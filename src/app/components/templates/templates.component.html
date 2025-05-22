@@ -1,0 +1,9 @@
+<div class="mb-6">
+  <h3 class="text-lg font-semibold text-neutral-900 mb-6">Templates</h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <app-template-card 
+      *ngFor="let template of templates"
+      [template]="template">
+    </app-template-card>
+  </div>
+</div>

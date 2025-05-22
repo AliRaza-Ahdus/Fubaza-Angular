@@ -1,0 +1,7 @@
+.stats-card {
+  @apply transition-all duration-300 hover:shadow-lg;
+  
+  .value-container {
+    @apply relative;
+  }
+}

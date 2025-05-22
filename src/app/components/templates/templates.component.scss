@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Custom scrollbar for the grid container
+.grid {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: theme('colors.neutral.100');
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: theme('colors.neutral.300');
+    border-radius: 3px;
+
+    &:hover {
+      background: theme('colors.neutral.400');
+    }
+  }
+}

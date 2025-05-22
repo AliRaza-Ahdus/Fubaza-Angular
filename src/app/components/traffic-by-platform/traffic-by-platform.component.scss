@@ -1,0 +1,11 @@
+.platform-item {
+  @apply mb-4;
+  
+  .progress-bar {
+    @apply transition-all duration-500 ease-out;
+    
+    .progress {
+      @apply transition-all duration-1000 ease-out;
+    }
+  }
+}

@@ -1,0 +1,200 @@
+@use 'tailwindcss/base' as *;
+@use 'tailwindcss/components' as *;
+@use 'tailwindcss/utilities' as *;
+@use '@angular/material' as mat;
+
+@use 'sass:map';
+
+// Import fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Base styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: theme('colors.neutral.800');
+  background-color: theme('colors.neutral.50');
+}
+
+/* Layout utilities */
+.container {
+  max-width: theme('maxWidth.7xl');
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: theme('spacing.4');
+  padding-right: theme('spacing.4');
+}
+
+.section {
+  padding-top: theme('spacing.8');
+  padding-bottom: theme('spacing.8');
+}
+
+/* Card styles */
+.card {
+  background-color: white;
+  border-radius: theme('borderRadius.lg');
+  box-shadow: theme('boxShadow.card');
+  padding: theme('spacing.4');
+}
+
+.card-hover {
+  transition-property: box-shadow;
+  transition-duration: 200ms;
+  &:hover {
+    box-shadow: theme('boxShadow.lg');
+  }
+}
+
+/* Button styles */
+.btn {
+  font-weight: 500;
+  padding: theme('spacing.2') theme('spacing.4');
+  border-radius: theme('borderRadius.md');
+  transition-duration: 200ms;
+}
+
+.btn-primary {
+  background-color: theme('colors.primary.600');
+  color: white;
+  &:hover {
+    background-color: theme('colors.primary.700');
+  }
+}
+
+.btn-secondary {
+  background-color: white;
+  border: 1px solid theme('colors.neutral.300');
+  color: theme('colors.neutral.800');
+  &:hover {
+    background-color: theme('colors.neutral.50');
+  }
+}
+
+.btn-danger {
+  background-color: theme('colors.red.600');
+  color: white;
+  &:hover {
+    background-color: theme('colors.red.700');
+  }
+}
+
+/* Form styles */
+.form-input {
+  width: 100%;
+  padding: theme('spacing.2') theme('spacing.3');
+  border: 1px solid theme('colors.neutral.300');
+  border-radius: theme('borderRadius.md');
+  &:focus {
+    outline: none;
+    border-color: transparent;
+    box-shadow: 0 0 0 2px theme('colors.primary.500');
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: theme('fontSize.sm');
+  font-weight: 500;
+  color: theme('colors.neutral.700');
+  margin-bottom: theme('spacing.1');
+}
+
+/* Typography utilities */
+.heading-1 {
+  font-size: theme('fontSize.3xl');
+  font-weight: 700;
+  color: theme('colors.neutral.900');
+}
+
+.heading-2 {
+  font-size: theme('fontSize.2xl');
+  font-weight: 600;
+  color: theme('colors.neutral.800');
+}
+
+.heading-3 {
+  font-size: theme('fontSize.xl');
+  font-weight: 500;
+  color: theme('colors.neutral.700');
+}
+
+/* Angular Material Customizations */
+.mat-mdc-button-base {
+  font-weight: 500;
+}
+
+.mat-toolbar {
+  box-shadow: theme('boxShadow.sm');
+  z-index: 10;
+}
+
+.mat-card {
+  border-radius: theme('borderRadius.lg');
+  box-shadow: theme('boxShadow.card');
+}
+
+/* Transition effects */
+.page-transition {
+  transition-property: all;
+  transition-duration: 300ms;
+}
+
+.hover-effect {
+  transition-property: all;
+  transition-duration: 200ms;
+  &:hover {
+    box-shadow: theme('boxShadow.lg');
+  }
+}
+
+/* Grid utilities */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: theme('spacing.4');
+}
+
+/* Spacing utilities */
+.section-spacing {
+  & > * + * {
+    margin-top: theme('spacing.6');
+  }
+}
+
+/* Responsive utilities */
+.responsive-container {
+  width: 100%;
+  max-width: theme('maxWidth.7xl');
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: theme('spacing.4');
+  padding-right: theme('spacing.4');
+}
+
+/* Animation utilities */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-in-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: theme('spacing.2');
+}
+
+::-webkit-scrollbar-track {
+  background-color: theme('colors.neutral.100');
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: theme('colors.neutral.400');
+  border-radius: 9999px;
+  &:hover {
+    background-color: theme('colors.neutral.500');
+  }
+}

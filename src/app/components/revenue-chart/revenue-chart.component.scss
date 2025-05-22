@@ -1,0 +1,9 @@
+.chart-container {
+  canvas {
+    @apply w-full h-full;
+  }
+}
+
+::ng-deep .mat-select-panel {
+  @apply bg-white border border-neutral-200 rounded-md shadow-lg;
+}

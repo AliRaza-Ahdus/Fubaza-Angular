@@ -1,0 +1,42 @@
+.sidebar {
+  @apply bg-neutral-900 text-white h-full flex flex-col transition-all duration-300 ease-in-out;
+  width: 250px;
+  
+  &.sidebar-closed {
+    width: 70px;
+    
+    .logo-container {
+      justify-content: center;
+      
+      h1 {
+        font-size: 1rem;
+      }
+    }
+    
+    .nav-item {
+      justify-content: center;
+      padding-left: 0;
+      padding-right: 0;
+      
+      mat-icon {
+        margin-right: 0;
+      }
+    }
+  }
+  
+  .sidebar-content {
+    @apply overflow-y-auto;
+  }
+  
+  .nav-item {
+    @apply rounded-md;
+    
+    &.active {
+      @apply bg-primary-700 text-white;
+      
+      mat-icon {
+        @apply text-white;
+      }
+    }
+  }
+}

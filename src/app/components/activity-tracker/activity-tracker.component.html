@@ -1,0 +1,103 @@
+<div class="card p-6">
+  <h3 class="text-lg font-semibold mb-4">Activity Tracker</h3>
+  
+  <div class="flex flex-wrap gap-2 mb-4 items-center justify-between">
+    <div class="filters flex flex-wrap gap-2">
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'all' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('all')">
+        All Files
+      </button>
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'posts' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('posts')">
+        Posts
+      </button>
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'stories' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('stories')">
+        Stories
+      </button>
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'more' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('more')">
+        More Filters
+      </button>
+    </div>
+    <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm ml-auto" placeholder="Search..." (input)="onSearch($event)">
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table mat-table [dataSource]="dataSource" matSort class="w-full">
+      
+      <!-- User Column -->
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="flex items-center">
+            <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 mr-3">
+              {{ element.user.name.charAt(0) }}
+            </div>
+            <div>
+              <p class="font-medium">{{ element.user.name }}</p>
+              <p class="text-neutral-500 text-sm">{{ element.user.role }}</p>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      
+      <!-- Activity Column -->
+      <ng-container matColumnDef="activity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Activity</th>
+        <td mat-cell *matCellDef="let element">{{ element.activity }}</td>
+      </ng-container>
+      
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+      </ng-container>
+      
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let element">
+          <span [ngClass]="getStatusClass(element.status)" class="px-2 py-1 rounded-full text-xs font-medium">
+            {{ element.status }}
+          </span>
+        </td>
+      </ng-container>
+      
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>visibility</mat-icon>
+              <span>View</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-neutral-50"></tr>
+    </table>
+  </div>
+</div>

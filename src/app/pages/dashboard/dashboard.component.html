@@ -1,0 +1,35 @@
+<div class="dashboard">
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <app-stats-card 
+      *ngFor="let card of statsCards"
+      [title]="card.title"
+      [value]="card.value"
+      [change]="card.change"
+      [changeText]="card.changeText"
+      [isPositive]="card.isPositive">
+    </app-stats-card>
+  </div>
+  
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="lg:col-span-2">
+      <app-revenue-chart></app-revenue-chart>
+    </div>
+    <div>
+      <app-traffic-by-platform></app-traffic-by-platform>
+    </div>
+  </div>
+  
+  <!-- Platform Reach and Storage Used -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <app-platform-reach></app-platform-reach>
+    <app-storage-used></app-storage-used>
+  </div>
+  
+  <!-- Templates Section -->
+  <app-templates></app-templates>
+  
+  <!-- Activity Tracker -->
+  <app-activity-tracker></app-activity-tracker>
+</div>

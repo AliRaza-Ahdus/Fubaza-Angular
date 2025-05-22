@@ -1,0 +1,28 @@
+<header class="header bg-white border-b border-neutral-200">
+  <div class="px-8 py-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <button mat-icon-button (click)="onToggleSidebar()" class="mr-4">
+          <mat-icon>menu</mat-icon>
+        </button>
+        
+        <div class="welcome-text">
+          <h2 class="text-lg font-semibold">Welcome back, {{username}}</h2>
+          <p class="text-neutral-500 text-sm">Track, manage and forecast your customers and orders.</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <button mat-flat-button class="search-btn flex items-center border border-neutral-300 rounded-md px-3 py-1">
+          <mat-icon class="text-neutral-500 mr-1">search</mat-icon>
+          <span class="text-neutral-500">Search</span>
+        </button>
+        
+        <button mat-flat-button color="primary" class="add-template-btn bg-primary-600 text-white px-4 py-1 rounded-md">
+          <mat-icon class="mr-1">add</mat-icon>
+          Add Template
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

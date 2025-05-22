@@ -1,0 +1,20 @@
+<div class="card p-6">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Revenue Generated</h3>
+    <div class="flex space-x-4 items-center">
+      <mat-select [(value)]="selectedPeriod" class="text-sm" panelClass="mat-select-panel">
+        <mat-option *ngFor="let period of periods" [value]="period">
+          {{ period }}
+        </mat-option>
+      </mat-select>
+    </div>
+  </div>
+  
+  <div class="chart-container h-64">
+    <canvas baseChart
+      [data]="lineChartData"
+      [options]="lineChartOptions"
+      [type]="'line'">
+    </canvas>
+  </div>
+</div>
