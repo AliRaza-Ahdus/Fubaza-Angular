@@ -31,13 +31,13 @@ export class SidebarComponent {
       active: false,
       children: [
         { name: 'Clubs', icon: 'business', route: '/club-overview', active: false },
-        { name: 'Players', icon: 'sports_soccer', route: '/players', active: false }
+        { name: 'Players', icon: 'sports_soccer',  active: false }
       ]
     },
-    { name: 'Templates', icon: 'description', route: '/templates', active: false },
-    { name: 'Revenue', icon: 'credit_card', route: '/financial', active: false },
-    { name: 'User Management', icon: 'person', route: '/user-management', active: false },
-    { name: 'Media Library', icon: 'photo_library', route: '/media-library', active: false }
+    { name: 'Templates', icon: 'description',  active: false },
+    { name: 'Revenue', icon: 'credit_card',  active: false },
+    { name: 'User Management', icon: 'person', active: false },
+    { name: 'Media Library', icon: 'photo_library', active: false }
   ];
 
   selectNavItem(item: NavItem, parent?: NavItem): void {
