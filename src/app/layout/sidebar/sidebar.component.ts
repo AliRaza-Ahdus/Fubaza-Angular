@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 interface NavItem {
   name: string;
@@ -24,21 +24,46 @@ export class SidebarComponent {
   overviewExpanded = false;
 
   navItems: NavItem[] = [
-    { name: 'Home', icon: 'home', route: '/dashboard', active: true },
+    { name: 'Home', icon: 'home', route: '/dashboard', active: false },
     {
       name: 'Overview',
       icon: 'dashboard',
       active: false,
       children: [
         { name: 'Clubs', icon: 'business', route: '/club-overview', active: false },
-        { name: 'Players', icon: 'sports_soccer',  active: false }
+        { name: 'Players', icon: 'sports_soccer', active: false }
       ]
     },
-    { name: 'Templates', icon: 'description',  active: false },
-    { name: 'Revenue', icon: 'credit_card',  active: false },
-    { name: 'User Management', icon: 'person', active: false },
-    { name: 'Media Library', icon: 'photo_library', active: false }
+    { name: 'Templates', icon: 'description', active: false,  },
+    { name: 'Revenue', icon: 'credit_card', active: false, },
+    { name: 'User Management', icon: 'person', active: false,  },
+    { name: 'Media Library', icon: 'photo_library', active: false, }
   ];
+
+  constructor(private router: Router) {
+    this.setActiveByRoute(this.router.url);
+    this.router.events.subscribe(() => {
+      this.setActiveByRoute(this.router.url);
+    });
+  }
+
+  setActiveByRoute(url: string) {
+    this.navItems.forEach(navItem => {
+      navItem.active = false;
+      if (navItem.children) {
+        navItem.children.forEach(child => {
+          child.active = false;
+          if (child.route && url.startsWith(child.route)) {
+            child.active = true;
+            this.overviewExpanded = true;
+          }
+        });
+      }
+      if (navItem.route && url.startsWith(navItem.route)) {
+        navItem.active = true;
+      }
+    });
+  }
 
   selectNavItem(item: NavItem, parent?: NavItem): void {
     this.navItems.forEach(navItem => {
@@ -49,6 +74,7 @@ export class SidebarComponent {
     });
     if (parent) {
       item.active = true;
+      this.overviewExpanded = true;
     } else {
       item.active = true;
     }
