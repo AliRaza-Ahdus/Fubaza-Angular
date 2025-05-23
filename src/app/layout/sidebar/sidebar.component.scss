@@ -39,13 +39,35 @@
   
   .nav-item {
     @apply rounded-md;
-    
+    font-size: 1.08rem;
     &.active {
-      @apply bg-primary-700 text-white;
-      
+      @apply bg-neutral-800 text-white font-semibold;
       mat-icon {
         @apply text-white;
       }
+    }
+  }
+
+  .submenu {
+    @apply ml-2;
+    li.nav-item {
+      font-size: 1rem;
+      @apply px-4 py-2 rounded-md;
+      &.active {
+        @apply bg-neutral-700 text-white font-semibold;
+      }
+    }
+  }
+
+  .sidebar-divider {
+    @apply border-t border-neutral-700 my-2;
+  }
+
+  .sidebar-footer {
+    .logout-btn {
+      @apply text-neutral-400 hover:text-white transition;
+      padding: 6px;
+      border-radius: 50%;
     }
   }
 }

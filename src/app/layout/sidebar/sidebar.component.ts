@@ -6,8 +6,9 @@ import { RouterModule } from '@angular/router';
 interface NavItem {
   name: string;
   icon: string;
-  route: string;
+  route?: string;
   active?: boolean;
+  children?: NavItem[];
 }
 
 @Component({
@@ -20,20 +21,45 @@ interface NavItem {
 export class SidebarComponent {
   @Input() isOpen = true;
 
+  overviewExpanded = true;
+
   navItems: NavItem[] = [
     { name: 'Home', icon: 'home', route: '/dashboard', active: true },
-    { name: 'Overview', icon: 'dashboard', route: '/overview' },
-    { name: 'Clubs', icon: 'business', route: '/club-overview' },
-    { name: 'Players', icon: 'sports_soccer', route: '/players' },
-    { name: 'Templates', icon: 'description', route: '/templates' },
-    { name: 'Financial', icon: 'account_balance', route: '/financial' },
-    { name: 'User Management', icon: 'people', route: '/user-management' },
-    { name: 'Media Library', icon: 'photo_library', route: '/media-library' }
+    {
+      name: 'Overview',
+      icon: 'dashboard',
+      active: false,
+      children: [
+        { name: 'Clubs', icon: 'business', route: '/club-overview', active: false },
+        { name: 'Players', icon: 'sports_soccer', route: '/players', active: false }
+      ]
+    },
+    { name: 'Templates', icon: 'description', route: '/templates', active: false },
+    { name: 'Revenue', icon: 'credit_card', route: '/financial', active: false },
+    { name: 'User Management', icon: 'person', route: '/user-management', active: false },
+    { name: 'Media Library', icon: 'photo_library', route: '/media-library', active: false }
   ];
 
-  selectNavItem(item: NavItem): void {
+  selectNavItem(item: NavItem, parent?: NavItem): void {
     this.navItems.forEach(navItem => {
-      navItem.active = (navItem === item);
+      navItem.active = false;
+      if (navItem.children) {
+        navItem.children.forEach(child => child.active = false);
+      }
     });
+    if (parent) {
+      parent.active = true;
+      item.active = true;
+    } else {
+      item.active = true;
+    }
+  }
+
+  toggleOverview(): void {
+    this.overviewExpanded = !this.overviewExpanded;
+  }
+
+  isParentActive(item: NavItem): boolean {
+    return !!(item.active || (item.children && item.children.some(child => child.active)));
   }
 }

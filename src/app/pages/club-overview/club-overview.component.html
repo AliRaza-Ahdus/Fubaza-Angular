@@ -1,13 +1,18 @@
 <div class="club-overview">
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-      
+    <h2 class="text-xl font-semibold mb-4">Clubs Overview</h2>
+    <div class="sports-cards-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div *ngFor="let card of sportsCards" class="sports-card flex flex-col justify-between rounded-2xl p-6 text-white relative {{card.colorClass}}">
+            <div class="flex items-center justify-between mb-2">
+                <mat-icon class="text-4xl">{{card.icon}}</mat-icon>
+            </div>
+            <div class="flex-1 flex flex-col justify-end">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-base">{{card.title}}</div>
+                    <mat-icon>more_vert</mat-icon>
+                </div>
+                <div class="text-3xl font-bold">{{card.value}}</div>
+            </div>
+        </div>
     </div>
-    
-    
-    
-   <app-clubs></app-clubs>
-    
-    
-   
+    <app-clubs></app-clubs>
 </div>

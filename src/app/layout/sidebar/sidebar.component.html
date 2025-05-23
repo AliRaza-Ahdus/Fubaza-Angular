@@ -8,27 +8,57 @@
   <div class="sidebar-content py-2">
     <nav>
       <ul>
-        <li *ngFor="let item of navItems" 
-            [routerLink]="item.route" 
-            [class.active]="item.active"
-            (click)="selectNavItem(item)"
-            class="nav-item flex items-center px-4 py-3 cursor-pointer hover:bg-neutral-700 transition-colors duration-200">
-          <mat-icon class="mr-3 text-neutral-400">{{item.icon}}</mat-icon>
-          <span *ngIf="isOpen" class="nav-text text-neutral-300">{{item.name}}</span>
+        <li *ngFor="let item of navItems" class="nav-item-wrapper">
+          <!-- Overview parent -->
+          <ng-container *ngIf="item.children; else singleNav">
+            <div class="nav-item flex items-center px-4 py-3 cursor-pointer hover:bg-neutral-700 transition-colors duration-200 font-semibold"
+                 [class.active]="isParentActive(item)"
+                 (click)="toggleOverview()">
+              <mat-icon class="mr-3">{{item.icon}}</mat-icon>
+              <span *ngIf="isOpen" class="nav-text text-neutral-300 flex-1">{{item.name}}</span>
+              <mat-icon *ngIf="isOpen" class="ml-auto text-neutral-400 text-xs">{{ overviewExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </div>
+            <ul *ngIf="overviewExpanded && isOpen" class="submenu ml-8 mt-1">
+              <li *ngFor="let child of item.children"
+                  [routerLink]="child.route"
+                  [class.active]="child.active"
+                  (click)="selectNavItem(child, item)"
+                  class="nav-item flex items-center px-4 py-2 cursor-pointer hover:bg-neutral-700 transition-colors duration-200 rounded-md">
+                <mat-icon class="mr-3 text-neutral-400">{{child.icon}}</mat-icon>
+                <span class="nav-text text-neutral-300">{{child.name}}</span>
+              </li>
+            </ul>
+            <div class="sidebar-divider"></div>
+          </ng-container>
+          <ng-template #singleNav>
+            <li [routerLink]="item.route"
+                [class.active]="item.active"
+                (click)="selectNavItem(item)"
+                class="nav-item flex items-center px-4 py-3 cursor-pointer hover:bg-neutral-700 transition-colors duration-200">
+              <mat-icon class="mr-3 text-neutral-400">{{item.icon}}</mat-icon>
+              <span *ngIf="isOpen" class="nav-text text-neutral-300">{{item.name}}</span>
+            </li>
+            <div class="sidebar-divider" *ngIf="item.name === 'Templates' || item.name === 'Revenue' || item.name === 'User Management'"></div>
+          </ng-template>
         </li>
       </ul>
     </nav>
   </div>
   
   <div class="sidebar-footer mt-auto p-4 border-t border-neutral-700" *ngIf="isOpen">
-    <div class="user-info flex items-center">
-      <div class="avatar h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white">
-        M
+    <div class="user-info flex items-center justify-between">
+      <div class="flex items-center">
+        <div class="avatar h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white">
+          M
+        </div>
+        <div class="ml-3">
+          <p class="text-white text-sm font-medium">Mustafa</p>
+          <p class="text-neutral-400 text-xs">View Profile</p>
+        </div>
       </div>
-      <div class="ml-3">
-        <p class="text-white text-sm font-medium">Mustafa</p>
-        <p class="text-neutral-400 text-xs">View Profile</p>
-      </div>
+      <button mat-icon-button class="logout-btn ml-2">
+        <mat-icon>logout</mat-icon>
+      </button>
     </div>
   </div>
 </div>
