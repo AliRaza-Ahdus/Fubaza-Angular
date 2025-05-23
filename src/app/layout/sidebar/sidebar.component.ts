@@ -23,7 +23,7 @@ export class SidebarComponent {
   navItems: NavItem[] = [
     { name: 'Home', icon: 'home', route: '/dashboard', active: true },
     { name: 'Overview', icon: 'dashboard', route: '/overview' },
-    { name: 'Clubs', icon: 'business', route: '/clubs' },
+    { name: 'Clubs', icon: 'business', route: '/club-overview' },
     { name: 'Players', icon: 'sports_soccer', route: '/players' },
     { name: 'Templates', icon: 'description', route: '/templates' },
     { name: 'Financial', icon: 'account_balance', route: '/financial' },
