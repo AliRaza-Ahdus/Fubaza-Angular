@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 export interface ActivityItem {
   id: number;
@@ -28,12 +29,13 @@ export interface ActivityItem {
     MatSortModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatCheckboxModule
   ],
   standalone: true
 })
 export class ActivityTrackerComponent implements OnInit {
-  displayedColumns: string[] = ['user', 'activity', 'date', 'status', 'actions'];
+  displayedColumns: string[] = ['select', 'user', 'activity', 'date', 'status', 'actions'];
   dataSource: MatTableDataSource<ActivityItem>;
   activeTab = 'all';
   searchValue = '';
@@ -43,6 +45,9 @@ export class ActivityTrackerComponent implements OnInit {
   pageSize = 5;
   totalPages = 1;
   pagedData: ActivityItem[] = [];
+  
+  // Selection
+  selectedIds: number[] = [];
   
   @ViewChild(MatSort) sort!: MatSort;
   
@@ -252,6 +257,7 @@ export class ActivityTrackerComponent implements OnInit {
     this.dataSource.filter = this.searchValue;
     this.currentPage = 1;
     this.updatePagination();
+    this.selectedIds = [];
   }
   
   getStatusClass(status: string): string {
@@ -269,6 +275,7 @@ export class ActivityTrackerComponent implements OnInit {
     this.dataSource.filter = this.searchValue;
     this.currentPage = 1;
     this.updatePagination();
+    this.selectedIds = [];
   }
 
   updatePagination() {
@@ -277,6 +284,8 @@ export class ActivityTrackerComponent implements OnInit {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     this.pagedData = filteredData.slice(start, end);
+    // Deselect all if pagedData changes
+    this.selectedIds = [];
   }
 
   nextPage() {
@@ -290,6 +299,26 @@ export class ActivityTrackerComponent implements OnInit {
     if (this.currentPage > 1) {
       this.currentPage--;
       this.updatePagination();
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.pagedData.length > 0 && this.pagedData.every(item => this.selectedIds.includes(item.id));
+  }
+
+  toggleAll(checked: boolean) {
+    if (checked) {
+      this.selectedIds = this.pagedData.map(item => item.id);
+    } else {
+      this.selectedIds = [];
+    }
+  }
+
+  toggleOne(id: number, checked: boolean) {
+    if (checked) {
+      this.selectedIds = [...this.selectedIds, id];
+    } else {
+      this.selectedIds = this.selectedIds.filter(selectedId => selectedId !== id);
     }
   }
 }

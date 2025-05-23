@@ -73,3 +73,16 @@
     @apply text-neutral-600;
   }
 }
+
+.mat-column-select, th.mat-header-cell:first-child, td.mat-cell:first-child {
+  width: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  text-align: center;
+}
+
+.mat-checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
