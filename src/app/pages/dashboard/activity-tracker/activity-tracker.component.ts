@@ -38,6 +38,12 @@ export class ActivityTrackerComponent implements OnInit {
   activeTab = 'all';
   searchValue = '';
   
+  // Pagination
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 1;
+  pagedData: ActivityItem[] = [];
+  
   @ViewChild(MatSort) sort!: MatSort;
   
   activities: ActivityItem[] = [
@@ -95,6 +101,117 @@ export class ActivityTrackerComponent implements OnInit {
       activity: 'Big WIN! Send Final (Facebook, Instagram)',
       date: 'Apr 27, 2025',
       status: 'Published'
+    },
+    // Additional records for pagination testing
+    {
+      id: 6,
+      user: {
+        name: 'Olivia Rye',
+        avatar: 'assets/avatars/olivia.jpg',
+        role: 'Media Specialist'
+      },
+      activity: 'Uploaded new team photos',
+      date: 'Apr 28, 2025',
+      status: 'Published'
+    },
+    {
+      id: 7,
+      user: {
+        name: 'Liam Smith',
+        avatar: 'assets/avatars/liam.jpg',
+        role: 'Player'
+      },
+      activity: 'Updated player profile',
+      date: 'Apr 29, 2025',
+      status: 'Draft'
+    },
+    {
+      id: 8,
+      user: {
+        name: 'Emma Brown',
+        avatar: 'assets/avatars/emma.jpg',
+        role: 'Coach'
+      },
+      activity: 'Shared training schedule',
+      date: 'Apr 30, 2025',
+      status: 'Published'
+    },
+    {
+      id: 9,
+      user: {
+        name: 'Noah Wilson',
+        avatar: 'assets/avatars/noah.jpg',
+        role: 'Team Manager'
+      },
+      activity: 'Added new player to roster',
+      date: 'May 1, 2025',
+      status: 'Draft'
+    },
+    {
+      id: 10,
+      user: {
+        name: 'Sophia Lee',
+        avatar: 'assets/avatars/sophia.jpg',
+        role: 'Club Admin'
+      },
+      activity: 'Scheduled friendly match',
+      date: 'May 2, 2025',
+      status: 'Published'
+    },
+    {
+      id: 11,
+      user: {
+        name: 'Mason Clark',
+        avatar: 'assets/avatars/mason.jpg',
+        role: 'Player'
+      },
+      activity: 'Updated medical records',
+      date: 'May 3, 2025',
+      status: 'Draft'
+    },
+    {
+      id: 12,
+      user: {
+        name: 'Ava Scott',
+        avatar: 'assets/avatars/ava.jpg',
+        role: 'Media Specialist'
+      },
+      activity: 'Published event highlights',
+      date: 'May 4, 2025',
+      status: 'Published'
+    },
+    {
+      id: 13,
+      user: {
+        name: 'Ethan King',
+        avatar: 'assets/avatars/ethan.jpg',
+        role: 'Team Coach'
+      },
+      activity: 'Reviewed match analytics',
+      date: 'May 5, 2025',
+      status: 'Draft'
+    },
+    {
+      id: 14,
+      user: {
+        name: 'Isabella Green',
+        avatar: 'assets/avatars/isabella.jpg',
+        role: 'Club Manager'
+      },
+      activity: 'Sent out newsletter',
+      date: 'May 6, 2025',
+      status: 'Published'
+    },
+    {
+      id: 15,
+      user: {
+        name: 'James Hall',
+        avatar: 'assets/avatars/james.jpg',
+        role: 'Player'
+      },
+      activity: 'Completed fitness test',
+      date: 'May 7, 2025',
+      status: 'Draft'
     }
   ];
   
@@ -113,7 +230,7 @@ export class ActivityTrackerComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    // Initialize any data here
+    this.updatePagination();
   }
   
   ngAfterViewInit() {
@@ -133,6 +250,8 @@ export class ActivityTrackerComponent implements OnInit {
       this.dataSource.data = this.activities.slice(0, 2);
     }
     this.dataSource.filter = this.searchValue;
+    this.currentPage = 1;
+    this.updatePagination();
   }
   
   getStatusClass(status: string): string {
@@ -148,5 +267,29 @@ export class ActivityTrackerComponent implements OnInit {
   onSearch(event: Event) {
     this.searchValue = (event.target as HTMLInputElement)?.value?.trim().toLowerCase() || '';
     this.dataSource.filter = this.searchValue;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    const filteredData = this.dataSource.filteredData;
+    this.totalPages = Math.ceil(filteredData.length / this.pageSize) || 1;
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedData = filteredData.slice(start, end);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
   }
 }

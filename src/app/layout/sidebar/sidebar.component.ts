@@ -28,8 +28,7 @@ export class SidebarComponent {
     { name: 'Templates', icon: 'description', route: '/templates' },
     { name: 'Financial', icon: 'account_balance', route: '/financial' },
     { name: 'User Management', icon: 'people', route: '/user-management' },
-    { name: 'Media Library', icon: 'photo_library', route: '/media-library' },
-    { name: 'Notifications', icon: 'notifications', route: '/notifications' }
+    { name: 'Media Library', icon: 'photo_library', route: '/media-library' }
   ];
 
   selectNavItem(item: NavItem): void {

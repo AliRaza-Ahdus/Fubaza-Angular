@@ -1,6 +1,6 @@
 <div class="dashboard">
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
     <app-stats-card 
       *ngFor="let card of statsCards"
       [title]="card.title"
@@ -12,7 +12,7 @@
   </div>
   
   <!-- Charts Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
     <div class="lg:col-span-2">
       <app-revenue-chart></app-revenue-chart>
     </div>
@@ -22,7 +22,7 @@
   </div>
   
   <!-- Platform Reach and Storage Used -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
     <app-platform-reach></app-platform-reach>
     <app-storage-used></app-storage-used>
   </div>

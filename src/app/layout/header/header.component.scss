@@ -4,24 +4,4 @@
   .welcome-text {
     @apply hidden md:block;
   }
-  
-  .search-btn {
-    @apply bg-transparent hover:bg-neutral-50 transition-colors duration-200;
-    
-    @media (max-width: 640px) {
-      @apply hidden;
-    }
-  }
-  
-  .add-template-btn {
-    @apply transition-colors duration-200 hover:bg-primary-700;
-    
-    @media (max-width: 640px) {
-      @apply px-2;
-      
-      span {
-        @apply hidden;
-      }
-    }
-  }
 }

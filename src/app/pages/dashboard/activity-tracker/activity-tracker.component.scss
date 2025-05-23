@@ -36,3 +36,40 @@
 .activity-search-input:focus {
   border-color: #60a5fa;
 }
+
+.activity-tracker-header {
+  @apply mb-2;
+  h3 {
+    @apply text-lg font-semibold;
+  }
+}
+
+.activity-tracker-controls {
+  @apply flex flex-col md:flex-row md:items-center md:justify-between gap-2;
+  .filters {
+    @apply flex flex-wrap gap-2;
+  }
+  .activity-search-input {
+    @apply w-full md:w-auto mt-2 md:mt-0;
+  }
+}
+
+.pagination-btn {
+  @apply px-4 py-2 rounded-lg border border-primary-500 text-primary-600 bg-white shadow-sm transition font-medium;
+  &:hover:not(:disabled) {
+    @apply bg-primary-50 text-primary-700 shadow-md;
+  }
+  &:focus {
+    @apply outline-none ring-2 ring-primary-200;
+  }
+  &:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
+.activity-pagination {
+  @apply flex items-center justify-start gap-2 mt-4 ml-0;
+  span {
+    @apply text-neutral-600;
+  }
+}
