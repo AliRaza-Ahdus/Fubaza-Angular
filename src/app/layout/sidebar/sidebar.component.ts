@@ -21,7 +21,7 @@ interface NavItem {
 export class SidebarComponent {
   @Input() isOpen = true;
 
-  overviewExpanded = true;
+  overviewExpanded = false;
 
   navItems: NavItem[] = [
     { name: 'Home', icon: 'home', route: '/dashboard', active: true },
@@ -48,7 +48,6 @@ export class SidebarComponent {
       }
     });
     if (parent) {
-      parent.active = true;
       item.active = true;
     } else {
       item.active = true;
