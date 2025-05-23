@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivityTrackerComponent } from '../../components/activity-tracker/activity-tracker.component';
-import { StatsCardComponent } from '../../components/stats-card/stats-card.component';
-import { PlatformReachComponent } from '../../components/platform-reach/platform-reach.component';
-import { TrafficByPlatformComponent } from '../../components/traffic-by-platform/traffic-by-platform.component';
-import { RevenueChartComponent } from '../../components/revenue-chart/revenue-chart.component';
-import { StorageUsedComponent } from '../../components/storage-used/storage-used.component';
-import { TemplatesComponent } from '../../components/templates/templates.component';
+import { ActivityTrackerComponent } from './activity-tracker/activity-tracker.component';
+import { StatsCardComponent } from './stats-card/stats-card.component';
+import { PlatformReachComponent } from './platform-reach/platform-reach.component';
+import { TrafficByPlatformComponent } from './traffic-by-platform/traffic-by-platform.component';
+import { RevenueChartComponent } from './revenue-chart/revenue-chart.component';
+import { StorageUsedComponent } from './storage-used/storage-used.component';
+import { TemplatesComponent } from './templates/templates.component';
 
 @Component({
   selector: 'app-dashboard',
