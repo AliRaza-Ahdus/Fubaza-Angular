@@ -31,7 +31,7 @@ export class SidebarComponent {
       active: false,
       children: [
         { name: 'Clubs', icon: 'business', route: '/club-overview', active: false },
-        { name: 'Players', icon: 'sports_soccer', active: false }
+        { name: 'Players', icon: 'sports_soccer', route: '/player-overview', active: false }
       ]
     },
     { name: 'Templates', icon: 'description', active: false,  },
@@ -55,12 +55,17 @@ export class SidebarComponent {
           child.active = false;
           if (child.route && url.startsWith(child.route)) {
             child.active = true;
-            this.overviewExpanded = true;
+            if (navItem.name === 'Overview') {
+              this.overviewExpanded = true;
+            }
           }
         });
       }
       if (navItem.route && url.startsWith(navItem.route)) {
         navItem.active = true;
+        if (navItem.name !== 'Overview') {
+          this.overviewExpanded = false;
+        }
       }
     });
   }
@@ -77,6 +82,9 @@ export class SidebarComponent {
       this.overviewExpanded = true;
     } else {
       item.active = true;
+      if (item.name !== 'Overview') {
+        this.overviewExpanded = false;
+      }
     }
   }
 

@@ -1,0 +1,119 @@
+<div class="activity-tracker-header mb-2">
+  <h3 class="text-lg font-semibold mb-2">All Players</h3>
+  <div class="activity-tracker-controls flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+    <div class="filters flex flex-wrap gap-2">
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'football' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('football')">
+        Football
+      </button>
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'basketball' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('basketball')">
+        Basketball
+      </button>
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'icehockey' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('icehockey')">
+        Ice Hockey
+      </button>
+      <button 
+        class="filter-btn rounded-full px-3 py-1 text-sm" 
+        [ngClass]="activeTab === 'rugby' ? 'bg-primary-500 text-white' : 'bg-neutral-100 text-neutral-700'"
+        (click)="setActiveTab('rugby')">
+        Rugby
+      </button>
+    </div>
+    <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm md:ml-auto" placeholder="Search players..." (input)="onSearch($event)">
+  </div>
+</div>
+
+<div class="card p-4 md:p-6">
+  <div class="overflow-x-auto">
+    <table mat-table [dataSource]="pagedData" matSort class="w-full">
+      <!-- Select Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox color="primary" [checked]="isAllSelected()" (change)="toggleAll($event.checked)"></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox color="primary" [checked]="selectedIds.includes(element.id)" (change)="toggleOne(element.id, $event.checked)"></mat-checkbox>
+        </td>
+      </ng-container>
+      <!-- Player Column -->
+      <ng-container matColumnDef="player">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Player Name</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="flex items-center">
+            <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 mr-3">
+              {{ element.player.name.charAt(0) }}
+            </div>
+            <span class="font-medium">{{ element.player.name }}</span>
+          </div>
+        </td>
+      </ng-container>
+      <!-- Club Column -->
+      <ng-container matColumnDef="club">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Club</th>
+        <td mat-cell *matCellDef="let element">{{ element.club }}</td>
+      </ng-container>
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
+        <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+      </ng-container>
+      <!-- DOB Column -->
+      <ng-container matColumnDef="dob">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>DOB</th>
+        <td mat-cell *matCellDef="let element">{{ element.dob }}</td>
+      </ng-container>
+      <!-- Subscription Plan Column -->
+      <ng-container matColumnDef="subscriptionPlan">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Subscription Plan</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="px-3 py-1 rounded-full text-xs font-medium bg-neutral-200 text-neutral-700">
+            {{ element.subscriptionPlan }}
+          </span>
+        </td>
+      </ng-container>
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>visibility</mat-icon>
+              <span>View Profile</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit Details</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <span>Remove Player</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>
+
+<div class="activity-pagination flex items-center justify-start gap-2 mt-4">
+  <button 
+    class="pagination-btn px-4 py-2 rounded-lg border border-primary-500 text-primary-600 bg-white shadow-sm hover:bg-primary-50 focus:ring-2 focus:ring-primary-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+    (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+  <span class="text-sm font-medium text-neutral-700">Page {{currentPage}} of {{totalPages}}</span>
+  <button 
+    class="pagination-btn px-4 py-2 rounded-lg border border-primary-500 text-primary-600 bg-white shadow-sm hover:bg-primary-50 focus:ring-2 focus:ring-primary-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+    (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+</div>

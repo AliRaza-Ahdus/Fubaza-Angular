@@ -1,0 +1,48 @@
+.player-overview {
+    @apply px-4;
+  }
+
+  .stats-card {
+    @apply transition-all duration-300 hover:shadow-lg;
+    
+    .value-container {
+      @apply relative;
+    }
+  }
+
+.sports-cards-grid {
+  @apply mb-8;
+}
+
+.sports-card {
+  @apply rounded-2xl p-6 flex flex-col justify-between relative shadow hover:shadow-lg transition-all duration-200;
+  min-height: 220px;
+}
+
+.bg-football {
+  background: #166534;
+}
+.bg-icehockey {
+  background: #bae6fd;
+  color: #fff !important;
+}
+.bg-basketball {
+  background: #fdbaaa;
+  color: #1e293b !important;
+}
+.bg-rugby {
+  background: #581c1c;
+  color: #facc15 !important;
+}
+
+.sports-card mat-icon {
+  font-size: 2.5rem;
+}
+
+.sports-card .font-semibold {
+  font-size: 1.1rem;
+}
+
+.sports-card .text-3xl {
+  font-size: 2rem;
+}
