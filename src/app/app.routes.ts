@@ -4,6 +4,7 @@ import { PlayerOverviewComponent } from './pages/player-overview/player-overview
 import { ClubOverviewComponent } from './pages/club-overview/club-overview.component';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
 import { ClubOverviewResolver } from './pages/club-overview/club-overview.resolver';
+import { PlayerOverviewResolver } from './pages/player-overview/player-overview.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -14,7 +15,13 @@ export const routes: Routes = [
       data: DashboardResolver
     }
   },
-  { path: 'player-overview', component: PlayerOverviewComponent },
+  { 
+    path: 'player-overview', 
+    component: PlayerOverviewComponent,
+    resolve: {
+      data: PlayerOverviewResolver
+    }
+  },
   { 
     path: 'club-overview', 
     component: ClubOverviewComponent,
