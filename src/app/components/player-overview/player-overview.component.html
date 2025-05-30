@@ -1,16 +1,52 @@
 <div class="player-overview">
     <h2 class="text-xl font-semibold mb-4">Players Overview</h2>
     <div class="sports-cards-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div *ngFor="let card of sportsCards" class="sports-card flex flex-col justify-between rounded-2xl p-6 text-white relative {{card.colorClass}}">
+        <div class="sports-card flex flex-col justify-between rounded-2xl p-6 text-white relative bg-football">
             <div class="flex items-center justify-between mb-2">
-                <mat-icon class="text-4xl">{{card.icon}}</mat-icon>
+                <mat-icon class="text-4xl">sports_soccer</mat-icon>
             </div>
             <div class="flex-1 flex flex-col justify-end">
                 <div class="flex items-center justify-between mb-2">
-                    <div class="font-semibold text-base">{{card.title}}</div>
+                    <div class="font-semibold text-base">Football Players</div>
                     <mat-icon>more_vert</mat-icon>
                 </div>
-                <div class="text-3xl font-bold">{{card.value}}</div>
+                <div class="text-3xl font-bold">{{footballPlayersValue}}</div>
+            </div>
+        </div>
+        <div class="sports-card flex flex-col justify-between rounded-2xl p-6 text-white relative bg-icehockey">
+            <div class="flex items-center justify-between mb-2">
+                <mat-icon class="text-4xl">sports_hockey</mat-icon>
+            </div>
+            <div class="flex-1 flex flex-col justify-end">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-base">Ice Hockey Players</div>
+                    <mat-icon>more_vert</mat-icon>
+                </div>
+                <div class="text-3xl font-bold">{{iceHockeyPlayersValue}}</div>
+            </div>
+        </div>
+        <div class="sports-card flex flex-col justify-between rounded-2xl p-6 text-white relative bg-basketball">
+            <div class="flex items-center justify-between mb-2">
+                <mat-icon class="text-4xl">sports_basketball</mat-icon>
+            </div>
+            <div class="flex-1 flex flex-col justify-end">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-base">Basketball Players</div>
+                    <mat-icon>more_vert</mat-icon>
+                </div>
+                <div class="text-3xl font-bold">{{basketballPlayersValue}}</div>
+            </div>
+        </div>
+        <div class="sports-card flex flex-col justify-between rounded-2xl p-6 text-white relative bg-rugby">
+            <div class="flex items-center justify-between mb-2">
+                <mat-icon class="text-4xl">sports_rugby</mat-icon>
+            </div>
+            <div class="flex-1 flex flex-col justify-end">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="font-semibold text-base">Rugby Players</div>
+                    <mat-icon>more_vert</mat-icon>
+                </div>
+                <div class="text-3xl font-bold">{{rugbyPlayersValue}}</div>
             </div>
         </div>
     </div>

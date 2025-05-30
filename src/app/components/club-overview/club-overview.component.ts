@@ -3,7 +3,7 @@ import { ClubsComponent } from './clubs/clubs.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
-import { ClubOverviewData, SportsCard, ClubItem } from './club-overview.resolver';
+import { ClubOverviewData, ClubItem } from './club-overview.resolver';
 
 @Component({
   selector: 'app-club-overview',
@@ -13,14 +13,20 @@ import { ClubOverviewData, SportsCard, ClubItem } from './club-overview.resolver
   standalone: true
 })
 export class ClubOverviewComponent implements OnInit {
-  sportsCards: SportsCard[] = [];
+  footballClubsValue!: number;
+  iceHockeyClubsValue!: number;
+  basketballClubsValue!: number;
+  rugbyClubsValue!: number;
   clubs: ClubItem[] = [];
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.data.subscribe(({ data }) => {
-      this.sportsCards = data.sportsCards;
+      this.footballClubsValue = data.footballClubsValue;
+      this.iceHockeyClubsValue = data.iceHockeyClubsValue;
+      this.basketballClubsValue = data.basketballClubsValue;
+      this.rugbyClubsValue = data.rugbyClubsValue;
       this.clubs = data.clubs;
     });
   }

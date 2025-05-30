@@ -3,7 +3,7 @@ import { PlayersComponent } from './players/players.component';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
-import { PlayerOverviewData, SportsCard, PlayerItem } from './player-overview.resolver';
+import { PlayerOverviewData, PlayerItem } from './player-overview.resolver';
 
 @Component({
   selector: 'app-player-overview',
@@ -13,14 +13,20 @@ import { PlayerOverviewData, SportsCard, PlayerItem } from './player-overview.re
   standalone: true
 })
 export class PlayerOverviewComponent implements OnInit {
-  sportsCards: SportsCard[] = [];
+  footballPlayersValue!: number;
+  iceHockeyPlayersValue!: number;
+  basketballPlayersValue!: number;
+  rugbyPlayersValue!: number;
   players: PlayerItem[] = [];
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.data.subscribe(({ data }) => {
-      this.sportsCards = data.sportsCards;
+      this.footballPlayersValue = data.footballPlayersValue;
+      this.iceHockeyPlayersValue = data.iceHockeyPlayersValue;
+      this.basketballPlayersValue = data.basketballPlayersValue;
+      this.rugbyPlayersValue = data.rugbyPlayersValue;
       this.players = data.players;
     });
   }

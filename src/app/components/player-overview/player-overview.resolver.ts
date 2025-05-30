@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
-export interface SportsCard {
-  title: string;
-  value: number;
-  colorClass: string;
-  icon: string;
+export interface PlayerOverviewData {
+  footballPlayersValue: number;
+  iceHockeyPlayersValue: number;
+  basketballPlayersValue: number;
+  rugbyPlayersValue: number;
+  players: PlayerItem[];
 }
 
 export interface PlayerItem {
@@ -21,11 +22,6 @@ export interface PlayerItem {
   subscriptionPlan: string;
 }
 
-export interface PlayerOverviewData {
-  sportsCards: SportsCard[];
-  players: PlayerItem[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -33,32 +29,10 @@ export class PlayerOverviewResolver implements Resolve<PlayerOverviewData> {
   resolve(): Observable<PlayerOverviewData> {
     // In a real application, this would be an HTTP call to your backend
     return of({
-      sportsCards: [
-        {
-          title: 'Football Players',
-          value: 4850,
-          colorClass: 'bg-football',
-          icon: 'sports_soccer'
-        },
-        {
-          title: 'Ice Hockey Players',
-          value: 3200,
-          colorClass: 'bg-icehockey',
-          icon: 'sports_hockey'
-        },
-        {
-          title: 'Basketball Players',
-          value: 2750,
-          colorClass: 'bg-basketball',
-          icon: 'sports_basketball'
-        },
-        {
-          title: 'Rugby Players',
-          value: 1850,
-          colorClass: 'bg-rugby',
-          icon: 'sports_rugby'
-        }
-      ],
+      footballPlayersValue: 4850,
+      iceHockeyPlayersValue: 3200,
+      basketballPlayersValue: 2750,
+      rugbyPlayersValue: 1850,
       players: [
         {
           id: 1,
