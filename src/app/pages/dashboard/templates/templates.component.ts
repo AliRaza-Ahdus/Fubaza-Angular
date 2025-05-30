@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { TemplateCardComponent } from '../template-card/template-card.component';
 
 interface Template {
   title: string;
@@ -17,7 +16,7 @@ interface Template {
   selector: 'app-templates',
   templateUrl: './templates.component.html',
   styleUrls: ['./templates.component.scss'],
-  imports: [CommonModule, MatIconModule, TemplateCardComponent],
+  imports: [CommonModule, MatIconModule],
   standalone: true
 })
 export class TemplatesComponent {

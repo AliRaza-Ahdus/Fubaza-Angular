@@ -2,6 +2,26 @@
   display: block;
 }
 
+.template-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+  background-color: #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  &:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.16);
+    filter: brightness(0.95);
+  }
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
