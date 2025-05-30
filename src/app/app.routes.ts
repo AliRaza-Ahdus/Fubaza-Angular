@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { PlayerOverviewComponent } from './pages/player-overview/player-overview.component';
-import { ClubOverviewComponent } from './pages/club-overview/club-overview.component';
-import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
-import { ClubOverviewResolver } from './pages/club-overview/club-overview.resolver';
-import { PlayerOverviewResolver } from './pages/player-overview/player-overview.resolver';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardResolver } from './components/dashboard/dashboard.resolver';
+import { ClubOverviewComponent } from './components/club-overview/club-overview.component';
+import { ClubOverviewResolver } from './components/club-overview/club-overview.resolver';
+import { PlayerOverviewComponent } from './components/player-overview/player-overview.component';
+import { PlayerOverviewResolver } from './components/player-overview/player-overview.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

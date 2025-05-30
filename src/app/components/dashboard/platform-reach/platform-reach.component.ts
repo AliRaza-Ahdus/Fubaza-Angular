@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgChartsModule } from 'ng2-charts';
-import { PlatformReachData } from '../../dashboard/dashboard.resolver';
+import { PlatformReachData } from '../../../components/dashboard/dashboard.resolver';
 
 @Component({
   selector: 'app-platform-reach',
