@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { RevenueData } from '../dashboard.resolver';
 
 @Component({
   selector: 'app-revenue-chart',
@@ -17,25 +18,9 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
   ],
   standalone: true
 })
-export class RevenueChartComponent implements OnInit {
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-    datasets: [
-      {
-        data: [65, 70, 80, 75, 95, 90, 110, 105, 120, 125],
-        label: 'Revenue',
-        fill: true,
-        tension: 0.4,
-        borderColor: 'rgb(0, 185, 112)',
-        backgroundColor: 'rgba(0, 185, 112, 0.1)',
-        pointBackgroundColor: 'rgb(0, 185, 112)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgb(0, 185, 112)'
-      }
-    ]
-  };
-  
+export class RevenueChartComponent {
+  @Input() revenueData!: RevenueData;
+
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -57,9 +42,9 @@ export class RevenueChartComponent implements OnInit {
       }
     }
   };
-  
+
   selectedPeriod: string = 'Current Month';
-  periods: string[] = ['Current Month', 'Last Month', 'Last 3 Months', 'Last 6 Months', 'Year to Date', 'All Time'];
-  
-  ngOnInit(): void {}
+  get periods(): string[] {
+    return this.revenueData?.periods || [];
+  }
 }

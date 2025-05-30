@@ -1,11 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface TrafficItem {
-  platform: string;
-  value: number;
-  color: string;
-}
+import { TrafficItem } from '../dashboard.resolver';
 
 @Component({
   selector: 'app-traffic-by-platform',
@@ -15,12 +10,7 @@ interface TrafficItem {
   standalone: true
 })
 export class TrafficByPlatformComponent {
-  trafficData: TrafficItem[] = [
-    { platform: 'Instagram', value: 35, color: '#E1306C' },
-    { platform: 'Facebook', value: 28, color: '#4267B2' },
-    { platform: 'Twitter', value: 22, color: '#1DA1F2' },
-    { platform: 'YouTube', value: 15, color: '#FF0000' }
-  ];
+  @Input() trafficData: TrafficItem[] = [];
   
   getProgressWidth(value: number): string {
     return `${value}%`;

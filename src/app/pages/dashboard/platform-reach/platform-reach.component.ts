@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
+import { PlatformReachData } from '../dashboard.resolver';
 
 @Component({
   selector: 'app-platform-reach',
@@ -11,30 +12,8 @@ import { ChartData, ChartOptions } from 'chart.js';
   standalone: true
 })
 export class PlatformReachComponent {
-  public barChartData: ChartData<'bar'> = {
-    labels: ['Facebook', 'Instagram', 'Twitter', 'WhatsApp'],
-    datasets: [
-      {
-        data: [65, 120, 80, 150],
-        backgroundColor: [
-          '#4267B2',  // Facebook blue
-          '#E1306C',  // Instagram pink
-          '#1DA1F2',  // Twitter blue
-          '#25D366'   // WhatsApp green
-        ],
-        borderRadius: 5,
-        maxBarThickness: 30,
-        borderWidth: 0,
-        hoverBackgroundColor: [
-          '#365899',  // Darker Facebook blue
-          '#C13584',  // Darker Instagram pink
-          '#1A91DA',  // Darker Twitter blue
-          '#128C7E'   // Darker WhatsApp green
-        ]
-      }
-    ]
-  };
-  
+  @Input() platformReachData!: PlatformReachData;
+
   public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,

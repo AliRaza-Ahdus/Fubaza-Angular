@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivityTrackerComponent } from './activity-tracker/activity-tracker.component';
 import { PlatformReachComponent } from './platform-reach/platform-reach.component';
@@ -7,6 +7,8 @@ import { RevenueChartComponent } from './revenue-chart/revenue-chart.component';
 import { StorageUsedComponent } from './storage-used/storage-used.component';
 import { TemplatesComponent } from './templates/templates.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute } from '@angular/router';
+import { DashboardData } from './dashboard.resolver';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,29 +26,41 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   standalone: true
 })
-export class DashboardComponent {
-  // Stats data
-  statsCards = [
-    {
-      title: 'Total Users',
-      value: '2,420',
-      change: 6,
-      changeText: 'active users',
-      isPositive: true
-    },
-    {
-      title: 'Clubs',
-      value: '1,210',
-      change: 10,
-      changeText: 'new clubs',
-      isPositive: false
-    },
-    {
-      title: 'Players',
-      value: '316',
-      change: 20,
-      changeText: 'active players',
-      isPositive: true
+export class DashboardComponent implements OnInit {
+  statsCards: DashboardData['statsCards'] = [];
+  activities: DashboardData['activities'] = [];
+  templates: DashboardData['templates'] = [];
+  storageData: DashboardData['storageData'] = {
+    pieChartData: {
+      labels: [],
+      datasets: [{
+        data: [],
+        backgroundColor: [],
+        hoverBackgroundColor: [],
+        borderWidth: 0
+      }]
     }
-  ];
+  };
+  revenueData: DashboardData['revenueData'] = {
+    lineChartData: { labels: [], datasets: [] },
+    periods: []
+  };
+  trafficData: DashboardData['trafficData'] = [];
+  platformReachData: DashboardData['platformReachData'] = {
+    barChartData: { labels: [], datasets: [] }
+  };
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.data.subscribe(({ data }) => {
+      this.statsCards = data.statsCards;
+      this.activities = data.activities;
+      this.templates = data.templates;
+      this.storageData = data.storageData;
+      this.revenueData = data.revenueData;
+      this.trafficData = data.trafficData;
+      this.platformReachData = data.platformReachData;
+    });
+  }
 }

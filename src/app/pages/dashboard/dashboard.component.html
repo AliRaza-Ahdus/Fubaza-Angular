@@ -26,22 +26,22 @@
   <!-- Charts Section -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
     <div class="lg:col-span-2">
-      <app-revenue-chart></app-revenue-chart>
+      <app-revenue-chart [revenueData]="revenueData"></app-revenue-chart>
     </div>
     <div>
-      <app-traffic-by-platform></app-traffic-by-platform>
+      <app-traffic-by-platform [trafficData]="trafficData"></app-traffic-by-platform>
     </div>
   </div>
   
   <!-- Platform Reach and Storage Used -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-    <app-platform-reach></app-platform-reach>
-    <app-storage-used></app-storage-used>
+    <app-platform-reach [platformReachData]="platformReachData"></app-platform-reach>
+    <app-storage-used [storageData]="storageData"></app-storage-used>
   </div>
   
   <!-- Templates Section -->
-  <app-templates></app-templates>
+  <app-templates [templates]="templates"></app-templates>
   
   <!-- Activity Tracker -->
-  <app-activity-tracker></app-activity-tracker>
+  <app-activity-tracker [activities]="activities"></app-activity-tracker>
 </div>

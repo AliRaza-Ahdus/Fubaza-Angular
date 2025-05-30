@@ -1,12 +1,11 @@
 <div class="card p-4 md:p-6">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-semibold text-neutral-800">Platform Reach</h3>
-    <div class="text-sm text-neutral-500">Last 30 days</div>
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-semibold">Platform Reach</h3>
   </div>
   
-  <div class="chart-container h-64" role="img" aria-label="Platform reach statistics chart">
+  <div class="chart-container h-64">
     <canvas baseChart
-      [data]="barChartData"
+      [data]="platformReachData.barChartData"
       [options]="barChartOptions"
       [type]="'bar'">
     </canvas>

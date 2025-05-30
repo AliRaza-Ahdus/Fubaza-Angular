@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { StorageData } from '../dashboard.resolver';
 
 @Component({
   selector: 'app-storage-used',
@@ -11,27 +12,7 @@ import { ChartConfiguration, ChartOptions } from 'chart.js';
   standalone: true
 })
 export class StorageUsedComponent {
-  public pieChartData: ChartConfiguration<'pie'>['data'] = {
-    labels: ['Used by Media', 'Used by Stats', 'Used by Players', 'Free'],
-    datasets: [
-      {
-        data: [25, 20, 15, 40],
-        backgroundColor: [
-          '#3B82F6',  // Blue
-          '#10B981',  // Green
-          '#F59E0B',  // Yellow
-          '#D1D5DB'   // Gray
-        ],
-        hoverBackgroundColor: [
-          '#2563EB',
-          '#059669',
-          '#D97706',
-          '#9CA3AF'
-        ],
-        borderWidth: 0
-      }
-    ]
-  };
+  @Input() storageData!: StorageData;
   
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
