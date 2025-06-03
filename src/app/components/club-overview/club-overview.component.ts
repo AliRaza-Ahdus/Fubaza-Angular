@@ -13,13 +13,29 @@ import { ClubOverviewData, ClubItem } from './club-overview.resolver';
   standalone: true
 })
 export class ClubOverviewComponent implements OnInit {
-  footballClubsValue!: number;
-  iceHockeyClubsValue!: number;
-  basketballClubsValue!: number;
-  rugbyClubsValue!: number;
-  handballClubsValue!: number;
-  volleyballClubsValue!: number;
-  clubs: ClubItem[] = [];
+  footballClubsValue = 0;
+  iceHockeyClubsValue = 0;
+  basketballClubsValue = 0;
+  rugbyClubsValue = 0;
+  handballClubsValue = 0;
+  volleyballClubsValue = 0;
+  clubs: ClubItem[] = [
+    {
+      id: 1,
+      user: { name: 'John Doe', avatar: 'assets/avatars/john.jpg', role: 'Club Manager' },
+      owner: 'Autumn Phillips',
+      subscriptionDate: 'Apr 16, 2025',
+      subscription: 'Plus (Yearly)'
+    },
+    {
+      id: 2,
+      user: { name: 'Cathy Martinez', avatar: 'assets/avatars/cathy.jpg', role: 'Team Coach' },
+      owner: 'Rodger Struck',
+      subscriptionDate: 'Apr 16, 2025',
+      subscription: 'Pro (Monthly)'
+    },
+    // ... add more static clubs as needed
+  ];
 
   constructor(private route: ActivatedRoute) {}
 
@@ -31,7 +47,7 @@ export class ClubOverviewComponent implements OnInit {
       this.rugbyClubsValue = data.rugbyClubsValue;
       this.handballClubsValue = data.handballClubsValue;
       this.volleyballClubsValue = data.volleyballClubsValue;
-      this.clubs = data.clubs;
+      // Keep using static clubs for the table
     });
   }
 }

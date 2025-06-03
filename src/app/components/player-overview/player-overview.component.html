@@ -68,5 +68,10 @@
             </div>
         </div>
     </div>
-    <app-players [players]="players"></app-players>
+    <app-players 
+      [players]="players"
+      [playerCountBySport]="playerCountBySport"
+      [activeTab]="activeTab"
+      [setActiveTab]="setActiveTab.bind(this)">
+    </app-players>
 </div>

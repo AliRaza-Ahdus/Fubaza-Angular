@@ -2,41 +2,12 @@
   <h3 class="text-lg font-semibold mb-2">All Players</h3>
   <div class="activity-tracker-controls flex flex-col md:flex-row md:items-center md:justify-between gap-2">
     <div class="filters flex flex-wrap gap-2">
-      <button 
-        class="filter-btn rounded-lg px-5 py-3 text-base font-medium" 
-        [ngClass]="activeTab === 'football' ? 'bg-black text-white' : 'bg-transparent text-black'"
-        (click)="setActiveTab('football')">
-        Football
-      </button>
-      <button 
-        class="filter-btn rounded-lg px-5 py-3 text-base font-medium" 
-        [ngClass]="activeTab === 'basketball' ? 'bg-black text-white' : 'bg-transparent text-black'"
-        (click)="setActiveTab('basketball')">
-        Basketball
-      </button>
-      <button 
-        class="filter-btn rounded-lg px-5 py-3 text-base font-medium" 
-        [ngClass]="activeTab === 'icehockey' ? 'bg-black text-white' : 'bg-transparent text-black'"
-        (click)="setActiveTab('icehockey')">
-        Ice Hockey
-      </button>
-      <button 
-        class="filter-btn rounded-lg px-5 py-3 text-base font-medium" 
-        [ngClass]="activeTab === 'rugby' ? 'bg-black text-white' : 'bg-transparent text-black'"
-        (click)="setActiveTab('rugby')">
-        Rugby
-      </button>
-      <button 
-        class="filter-btn rounded-lg px-5 py-3 text-base font-medium" 
-        [ngClass]="activeTab === 'handball' ? 'bg-black text-white' : 'bg-transparent text-black'"
-        (click)="setActiveTab('handball')">
-        Handball
-      </button>
-      <button 
-        class="filter-btn rounded-lg px-5 py-3 text-base font-medium" 
-        [ngClass]="activeTab === 'volleyball' ? 'bg-black text-white' : 'bg-transparent text-black'"
-        (click)="setActiveTab('volleyball')">
-        Volleyball
+      <button
+        *ngFor="let sport of playerCountBySport"
+        class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
+        [ngClass]="activeTab === sport.sportId ? 'bg-black text-white' : 'bg-transparent text-black'"
+        (click)="setActiveTab(sport.sportId)">
+        {{ sport.sportName }}
       </button>
     </div>
     <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm md:ml-auto" placeholder="Search players..." (input)="onSearch($event)">

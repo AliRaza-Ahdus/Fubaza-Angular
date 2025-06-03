@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ClubOverviewService, ClubCountBySportResponse } from '../../services/club-overview.service';
 
 export interface ClubItem {
   id: number;
@@ -27,183 +29,33 @@ export interface ClubOverviewData {
 @Injectable({
   providedIn: 'root'
 })
-export class ClubOverviewResolver implements Resolve<ClubOverviewData> {
+export class ClubOverviewResolver implements Resolve<Observable<ClubOverviewData>> {
+  constructor(private clubOverviewService: ClubOverviewService) {}
+
   resolve(): Observable<ClubOverviewData> {
-    // In a real application, this would be an HTTP call to your backend
-    return of({
-      footballClubsValue: 1210,
-      iceHockeyClubsValue: 1210,
-      basketballClubsValue: 1210,
-      rugbyClubsValue: 1210,
-      handballClubsValue: 1210,
-      volleyballClubsValue: 1210,
-      clubs: [
-        {
-          id: 1,
-          user: {
-            name: 'John Doe',
-            avatar: 'assets/avatars/john.jpg',
-            role: 'Club Manager'
-          },
-          owner: 'Autumn Phillips',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 2,
-          user: {
-            name: 'Cathy Martinez',
-            avatar: 'assets/avatars/cathy.jpg',
-            role: 'Team Coach'
-          },
-          owner: 'Rodger Struck',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Pro (Monthly)'
-        },
-        {
-          id: 3,
-          user: {
-            name: 'Joshua Jones',
-            avatar: 'assets/avatars/joshua.jpg',
-            role: 'Club Admin'
-          },
-          owner: 'Patricia Sanders',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 4,
-          user: {
-            name: 'Maria Williams',
-            avatar: 'assets/avatars/maria.jpg',
-            role: 'Team Manager'
-          },
-          owner: 'Joshua Jones',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 5,
-          user: {
-            name: 'Adam Taylor',
-            avatar: 'assets/avatars/adam.jpg',
-            role: 'Club Admin'
-          },
-          owner: 'Katie Sims',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Pro (Monthly)'
-        },
-        {
-          id: 6,
-          user: {
-            name: 'Olivia Rye',
-            avatar: 'assets/avatars/olivia.jpg',
-            role: 'Media Specialist'
-          },
-          owner: 'Alex Buckmaster',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 7,
-          user: {
-            name: 'Liam Smith',
-            avatar: 'assets/avatars/liam.jpg',
-            role: 'Player'
-          },
-          owner: 'Samantha Lee',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Pro (Monthly)'
-        },
-        {
-          id: 8,
-          user: {
-            name: 'Emma Brown',
-            avatar: 'assets/avatars/emma.jpg',
-            role: 'Coach'
-          },
-          owner: 'Michael Green',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 9,
-          user: {
-            name: 'Noah Wilson',
-            avatar: 'assets/avatars/noah.jpg',
-            role: 'Team Manager'
-          },
-          owner: 'Jessica Smith',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 10,
-          user: {
-            name: 'Sophia Lee',
-            avatar: 'assets/avatars/sophia.jpg',
-            role: 'Club Admin'
-          },
-          owner: 'David Clark',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Pro (Monthly)'
-        },
-        {
-          id: 11,
-          user: {
-            name: 'Mason Clark',
-            avatar: 'assets/avatars/mason.jpg',
-            role: 'Player'
-          },
-          owner: 'Emily Turner',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 12,
-          user: {
-            name: 'Ava Scott',
-            avatar: 'assets/avatars/ava.jpg',
-            role: 'Media Specialist'
-          },
-          owner: 'Brian Adams',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Pro (Monthly)'
-        },
-        {
-          id: 13,
-          user: {
-            name: 'Ethan King',
-            avatar: 'assets/avatars/ethan.jpg',
-            role: 'Team Coach'
-          },
-          owner: 'Laura White',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        },
-        {
-          id: 14,
-          user: {
-            name: 'Isabella Green',
-            avatar: 'assets/avatars/isabella.jpg',
-            role: 'Club Manager'
-          },
-          owner: 'Chris Evans',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Pro (Monthly)'
-        },
-        {
-          id: 15,
-          user: {
-            name: 'James Hall',
-            avatar: 'assets/avatars/james.jpg',
-            role: 'Player'
-          },
-          owner: 'Sarah Parker',
-          subscriptionDate: 'Apr 16, 2025',
-          subscription: 'Plus (Yearly)'
-        }
-      ]
-    });
+    return this.clubOverviewService.getClubCountBySport().pipe(
+      map((response: ClubCountBySportResponse) => {
+        const sportMap: Record<string, number> = {};
+        response.data.forEach(item => {
+          // Normalize sport names for mapping
+          const name = item.sportName.toLowerCase();
+          if (name.includes('football') && !name.includes('american')) sportMap['football'] = item.clubCount;
+          else if (name.includes('basketball')) sportMap['basketball'] = item.clubCount;
+          else if (name.includes('ice hockey')) sportMap['iceHockey'] = item.clubCount;
+          else if (name.includes('rugby')) sportMap['rugby'] = item.clubCount;
+          else if (name.includes('handball')) sportMap['handball'] = item.clubCount;
+          else if (name.includes('volleyball')) sportMap['volleyball'] = item.clubCount;
+        });
+        return {
+          footballClubsValue: sportMap['football'] || 0,
+          iceHockeyClubsValue: sportMap['iceHockey'] || 0,
+          basketballClubsValue: sportMap['basketball'] || 0,
+          rugbyClubsValue: sportMap['rugby'] || 0,
+          handballClubsValue: sportMap['handball'] || 0,
+          volleyballClubsValue: sportMap['volleyball'] || 0,
+          clubs: [] // You can fetch clubs list separately if needed
+        };
+      })
+    );
   }
 } 

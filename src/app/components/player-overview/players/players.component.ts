@@ -25,10 +25,12 @@ import { PlayerItem } from '../player-overview.resolver';
 })
 export class PlayersComponent implements OnInit {
   @Input() players: PlayerItem[] = [];
+  @Input() playerCountBySport: Array<{ sportId: string; sportName: string; playerCount: number }> = [];
+  @Input() activeTab: string = '';
+  @Input() setActiveTab: (sportId: string) => void = () => {};
   
   displayedColumns: string[] = ['player', 'club', 'position', 'dob', 'subscriptionPlan', 'actions'];
   dataSource: MatTableDataSource<PlayerItem>;
-  activeTab = 'football';
   searchValue = '';
   
   // Pagination
@@ -63,35 +65,6 @@ export class PlayersComponent implements OnInit {
   
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
-  }
-  
-  setActiveTab(tab: string) {
-    this.activeTab = tab;
-    // You can implement filtering logic for each sport here if needed
-    if (tab === 'football') {
-      this.dataSource.data = this.players.filter(player => player.position === 'Forward' || player.position === 'Midfielder' || player.position === 'Defender' || player.position === 'Goalkeeper');
-    } else if (tab === 'basketball') {
-      // Add basketball filtering logic
-       this.dataSource.data = this.players; // Replace with actual filtering
-    } else if (tab === 'icehockey') {
-      // Add ice hockey filtering logic
-       this.dataSource.data = this.players; // Replace with actual filtering
-    } else if (tab === 'rugby') {
-      // Add rugby filtering logic
-       this.dataSource.data = this.players; // Replace with actual filtering
-    } else if (tab === 'handball') {
-      // Add handball filtering logic
-       this.dataSource.data = this.players; // Replace with actual filtering
-    } else if (tab === 'volleyball') {
-      // Add volleyball filtering logic
-       this.dataSource.data = this.players; // Replace with actual filtering
-    } else {
-      this.dataSource.data = this.players;
-    }
-    this.dataSource.filter = this.searchValue;
-    this.currentPage = 1;
-    this.updatePagination();
-    this.selectedIds = [];
   }
   
   getStatusClass(status: string): string {
