@@ -6,6 +6,9 @@
     "logLevel": "debug",
     "pathRewrite": {
       "^/api": ""
+    },
+    "headers": {
+      "Connection": "keep-alive"
     }
   }
 } 
