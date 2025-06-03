@@ -17,6 +17,8 @@ export class PlayerOverviewComponent implements OnInit {
   iceHockeyPlayersValue!: number;
   basketballPlayersValue!: number;
   rugbyPlayersValue!: number;
+  handballPlayersValue!: number;
+  volleyballPlayersValue!: number;
   players: PlayerItem[] = [];
 
   constructor(private route: ActivatedRoute) {}
@@ -27,6 +29,8 @@ export class PlayerOverviewComponent implements OnInit {
       this.iceHockeyPlayersValue = data.iceHockeyPlayersValue;
       this.basketballPlayersValue = data.basketballPlayersValue;
       this.rugbyPlayersValue = data.rugbyPlayersValue;
+      this.handballPlayersValue = data.handballPlayersValue;
+      this.volleyballPlayersValue = data.volleyballPlayersValue;
       this.players = data.players;
     });
   }

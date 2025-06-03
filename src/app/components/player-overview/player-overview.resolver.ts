@@ -7,6 +7,8 @@ export interface PlayerOverviewData {
   iceHockeyPlayersValue: number;
   basketballPlayersValue: number;
   rugbyPlayersValue: number;
+  handballPlayersValue: number;
+  volleyballPlayersValue: number;
   players: PlayerItem[];
 }
 
@@ -33,6 +35,8 @@ export class PlayerOverviewResolver implements Resolve<PlayerOverviewData> {
       iceHockeyPlayersValue: 3200,
       basketballPlayersValue: 2750,
       rugbyPlayersValue: 1850,
+      handballPlayersValue: 2200,
+      volleyballPlayersValue: 1500,
       players: [
         {
           id: 1,

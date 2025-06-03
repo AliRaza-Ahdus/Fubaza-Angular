@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ClubItem } from '../club-overview.resolver';
 
 @Component({
@@ -16,8 +15,7 @@ import { ClubItem } from '../club-overview.resolver';
     MatSortModule,
     MatIconModule,
     MatButtonModule,
-    MatMenuModule,
-    MatCheckboxModule
+    MatMenuModule
   ],
   templateUrl: './clubs.component.html',
   styleUrl: './clubs.component.scss',
@@ -26,7 +24,7 @@ import { ClubItem } from '../club-overview.resolver';
 export class ClubsComponent implements OnInit {
   @Input() clubs: ClubItem[] = [];
   
-  displayedColumns: string[] = ['select', 'user', 'owner', 'subscriptionDate', 'subscription', 'actions'];
+  displayedColumns: string[] = ['user', 'owner', 'subscriptionDate', 'subscription', 'actions'];
   dataSource: MatTableDataSource<ClubItem>;
   activeTab = 'football';
   searchValue = '';
@@ -36,9 +34,6 @@ export class ClubsComponent implements OnInit {
   pageSize = 5;
   totalPages = 1;
   pagedData: ClubItem[] = [];
-  
-  // Selection
-  selectedIds: number[] = [];
   
   @ViewChild(MatSort) sort!: MatSort;
   
@@ -71,7 +66,6 @@ export class ClubsComponent implements OnInit {
     this.dataSource.filter = this.searchValue;
     this.currentPage = 1;
     this.updatePagination();
-    this.selectedIds = [];
   }
   
   getStatusClass(status: string): string {
@@ -89,7 +83,6 @@ export class ClubsComponent implements OnInit {
     this.dataSource.filter = this.searchValue;
     this.currentPage = 1;
     this.updatePagination();
-    this.selectedIds = [];
   }
 
   updatePagination() {
@@ -98,8 +91,6 @@ export class ClubsComponent implements OnInit {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
     this.pagedData = filteredData.slice(start, end);
-    // Deselect all if pagedData changes
-    this.selectedIds = [];
   }
 
   nextPage() {
@@ -113,26 +104,6 @@ export class ClubsComponent implements OnInit {
     if (this.currentPage > 1) {
       this.currentPage--;
       this.updatePagination();
-    }
-  }
-
-  isAllSelected(): boolean {
-    return this.pagedData.length > 0 && this.pagedData.every(item => this.selectedIds.includes(item.id));
-  }
-
-  toggleAll(checked: boolean) {
-    if (checked) {
-      this.selectedIds = this.pagedData.map(item => item.id);
-    } else {
-      this.selectedIds = [];
-    }
-  }
-
-  toggleOne(id: number, checked: boolean) {
-    if (checked) {
-      this.selectedIds = [...this.selectedIds, id];
-    } else {
-      this.selectedIds = this.selectedIds.filter(selectedId => selectedId !== id);
     }
   }
 }

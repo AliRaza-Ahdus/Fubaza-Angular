@@ -1,5 +1,20 @@
 .filter-btn {
-  @apply transition-all duration-200;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  background: transparent;
+  color: #111;
+  transition: background 0.2s, color 0.2s;
+}
+.filter-btn.active, .filter-btn.bg-black {
+  background: #111;
+  color: #fff;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 ::ng-deep {

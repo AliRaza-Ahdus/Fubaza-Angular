@@ -17,6 +17,8 @@ export class ClubOverviewComponent implements OnInit {
   iceHockeyClubsValue!: number;
   basketballClubsValue!: number;
   rugbyClubsValue!: number;
+  handballClubsValue!: number;
+  volleyballClubsValue!: number;
   clubs: ClubItem[] = [];
 
   constructor(private route: ActivatedRoute) {}
@@ -27,6 +29,8 @@ export class ClubOverviewComponent implements OnInit {
       this.iceHockeyClubsValue = data.iceHockeyClubsValue;
       this.basketballClubsValue = data.basketballClubsValue;
       this.rugbyClubsValue = data.rugbyClubsValue;
+      this.handballClubsValue = data.handballClubsValue;
+      this.volleyballClubsValue = data.volleyballClubsValue;
       this.clubs = data.clubs;
     });
   }

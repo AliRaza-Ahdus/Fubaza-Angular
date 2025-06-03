@@ -19,6 +19,8 @@ export interface ClubOverviewData {
   iceHockeyClubsValue: number;
   basketballClubsValue: number;
   rugbyClubsValue: number;
+  handballClubsValue: number;
+  volleyballClubsValue: number;
   clubs: ClubItem[]; // Keep clubs data for the table
 }
 
@@ -33,6 +35,8 @@ export class ClubOverviewResolver implements Resolve<ClubOverviewData> {
       iceHockeyClubsValue: 1210,
       basketballClubsValue: 1210,
       rugbyClubsValue: 1210,
+      handballClubsValue: 1210,
+      volleyballClubsValue: 1210,
       clubs: [
         {
           id: 1,
