@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { ClubItem } from '../club-overview.resolver';
+import { ClubOverviewService } from '../../../services/club-overview.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-clubs',
@@ -21,89 +23,98 @@ import { ClubItem } from '../club-overview.resolver';
   styleUrl: './clubs.component.scss',
   standalone: true
 })
-export class ClubsComponent implements OnInit {
-  @Input() clubs: ClubItem[] = [];
+export class ClubsComponent implements OnInit, OnChanges {
+  @Input() clubCountBySport: Array<{ sportId: string; sportName: string; clubCount: number }> = [];
+  @Input() activeTab: string = '';
+  @Input() setActiveTab: (sportId: string) => void = () => {};
   
   displayedColumns: string[] = ['user', 'owner', 'subscriptionDate', 'subscription', 'actions'];
   dataSource: MatTableDataSource<ClubItem>;
-  activeTab = 'football';
   searchValue = '';
   
   // Pagination
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalPages = 1;
   pagedData: ClubItem[] = [];
+  totalCount = 0;
   
   @ViewChild(MatSort) sort!: MatSort;
   
-  constructor() {
+  constructor(private clubOverviewService: ClubOverviewService) {
     this.dataSource = new MatTableDataSource<ClubItem>([]);
-    this.dataSource.filterPredicate = (data: ClubItem, filter: string) => {
-      const dataStr = [
-        data.user.name,
-        data.user.role,
-        data.owner,
-        data.subscriptionDate,
-        data.subscription
-      ].join(' ').toLowerCase();
-      return dataStr.includes(filter);
-    };
   }
   
   ngOnInit(): void {
-    this.dataSource.data = this.clubs;
-    this.updatePagination();
+    this.loadClubs();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['activeTab'] && !changes['activeTab'].firstChange) {
+      this.currentPage = 1;
+      this.loadClubs();
+    }
   }
   
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
-  
-  setActiveTab(tab: string) {
-    this.activeTab = tab;
-    // You can implement filtering logic for each sport here if needed
-    this.dataSource.filter = this.searchValue;
-    this.currentPage = 1;
-    this.updatePagination();
-  }
-  
-  getStatusClass(status: string): string {
-    if (status === 'Published') {
-      return 'bg-green-100 text-green-800';
-    } else if (status === 'Draft') {
-      return 'bg-blue-100 text-blue-800';
-    } else {
-      return 'bg-neutral-100 text-neutral-800';
-    }
+
+  loadClubs() {
+    const request = {
+      sportId: this.activeTab,
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      SearchTerm: this.searchValue
+    };
+
+    this.clubOverviewService.getClubs(request).subscribe(response => {
+      if (response.success) {
+        this.totalCount = response.data.totalCount;
+        this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+        
+        // Transform the API response to match our ClubItem interface
+        this.pagedData = response.data.items.map(item => ({
+          id: item.id,
+          user: {
+            name: item.fullName,
+            avatar: item.fileUrl ? `${environment.apiUrl}/${item.fileUrl}` : 'assets/images/default-avatar.png'
+          },
+          owner: item.owner,
+          subscriptionDate: new Date(item.subscriptionDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }),
+          subscription: item.subscriptionPlan
+        }));
+      }
+    });
   }
 
   onSearch(event: Event) {
-    this.searchValue = (event.target as HTMLInputElement)?.value?.trim().toLowerCase() || '';
-    this.dataSource.filter = this.searchValue;
+    this.searchValue = (event.target as HTMLInputElement)?.value?.trim() || '';
     this.currentPage = 1;
-    this.updatePagination();
+    this.loadClubs();
   }
 
-  updatePagination() {
-    const filteredData = this.dataSource.filteredData;
-    this.totalPages = Math.ceil(filteredData.length / this.pageSize) || 1;
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.pagedData = filteredData.slice(start, end);
+  clearSearch() {
+    this.searchValue = '';
+    this.currentPage = 1;
+    this.loadClubs();
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.updatePagination();
+      this.loadClubs();
     }
   }
 
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePagination();
+      this.loadClubs();
     }
   }
 }

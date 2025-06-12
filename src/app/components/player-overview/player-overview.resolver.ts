@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { PlayerOverviewService, PlayerCountBySportResponse } from '../../services/player-overview.service';
 
 export interface PlayerItem {
-  id: number;
+  id: string;
   player: {
     name: string;
     avatar: string;
@@ -14,13 +14,14 @@ export interface PlayerItem {
   position: string;
   dob: string;
   subscriptionPlan: string;
+  subscriptionDate: string;
 }
 
 export interface PlayerOverviewData {
   footballPlayersValue: number;
-  iceHockeyPlayersValue: number;
   basketballPlayersValue: number;
-  rugbyPlayersValue: number;
+  iceHockeyPlayersValue: number;
+  americanFootballPlayersValue: number;
   handballPlayersValue: number;
   volleyballPlayersValue: number;
   players: PlayerItem[];
@@ -42,19 +43,32 @@ export class PlayerOverviewResolver implements Resolve<Observable<PlayerOverview
       map((response: PlayerCountBySportResponse) => {
         const sportMap: Record<string, number> = {};
         response.data.forEach(item => {
-          const name = item.sportName.toLowerCase();
-          if (name.includes('football') && !name.includes('american')) sportMap['football'] = item.playerCount;
-          else if (name.includes('basketball')) sportMap['basketball'] = item.playerCount;
-          else if (name.includes('ice hockey')) sportMap['iceHockey'] = item.playerCount;
-          else if (name.includes('rugby')) sportMap['rugby'] = item.playerCount;
-          else if (name.includes('handball')) sportMap['handball'] = item.playerCount;
-          else if (name.includes('volleyball')) sportMap['volleyball'] = item.playerCount;
+          switch(item.sportName) {
+            case 'Football':
+              sportMap['football'] = item.playerCount;
+              break;
+            case 'Basketball':
+              sportMap['basketball'] = item.playerCount;
+              break;
+            case 'Ice Hockey':
+              sportMap['iceHockey'] = item.playerCount;
+              break;
+            case 'American Football':
+              sportMap['americanFootball'] = item.playerCount;
+              break;
+            case 'Handball':
+              sportMap['handball'] = item.playerCount;
+              break;
+            case 'Volleyball':
+              sportMap['volleyball'] = item.playerCount;
+              break;
+          }
         });
         return {
           footballPlayersValue: sportMap['football'] || 0,
-          iceHockeyPlayersValue: sportMap['iceHockey'] || 0,
           basketballPlayersValue: sportMap['basketball'] || 0,
-          rugbyPlayersValue: sportMap['rugby'] || 0,
+          iceHockeyPlayersValue: sportMap['iceHockey'] || 0,
+          americanFootballPlayersValue: sportMap['americanFootball'] || 0,
           handballPlayersValue: sportMap['handball'] || 0,
           volleyballPlayersValue: sportMap['volleyball'] || 0,
           players: [],

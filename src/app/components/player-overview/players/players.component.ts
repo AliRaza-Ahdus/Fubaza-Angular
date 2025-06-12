@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PlayerItem } from '../player-overview.resolver';
+import { PlayerOverviewService } from '../../../services/player-overview.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-players',
@@ -23,89 +25,108 @@ import { PlayerItem } from '../player-overview.resolver';
   styleUrl: './players.component.scss',
   standalone: true
 })
-export class PlayersComponent implements OnInit {
+export class PlayersComponent implements OnInit, OnChanges {
   @Input() players: PlayerItem[] = [];
   @Input() playerCountBySport: Array<{ sportId: string; sportName: string; playerCount: number }> = [];
   @Input() activeTab: string = '';
   @Input() setActiveTab: (sportId: string) => void = () => {};
   
-  displayedColumns: string[] = ['player', 'club', 'position', 'dob', 'subscriptionPlan', 'actions'];
+  displayedColumns: string[] = ['player', 'club', 'position', 'dob', 'subscriptionPlan', 'subscriptionDate', 'actions'];
   dataSource: MatTableDataSource<PlayerItem>;
   searchValue = '';
   
   // Pagination
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 10;
   totalPages = 1;
   pagedData: PlayerItem[] = [];
+  totalCount = 0;
   
   // Selection
-  selectedIds: number[] = [];
+  selectedIds: string[] = [];
   
   @ViewChild(MatSort) sort!: MatSort;
   
-  constructor() {
+  constructor(private playerOverviewService: PlayerOverviewService) {
     this.dataSource = new MatTableDataSource<PlayerItem>([]);
-    this.dataSource.filterPredicate = (data: PlayerItem, filter: string) => {
-      const dataStr = [
-        data.player.name,
-        data.club,
-        data.position,
-        data.dob,
-        data.subscriptionPlan
-      ].join(' ').toLowerCase();
-      return dataStr.includes(filter);
-    };
   }
   
   ngOnInit(): void {
-    this.dataSource.data = this.players;
-    this.updatePagination();
+    this.loadPlayers();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['activeTab'] && !changes['activeTab'].firstChange) {
+      this.currentPage = 1;
+      this.loadPlayers();
+    }
   }
   
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
   }
-  
-  getStatusClass(status: string): string {
-    if (status === 'Published') {
-      return 'bg-green-100 text-green-800';
-    } else if (status === 'Draft') {
-      return 'bg-blue-100 text-blue-800';
-    } else {
-      return 'bg-neutral-100 text-neutral-800';
-    }
+
+  loadPlayers() {
+    const request = {
+      sportId: this.activeTab,
+      pageNumber: this.currentPage,
+      pageSize: this.pageSize,
+      SearchTerm: this.searchValue
+    };
+
+    this.playerOverviewService.getPlayers(request).subscribe(response => {
+      if (response.success) {
+        this.totalCount = response.data.totalCount;
+        this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+        
+        // Transform the API response to match our PlayerItem interface
+        this.pagedData = response.data.items.map(item => ({
+          id: item.id,
+          player: {
+            name: item.fullName,
+            avatar: item.fileUrl ? `${environment.apiUrl}/${item.fileUrl}` : 'assets/images/default-avatar.png'
+          },
+          club: item.currentClub,
+          position: item.playingPosition,
+          dob: new Date(item.dateOfBirth).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }),
+          subscriptionPlan: item.subscriptionPlan,
+          subscriptionDate: new Date(item.subscriptionDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          })
+        }));
+      }
+    });
   }
 
   onSearch(event: Event) {
-    this.searchValue = (event.target as HTMLInputElement)?.value?.trim().toLowerCase() || '';
-    this.dataSource.filter = this.searchValue;
+    this.searchValue = (event.target as HTMLInputElement)?.value?.trim() || '';
     this.currentPage = 1;
-    this.updatePagination();
-    this.selectedIds = [];
+    this.loadPlayers();
   }
 
-  updatePagination() {
-    const filteredData = this.dataSource.filteredData;
-    this.totalPages = Math.ceil(filteredData.length / this.pageSize) || 1;
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.pagedData = filteredData.slice(start, end);
-    // Deselect all if pagedData changes
-    this.selectedIds = [];
+  clearSearch() {
+    this.searchValue = '';
+    this.currentPage = 1;
+    this.loadPlayers();
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.updatePagination();
+      this.loadPlayers();
     }
   }
 
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePagination();
+      this.loadPlayers();
     }
   }
 
@@ -121,7 +142,7 @@ export class PlayersComponent implements OnInit {
     }
   }
 
-  toggleOne(id: number, checked: boolean) {
+  toggleOne(id: string, checked: boolean) {
     if (checked) {
       this.selectedIds = [...this.selectedIds, id];
     } else {

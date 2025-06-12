@@ -3,43 +3,19 @@
     <div class="activity-tracker-controls flex flex-col md:flex-row md:items-center md:justify-between gap-2">
       <div class="filters flex flex-wrap gap-2">
         <button 
+          *ngFor="let sport of clubCountBySport"
           class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
-          [ngClass]="activeTab === 'football' ? 'bg-black text-white' : 'bg-transparent text-black'"
-          (click)="setActiveTab('football')">
-          Football
-        </button>
-        <button 
-          class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
-          [ngClass]="activeTab === 'basketball' ? 'bg-black text-white' : 'bg-transparent text-black'"
-          (click)="setActiveTab('basketball')">
-          Basketball
-        </button>
-        <button 
-          class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
-          [ngClass]="activeTab === 'icehockey' ? 'bg-black text-white' : 'bg-transparent text-black'"
-          (click)="setActiveTab('icehockey')">
-          Ice Hockey
-        </button>
-        <button 
-          class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
-          [ngClass]="activeTab === 'rugby' ? 'bg-black text-white' : 'bg-transparent text-black'"
-          (click)="setActiveTab('rugby')">
-          Rugby
-        </button>
-        <button 
-          class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
-          [ngClass]="activeTab === 'handball' ? 'bg-black text-white' : 'bg-transparent text-black'"
-          (click)="setActiveTab('handball')">
-          Handball
-        </button>
-        <button 
-          class="filter-btn rounded-lg px-5 py-3 text-base font-medium"
-          [ngClass]="activeTab === 'volleyball' ? 'bg-black text-white' : 'bg-transparent text-black'"
-          (click)="setActiveTab('volleyball')">
-          Volleyball
+          [ngClass]="activeTab === sport.sportId ? 'bg-black text-white' : 'bg-transparent text-black'"
+          (click)="setActiveTab(sport.sportId)">
+          {{ sport.sportName }}
         </button>
       </div>
-      <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm md:ml-auto" placeholder="Search..." (input)="onSearch($event)">
+      <div class="relative md:ml-auto">
+        <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm w-full" placeholder="Search" (input)="onSearch($event)" [value]="searchValue">
+        <button *ngIf="searchValue" class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600" (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
   
@@ -50,14 +26,12 @@
         <ng-container matColumnDef="user">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
           <td mat-cell *matCellDef="let element">
+
             <div class="flex items-center">
-              <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 mr-3">
-                {{ element.user.name.charAt(0) }}
+              <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center mr-3 overflow-hidden">
+                <img [src]="element.user.avatar" [alt]="element.user.name" title="Club avatar" class="w-full h-full object-cover">
               </div>
-              <div>
-                <p class="font-medium">{{ element.user.name }}</p>
-                <p class="text-neutral-500 text-sm">{{ element.user.role }}</p>
-              </div>
+              <span class="font-medium">{{ element.user.name }}</span>
             </div>
           </td>
         </ng-container>

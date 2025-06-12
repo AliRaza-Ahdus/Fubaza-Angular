@@ -14,6 +14,31 @@ export interface ClubCountBySportResponse {
   error: any[];
 }
 
+export interface ClubsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+    items: Array<{
+      id: string;
+      fullName: string;
+      owner: string;
+      subscriptionPlan: string;
+      subscriptionDate: string;
+      fileUrl: string | null;
+    }>;
+  };
+}
+
+export interface ClubsRequest {
+  sportId: string;
+  pageNumber: number;
+  pageSize: number;
+  SearchTerm: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ClubOverviewService {
   private baseUrl = environment.apiUrl;
@@ -21,7 +46,10 @@ export class ClubOverviewService {
   constructor(private http: HttpClient) {}
 
   getClubCountBySport(): Observable<ClubCountBySportResponse> {
-    debugger;
     return this.http.get<ClubCountBySportResponse>(`${this.baseUrl}/api/ClubOverview/ClubCountBySport`);
+  }
+
+  getClubs(request: ClubsRequest): Observable<ClubsResponse> {
+    return this.http.post<ClubsResponse>(`${this.baseUrl}/api/ClubOverview/Clubs`, request);
   }
 } 
