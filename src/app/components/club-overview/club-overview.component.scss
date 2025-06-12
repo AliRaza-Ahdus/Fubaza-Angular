@@ -31,7 +31,7 @@
     color: #1e293b !important;
 }
 .bg-americanfootball {
-    background: #8B4513;
+    background: #530000;
     color: #fff !important;
 }
 .bg-rugby {
@@ -55,4 +55,140 @@
 
 .sports-card .text-3xl {
     font-size: 2rem;
+}
+
+// Club table styles
+.filter-btn {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    background: transparent;
+    color: #111;
+    transition: background 0.2s, color 0.2s;
+}
+.filter-btn.active, .filter-btn.bg-black {
+    background: #111;
+    color: #fff;
+}
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+    overflow: hidden;
+}
+
+.mat-mdc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.mat-mdc-header-row {
+    background: #f5f5f5;
+}
+
+.mat-mdc-header-cell {
+    color: #888;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #ececec;
+}
+
+.mat-mdc-row {
+    background: #fff;
+    transition: background 0.2s;
+}
+
+.mat-mdc-row:hover {
+    background: #f9fafb;
+}
+
+.mat-mdc-cell {
+    font-size: 1rem;
+    color: #222;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.75rem;
+}
+
+.activity-search-input {
+    height: 48px;
+    font-size: 1rem;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+    margin-left: auto;
+    border: 1px solid #e5e7eb;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.activity-search-input:focus {
+    border-color: #60a5fa;
+}
+
+.activity-tracker-header {
+    @apply mb-2;
+    h3 {
+        @apply text-lg font-semibold;
+    }
+}
+
+.activity-tracker-controls {
+    @apply flex flex-col md:flex-row md:items-center md:justify-between gap-2;
+    .activity-search-input {
+        @apply w-full md:w-auto mt-2 md:mt-0;
+    }
+}
+
+.pagination-btn {
+    @apply px-4 py-2 rounded-lg border border-primary-500 text-primary-600 bg-white shadow-sm transition font-medium;
+    &:hover:not(:disabled) {
+        @apply bg-primary-50 text-primary-700 shadow-md;
+    }
+    &:focus {
+        @apply outline-none ring-2 ring-primary-200;
+    }
+    &:disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+}
+
+.activity-pagination {
+    @apply flex items-center justify-start gap-2 mt-4 ml-0;
+    span {
+        @apply text-neutral-600;
+    }
+}
+
+.action-icon-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+// Remove extra border on last row
+.mat-mdc-row:last-child .mat-mdc-cell {
+    border-bottom: none;
 }
