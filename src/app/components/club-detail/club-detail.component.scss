@@ -1,0 +1,142 @@
+.club-detail {
+  .summary-cards {
+    margin-bottom: 2rem;
+    .summary-card {
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      text-align: left;
+      height: 168px;
+      min-height: 168px;
+      max-height: 168px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    .font-semibold {
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+    }
+    .text-3xl {
+      margin-top: 0;
+    }
+  }
+  .members-section {
+    .tabs {
+      margin-bottom: 1rem;
+      .tab-btn {
+        min-width: 100px;
+        &.active {
+          background: #000;
+          color: #fff;
+        }
+      }
+    }
+    .card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      th, td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+      }
+      th {
+        font-weight: 600;
+        background: #f9f9f9;
+      }
+      tr {
+        border-bottom: 1px solid #eee;
+      }
+    }
+    .activity-pagination {
+      margin-top: 1rem;
+    }
+  }
+
+  // --- Copied styles from club-overview for search input and controls ---
+  .activity-search-input {
+    height: 48px;
+    font-size: 1rem;
+    padding: 0 1rem;
+    border-radius: 0.5rem;
+    margin-left: auto;
+    border: 1px solid #e5e7eb;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .activity-search-input:focus {
+    border-color: #60a5fa;
+  }
+  .activity-tracker-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  @media (min-width: 768px) {
+    .activity-tracker-controls {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .activity-search-input {
+      width: auto;
+      margin-top: 0;
+    }
+  }
+  // --- End copied styles ---
+
+  .club-header-card {
+    .bg-blue-100.text-blue-600 {
+      border-radius: 9999px !important;
+    }
+  }
+
+  // Table styles copied from club-overview for row hover and cell appearance
+  .mat-mdc-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .mat-mdc-header-row {
+    background: #f5f5f5;
+  }
+
+  .mat-mdc-header-cell {
+    color: #888;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #ececec;
+  }
+
+  .mat-mdc-row {
+    background: #fff;
+    transition: background 0.2s;
+  }
+
+  .mat-mdc-row:hover {
+    background: #f9fafb;
+  }
+
+  .mat-mdc-cell {
+    font-size: 1rem;
+    color: #222;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+
+  // Remove extra border on last row
+  .mat-mdc-row:last-child .mat-mdc-cell {
+    border-bottom: none;
+  }
+} 

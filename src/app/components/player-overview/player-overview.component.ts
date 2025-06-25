@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { PlayerOverviewService } from '../../services/player-overview.service';
 import { environment } from '../../../environments/environment';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-player-overview',
@@ -20,7 +21,8 @@ import { environment } from '../../../environments/environment';
     MatSortModule,
     MatButtonModule,
     MatMenuModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   templateUrl: './player-overview.component.html',
   styleUrl: './player-overview.component.scss',

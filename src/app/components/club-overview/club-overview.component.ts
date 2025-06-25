@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { ClubOverviewService } from '../../services/club-overview.service';
 import { environment } from '../../../environments/environment';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-club-overview',
@@ -18,7 +20,9 @@ import { environment } from '../../../environments/environment';
     MatTableModule,
     MatSortModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTooltipModule,
+    RouterModule
   ],
   templateUrl: './club-overview.component.html',
   styleUrl: './club-overview.component.scss',
