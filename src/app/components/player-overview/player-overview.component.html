@@ -146,7 +146,7 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef class="text-center">Action</th>
                     <td mat-cell *matCellDef="let element" class="text-center">
-                        <button mat-icon-button class="action-icon-btn" aria-label="View" matTooltip="View" matTooltipPosition="left">
+                        <button mat-icon-button class="action-icon-btn" aria-label="View" matTooltip="View" matTooltipPosition="left" (click)="viewPlayer(element.id)">
                             <mat-icon>visibility</mat-icon>
                         </button>
                     </td>
