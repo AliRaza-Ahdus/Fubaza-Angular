@@ -1,7 +1,7 @@
 <div class="club-detail">
   <div class="club-header-card bg-white rounded-xl p-6 flex flex-col gap-4 mb-6">
     <div class="flex items-center gap-3 mb-1">
-      <img src="assets/images/Color=White.png" alt="Club Logo" class="w-14 h-14 rounded-lg object-cover border border-neutral-200">
+      <img src="https://flagcdn.com/16x12/de.png" alt="Club Logo" class="w-14 h-14 rounded-lg object-cover border border-neutral-200">
       <span class="text-2xl font-semibold">Rostselmash Football Club</span>
       <span class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded ml-2">Free</span>
     </div>
@@ -90,7 +90,8 @@
                 <ng-container *ngSwitchCase="'referee'">{{ element.referee }}</ng-container>
                 <ng-container *ngSwitchCase="'status'">
                   <span *ngIf="element.status === 'Upcoming'" class="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold">Upcoming</span>
-                  <span *ngIf="element.status === 'Full Time'" class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Full Time <span *ngIf="element.score"> <mat-icon inline style='font-size: 1rem; vertical-align: middle;'>thumb_up</mat-icon> {{element.score}}</span></span>
+                  <span *ngIf="element.status === 'Full Time'" class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Full Time <span *ngIf="element.score"> 
+                    <mat-icon inline style='font-size: 1rem; vertical-align: middle;'>thumb_up</mat-icon> {{element.score}}</span></span>
                 </ng-container>
               </ng-container>
             </td>
