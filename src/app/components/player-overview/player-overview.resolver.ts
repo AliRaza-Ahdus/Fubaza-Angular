@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PlayerOverviewService, PlayerCountBySportResponse } from '../../services/player-overview.service';
+import { PlayerOverviewService } from '../../services/player-overview.service';
+import { PlayerCountBySportResponse } from '../../models/api-response.model';
 
 export interface PlayerItem {
   id: string;
@@ -42,7 +43,7 @@ export class PlayerOverviewResolver implements Resolve<Observable<PlayerOverview
     return this.playerOverviewService.getPlayerCountBySport().pipe(
       map((response: PlayerCountBySportResponse) => {
         const sportMap: Record<string, number> = {};
-        response.data.forEach(item => {
+        response.data.forEach((item: { sportName: string; playerCount: number }) => {
           switch(item.sportName) {
             case 'Football':
               sportMap['football'] = item.playerCount;

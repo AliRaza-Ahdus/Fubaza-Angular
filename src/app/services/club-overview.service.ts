@@ -2,42 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-export interface ClubCountBySportResponse {
-  success: boolean;
-  message: string;
-  data: Array<{
-    sportId: string;
-    sportName: string;
-    clubCount: number;
-  }>;
-  error: any[];
-}
-
-export interface ClubsResponse {
-  success: boolean;
-  message: string;
-  data: {
-    totalCount: number;
-    pageNumber: number;
-    pageSize: number;
-    items: Array<{
-      id: string;
-      fullName: string;
-      owner: string;
-      subscriptionPlan: string;
-      subscriptionDate: string;
-      fileUrl: string | null;
-    }>;
-  };
-}
-
-export interface ClubsRequest {
-  sportId: string;
-  pageNumber: number;
-  pageSize: number;
-  SearchTerm: string;
-}
+import {
+  ClubCountBySportResponse,
+  ClubsResponse
+} from '../models/api-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClubOverviewService {
@@ -49,7 +17,7 @@ export class ClubOverviewService {
     return this.http.get<ClubCountBySportResponse>(`${this.baseUrl}/api/ClubOverview/ClubCountBySport`);
   }
 
-  getClubs(request: ClubsRequest): Observable<ClubsResponse> {
+  getClubs(request: { sportId: string; pageNumber: number; pageSize: number; SearchTerm?: string }): Observable<ClubsResponse> {
     return this.http.post<ClubsResponse>(`${this.baseUrl}/api/ClubOverview/Clubs`, request);
   }
 } 
