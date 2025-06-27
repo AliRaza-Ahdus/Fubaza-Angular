@@ -7,6 +7,7 @@ import { PlayerOverviewComponent } from './components/player-overview/player-ove
 import { PlayerOverviewResolver } from './components/player-overview/player-overview.resolver';
 import { ClubDetailComponent } from './components/club-detail/club-detail.component';
 import { PlayerDetailComponent } from './components/player-detail/player-detail.component';
+import { PlayerDetailResolver } from './components/player-detail/player-detail.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -38,6 +39,7 @@ export const routes: Routes = [
   { 
     path: 'player-detail/:id',
     component: PlayerDetailComponent,
+    resolve: { player: PlayerDetailResolver },
   },
   
   { path: 'templates', component: DashboardComponent },

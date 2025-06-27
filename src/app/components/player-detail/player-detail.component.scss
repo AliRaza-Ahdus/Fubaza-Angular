@@ -36,15 +36,8 @@
   margin-left: 8px;
 }
 
-.player-first-name {
-  font-size: 18px;
-  font-weight: 500;
-  color: #222;
-  margin-bottom: -8px;
-}
-
-.player-last-name {
-  font-size: 48px;
+.player-full-name {
+  font-size: 64px;
   font-weight: 800;
   color: #111;
   line-height: 1.1;
@@ -252,16 +245,16 @@
   }
   table {
     width: 100%;
-    min-width: 600px;
+    min-width: 400px;
     th, td {
       padding: 0.75rem 1rem;
       text-align: left;
       font-size: 1rem;
+      white-space: nowrap;
     }
     th {
       font-weight: 600;
       background: #f9f9f9;
-      white-space: nowrap;
     }
     tr {
       border-bottom: 1px solid #eee;

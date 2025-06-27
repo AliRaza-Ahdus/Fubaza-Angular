@@ -2,16 +2,17 @@
   <div class="profile-header">
     <div class="profile-title">Player Profile</div>
     <div class="profile-main">
-      <img class="avatar" [src]="player.avatar" alt="Player Avatar">
+      <img class="avatar" [src]="player.profileUrl" alt="Player Avatar">
       <div class="profile-info">
-        <div class="player-first-name">Kimberly</div>
-        <div class="player-last-name">Mastrangelo</div>
+        <div class="player-full-name">{{ player.fullName }}</div>
       </div>
     </div>
   </div>
   <div class="profile-card">
     <div class="profile-details">
-      <div class="detail-row"><span class="label">Current Club</span> <span class="value bold">{{ player.club }}</span></div>
+      <div class="detail-row"><span class="label">Current Club</span> <span class="value bold">{{ player.currentClub }}</span></div>
+      <div class="detail-row"><span class="label">Joined at</span> <span class="value bold">{{ player.joinedAt }}</span></div>
+      <div class="detail-row"><span class="label">Gender</span> <span class="value bold">{{ player.gender }}</span></div>
       <div class="detail-row"><span class="label">Position</span> <span class="value bold">{{ player.position }}</span></div>
       <div class="detail-row"><span class="label">Birthdate</span> <span class="value bold">{{ player.birthdate }}</span></div>
       <div class="detail-row"><span class="label">Profile</span> <span class="value bold">{{ player.profile }}</span></div>
@@ -22,14 +23,24 @@
   <div class="player-images-section">
     <div class="images-title">Players Images</div>
     <div class="images-list">
-      <ng-container *ngFor="let img of player.images">
-        <div class="image-card-wrapper">
-          <div class="image-card">
-            <img [src]="img.url" [alt]="img.label" [title]="img.label">
-          </div>
-          <div class="image-label">{{ img.label }}</div>
+      <div class="image-card-wrapper">
+        <div class="image-card">
+          <img [src]="player.images.inMotionUrl" alt="In Motion" title="In Motion">
         </div>
-      </ng-container>
+        <div class="image-label">In Motion</div>
+      </div>
+      <div class="image-card-wrapper">
+        <div class="image-card">
+          <img [src]="player.images.celebrationUrl" alt="Celebration" title="Celebration">
+        </div>
+        <div class="image-label">Celebration</div>
+      </div>
+      <div class="image-card-wrapper">
+        <div class="image-card">
+          <img [src]="player.images.fullBodyUrl" alt="Full Body" title="Full Body">
+        </div>
+        <div class="image-label">Full Body</div>
+      </div>
     </div>
   </div>
   <div class="members-section">
@@ -50,27 +61,22 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Club Name</th>
             <td mat-cell *matCellDef="let element">
               <div class="flex items-center">
-                <img [src]="element.logo" alt="{{element.club}}" class="w-10 h-10 rounded-full object-cover mr-3">
+                <img [src]="element.clubUrl" alt="{{element.clubName}}" class="w-10 h-10 rounded-full object-cover mr-3">
                 <div>
-                  <div class="font-semibold">{{ element.club }}</div>
+                  <div class="font-semibold">{{ element.clubName }}</div>
                 </div>
               </div>
             </td>
           </ng-container>
-          <!-- Games Column -->
-          <ng-container matColumnDef="games">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Games</th>
-            <td mat-cell *matCellDef="let element">{{ element.games }}</td>
+          <!-- From (Year) Column -->
+          <ng-container matColumnDef="fromYear">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>From (Year)</th>
+            <td mat-cell *matCellDef="let element">{{ element.fromYear }}</td>
           </ng-container>
-          <!-- Goals Column -->
-          <ng-container matColumnDef="goals">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Goals</th>
-            <td mat-cell *matCellDef="let element">{{ element.goals }}</td>
-          </ng-container>
-          <!-- Assists Column -->
-          <ng-container matColumnDef="assists">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Assists</th>
-            <td mat-cell *matCellDef="let element">{{ element.assists }}</td>
+          <!-- To (Year) Column -->
+          <ng-container matColumnDef="toYear">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>To (Year)</th>
+            <td mat-cell *matCellDef="let element">{{ element.toYear }}</td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -84,4 +90,4 @@
     </div>
   </div>
 </div>
-<div *ngIf="!player">Loading player details...</div> 
+<div *ngIf="!player">Loading player details...</div>

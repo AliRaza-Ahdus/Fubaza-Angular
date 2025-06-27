@@ -5,6 +5,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-player-detail',
@@ -24,8 +26,8 @@ export class PlayerDetailComponent implements OnInit {
   @Input() playerId!: string;
   player: any;
 
-  // Career-section logic (Club Name, Games, Goals, Assists)
-  displayedColumns: string[] = ['club', 'games', 'goals', 'assists'];
+  // Career-section logic (Club Name, From (Year) and To (Year))
+  displayedColumns: string[] = ['club', 'fromYear', 'toYear'];
   searchValue = '';
 
   // Pagination
@@ -34,36 +36,59 @@ export class PlayerDetailComponent implements OnInit {
   totalPages = 1;
   totalCount = 0;
 
-  // Career data
-  allCareer: any[] = [
-    { logo: 'https://randomuser.me/api/portraits/men/32.jpg', club: 'Bayern Munich', games: 4, goals: 21, assists: 11 },
-    { logo: 'https://randomuser.me/api/portraits/men/33.jpg', club: 'VfL Wolfsburg', games: 6, goals: 21, assists: 11 },
-    { logo: 'https://randomuser.me/api/portraits/men/34.jpg', club: 'RB Leipzig', games: 3, goals: 21, assists: 11 },
-    { logo: 'https://randomuser.me/api/portraits/men/35.jpg', club: 'Borussia Dortmund', games: 1, goals: 21, assists: 11 },
-    { logo: 'https://randomuser.me/api/portraits/men/36.jpg', club: 'Bayer 04 Leverkusen', games: 5, goals: 21, assists: 11 },
-    { logo: 'https://randomuser.me/api/portraits/men/37.jpg', club: 'Eintracht Frankfurt', games: 2, goals: 21, assists: 11 }
-  ];
-  career: any[] = [...this.allCareer];
   pagedData: any[] = [];
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit() {
-    // Player detail mock data
-    this.player = {
-      avatar: 'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=facearea&w=256&q=80',
-      name: 'Kimberly Mastrangelo',
-      club: 'Rostselmash Football Club',
-      position: 'Center Back (CB)',
-      birthdate: '14 April, 1998',
-      profile: '178cm / 73 kg',
-      signedAt: '14 April, 2025',
-      number: 7,
-      images: [
-        { url: 'https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg?auto=compress&w=800&q=80', label: 'In Motion' },
-        { url: 'https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&w=800&q=80', label: 'Celebration' },
-        { url: 'https://images.pexels.com/photos/2744222/pexels-photo-2744222.jpeg?auto=compress&w=800&q=80', label: 'Full Body' }
-      ]
-    };
-    this.updatePagination();
+    this.playerId = this.route.snapshot.paramMap.get('id')!;
+    this.route.data.subscribe((data) => {
+      const apiData = data['player'].data;
+      this.player = {
+        profileUrl:  apiData.images.profileUrl ? `${environment.apiUrl}/${apiData.images.profileUrl}` : 'assets/images/default-avatar.png'   ,
+        fullName: apiData.fullName,
+        currentClub: apiData.currentClub,
+        joinedAt: apiData.joinedAt,
+        gender:
+          apiData.gender === null || apiData.gender === undefined || apiData.gender === ''
+            ? 'Other'
+            : apiData.gender === 0
+            ? 'Male'
+            : apiData.gender === 1
+            ? 'Female'
+            : 'Other',
+        position: apiData.playingPositionName,
+        birthdate: new Date(apiData.dateOfBirth).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        }),
+        profile: `${apiData.heightCm || '-'} cm / ${apiData.weightKg || '-'} kg`,
+        signedAt: apiData.signedAt ? new Date(apiData.signedAt).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        }) : '-',
+        number: apiData.jerseyNumber,
+        images: {
+          profileUrl: apiData.images.profileUrl ? `${environment.apiUrl}/${apiData.images.profileUrl}` : 'assets/images/empty-picture.jpg',
+          inMotionUrl: apiData.images.inMotionUrl ? `${environment.apiUrl}/${apiData.images.inMotionUrl}` : 'assets/images/empty-picture.jpg',
+          celebrationUrl: apiData.images.celebrationUrl ? `${environment.apiUrl}/${apiData.images.celebrationUrl}` : 'assets/images/empty-picture.jpg',
+          fullBodyUrl: apiData.images.fullBodyUrl ? `${environment.apiUrl}/${apiData.images.fullBodyUrl}` : 'assets/images/empty-picture.jpg',
+        },
+        career: (apiData.career || []).map((c: any) => ({
+          clubUrl: c.clubUrl ? `${environment.apiUrl}/${c.clubUrl}` : 'assets/images/default-avatar.png',
+          clubName: c.clubName,
+          fromYear: c.startYear,
+          toYear: c.isCurrentClub ? 'Present' : c.endYear
+        }))
+      };
+      this.filterCareer();
+    });
   }
 
   onSearch(event: Event) {
@@ -77,37 +102,38 @@ export class PlayerDetailComponent implements OnInit {
   }
 
   filterCareer() {
+    let filteredCareer: any[];
     if (!this.searchValue) {
-      this.career = [...this.allCareer];
+      filteredCareer = [...this.player.career];
     } else {
       const search = this.searchValue.toLowerCase();
-      this.career = this.allCareer.filter(item =>
-        item.club.toLowerCase().includes(search)
+      filteredCareer = this.player.career.filter((item: any) =>
+        item.clubName.toLowerCase().includes(search)
       );
     }
     this.currentPage = 1;
-    this.updatePagination();
+    this.updatePagination(filteredCareer);
   }
 
-  updatePagination() {
-    this.totalCount = this.career.length;
+  updatePagination(filteredCareer: any[]) {
+    this.totalCount = filteredCareer.length;
     this.totalPages = Math.max(1, Math.ceil(this.totalCount / this.pageSize));
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-    this.pagedData = this.career.slice(start, end);
+    this.pagedData = filteredCareer.slice(start, end);
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.updatePagination();
+      this.filterCareer();
     }
   }
 
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePagination();
+      this.filterCareer();
     }
   }
 } 
