@@ -95,7 +95,9 @@ export class ClubOverviewComponent implements OnInit {
 
     this.clubOverviewService.getClubs(request).subscribe(response => {
       if (response.success) {
-        this.totalCount = response.data.totalCount;
+        this.totalCount = response.data.pagination.totalCount;
+        this.currentPage = response.data.pagination.pageNumber;
+        this.pageSize = response.data.pagination.pageSize;
         this.totalPages = Math.ceil(this.totalCount / this.pageSize);
         
         this.pagedData = response.data.items.map(item => ({

@@ -8,6 +8,7 @@ import { PlayerOverviewResolver } from './components/player-overview/player-over
 import { ClubDetailComponent } from './components/club-detail/club-detail.component';
 import { PlayerDetailComponent } from './components/player-detail/player-detail.component';
 import { PlayerDetailResolver } from './components/player-detail/player-detail.resolver';
+import { ClubDetailResolver } from './components/club-detail/club-detail.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -35,6 +36,9 @@ export const routes: Routes = [
   { 
     path: 'club-detail/:id',
     component: ClubDetailComponent,
+    resolve: {
+      data: ClubDetailResolver
+    }
   },
   { 
     path: 'player-detail/:id',

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ClubOverviewService, ClubCountBySportResponse } from '../../services/club-overview.service';
+import { ClubOverviewService } from '../../services/club-overview.service';
+import { ClubCountBySportResponse } from '../../models/api-response.model';
 
 export interface ClubItem {
   id: string;
@@ -39,7 +40,7 @@ export class ClubOverviewResolver implements Resolve<Observable<ClubOverviewData
     return this.clubOverviewService.getClubCountBySport().pipe(
       map((response: ClubCountBySportResponse) => {
         const sportMap: Record<string, number> = {};
-        response.data.forEach(item => {
+        response.data.forEach((item: { sportId: string; sportName: string; clubCount: number }) => {
           switch(item.sportName) {
             case 'Football':
               sportMap['football'] = item.clubCount;

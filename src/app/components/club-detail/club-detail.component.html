@@ -1,30 +1,27 @@
 <div class="club-detail">
   <div class="club-header-card bg-white rounded-xl p-6 flex flex-col gap-4 mb-6">
     <div class="flex items-center gap-3 mb-1">
-      <img src="https://flagcdn.com/16x12/de.png" alt="Club Logo" class="w-14 h-14 rounded-lg object-cover border border-neutral-200">
-      <span class="text-2xl font-semibold">Rostselmash Football Club</span>
+      <img [src]="club.clubUrl" alt="Club Logo" title="Club Logo" class="w-14 h-14 rounded-lg object-cover border border-neutral-200">
+      <span class="text-2xl font-semibold">{{ club.fullName }}</span>
       <span class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-1 rounded ml-2">Free</span>
     </div>
     <div class="flex items-center gap-2 mb-1">
       <span class="bg-green-600 text-white text-xs font-medium px-2 py-1 rounded flex items-center gap-1">
-        <img src="assets/icons/football.svg" alt="Football" class="w-4 h-4 inline-block"> Football
+        <img [src]="getSportIconPath()" [alt]="club.sportName" [title]="club.sportName + ' icon'" class="w-4 h-4 inline-block"> {{ club.sportName }}
       </span>
-      <img src="https://flagcdn.com/16x12/de.png" alt="Germany" class="inline-block w-5 h-4 ml-2"> <span class="text-sm text-neutral-700">Germany</span>
+      <mat-icon class="inline-block align-middle ml-2" fontIcon="location_on">location_on</mat-icon>
+      <span class="text-sm text-neutral-700">{{ club.address }}</span>
     </div>
     <div class="text-sm text-neutral-400 mt-1">Latest Activity on: <b>14 April, 2025 12:43:53 PM</b></div>
   </div>
-  <div class="summary-cards grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+  <div class="summary-cards grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-8">
     <div class="summary-card rounded-2xl p-6 bg-white flex flex-col items-center">
       <div class="font-semibold text-base mb-2">Members</div>
-      <div class="text-3xl font-bold">25</div>
+      <div class="text-3xl font-bold">{{ club.totalMembers }}</div>
     </div>
     <div class="summary-card rounded-2xl p-6 bg-white flex flex-col items-center">
       <div class="font-semibold text-base mb-2">Posts</div>
-      <div class="text-3xl font-bold">131</div>
-    </div>
-    <div class="summary-card rounded-2xl p-6 bg-white flex flex-col items-center">
-      <div class="font-semibold text-base mb-2">Match-day Plan</div>
-      <div class="text-3xl font-bold">5</div>
+      <div class="text-3xl font-bold">{{ club.posts }}</div>
     </div>
   </div>
   <div class="members-section">
@@ -33,7 +30,6 @@
       <div class="filters flex flex-wrap gap-2">
         <button class="filter-btn rounded-lg px-5 py-3 text-base font-medium" [ngClass]="activeTab === 'players' ? 'bg-black text-white' : 'bg-transparent text-black'" (click)="setActiveTab('players')">Players</button>
         <button class="filter-btn rounded-lg px-5 py-3 text-base font-medium" [ngClass]="activeTab === 'officials' ? 'bg-black text-white' : 'bg-transparent text-black'" (click)="setActiveTab('officials')">Officials</button>
-        <button class="filter-btn rounded-lg px-5 py-3 text-base font-medium" [ngClass]="activeTab === 'matchday' ? 'bg-black text-white' : 'bg-transparent text-black'" (click)="setActiveTab('matchday')">Match-day</button>
       </div>
       <div class="relative md:ml-auto">
         <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm w-full" placeholder="Search" (input)="onSearch($event)" [value]="searchValue">
@@ -55,11 +51,6 @@
                 column === 'assist' ? 'Assist' :
                 column === 'designation' ? 'Designation' :
                 column === 'joiningDate' ? 'Joining date' :
-                column === 'opponent' ? 'Opponent' :
-                column === 'dateTime' ? 'Date & Time' :
-                column === 'location' ? 'Location' :
-                column === 'referee' ? 'Referee' :
-                column === 'status' ? 'Status' :
                 column
               }}
             </th>
@@ -68,7 +59,7 @@
                 <ng-container *ngSwitchCase="'user'">
                   <div class="flex items-center">
                     <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center mr-3 overflow-hidden">
-                      <img [src]="element.avatar" [alt]="element.name" title="Avatar" class="w-full h-full object-cover">
+                      <img [src]="element.url" [alt]="element.name" title="Avatar" class="w-full h-full object-cover">
                     </div>
                     <span class="font-medium">{{ element.name }}</span>
                   </div>
@@ -79,20 +70,6 @@
                 <ng-container *ngSwitchCase="'assist'">{{ element.assist }}</ng-container>
                 <ng-container *ngSwitchCase="'designation'">{{ element.designation }}</ng-container>
                 <ng-container *ngSwitchCase="'joiningDate'">{{ element.joiningDate }}</ng-container>
-                <ng-container *ngSwitchCase="'opponent'">
-                  <div class="flex items-center gap-2">
-                    <img *ngIf="element.logo" [src]="element.logo" alt="{{element.opponent}}" class="w-8 h-8 rounded-full object-cover">
-                    <span>{{ element.opponent }}</span>
-                  </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="'dateTime'">{{ element.dateTime }}</ng-container>
-                <ng-container *ngSwitchCase="'location'">{{ element.location }}</ng-container>
-                <ng-container *ngSwitchCase="'referee'">{{ element.referee }}</ng-container>
-                <ng-container *ngSwitchCase="'status'">
-                  <span *ngIf="element.status === 'Upcoming'" class="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold">Upcoming</span>
-                  <span *ngIf="element.status === 'Full Time'" class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Full Time <span *ngIf="element.score"> 
-                    <mat-icon inline style='font-size: 1rem; vertical-align: middle;'>thumb_up</mat-icon> {{element.score}}</span></span>
-                </ng-container>
               </ng-container>
             </td>
           </ng-container>

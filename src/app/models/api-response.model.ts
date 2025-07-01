@@ -21,9 +21,11 @@ export interface PlayerOverviewData {
 }
 
 export type PlayersResponse = ApiResponse<{
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
+  pagination: {
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+  };
   items: Array<{
     id: string;
     fullName: string;
@@ -73,9 +75,11 @@ export type ClubCountBySportResponse = ApiResponse<Array<{
 }>>;
 
 export type ClubsResponse = ApiResponse<{
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
+  pagination: {
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+  };
   items: Array<{
     id: string;
     fullName: string;
@@ -83,5 +87,27 @@ export type ClubsResponse = ApiResponse<{
     subscriptionPlan: string;
     subscriptionDate: string;
     fileUrl: string | null;
+  }>;
+}>;
+
+export type ClubInfoResponse = ApiResponse<{
+  fullName: string;
+  address: string;
+  sportName: string;
+  clubUrl: string | null;
+  totalPlayers: number;
+  totalOfficials: number;
+  totalMembers: number;
+  players: Array<{
+    fullName: string;
+    dateOfBirth: string;
+    playingPositionName: string;
+    playerUrl: string | null;
+  }>;
+  officials: Array<{
+    name: string;
+    designation: string;
+    joiningDate: string;
+    clubOfficialUrl: string | null;
   }>;
 }>; 

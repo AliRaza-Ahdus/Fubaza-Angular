@@ -43,6 +43,7 @@ export class PlayerDetailComponent implements OnInit {
   ngOnInit() {
     this.playerId = this.route.snapshot.paramMap.get('id')!;
     this.route.data.subscribe((data) => {
+      debugger;
       const apiData = data['player'].data;
       this.player = {
         profileUrl:  apiData.images.profileUrl ? `${environment.apiUrl}/${apiData.images.profileUrl}` : 'assets/images/default-avatar.png'   ,
