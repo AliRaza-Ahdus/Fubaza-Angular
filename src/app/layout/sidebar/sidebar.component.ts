@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
@@ -20,6 +20,7 @@ interface NavItem {
 })
 export class SidebarComponent {
   @Input() isOpen = true;
+  @Output() toggleSidebarEvent = new EventEmitter<void>();
 
   overviewExpanded = false;
 
@@ -94,5 +95,10 @@ export class SidebarComponent {
 
   isParentActive(item: NavItem): boolean {
     return !!(item.active || (item.children && item.children.some(child => child.active)));
+  }
+
+  toggleSidebar(): void {
+    this.isOpen = !this.isOpen;
+    this.toggleSidebarEvent.emit();
   }
 }

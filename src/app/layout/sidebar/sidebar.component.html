@@ -1,9 +1,12 @@
 <div class="sidebar" [ngClass]="{'sidebar-open': isOpen, 'sidebar-closed': !isOpen}">
   <div class="sidebar-header p-4 flex items-center border-b border-neutral-700">
-    <div class="logo-container flex items-center py-2 px-4">
+    <div class="logo-container flex items-center py-2 px-4 w-full">
       <a [routerLink]="['/dashboard']" class="cursor-pointer">
         <img src="assets/images/Color=White.png" alt="Fubaza Logo" class="h-8 w-auto" />
       </a>
+      <button mat-icon-button (click)="toggleSidebar()" class="ml-auto" aria-label="Toggle sidebar">
+        <mat-icon>{{ isOpen ? 'chevron_left' : 'menu' }}</mat-icon>
+      </button>
     </div>
   </div>
   

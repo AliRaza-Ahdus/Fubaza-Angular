@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class HeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
+  @Input() pageTitle?: string;
   
   username = 'Mustafa';
   

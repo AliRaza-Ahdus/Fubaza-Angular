@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 
@@ -16,6 +16,25 @@ export class AppComponent implements OnInit {
   private readonly TABLET_BREAKPOINT = 768;  // md
   private readonly DESKTOP_BREAKPOINT = 1024; // lg
   isDesktop = true;
+  pageTitle?: string;
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.urlAfterRedirects.startsWith('/club-overview')) {
+          this.pageTitle = 'Clubs Overview';
+        } else if (event.urlAfterRedirects.startsWith('/player-overview')) {
+          this.pageTitle = 'Players Overview';
+        } else if (event.urlAfterRedirects.startsWith('/player-detail')) {
+          this.pageTitle = 'Player Profile';
+        } else if (event.urlAfterRedirects.startsWith('/club-detail')) {
+          this.pageTitle = 'Club Profile';
+        } else {
+          this.pageTitle = undefined;
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.checkScreenSize();

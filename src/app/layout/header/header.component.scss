@@ -3,5 +3,8 @@
   
   .welcome-text {
     @apply hidden md:block;
+    h2 {
+      font-size: 2rem;
+    }
   }
 }
