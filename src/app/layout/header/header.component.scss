@@ -1,6 +1,10 @@
 .header {
   @apply sticky top-0 z-10;
   
+  button[aria-label="Back"] {
+    margin-right: 0.75rem;
+  }
+  
   .welcome-text {
     @apply hidden md:block;
     h2 {

@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,20 +18,26 @@ export class AppComponent implements OnInit {
   private readonly DESKTOP_BREAKPOINT = 1024; // lg
   isDesktop = true;
   pageTitle?: string;
+  showBackButton = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         if (event.urlAfterRedirects.startsWith('/club-overview')) {
           this.pageTitle = 'Clubs Overview';
+          this.showBackButton = false;
         } else if (event.urlAfterRedirects.startsWith('/player-overview')) {
           this.pageTitle = 'Players Overview';
+          this.showBackButton = false;
         } else if (event.urlAfterRedirects.startsWith('/player-detail')) {
           this.pageTitle = 'Player Profile';
+          this.showBackButton = true;
         } else if (event.urlAfterRedirects.startsWith('/club-detail')) {
           this.pageTitle = 'Club Profile';
+          this.showBackButton = true;
         } else {
           this.pageTitle = undefined;
+          this.showBackButton = false;
         }
       }
     });
@@ -57,5 +64,9 @@ export class AppComponent implements OnInit {
     } else if (width >= this.DESKTOP_BREAKPOINT) {
       this.sidebarOpen = true;
     }
+  }
+
+  onBack(): void {
+    this.location.back();
   }
 }
