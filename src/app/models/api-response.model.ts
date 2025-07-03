@@ -99,12 +99,14 @@ export type ClubInfoResponse = ApiResponse<{
   totalOfficials: number;
   totalMembers: number;
   players: Array<{
+    id: string;
     fullName: string;
     dateOfBirth: string;
     playingPositionName: string;
     playerUrl: string | null;
   }>;
   officials: Array<{
+    id: string;
     name: string;
     designation: string;
     joiningDate: string;

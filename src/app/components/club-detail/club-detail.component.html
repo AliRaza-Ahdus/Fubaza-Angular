@@ -51,6 +51,7 @@
                 column === 'assist' ? 'Assist' :
                 column === 'designation' ? 'Designation' :
                 column === 'joiningDate' ? 'Joining date' :
+                column === 'action' ? 'Action' :
                 column
               }}
             </th>
@@ -70,6 +71,12 @@
                 <ng-container *ngSwitchCase="'assist'">{{ element.assist }}</ng-container>
                 <ng-container *ngSwitchCase="'designation'">{{ element.designation }}</ng-container>
                 <ng-container *ngSwitchCase="'joiningDate'">{{ element.joiningDate }}</ng-container>
+                <ng-container *ngSwitchCase="'action'">
+                  <button *ngIf="activeTab === 'players'" mat-icon-button class="action-icon-btn" aria-label="View" matTooltip="View" matTooltipPosition="left"
+                    [routerLink]="['/player-detail', element.id]">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </ng-container>
               </ng-container>
             </td>
           </ng-container>

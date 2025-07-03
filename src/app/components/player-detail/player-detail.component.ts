@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -17,7 +18,8 @@ import { environment } from '../../../environments/environment';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterModule
   ],
   templateUrl: './player-detail.component.html',
   styleUrls: ['./player-detail.component.scss']
@@ -27,7 +29,7 @@ export class PlayerDetailComponent implements OnInit {
   player: any;
 
   // Career-section logic (Club Name, From (Year) and To (Year))
-  displayedColumns: string[] = ['club', 'fromYear', 'toYear'];
+  displayedColumns: string[] = ['club', 'fromYear', 'toYear', 'action'];
   searchValue = '';
 
   // Pagination
@@ -82,6 +84,7 @@ export class PlayerDetailComponent implements OnInit {
           fullBodyUrl: apiData.images.fullBodyUrl ? `${environment.apiUrl}/${apiData.images.fullBodyUrl}` : 'assets/images/empty-picture.jpg',
         },
         career: (apiData.career || []).map((c: any) => ({
+          clubId: c.clubId,
           clubUrl: c.clubUrl ? `${environment.apiUrl}/${c.clubUrl}` : 'assets/images/default-avatar.png',
           clubName: c.clubName,
           fromYear: c.startYear,

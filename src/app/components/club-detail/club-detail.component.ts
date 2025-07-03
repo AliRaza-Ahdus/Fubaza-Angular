@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ClubInfoResponse } from '../../models/api-response.model';
 import { environment } from '../../../environments/environment';
 
@@ -18,7 +19,8 @@ import { environment } from '../../../environments/environment';
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RouterModule
   ],
   templateUrl: './club-detail.component.html',
   styleUrl: './club-detail.component.scss'
@@ -42,7 +44,7 @@ export class ClubDetailComponent {
   pagedData: any[] = [];
 
   // Columns for each tab
-  playerColumns = ['user', 'position', 'dob', 'totalGoalScored', 'assist'];
+  playerColumns = ['user', 'position', 'dob', 'totalGoalScored', 'assist', 'action'];
   officialColumns = ['user', 'designation', 'joiningDate'];
 
   clubId: string | null = null;
@@ -62,6 +64,7 @@ export class ClubDetailComponent {
         posts: 131,
         totalMembers: apiData.totalMembers,
         allMembers: (apiData.players || []).map((player: any) => ({
+          id: player.id,
           url: player.playerUrl ? `${environment.apiUrl}/${player.playerUrl}` : 'assets/images/default-avatar.png',
           name: player.fullName,
           position: player.playingPositionName,
