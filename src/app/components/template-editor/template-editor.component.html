@@ -1,0 +1,280 @@
+<div class="template-editor-container">
+  <div class="template-editor-header">
+    <div class="header-left">
+      <h2 class="template-editor-title">Template Editor</h2>
+      <div class="template-info">
+        <input type="text" class="template-name-input" [(ngModel)]="template.name" placeholder="Untitled Template">
+        <select class="template-type-select" [(ngModel)]="template.type">
+          <option value="">Select type</option>
+          <option *ngFor="let type of templateTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="action-btn undo-btn" title="Undo" [disabled]="!canUndo">
+        <mat-icon>undo</mat-icon>
+      </button>
+      <button class="action-btn redo-btn" title="Redo" [disabled]="!canRedo">
+        <mat-icon>redo</mat-icon>
+      </button>
+      <button class="action-btn preview-btn" title="Preview" (click)="previewTemplate()">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button class="save-btn" (click)="saveTemplate()">Save</button>
+      <button class="exit-btn" (click)="cancelEdit()">Exit</button>
+    </div>
+  </div>
+  
+  <div class="template-editor-main">
+    <div class="template-sidebar">
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Elements</h3>
+        <div class="elements-list">
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'text')">
+            <mat-icon>text_fields</mat-icon>
+            <span>Text</span>
+          </div>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'image')">
+            <mat-icon>image</mat-icon>
+            <span>Image</span>
+          </div>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'shape')">
+            <mat-icon>crop_square</mat-icon>
+            <span>Shape</span>
+          </div>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'button')">
+            <mat-icon>smart_button</mat-icon>
+            <span>Button</span>
+          </div>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'video')">
+            <mat-icon>videocam</mat-icon>
+            <span>Video</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Templates</h3>
+        <div class="templates-list">
+          <div class="template-item" *ngFor="let template of templatePresets" (click)="loadTemplatePreset(template)">
+            <div class="template-thumbnail" [style.backgroundImage]="'url(' + template.thumbnail + ')'"></div>
+            <span class="template-preset-name">{{ template.name }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Uploads</h3>
+        <div class="upload-section">
+          <button class="upload-btn" (click)="triggerUpload()">
+            <mat-icon>cloud_upload</mat-icon>
+            <span>Upload Media</span>
+          </button>
+          <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" multiple>
+        </div>
+        <div class="uploads-list" *ngIf="uploads.length > 0">
+          <div class="upload-item" *ngFor="let upload of uploads" (click)="addElementToCanvas('image', upload)">
+            <img [src]="upload.url" [alt]="upload.name">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="canvas-container">
+      <div class="canvas-toolbar">
+        <div class="canvas-size-controls">
+          <button class="size-btn" (click)="setCanvasSize('small')">Small</button>
+          <button class="size-btn" (click)="setCanvasSize('medium')">Medium</button>
+          <button class="size-btn" (click)="setCanvasSize('large')">Large</button>
+          <button class="size-btn custom-size" (click)="openCustomSizeDialog()">
+            <mat-icon>settings</mat-icon>
+            <span>Custom</span>
+          </button>
+        </div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" (click)="zoom(-10)">
+            <mat-icon>zoom_out</mat-icon>
+          </button>
+          <span class="zoom-level">{{ zoomLevel }}%</span>
+          <button class="zoom-btn" (click)="zoom(10)">
+            <mat-icon>zoom_in</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <div class="canvas-workspace" [style.transform]="'scale(' + zoomLevel/100 + ')'" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+        <div class="canvas" #canvas [style.width.px]="canvasWidth" [style.height.px]="canvasHeight">
+          <!-- Canvas elements will be rendered here -->
+          <div *ngFor="let element of canvasElements; let i = index" 
+               class="canvas-element" 
+               [ngClass]="{'selected': selectedElement === i}" 
+               [style.left.px]="element.x" 
+               [style.top.px]="element.y"
+               [style.width.px]="element.width"
+               [style.height.px]="element.height"
+               (mousedown)="selectElement(i, $event)">
+            
+            <!-- Text element -->
+            <div *ngIf="element.type === 'text'" 
+                 class="text-element" 
+                 [style.fontSize.px]="element.fontSize"
+                 [style.color]="element.color"
+                 [style.fontFamily]="element.fontFamily"
+                 [contentEditable]="selectedElement === i"
+                 (blur)="updateElementContent(i, $event)">
+              {{ element.content }}
+            </div>
+            
+            <!-- Image element -->
+            <img *ngIf="element.type === 'image'" 
+                 [src]="element.src" 
+                 [alt]="element.alt || 'Image'" 
+                 class="image-element">
+            
+            <!-- Shape element -->
+            <div *ngIf="element.type === 'shape'" 
+                 class="shape-element"
+                 [style.backgroundColor]="element.color"
+                 [style.borderRadius]="element.shape === 'circle' ? '50%' : '0'">
+            </div>
+            
+            <!-- Button element -->
+            <button *ngIf="element.type === 'button'" 
+                    class="button-element"
+                    [style.backgroundColor]="element.backgroundColor"
+                    [style.color]="element.color"
+                    [style.borderRadius.px]="element.borderRadius">
+              {{ element.content }}
+            </button>
+            
+            <!-- Video element -->
+            <div *ngIf="element.type === 'video'" class="video-element">
+              <video [src]="element.src" controls></video>
+            </div>
+            
+            <!-- Resize handles for selected element -->
+            <div *ngIf="selectedElement === i" class="resize-handles">
+              <div class="resize-handle top-left" (mousedown)="startResize(i, 'top-left', $event)"></div>
+              <div class="resize-handle top-right" (mousedown)="startResize(i, 'top-right', $event)"></div>
+              <div class="resize-handle bottom-left" (mousedown)="startResize(i, 'bottom-left', $event)"></div>
+              <div class="resize-handle bottom-right" (mousedown)="startResize(i, 'bottom-right', $event)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="properties-panel" *ngIf="selectedElement !== null">
+      <h3 class="panel-title">Properties</h3>
+      
+      <!-- Common properties -->
+      <div class="property-group">
+        <label>Position</label>
+        <div class="property-controls">
+          <div class="property-control">
+            <span>X</span>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].x" (change)="updateElement()">
+          </div>
+          <div class="property-control">
+            <span>Y</span>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].y" (change)="updateElement()">
+          </div>
+        </div>
+      </div>
+      
+      <div class="property-group">
+        <label>Size</label>
+        <div class="property-controls">
+          <div class="property-control">
+            <span>W</span>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].width" (change)="updateElement()">
+          </div>
+          <div class="property-control">
+            <span>H</span>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].height" (change)="updateElement()">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Text specific properties -->
+      <div *ngIf="canvasElements[selectedElement].type === 'text'">
+        <div class="property-group">
+          <label>Text</label>
+          <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()"></textarea>
+        </div>
+        
+        <div class="property-group">
+          <label>Font</label>
+          <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()">
+            <option value="Arial">Arial</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Georgia">Georgia</option>
+          </select>
+        </div>
+        
+        <div class="property-group">
+          <label>Size</label>
+          <input type="number" [(ngModel)]="canvasElements[selectedElement].fontSize" (change)="updateElement()">
+        </div>
+        
+        <div class="property-group">
+          <label>Color</label>
+          <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+        </div>
+      </div>
+      
+      <!-- Shape specific properties -->
+      <div *ngIf="canvasElements[selectedElement].type === 'shape'">
+        <div class="property-group">
+          <label>Shape</label>
+          <select [(ngModel)]="canvasElements[selectedElement].shape" (change)="updateElement()">
+            <option value="rectangle">Rectangle</option>
+            <option value="circle">Circle</option>
+          </select>
+        </div>
+        
+        <div class="property-group">
+          <label>Color</label>
+          <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+        </div>
+      </div>
+      
+      <!-- Button specific properties -->
+      <div *ngIf="canvasElements[selectedElement].type === 'button'">
+        <div class="property-group">
+          <label>Text</label>
+          <input type="text" [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()">
+        </div>
+        
+        <div class="property-group">
+          <label>Background</label>
+          <input type="color" [(ngModel)]="canvasElements[selectedElement].backgroundColor" (change)="updateElement()">
+        </div>
+        
+        <div class="property-group">
+          <label>Text Color</label>
+          <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+        </div>
+        
+        <div class="property-group">
+          <label>Border Radius</label>
+          <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()">
+        </div>
+      </div>
+      
+      <div class="property-actions">
+        <button class="delete-btn" (click)="deleteElement(selectedElement)">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+        <button class="duplicate-btn" (click)="duplicateElement(selectedElement)">
+          <mat-icon>content_copy</mat-icon>
+          <span>Duplicate</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
