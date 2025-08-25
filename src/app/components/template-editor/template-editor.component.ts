@@ -9,7 +9,6 @@ interface Template {
   name: string;
   description?: string;
   type: string;
-  content?: string;
   elements?: CanvasElement[];
   canvasWidth?: number;
   canvasHeight?: number;
@@ -22,18 +21,9 @@ interface TemplateType {
   label: string;
 }
 
-interface TemplatePreset {
-  id: string;
-  name: string;
-  thumbnail: string;
-  elements: CanvasElement[];
-  canvasWidth: number;
-  canvasHeight: number;
-}
-
 interface CanvasElement {
   id: string;
-  type: 'text' | 'image' | 'shape' | 'button' | 'video';
+  type: 'text' | 'image' | 'shape';
   x: number;
   y: number;
   width: number;
@@ -45,15 +35,8 @@ interface CanvasElement {
   backgroundColor?: string;
   fontFamily?: string;
   fontSize?: number;
-  shape?: 'rectangle' | 'circle';
+  shape?: string;
   borderRadius?: number;
-}
-
-interface Upload {
-  id: string;
-  name: string;
-  url: string;
-  type: string;
 }
 
 @Component({
@@ -78,75 +61,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     { value: 'notification', label: 'Notification Template' },
     { value: 'report', label: 'Report Template' },
     { value: 'newsletter', label: 'Newsletter Template' },
-    { value: 'social', label: 'Social Media Post' },
     { value: 'custom', label: 'Custom Template' }
-  ];
-
-  templatePresets: TemplatePreset[] = [
-    {
-      id: 'preset1',
-      name: 'Email Newsletter',
-      thumbnail: 'assets/images/empty-picture.jpg',
-      canvasWidth: 600,
-      canvasHeight: 800,
-      elements: [
-        {
-          id: 'header1',
-          type: 'text',
-          x: 20,
-          y: 20,
-          width: 560,
-          height: 60,
-          content: 'Newsletter Title',
-          fontFamily: 'Arial',
-          fontSize: 24,
-          color: '#333333'
-        },
-        {
-          id: 'body1',
-          type: 'text',
-          x: 20,
-          y: 100,
-          width: 560,
-          height: 100,
-          content: 'Your newsletter content goes here. Click to edit this text.',
-          fontFamily: 'Arial',
-          fontSize: 14,
-          color: '#555555'
-        }
-      ]
-    },
-    {
-      id: 'preset2',
-      name: 'Social Media Post',
-      thumbnail: 'assets/images/empty-picture.jpg',
-      canvasWidth: 800,
-      canvasHeight: 800,
-      elements: [
-        {
-          id: 'background1',
-          type: 'shape',
-          x: 0,
-          y: 0,
-          width: 800,
-          height: 800,
-          color: '#f5f5f5',
-          shape: 'rectangle'
-        },
-        {
-          id: 'headline1',
-          type: 'text',
-          x: 50,
-          y: 50,
-          width: 700,
-          height: 80,
-          content: 'Social Media Post Title',
-          fontFamily: 'Arial',
-          fontSize: 32,
-          color: '#333333'
-        }
-      ]
-    }
   ];
 
   // Canvas properties
@@ -156,7 +71,6 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   selectedElement: number | null = null;
   isDragging: boolean = false;
   isResizing: boolean = false;
-  resizeHandle: string = '';
   dragStartX: number = 0;
   dragStartY: number = 0;
   elementStartX: number = 0;
@@ -165,14 +79,15 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   elementStartHeight: number = 0;
   zoomLevel: number = 100;
   
-  // History for undo/redo
-  history: CanvasElement[][] = [];
-  historyIndex: number = -1;
+  // For uploads
+  uploads: any[] = [];
+  
+  // History management
+  history: CanvasElement[][] = [[]];
+  historyIndex: number = 0;
   canUndo: boolean = false;
   canRedo: boolean = false;
-
-  // Uploads
-  uploads: Upload[] = [];
+  resizeHandle: string = '';
 
   constructor(private router: Router) {}
 
@@ -200,7 +115,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     this.saveToHistory();
   }
 
-  // Drag and drop operations
+  // Basic drag and drop functionality
   onDragStart(event: DragEvent, elementType: string): void {
     if (event.dataTransfer) {
       event.dataTransfer.setData('elementType', elementType);
@@ -219,7 +134,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     if (!event.dataTransfer) return;
 
-    const elementType = event.dataTransfer.getData('elementType') as 'text' | 'image' | 'shape' | 'button' | 'video';
+    const elementType = event.dataTransfer.getData('elementType') as 'text' | 'image' | 'shape';
     if (!elementType) return;
 
     const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
@@ -229,7 +144,8 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     this.addElementToCanvas(elementType, null, x, y);
   }
 
-  addElementToCanvas(elementType: 'text' | 'image' | 'shape' | 'button' | 'video', data?: any, x: number = 100, y: number = 100): void {
+  // Add element to canvas - core functionality
+  addElementToCanvas(elementType: 'text' | 'image' | 'shape', data?: any, x: number = 100, y: number = 100): void {
     const newElement: CanvasElement = {
       id: `element_${Date.now()}`,
       type: elementType,
@@ -259,15 +175,6 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
         newElement.shape = 'rectangle';
         newElement.color = '#3498db';
         break;
-      case 'button':
-        newElement.content = 'Button';
-        newElement.backgroundColor = '#4285f4';
-        newElement.color = '#ffffff';
-        newElement.borderRadius = 4;
-        break;
-      case 'video':
-        newElement.src = 'https://www.example.com/sample-video.mp4';
-        break;
     }
 
     this.canvasElements.push(newElement);
@@ -277,8 +184,6 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
 
   // Element selection and manipulation
   selectElement(index: number, event: MouseEvent): void {
-    if (this.isResizing) return;
-    
     event.stopPropagation();
     this.selectedElement = index;
     
@@ -358,17 +263,35 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     this.isResizing = false;
   }
 
-  // Update element properties
-  updateElement(): void {
-    // Just to trigger change detection
-    this.canvasElements = [...this.canvasElements];
-    this.saveToHistory();
-  }
-
+  // Update element content
   updateElementContent(index: number, event: FocusEvent): void {
     if (this.canvasElements[index].type === 'text') {
       const target = event.target as HTMLDivElement;
       this.canvasElements[index].content = target.innerText;
+      this.saveToHistory();
+    }
+  }
+
+  // Element actions
+  deleteElement(index: number): void {
+    if (index >= 0 && index < this.canvasElements.length) {
+      this.canvasElements.splice(index, 1);
+      this.selectedElement = null;
+      this.saveToHistory();
+    }
+  }
+  
+  // Duplicate an element
+  duplicateElement(index: number): void {
+    if (index >= 0 && index < this.canvasElements.length) {
+      const original = this.canvasElements[index];
+      const clone = JSON.parse(JSON.stringify(original));
+      clone.id = `element_${Date.now()}`;
+      clone.x = original.x + 20;
+      clone.y = original.y + 20;
+      
+      this.canvasElements.push(clone);
+      this.selectedElement = this.canvasElements.length - 1;
       this.saveToHistory();
     }
   }
@@ -393,64 +316,67 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     this.setupCanvas();
   }
 
-  openCustomSizeDialog(): void {
-    // For simplicity, we'll just use prompt here
-    // In a real app, you'd use a proper dialog component
-    const width = prompt('Enter canvas width (px):', this.canvasWidth.toString());
-    const height = prompt('Enter canvas height (px):', this.canvasHeight.toString());
-    
-    if (width && height) {
-      this.canvasWidth = parseInt(width, 10);
-      this.canvasHeight = parseInt(height, 10);
-      this.setupCanvas();
-    }
+  // Preview the template
+  previewTemplate(): void {
+    // In a real application, you might open a modal or a new tab with the preview
+    alert('Template Preview - This would show a rendered version of your template');
   }
 
+  // Simple zoom function
   zoom(delta: number): void {
     this.zoomLevel = Math.max(10, Math.min(200, this.zoomLevel + delta));
   }
 
-  // Element actions
-  deleteElement(index: number): void {
-    if (index >= 0 && index < this.canvasElements.length) {
-      this.canvasElements.splice(index, 1);
-      this.selectedElement = null;
-      this.saveToHistory();
+  // Trigger file upload
+  triggerUpload(): void {
+    if (this.fileUploadRef) {
+      this.fileUploadRef.nativeElement.click();
     }
   }
 
-  duplicateElement(index: number): void {
-    if (index >= 0 && index < this.canvasElements.length) {
-      const original = this.canvasElements[index];
-      const clone: CanvasElement = {
-        ...JSON.parse(JSON.stringify(original)),
-        id: `element_${Date.now()}`,
-        x: original.x + 20,
-        y: original.y + 20
-      };
-      
-      this.canvasElements.push(clone);
-      this.selectedElement = this.canvasElements.length - 1;
-      this.saveToHistory();
+  // Handle file selection
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    
+    // Process the first file
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) {
+      alert('Only image files are supported');
+      return;
     }
+    
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target && e.target.result) {
+        const upload = {
+          id: `upload_${Date.now()}`,
+          name: file.name,
+          url: e.target.result as string,
+          type: file.type
+        };
+        
+        this.uploads.push(upload);
+        
+        // Add the uploaded image to canvas
+        this.addElementToCanvas('image', upload);
+      }
+    };
+    
+    reader.readAsDataURL(file);
+    
+    // Clear the input
+    input.value = '';
   }
 
-  // Template operations
-  loadTemplatePreset(preset: TemplatePreset): void {
-    this.canvasWidth = preset.canvasWidth;
-    this.canvasHeight = preset.canvasHeight;
-    this.canvasElements = JSON.parse(JSON.stringify(preset.elements));
-    this.template.name = preset.name;
-    this.selectedElement = null;
-    this.setupCanvas();
+  // Update element properties
+  updateElement(): void {
+    // Just to trigger change detection
+    this.canvasElements = [...this.canvasElements];
     this.saveToHistory();
   }
 
-  previewTemplate(): void {
-    // Here you would show a preview of the template
-    alert('Preview functionality would be implemented here');
-  }
-
+  // Save template
   saveTemplate(): void {
     if (!this.template.name || !this.template.type) {
       alert('Please provide a name and type for your template');
@@ -471,53 +397,15 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     // In a real app, you would save to a service/backend here
     console.log('Saving template:', this.template);
     
-    // Navigate back or show success message
+    // Show success message
     alert('Template saved successfully');
   }
 
+  // Cancel editing
   cancelEdit(): void {
-    // Navigate back to previous page
     this.router.navigate(['/dashboard']);
   }
-
-  // File upload
-  triggerUpload(): void {
-    this.fileUploadRef.nativeElement.click();
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-    
-    // Process each file
-    Array.from(input.files).forEach(file => {
-      // Only allow images for simplicity
-      if (!file.type.startsWith('image/')) {
-        alert('Only image files are supported');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        if (e.target && e.target.result) {
-          const upload: Upload = {
-            id: `upload_${Date.now()}`,
-            name: file.name,
-            url: e.target.result as string,
-            type: file.type
-          };
-          
-          this.uploads.push(upload);
-        }
-      };
-      
-      reader.readAsDataURL(file);
-    });
-    
-    // Clear the input
-    input.value = '';
-  }
-
+  
   // History management
   saveToHistory(): void {
     // Truncate history if we're not at the end

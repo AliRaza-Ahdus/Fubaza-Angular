@@ -1,3 +1,63 @@
+// Variables for responsive breakpoints
+$breakpoint-mobile: 576px;
+$breakpoint-tablet: 768px;
+$breakpoint-laptop: 992px;
+$breakpoint-desktop: 1200px;
+
+/* Mobile Navigation Controls */
+.mobile-nav-buttons {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 56px;
+  background-color: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  justify-content: space-around;
+  align-items: center;
+  
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    display: flex;
+  }
+  
+  button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    width: 33.33%;
+    height: 100%;
+    color: #666;
+    transition: all 0.2s ease;
+    
+    &.active {
+      color: #4285f4;
+      background-color: rgba(66, 133, 244, 0.05);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      color: #999;
+    }
+    
+    mat-icon {
+      font-size: 20px;
+      margin-bottom: 0.25rem;
+    }
+    
+    span {
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Main editor container adjustments for mobile */
 .template-editor-container {
   display: flex;
   flex-direction: column;
@@ -6,6 +66,11 @@
   background-color: #f9f9f9;
   color: #333;
   overflow: hidden;
+  font-family: 'Roboto', 'Segoe UI', sans-serif;
+  
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    padding-bottom: 56px; /* Space for the mobile navigation */
+  }
 }
 
 /* Header Styles */
@@ -13,35 +78,70 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0 1rem;
   background-color: #ffffff;
   border-bottom: 1px solid #eaeaea;
   height: 64px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   z-index: 10;
   
+  @media (min-width: $breakpoint-tablet) {
+    padding: 0 1.5rem;
+  }
+  
   .header-left {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 0.5rem;
     
-    .template-editor-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0;
-      color: #2c2c2c;
+    @media (min-width: $breakpoint-tablet) {
+      gap: 1.5rem;
+    }
+    
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      mat-icon {
+        color: #4285f4;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+      
+      .template-editor-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        color: #2c2c2c;
+        letter-spacing: 0.3px;
+        
+        @media (max-width: $breakpoint-mobile) {
+          display: none;
+        }
+      }
     }
     
     .template-info {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      
+      @media (min-width: $breakpoint-tablet) {
+        gap: 0.75rem;
+      }
       
       .template-name-input {
-        padding: 0.5rem 0.75rem;
+        padding: 0.5rem;
         border: 1px solid #e0e0e0;
         border-radius: 4px;
         font-size: 0.9rem;
-        width: 180px;
+        width: 120px;
+        
+        @media (min-width: $breakpoint-tablet) {
+          width: 180px;
+          padding: 0.5rem 0.75rem;
+        }
         
         &:focus {
           border-color: #4d90fe;
@@ -51,11 +151,17 @@
       }
       
       .template-type-select {
-        padding: 0.5rem 0.75rem;
+        padding: 0.5rem;
         border: 1px solid #e0e0e0;
         border-radius: 4px;
         font-size: 0.9rem;
         background-color: white;
+        width: 100px;
+        
+        @media (min-width: $breakpoint-tablet) {
+          width: auto;
+          padding: 0.5rem 0.75rem;
+        }
         
         &:focus {
           border-color: #4d90fe;
@@ -69,27 +175,68 @@
   .header-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     
-    .action-btn {
+    @media (min-width: $breakpoint-tablet) {
+      gap: 0.75rem;
+    }
+    
+    .history-controls {
       display: flex;
+      gap: 0.25rem;
+      margin-right: 0.25rem;
+      
+      @media (min-width: $breakpoint-tablet) {
+        margin-right: 0.5rem;
+      }
+      
+      .history-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0;
+        background-color: white;
+        cursor: pointer;
+        
+        &:hover:not([disabled]) {
+          background-color: #f5f5f5;
+        }
+        
+        &[disabled] {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: #555;
+        }
+      }
+    }
+    
+    .preview-btn {
+      display: none;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 4px;
       border: 1px solid #e0e0e0;
       background-color: white;
+      margin-right: 0.5rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      
+      @media (min-width: $breakpoint-tablet) {
+        display: flex;
+      }
       
       &:hover {
         background-color: #f5f5f5;
-      }
-      
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
       }
       
       mat-icon {
@@ -101,7 +248,6 @@
     }
     
     .save-btn, .exit-btn {
-      padding: 0 1rem;
       height: 36px;
       border-radius: 4px;
       font-weight: 500;
@@ -111,12 +257,37 @@
       justify-content: center;
       transition: all 0.2s ease;
       cursor: pointer;
+      padding: 0 0.5rem;
+      
+      @media (min-width: $breakpoint-tablet) {
+        padding: 0 1rem;
+      }
     }
     
     .save-btn {
       background-color: #4285f4;
       color: white;
       border: none;
+      display: flex;
+      gap: 0.25rem;
+      
+      @media (min-width: $breakpoint-tablet) {
+        gap: 0.5rem;
+      }
+      
+      span {
+        display: none;
+        
+        @media (min-width: $breakpoint-tablet) {
+          display: inline;
+        }
+      }
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
       
       &:hover {
         background-color: #3367d6;
@@ -138,148 +309,299 @@
 /* Main Editor Layout */
 .template-editor-main {
   display: flex;
+  flex-direction: column;
   flex: 1;
   overflow: hidden;
+  
+  @media (min-width: $breakpoint-tablet) {
+    flex-direction: row;
+  }
+  
+  /* Mobile panel visibility */
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    .template-sidebar,
+    .canvas-container,
+    .properties-panel {
+      display: none;
+      
+      &.mobile-active {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
 }
 
 /* Sidebar Styles */
 .template-sidebar {
-  width: 280px;
+  width: 100%;
+  height: auto;
+  max-height: 250px;
   background-color: white;
-  border-right: 1px solid #eaeaea;
+  border-right: none;
+  border-bottom: 1px solid #eaeaea;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   
+  @media (min-width: $breakpoint-tablet) {
+    width: 250px;
+    height: auto;
+    max-height: none;
+    border-right: 1px solid #eaeaea;
+    border-bottom: none;
+  }
+  
   .sidebar-section {
-    padding: 1.25rem 1rem;
+    padding: 0.75rem;
     border-bottom: 1px solid #eaeaea;
+    
+    @media (min-width: $breakpoint-tablet) {
+      padding: 1.25rem 1rem;
+    }
     
     .sidebar-title {
       font-size: 0.9rem;
       font-weight: 600;
       color: #666;
-      margin: 0 0 1rem 0;
+      margin: 0 0 0.75rem 0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      
+      @media (min-width: $breakpoint-tablet) {
+        margin: 0 0 1rem 0;
+      }
     }
     
     .elements-list {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      
+      @media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      
+      @media (min-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+      }
       
       .element-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 0.75rem 0.5rem;
-        border-radius: 4px;
+        padding: 0.5rem;
+        border-radius: 8px;
         background-color: #f8f8f8;
         cursor: move;
         transition: all 0.2s ease;
         
+        @media (min-width: $breakpoint-tablet) {
+          padding: 0.75rem 0.5rem;
+        }
+        
         &:hover {
           background-color: #f0f0f0;
+          transform: translateY(-2px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         mat-icon {
-          font-size: 24px;
-          width: 24px;
-          height: 24px;
-          margin-bottom: 0.5rem;
-          color: #555;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          margin-bottom: 0.25rem;
+          color: #4285f4;
+          
+          @media (min-width: $breakpoint-tablet) {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            margin-bottom: 0.5rem;
+          }
         }
         
         span {
-          font-size: 0.8rem;
-          color: #666;
+          font-size: 0.7rem;
+          color: #555;
+          font-weight: 500;
+          
+          @media (min-width: $breakpoint-tablet) {
+            font-size: 0.8rem;
+          }
         }
       }
     }
     
-    .templates-list {
+    .template-presets {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
       
-      .template-item {
+      @media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      
+      @media (min-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .preset-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         cursor: pointer;
         transition: all 0.2s ease;
         
         &:hover {
           transform: translateY(-2px);
+          
+          .preset-preview {
+            border-color: #4285f4;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+          }
         }
         
-        .template-thumbnail {
-          height: 100px;
-          background-size: cover;
-          background-position: center;
-          border-radius: 4px;
-          margin-bottom: 0.5rem;
+        .preset-preview {
+          width: 100%;
+          height: 60px;
+          border-radius: 8px;
+          background-color: white;
           border: 1px solid #eaeaea;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.25rem;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: #4285f4;
+          transition: all 0.2s ease;
+          
+          @media (min-width: $breakpoint-tablet) {
+            height: 80px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+          }
         }
         
-        .template-preset-name {
-          font-size: 0.8rem;
+        span {
+          font-size: 0.7rem;
           color: #666;
-          display: block;
-          text-align: center;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          
+          @media (min-width: $breakpoint-tablet) {
+            font-size: 0.8rem;
+          }
         }
       }
     }
     
     .upload-section {
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
+      
+      @media (min-width: $breakpoint-tablet) {
+        margin-bottom: 1rem;
+      }
       
       .upload-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
-        padding: 0.75rem;
+        padding: 0.5rem;
         border: 1px dashed #ccc;
-        border-radius: 4px;
+        border-radius: 8px;
         background-color: #f8f8f8;
         cursor: pointer;
         transition: all 0.2s ease;
         
+        @media (min-width: $breakpoint-tablet) {
+          padding: 0.75rem;
+        }
+        
         &:hover {
           background-color: #f0f0f0;
-          border-color: #aaa;
+          border-color: #4285f4;
         }
         
         mat-icon {
-          margin-right: 0.5rem;
-          color: #555;
+          margin-right: 0.25rem;
+          color: #4285f4;
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          
+          @media (min-width: $breakpoint-tablet) {
+            margin-right: 0.5rem;
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
         }
         
         span {
-          font-size: 0.9rem;
+          font-size: 0.8rem;
           color: #555;
+          font-weight: 500;
+          
+          @media (min-width: $breakpoint-tablet) {
+            font-size: 0.9rem;
+          }
         }
       }
     }
     
     .uploads-list {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 0.5rem;
       
+      @media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      
+      @media (min-width: $breakpoint-tablet) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
       .upload-item {
-        height: 70px;
-        border-radius: 4px;
+        height: 60px;
+        border-radius: 8px;
         overflow: hidden;
         cursor: pointer;
         border: 1px solid #eaeaea;
         transition: all 0.2s ease;
+        position: relative;
+        
+        @media (min-width: $breakpoint-tablet) {
+          height: 70px;
+        }
         
         &:hover {
           transform: scale(1.05);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          
+          &::after {
+            opacity: 1;
+          }
+        }
+        
+        &::after {
+          content: '+';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(66, 133, 244, 0.3);
+          color: white;
+          font-size: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          transition: opacity 0.2s ease;
         }
         
         img {
@@ -299,22 +621,40 @@
   flex-direction: column;
   background-color: #f0f0f0;
   overflow: hidden;
+  order: -1; /* Show canvas first on mobile */
+  
+  @media (min-width: $breakpoint-tablet) {
+    order: 0; /* Reset order on larger screens */
+  }
   
   .canvas-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1.5rem;
+    padding: 0 0.75rem;
     background-color: white;
     border-bottom: 1px solid #eaeaea;
     height: 48px;
     
+    @media (min-width: $breakpoint-tablet) {
+      padding: 0 1.5rem;
+    }
+    
+    .toolbar-section {
+      display: flex;
+      align-items: center;
+    }
+    
     .canvas-size-controls {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.25rem;
+      
+      @media (min-width: $breakpoint-tablet) {
+        gap: 0.5rem;
+      }
       
       .size-btn {
-        padding: 0.4rem 0.75rem;
+        padding: 0.4rem 0.5rem;
         border: 1px solid #e0e0e0;
         border-radius: 4px;
         background-color: white;
@@ -322,19 +662,26 @@
         cursor: pointer;
         transition: all 0.2s ease;
         
+        @media (min-width: $breakpoint-tablet) {
+          padding: 0.4rem 0.75rem;
+        }
+        
         &:hover {
           background-color: #f5f5f5;
         }
         
-        &.custom-size {
+        &.custom {
           display: flex;
           align-items: center;
+          justify-content: center;
+          width: 32px;
+          padding: 0;
           
           mat-icon {
             font-size: 16px;
             width: 16px;
             height: 16px;
-            margin-right: 0.25rem;
+            color: #555;
           }
         }
       }
@@ -383,14 +730,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 1rem;
     transition: transform 0.2s ease;
+    background-color: #f5f5f5;
+    background-image: 
+      linear-gradient(45deg, #eee 25%, transparent 25%), 
+      linear-gradient(-45deg, #eee 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #eee 75%), 
+      linear-gradient(-45deg, transparent 75%, #eee 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    
+    @media (min-width: $breakpoint-tablet) {
+      padding: 2rem;
+    }
     
     .canvas {
       background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       position: relative;
       transition: all 0.2s ease;
+      max-width: 100%;
       
       .canvas-element {
         position: absolute;
@@ -408,6 +768,10 @@
           outline: none;
           cursor: text;
           overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
         }
         
         .image-element {
@@ -421,66 +785,45 @@
           height: 100%;
         }
         
-        .button-element {
-          width: 100%;
-          height: 100%;
-          border: none;
-          cursor: pointer;
-          font-size: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .video-element {
-          width: 100%;
-          height: 100%;
-          
-          video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-          }
-        }
-        
         .resize-handles {
           position: absolute;
-          top: 0;
-          left: 0;
           width: 100%;
           height: 100%;
+          top: 0;
+          left: 0;
           pointer-events: none;
           
           .resize-handle {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background-color: white;
-            border: 1px solid #4285f4;
+            border: 2px solid #4285f4;
+            border-radius: 50%;
             pointer-events: all;
             cursor: nwse-resize;
             
             &.top-left {
-              top: -4px;
-              left: -4px;
+              top: -5px;
+              left: -5px;
               cursor: nwse-resize;
             }
             
             &.top-right {
-              top: -4px;
-              right: -4px;
+              top: -5px;
+              right: -5px;
               cursor: nesw-resize;
             }
             
             &.bottom-left {
-              bottom: -4px;
-              left: -4px;
+              bottom: -5px;
+              left: -5px;
               cursor: nesw-resize;
             }
             
             &.bottom-right {
-              bottom: -4px;
-              right: -4px;
+              bottom: -5px;
+              right: -5px;
               cursor: nwse-resize;
             }
           }
@@ -492,35 +835,121 @@
 
 /* Properties Panel Styles */
 .properties-panel {
-  width: 280px;
+  width: 100%;
+  height: auto;
+  max-height: 300px;
   background-color: white;
-  border-left: 1px solid #eaeaea;
-  padding: 1.25rem 1rem;
+  border-top: 1px solid #eaeaea;
+  border-left: none;
+  padding: 0.75rem;
   overflow-y: auto;
+  transition: transform 0.3s ease, width 0.3s ease;
+  
+  @media (min-width: $breakpoint-tablet) {
+    width: 280px;
+    height: auto;
+    max-height: none;
+    border-left: 1px solid #eaeaea;
+    border-top: none;
+    padding: 1.25rem 1rem;
+  }
   
   .panel-title {
     font-size: 0.9rem;
     font-weight: 600;
     color: #666;
-    margin: 0 0 1.25rem 0;
+    margin: 0 0 0.75rem 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    
+    @media (min-width: $breakpoint-tablet) {
+      margin: 0 0 1.25rem 0;
+    }
+  }
+  
+  .quick-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    
+    @media (min-width: $breakpoint-tablet) {
+      margin-bottom: 1.5rem;
+    }
+    
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      border: 1px solid #e0e0e0;
+      background-color: white;
+      cursor: pointer;
+      flex: 1;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #f5f5f5;
+      }
+      
+      &.delete:hover {
+        background-color: #fee;
+        border-color: #ffcdd2;
+        
+        mat-icon {
+          color: #d32f2f;
+        }
+      }
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #555;
+      }
+    }
   }
   
   .property-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
     
     label {
       display: block;
       font-size: 0.8rem;
-      font-weight: 500;
-      color: #666;
-      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 0.75rem;
+    }
+    
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      
+      .property-control {
+        display: flex;
+        flex-direction: column;
+        
+        span {
+          font-size: 0.7rem;
+          color: #999;
+          margin-bottom: 0.25rem;
+        }
+      }
     }
     
     .property-controls {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.75rem;
       
       .property-control {
         flex: 1;
@@ -531,6 +960,110 @@
           font-size: 0.7rem;
           color: #999;
           margin-bottom: 0.25rem;
+        }
+      }
+    }
+    
+    .text-formatting {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      
+      .font-select {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        
+        &:focus {
+          border-color: #4d90fe;
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.2);
+        }
+      }
+      
+      .text-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+    }
+    
+    .text-editor {
+      min-height: 80px;
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      resize: vertical;
+      width: 100%;
+      
+      &:focus {
+        border-color: #4d90fe;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.2);
+      }
+    }
+    
+    .image-preview {
+      width: 100%;
+      height: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+      border: 1px solid #eaeaea;
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    
+    .replace-image-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: #f0f0f0;
+      }
+      
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #555;
+      }
+      
+      span {
+        font-size: 0.8rem;
+        color: #555;
+      }
+    }
+    
+    .shape-controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      
+      .shape-selector, .color-control {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        
+        span {
+          font-size: 0.7rem;
+          color: #999;
         }
       }
     }
@@ -552,11 +1085,6 @@
       }
     }
     
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-    
     input[type="color"] {
       width: 100%;
       height: 32px;
@@ -571,57 +1099,6 @@
       &::-webkit-color-swatch {
         border: none;
         border-radius: 2px;
-      }
-    }
-  }
-  
-  .property-actions {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-    
-    button {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      
-      &.delete-btn {
-        background-color: #f8f8f8;
-        color: #d93025;
-        border: 1px solid #e0e0e0;
-        
-        &:hover {
-          background-color: #fee;
-        }
-        
-        mat-icon {
-          font-size: 16px;
-          width: 16px;
-          height: 16px;
-        }
-      }
-      
-      &.duplicate-btn {
-        background-color: #f8f8f8;
-        color: #555;
-        border: 1px solid #e0e0e0;
-        
-        &:hover {
-          background-color: #f0f0f0;
-        }
-        
-        mat-icon {
-          font-size: 16px;
-          width: 16px;
-          height: 16px;
-        }
       }
     }
   }

@@ -1,7 +1,26 @@
 <div class="template-editor-container">
+  <!-- Mobile Navigation Buttons (Visible only on small screens) -->
+  <div class="mobile-nav-buttons">
+    <button [ngClass]="{'active': activeMobilePanel === 'sidebar'}" (click)="toggleMobilePanel('sidebar')">
+      <mat-icon>dashboard</mat-icon>
+      <span>Elements</span>
+    </button>
+    <button [ngClass]="{'active': activeMobilePanel === 'canvas'}" (click)="toggleMobilePanel('canvas')">
+      <mat-icon>edit</mat-icon>
+      <span>Canvas</span>
+    </button>
+    <button [ngClass]="{'active': activeMobilePanel === 'properties'}" (click)="toggleMobilePanel('properties')" [disabled]="selectedElement === null">
+      <mat-icon>tune</mat-icon>
+      <span>Properties</span>
+    </button>
+  </div>
+
   <div class="template-editor-header">
     <div class="header-left">
-      <h2 class="template-editor-title">Template Editor</h2>
+      <div class="app-logo">
+        <mat-icon>dashboard_customize</mat-icon>
+        <h2 class="template-editor-title">Template Studio</h2>
+      </div>
       <div class="template-info">
         <input type="text" class="template-name-input" [(ngModel)]="template.name" placeholder="Untitled Template">
         <select class="template-type-select" [(ngModel)]="template.type">
@@ -11,22 +30,27 @@
       </div>
     </div>
     <div class="header-actions">
-      <button class="action-btn undo-btn" title="Undo" [disabled]="!canUndo">
-        <mat-icon>undo</mat-icon>
-      </button>
-      <button class="action-btn redo-btn" title="Redo" [disabled]="!canRedo">
-        <mat-icon>redo</mat-icon>
-      </button>
-      <button class="action-btn preview-btn" title="Preview" (click)="previewTemplate()">
+      <div class="history-controls">
+        <button class="history-btn" [disabled]="!canUndo" (click)="undo()" title="Undo">
+          <mat-icon>undo</mat-icon>
+        </button>
+        <button class="history-btn" [disabled]="!canRedo" (click)="redo()" title="Redo">
+          <mat-icon>redo</mat-icon>
+        </button>
+      </div>
+      <button class="preview-btn" title="Preview" (click)="previewTemplate()">
         <mat-icon>visibility</mat-icon>
       </button>
-      <button class="save-btn" (click)="saveTemplate()">Save</button>
+      <button class="save-btn" (click)="saveTemplate()">
+        <mat-icon>save</mat-icon>
+        <span>Save</span>
+      </button>
       <button class="exit-btn" (click)="cancelEdit()">Exit</button>
     </div>
   </div>
   
   <div class="template-editor-main">
-    <div class="template-sidebar">
+    <div class="template-sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}">
       <div class="sidebar-section">
         <h3 class="sidebar-title">Elements</h3>
         <div class="elements-list">
@@ -42,23 +66,23 @@
             <mat-icon>crop_square</mat-icon>
             <span>Shape</span>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'button')">
-            <mat-icon>smart_button</mat-icon>
-            <span>Button</span>
-          </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'video')">
-            <mat-icon>videocam</mat-icon>
-            <span>Video</span>
-          </div>
         </div>
       </div>
       
       <div class="sidebar-section">
         <h3 class="sidebar-title">Templates</h3>
-        <div class="templates-list">
-          <div class="template-item" *ngFor="let template of templatePresets" (click)="loadTemplatePreset(template)">
-            <div class="template-thumbnail" [style.backgroundImage]="'url(' + template.thumbnail + ')'"></div>
-            <span class="template-preset-name">{{ template.name }}</span>
+        <div class="template-presets">
+          <div class="preset-item">
+            <div class="preset-preview">Email</div>
+            <span>Email Template</span>
+          </div>
+          <div class="preset-item">
+            <div class="preset-preview">Notice</div>
+            <span>Notification</span>
+          </div>
+          <div class="preset-item">
+            <div class="preset-preview">Report</div>
+            <span>Report</span>
           </div>
         </div>
       </div>
@@ -68,9 +92,9 @@
         <div class="upload-section">
           <button class="upload-btn" (click)="triggerUpload()">
             <mat-icon>cloud_upload</mat-icon>
-            <span>Upload Media</span>
+            <span>Upload Image</span>
           </button>
-          <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" multiple>
+          <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" accept="image/*">
         </div>
         <div class="uploads-list" *ngIf="uploads.length > 0">
           <div class="upload-item" *ngFor="let upload of uploads" (click)="addElementToCanvas('image', upload)">
@@ -80,25 +104,28 @@
       </div>
     </div>
     
-    <div class="canvas-container">
+    <div class="canvas-container" [ngClass]="{'mobile-active': activeMobilePanel === 'canvas'}">
       <div class="canvas-toolbar">
-        <div class="canvas-size-controls">
-          <button class="size-btn" (click)="setCanvasSize('small')">Small</button>
-          <button class="size-btn" (click)="setCanvasSize('medium')">Medium</button>
-          <button class="size-btn" (click)="setCanvasSize('large')">Large</button>
-          <button class="size-btn custom-size" (click)="openCustomSizeDialog()">
-            <mat-icon>settings</mat-icon>
-            <span>Custom</span>
-          </button>
+        <div class="toolbar-section">
+          <div class="canvas-size-controls">
+            <button class="size-btn" (click)="setCanvasSize('small')">Small</button>
+            <button class="size-btn" (click)="setCanvasSize('medium')">Medium</button>
+            <button class="size-btn" (click)="setCanvasSize('large')">Large</button>
+            <button class="size-btn custom" title="Custom Size">
+              <mat-icon>settings</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="zoom-controls">
-          <button class="zoom-btn" (click)="zoom(-10)">
-            <mat-icon>zoom_out</mat-icon>
-          </button>
-          <span class="zoom-level">{{ zoomLevel }}%</span>
-          <button class="zoom-btn" (click)="zoom(10)">
-            <mat-icon>zoom_in</mat-icon>
-          </button>
+        <div class="toolbar-section">
+          <div class="zoom-controls">
+            <button class="zoom-btn" (click)="zoom(-10)" title="Zoom Out">
+              <mat-icon>zoom_out</mat-icon>
+            </button>
+            <span class="zoom-level">{{ zoomLevel }}%</span>
+            <button class="zoom-btn" (click)="zoom(10)" title="Zoom In">
+              <mat-icon>zoom_in</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
       
@@ -134,25 +161,10 @@
             <!-- Shape element -->
             <div *ngIf="element.type === 'shape'" 
                  class="shape-element"
-                 [style.backgroundColor]="element.color"
-                 [style.borderRadius]="element.shape === 'circle' ? '50%' : '0'">
+                 [style.backgroundColor]="element.color">
             </div>
             
-            <!-- Button element -->
-            <button *ngIf="element.type === 'button'" 
-                    class="button-element"
-                    [style.backgroundColor]="element.backgroundColor"
-                    [style.color]="element.color"
-                    [style.borderRadius.px]="element.borderRadius">
-              {{ element.content }}
-            </button>
-            
-            <!-- Video element -->
-            <div *ngIf="element.type === 'video'" class="video-element">
-              <video [src]="element.src" controls></video>
-            </div>
-            
-            <!-- Resize handles for selected element -->
+            <!-- Resize handles (only show for selected element) -->
             <div *ngIf="selectedElement === i" class="resize-handles">
               <div class="resize-handle top-left" (mousedown)="startResize(i, 'top-left', $event)"></div>
               <div class="resize-handle top-right" (mousedown)="startResize(i, 'top-right', $event)"></div>
@@ -164,13 +176,28 @@
       </div>
     </div>
     
-    <div class="properties-panel" *ngIf="selectedElement !== null">
+    <div class="properties-panel" *ngIf="selectedElement !== null" [ngClass]="{'mobile-active': activeMobilePanel === 'properties'}">
       <h3 class="panel-title">Properties</h3>
+      
+      <div class="quick-actions">
+        <button class="action-btn" title="Bring Forward">
+          <mat-icon>flip_to_front</mat-icon>
+        </button>
+        <button class="action-btn" title="Send Backward">
+          <mat-icon>flip_to_back</mat-icon>
+        </button>
+        <button class="action-btn" title="Duplicate" (click)="duplicateElement(selectedElement)">
+          <mat-icon>content_copy</mat-icon>
+        </button>
+        <button class="action-btn delete" title="Delete" (click)="deleteElement(selectedElement)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
       
       <!-- Common properties -->
       <div class="property-group">
-        <label>Position</label>
-        <div class="property-controls">
+        <label>Position & Size</label>
+        <div class="property-grid">
           <div class="property-control">
             <span>X</span>
             <input type="number" [(ngModel)]="canvasElements[selectedElement].x" (change)="updateElement()">
@@ -179,12 +206,6 @@
             <span>Y</span>
             <input type="number" [(ngModel)]="canvasElements[selectedElement].y" (change)="updateElement()">
           </div>
-        </div>
-      </div>
-      
-      <div class="property-group">
-        <label>Size</label>
-        <div class="property-controls">
           <div class="property-control">
             <span>W</span>
             <input type="number" [(ngModel)]="canvasElements[selectedElement].width" (change)="updateElement()">
@@ -200,80 +221,73 @@
       <div *ngIf="canvasElements[selectedElement].type === 'text'">
         <div class="property-group">
           <label>Text</label>
-          <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()"></textarea>
+          <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()" class="text-editor"></textarea>
         </div>
         
         <div class="property-group">
-          <label>Font</label>
-          <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()">
-            <option value="Arial">Arial</option>
-            <option value="Helvetica">Helvetica</option>
-            <option value="Times New Roman">Times New Roman</option>
-            <option value="Courier New">Courier New</option>
-            <option value="Verdana">Verdana</option>
-            <option value="Georgia">Georgia</option>
-          </select>
+          <label>Appearance</label>
+          <div class="text-formatting">
+            <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()" class="font-select">
+              <option value="Arial">Arial</option>
+              <option value="Helvetica">Helvetica</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Verdana">Verdana</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Open Sans">Open Sans</option>
+              <option value="Montserrat">Montserrat</option>
+            </select>
+            
+            <div class="text-controls">
+              <div class="font-size-control">
+                <span>Size</span>
+                <input type="number" [(ngModel)]="canvasElements[selectedElement].fontSize" (change)="updateElement()">
+              </div>
+              
+              <div class="color-control">
+                <span>Color</span>
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+              </div>
+            </div>
+          </div>
         </div>
-        
+      </div>
+      
+      <!-- Image specific properties -->
+      <div *ngIf="canvasElements[selectedElement].type === 'image'">
         <div class="property-group">
-          <label>Size</label>
-          <input type="number" [(ngModel)]="canvasElements[selectedElement].fontSize" (change)="updateElement()">
-        </div>
-        
-        <div class="property-group">
-          <label>Color</label>
-          <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+          <label>Image</label>
+          <div class="image-preview">
+            <img [src]="canvasElements[selectedElement].src" [alt]="canvasElements[selectedElement].alt || 'Image'">
+          </div>
+          <button class="replace-image-btn" (click)="triggerUpload()">
+            <mat-icon>photo_library</mat-icon>
+            <span>Replace Image</span>
+          </button>
         </div>
       </div>
       
       <!-- Shape specific properties -->
       <div *ngIf="canvasElements[selectedElement].type === 'shape'">
         <div class="property-group">
-          <label>Shape</label>
-          <select [(ngModel)]="canvasElements[selectedElement].shape" (change)="updateElement()">
-            <option value="rectangle">Rectangle</option>
-            <option value="circle">Circle</option>
-          </select>
+          <label>Shape Style</label>
+          <div class="shape-controls">
+            <div class="shape-selector">
+              <span>Type</span>
+              <select [(ngModel)]="canvasElements[selectedElement].shape" (change)="updateElement()">
+                <option value="rectangle">Rectangle</option>
+                <option value="circle">Circle</option>
+                <option value="triangle">Triangle</option>
+              </select>
+            </div>
+            
+            <div class="color-control">
+              <span>Fill Color</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+            </div>
+          </div>
         </div>
-        
-        <div class="property-group">
-          <label>Color</label>
-          <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
-        </div>
-      </div>
-      
-      <!-- Button specific properties -->
-      <div *ngIf="canvasElements[selectedElement].type === 'button'">
-        <div class="property-group">
-          <label>Text</label>
-          <input type="text" [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()">
-        </div>
-        
-        <div class="property-group">
-          <label>Background</label>
-          <input type="color" [(ngModel)]="canvasElements[selectedElement].backgroundColor" (change)="updateElement()">
-        </div>
-        
-        <div class="property-group">
-          <label>Text Color</label>
-          <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
-        </div>
-        
-        <div class="property-group">
-          <label>Border Radius</label>
-          <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()">
-        </div>
-      </div>
-      
-      <div class="property-actions">
-        <button class="delete-btn" (click)="deleteElement(selectedElement)">
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-        <button class="duplicate-btn" (click)="duplicateElement(selectedElement)">
-          <mat-icon>content_copy</mat-icon>
-          <span>Duplicate</span>
-        </button>
       </div>
     </div>
   </div>
