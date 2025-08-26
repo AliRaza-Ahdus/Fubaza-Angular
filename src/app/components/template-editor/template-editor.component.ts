@@ -55,6 +55,14 @@ interface CanvasElement {
   rotate?: number;
 }
 
+interface UploadItem {
+  id: string;
+  name: string;
+  url: string;
+  type: string;
+  source?: 'local';
+}
+
 @Component({
   selector: 'app-template-editor',
   templateUrl: './template-editor.component.html',
@@ -96,7 +104,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   zoomLevel: number = 100;
   
   // For uploads
-  uploads: any[] = [];
+  uploads: UploadItem[] = [];
   
   // History management
   history: CanvasElement[][] = [[]];
@@ -452,11 +460,12 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {
       if (e.target && e.target.result) {
-        const upload = {
+        const upload: UploadItem = {
           id: `upload_${Date.now()}`,
           name: file.name,
           url: e.target.result as string,
-          type: file.type
+          type: file.type,
+          source: 'local'
         };
         
         this.uploads.push(upload);
@@ -470,6 +479,15 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     
     // Clear the input
     input.value = '';
+  }
+  
+  // Delete an upload
+  deleteUpload(id: string, event: MouseEvent): void {
+    event.stopPropagation(); // Prevent triggering the parent click
+    const index = this.uploads.findIndex(u => u.id === id);
+    if (index !== -1) {
+      this.uploads.splice(index, 1);
+    }
   }
 
   // Update element properties

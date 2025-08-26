@@ -118,16 +118,22 @@
       
       <div class="sidebar-section">
         <h3 class="sidebar-title">Uploads</h3>
-        <div class="upload-section">
-          <button class="upload-btn" (click)="triggerUpload()">
-            <mat-icon>cloud_upload</mat-icon>
-            <span>Upload Image</span>
-          </button>
-          <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" accept="image/*">
+        <div class="upload-options">
+          <div class="upload-method">
+            <button class="upload-btn" (click)="triggerUpload()">
+              <mat-icon>cloud_upload</mat-icon>
+              <span>Upload Image</span>
+            </button>
+            <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" accept="image/*">
+          </div>
         </div>
+        
         <div class="uploads-list" *ngIf="uploads.length > 0">
           <div class="upload-item" *ngFor="let upload of uploads" (click)="addElementToCanvas('image', upload)">
             <img [src]="upload.url" [alt]="upload.name">
+            <button class="delete-upload-btn" (click)="deleteUpload(upload.id, $event)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
       </div>
