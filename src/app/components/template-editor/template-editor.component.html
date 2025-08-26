@@ -70,19 +70,48 @@
       </div>
       
       <div class="sidebar-section">
-        <h3 class="sidebar-title">Templates</h3>
+        <h3 class="sidebar-title">Social Media Templates</h3>
         <div class="template-presets">
-          <div class="preset-item">
-            <div class="preset-preview">Email</div>
-            <span>Email Template</span>
+          <div class="preset-item" (click)="setCanvasSize('instagram')">
+            <div class="preset-preview instagram">
+              <img src="assets/icons/instagram.svg" alt="Instagram" *ngIf="false">
+              <span>Instagram</span>
+            </div>
+            <span>Instagram Post</span>
           </div>
-          <div class="preset-item">
-            <div class="preset-preview">Notice</div>
-            <span>Notification</span>
+          <div class="preset-item" (click)="setCanvasSize('facebook')">
+            <div class="preset-preview facebook">
+              <img src="assets/icons/facebook.svg" alt="Facebook" *ngIf="false">
+              <span>Facebook</span>
+            </div>
+            <span>Facebook Post</span>
           </div>
-          <div class="preset-item">
-            <div class="preset-preview">Report</div>
-            <span>Report</span>
+          <div class="preset-item" (click)="setCanvasSize('twitter')">
+            <div class="preset-preview twitter">
+              <img src="assets/icons/twitter.svg" alt="Twitter" *ngIf="false">
+              <span>Twitter</span>
+            </div>
+            <span>Twitter Post</span>
+          </div>
+          <div class="preset-item" (click)="setCanvasSize('story')">
+            <div class="preset-preview story">
+              <span>Story</span>
+            </div>
+            <span>Instagram Story</span>
+          </div>
+          <div class="preset-item" (click)="setCanvasSize('youtube')">
+            <div class="preset-preview youtube">
+              <img src="assets/icons/youtube.svg" alt="YouTube" *ngIf="false">
+              <span>YouTube</span>
+            </div>
+            <span>YouTube Thumbnail</span>
+          </div>
+          <div class="preset-item" (click)="setCanvasSize('linkedin')">
+            <div class="preset-preview linkedin">
+              <img src="assets/icons/linkedin.svg" alt="LinkedIn" *ngIf="false">
+              <span>LinkedIn</span>
+            </div>
+            <span>LinkedIn Post</span>
           </div>
         </div>
       </div>

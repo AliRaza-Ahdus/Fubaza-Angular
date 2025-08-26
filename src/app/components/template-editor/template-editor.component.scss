@@ -479,6 +479,36 @@ $breakpoint-desktop: 1200px;
           color: #4285f4;
           transition: all 0.2s ease;
           
+          &.instagram {
+            background-color: #fcf0f6;
+            color: #E4405F;
+          }
+          
+          &.facebook {
+            background-color: #f0f4ff;
+            color: #1877F2;
+          }
+          
+          &.twitter {
+            background-color: #edf8ff;
+            color: #1DA1F2;
+          }
+          
+          &.story {
+            background-color: #f6f0fc;
+            color: #833AB4;
+          }
+          
+          &.youtube {
+            background-color: #ffefef;
+            color: #FF0000;
+          }
+          
+          &.linkedin {
+            background-color: #edf6ff;
+            color: #0A66C2;
+          }
+          
           @media (min-width: $breakpoint-tablet) {
             height: 80px;
             margin-bottom: 0.5rem;

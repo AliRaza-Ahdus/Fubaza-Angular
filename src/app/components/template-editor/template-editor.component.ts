@@ -378,6 +378,30 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   // Canvas operations
   setCanvasSize(size: string): void {
     switch (size) {
+      case 'instagram':
+        this.canvasWidth = 1080;
+        this.canvasHeight = 1080;
+        break;
+      case 'facebook':
+        this.canvasWidth = 1200;
+        this.canvasHeight = 630;
+        break;
+      case 'twitter':
+        this.canvasWidth = 1024;
+        this.canvasHeight = 512;
+        break;
+      case 'story':
+        this.canvasWidth = 1080;
+        this.canvasHeight = 1920;
+        break;
+      case 'youtube':
+        this.canvasWidth = 1280;
+        this.canvasHeight = 720;
+        break;
+      case 'linkedin':
+        this.canvasWidth = 1200;
+        this.canvasHeight = 627;
+        break;
       case 'small':
         this.canvasWidth = 600;
         this.canvasHeight = 400;
