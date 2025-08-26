@@ -182,6 +182,34 @@
             </button>
             <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" accept="image/*">
           </div>
+          <div class="upload-method">
+            <button class="upload-btn stock" (click)="toggleStockLibrary()">
+              <mat-icon>collections</mat-icon>
+              <span>Stock Images</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Stock Image Library -->
+        <div class="stock-library" *ngIf="showStockLibrary">
+          <div class="stock-search">
+            <input type="text" [(ngModel)]="stockSearchQuery" placeholder="Search images...">
+            <button (click)="searchStockImages()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+          <div class="stock-categories">
+            <span class="category" (click)="selectStockCategory('nature')">Nature</span>
+            <span class="category" (click)="selectStockCategory('people')">People</span>
+            <span class="category" (click)="selectStockCategory('business')">Business</span>
+            <span class="category" (click)="selectStockCategory('food')">Food</span>
+            <span class="category" (click)="selectStockCategory('technology')">Technology</span>
+          </div>
+          <div class="stock-images-grid">
+            <div class="stock-image" *ngFor="let image of stockImages" (click)="addStockImage(image)">
+              <img [src]="image.thumbnailUrl" [alt]="image.description">
+            </div>
+          </div>
         </div>
         
         <div class="uploads-list" *ngIf="uploads.length > 0">

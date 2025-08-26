@@ -118,8 +118,41 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   elementStartHeight: number = 0;
   zoomLevel: number = 100;
   
+  // Grid and alignment
+  showGrid: boolean = false;
+  snapToGrid: boolean = false;
+  gridSize: number = 20;
+  showAlignmentGuides: boolean = true;
+  showHorizontalCenterGuide: boolean = false;
+  showVerticalCenterGuide: boolean = false;
+  showLeftEdgeGuide: boolean = false;
+  showRightEdgeGuide: boolean = false;
+  showTopEdgeGuide: boolean = false;
+  showBottomEdgeGuide: boolean = false;
+  
   // For uploads
   uploads: UploadItem[] = [];
+  showShapeSelector: boolean = false;
+  
+  // Dialogs
+  showCustomSizeDialog: boolean = false;
+  customWidth: number = 800;
+  customHeight: number = 600;
+  showCropDialog: boolean = false;
+  currentImageToCrop: CanvasElement | null = null;
+  cropWidth: number = 200;
+  cropHeight: number = 200;
+  cropTop: number = 0;
+  cropLeft: number = 0;
+  cropAspectRatio: string = 'free';
+  showShareDialog: boolean = false;
+  shareLink: string = '';
+  sharePermission: 'view' | 'edit' = 'view';
+  showExportOptions: boolean = false;
+  
+  // Page management
+  currentPage: number = 0;
+  pages: CanvasElement[][] = [[]];
   
   // History management
   history: CanvasElement[][] = [[]];
@@ -139,6 +172,9 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     
     // Set default panel for mobile
     this.activeMobilePanel = 'canvas';
+    
+    // Initialize pages
+    this.pages[0] = this.canvasElements;
     
     // Add window resize listener
     this.handleWindowResize();
@@ -642,5 +678,240 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     
     element.boxShadow = `${offsetX}px ${offsetY}px ${blur}px ${shadowColor}`;
     this.updateElement();
+  }
+  
+  // Grid and alignment features
+  toggleGrid(): void {
+    this.showGrid = !this.showGrid;
+  }
+  
+  toggleSnapToGrid(): void {
+    this.snapToGrid = !this.snapToGrid;
+    if (this.snapToGrid && !this.showGrid) {
+      this.showGrid = true;
+    }
+  }
+  
+  toggleAlignmentGuides(): void {
+    this.showAlignmentGuides = !this.showAlignmentGuides;
+  }
+  
+  // Layer ordering
+  bringForward(): void {
+    if (this.selectedElement === null || this.selectedElement >= this.canvasElements.length - 1) return;
+    
+    const temp = this.canvasElements[this.selectedElement];
+    this.canvasElements[this.selectedElement] = this.canvasElements[this.selectedElement + 1];
+    this.canvasElements[this.selectedElement + 1] = temp;
+    this.selectedElement++;
+    this.saveToHistory();
+  }
+  
+  sendBackward(): void {
+    if (this.selectedElement === null || this.selectedElement <= 0) return;
+    
+    const temp = this.canvasElements[this.selectedElement];
+    this.canvasElements[this.selectedElement] = this.canvasElements[this.selectedElement - 1];
+    this.canvasElements[this.selectedElement - 1] = temp;
+    this.selectedElement--;
+    this.saveToHistory();
+  }
+  
+  // Page management
+  duplicatePage(): void {
+    const pageCopy = JSON.parse(JSON.stringify(this.canvasElements));
+    this.pages.push(pageCopy);
+    this.currentPage = this.pages.length - 1;
+    this.canvasElements = this.pages[this.currentPage];
+    this.selectedElement = null;
+    this.saveToHistory();
+  }
+  
+  // Custom size dialog
+  openCustomSizeDialog(): void {
+    this.customWidth = this.canvasWidth;
+    this.customHeight = this.canvasHeight;
+    this.showCustomSizeDialog = true;
+  }
+  
+  closeCustomSizeDialog(): void {
+    this.showCustomSizeDialog = false;
+  }
+  
+  selectPresetSize(preset: string): void {
+    switch(preset) {
+      case 'instagram':
+        this.customWidth = 1080;
+        this.customHeight = 1080;
+        break;
+      case 'facebook':
+        this.customWidth = 1200;
+        this.customHeight = 630;
+        break;
+      case 'twitter':
+        this.customWidth = 1200;
+        this.customHeight = 675;
+        break;
+      case 'story':
+        this.customWidth = 1080;
+        this.customHeight = 1920;
+        break;
+      case 'youtube':
+        this.customWidth = 1280;
+        this.customHeight = 720;
+        break;
+    }
+  }
+  
+  applyCustomSize(): void {
+    if (this.customWidth < 50) this.customWidth = 50;
+    if (this.customHeight < 50) this.customHeight = 50;
+    if (this.customWidth > 2000) this.customWidth = 2000;
+    if (this.customHeight > 2000) this.customHeight = 2000;
+    
+    this.canvasWidth = this.customWidth;
+    this.canvasHeight = this.customHeight;
+    this.setupCanvas();
+    this.closeCustomSizeDialog();
+  }
+  
+  // Image editing functions
+  cropImage(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    this.currentImageToCrop = this.canvasElements[this.selectedElement];
+    this.cropWidth = this.currentImageToCrop.width / 2;
+    this.cropHeight = this.currentImageToCrop.height / 2;
+    this.cropTop = this.currentImageToCrop.height / 4;
+    this.cropLeft = this.currentImageToCrop.width / 4;
+    this.showCropDialog = true;
+  }
+  
+  closeCropDialog(): void {
+    this.showCropDialog = false;
+    this.currentImageToCrop = null;
+  }
+  
+  startCropResize(handle: string, event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    // Logic for crop resizing would go here
+  }
+  
+  applyCropAspectRatio(): void {
+    if (!this.cropAspectRatio || this.cropAspectRatio === 'free') return;
+    
+    const [width, height] = this.cropAspectRatio.split(':').map(Number);
+    const ratio = width / height;
+    
+    this.cropHeight = this.cropWidth / ratio;
+  }
+  
+  applyCrop(): void {
+    // In a real implementation, this would apply cropping to the image
+    // using canvas or an image processing library
+    this.closeCropDialog();
+  }
+  
+  flipImage(direction: 'horizontal' | 'vertical'): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    // In a real implementation, this would apply an actual transform to the image
+    // For now, we'll just log it
+    console.log(`Flipping image ${direction}`);
+  }
+  
+  rotateImage(degrees: number): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (!element.rotate) element.rotate = 0;
+    element.rotate = (element.rotate + degrees) % 360;
+    this.updateElement();
+  }
+  
+  toggleBackgroundRemoval(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    // In a real app, this would call a background removal API
+    console.log('Background removal requested');
+  }
+  
+  // Export functions
+  toggleExportOptions(): void {
+    this.showExportOptions = !this.showExportOptions;
+  }
+  
+  exportTemplate(format: 'png' | 'jpg' | 'pdf', quality: 'standard' | 'high'): void {
+    // In a real implementation, this would convert the canvas to the requested format
+    console.log(`Exporting as ${format} in ${quality} quality`);
+    this.showExportOptions = false;
+  }
+  
+  // Sharing functions
+  generateShareLink(): void {
+    // Generate a mock share link
+    this.shareLink = `https://fubaza.com/templates/share/${Date.now()}`;
+    this.sharePermission = 'view';
+    this.showShareDialog = true;
+    this.showExportOptions = false;
+  }
+  
+  closeShareDialog(): void {
+    this.showShareDialog = false;
+  }
+  
+  copyShareLink(input: HTMLInputElement): void {
+    input.select();
+    document.execCommand('copy');
+    // Show a toast notification or some feedback
+    console.log('Link copied to clipboard');
+  }
+  
+  generateNewShareLink(): void {
+    // In a real app, this would invalidate the old link and create a new one
+    this.shareLink = `https://fubaza.com/templates/share/${Date.now()}`;
+    console.log('New share link generated');
+  }
+
+  // Added missing method
+  openShapeSelector(): void {
+    this.showShapeSelector = !this.showShapeSelector;
+  }
+  
+  updateGradient(): void {
+    if (!this.selectedElement) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    
+    if (element.gradientType) {
+      if (element.gradientType === 'linear') {
+        const angle = element.gradientAngle || 0;
+        element.color = `linear-gradient(${angle}deg, ${element.gradientStop1 || '#ffffff'}, ${element.gradientStop2 || '#000000'})`;
+      } else if (element.gradientType === 'radial') {
+        element.color = `radial-gradient(circle, ${element.gradientStop1 || '#ffffff'}, ${element.gradientStop2 || '#000000'})`;
+      }
+    }
+    
+    this.updateElement();
+  }
+  
+  addShapeToCanvas(shapeType: string): void {
+    const newShape: CanvasElement = {
+      id: `shape-${Date.now()}`,
+      type: 'shape',
+      x: (this.canvasWidth - 150) / 2,
+      y: (this.canvasHeight - 150) / 2,
+      width: 150,
+      height: shapeType === 'circle' ? 150 : (shapeType === 'star' || shapeType === 'heart') ? 120 : 150,
+      shape: shapeType,
+      color: '#4c6ef5',
+      opacity: 1,
+      borderRadius: 0
+    };
+    
+    this.addElementToCanvas('shape', newShape);
+    this.showShapeSelector = false;
   }
 }
