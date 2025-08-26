@@ -118,6 +118,10 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   elementStartHeight: number = 0;
   zoomLevel: number = 100;
   
+  // Add a property to store the generated template JSON
+  templateJsonData: any = null;
+  templateJsonString: string = '';
+  
   // Grid and alignment
   showGrid: boolean = false;
   snapToGrid: boolean = false;
@@ -572,11 +576,322 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
       this.template.createdAt = new Date();
     }
     
+    // Generate the standardized JSON format for saving/exporting
+    this.templateJsonData = this.generateTemplateJson();
+    
+    // Store the JSON in a variable (could be saved to DB in the future)
+    this.templateJsonString = JSON.stringify(this.templateJsonData, null, 2);
+    
+    // For debugging purposes - log the JSON
+    console.log('Template JSON:', this.templateJsonString);
+    
     // In a real app, you would save to a service/backend here
     console.log('Saving template:', this.template);
     
-    // Show success message
-    alert('Template saved successfully');
+    // Show success message with JSON preview
+    alert(`Template saved successfully!\n\nPreview of JSON data:\n${this.templateJsonString.substring(0, 150)}...`);
+    
+    // Set a breakpoint here for debugging
+    debugger; // This will pause execution in the browser's developer tools
+  }
+  
+  // Save template with promise-based image conversion
+  async saveTemplateWithImageConversion(): Promise<void> {
+    if (!this.template.name || !this.template.type) {
+      alert('Please provide a name and type for your template');
+      return;
+    }
+    
+    try {
+      // Show loading indicator
+      console.log('Converting images to base64...');
+      
+      // Pre-process all images to base64
+      await this.preProcessImages();
+
+      debugger;
+      
+      // Continue with regular save flow
+      // Save the current state to the template
+      this.template.elements = this.canvasElements;
+      this.template.canvasWidth = this.canvasWidth;
+      this.template.canvasHeight = this.canvasHeight;
+      this.template.updatedAt = new Date();
+      
+      if (!this.template.id) {
+        this.template.id = `template_${Date.now()}`;
+        this.template.createdAt = new Date();
+      }
+      
+      // Generate the standardized JSON format for saving/exporting
+      this.templateJsonData = this.generateTemplateJson();
+      
+      // Store the JSON in a variable (could be saved to DB in the future)
+      this.templateJsonString = JSON.stringify(this.templateJsonData, null, 2);
+      
+      // For debugging purposes - log the JSON
+      console.log('Template JSON:', this.templateJsonString);
+      
+      // In a real app, you would save to a service/backend here
+      console.log('Saving template:', this.template);
+      
+      // Show success message with JSON preview
+      alert(`Template saved successfully!\n\nPreview of JSON data:\n${this.templateJsonString.substring(0, 150)}...`);
+      
+      // Set a breakpoint here for debugging
+      debugger; // This will pause execution in the browser's developer tools
+    } catch (error) {
+      console.error('Error during image conversion:', error);
+      alert('Error saving template: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
+  }
+  
+  // Pre-process all images to ensure they're in base64 format
+  async preProcessImages(): Promise<void> {
+    // Get all image elements
+    const imageElements = this.canvasElements.filter(element => element.type === 'image');
+    
+    // Process each image element
+    const conversionPromises = imageElements.map(async (element, index) => {
+      if (!element.src || element.src.startsWith('data:')) {
+        // Already a data URL, no need to convert
+        return;
+      }
+      
+      try {
+        // Convert the image to base64
+        const base64Data = await this.convertImageToBase64(element.src);
+        
+        // Update the element with the base64 data
+        const elementIndex = this.canvasElements.findIndex(e => e.id === element.id);
+        if (elementIndex !== -1) {
+          this.canvasElements[elementIndex].src = base64Data;
+        }
+      } catch (error) {
+        console.warn(`Failed to convert image ${element.id} to base64:`, error);
+        // Continue with other images even if one fails
+      }
+    });
+    
+    // Wait for all conversions to complete
+    await Promise.all(conversionPromises);
+  }
+  
+  // Promise-based image to base64 conversion
+  convertImageToBase64(imageUrl: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // Enable CORS if the image is from another domain
+      
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Could not get canvas context'));
+            return;
+          }
+          
+          // Draw the image on the canvas
+          ctx.drawImage(img, 0, 0);
+          
+          // Convert to base64
+          const dataUrl = canvas.toDataURL('image/png');
+          resolve(dataUrl);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      img.onerror = () => {
+        reject(new Error(`Failed to load image: ${imageUrl}`));
+      };
+      
+      // Start loading the image
+      img.src = imageUrl;
+    });
+  }
+  
+  // Generate standardized template JSON
+  generateTemplateJson(): any {
+    // Create the template JSON structure according to the required format
+    const templateJson = {
+      width: this.canvasWidth,
+      height: this.canvasHeight,
+      elements: this.canvasElements.map((element, index) => {
+        // Base element properties that all elements will have
+        const jsonElement: any = {
+          id: element.id || `element_${index}`,
+          type: element.type === 'shape' ? 'image' : element.type, // Convert shape to image type as requested
+          x: element.x || 0,
+          y: element.y || 0,
+          scale: 1.0,
+          rotation: element.rotate || 0,
+          z: index
+        };
+        
+        // Add type-specific properties
+        switch (element.type) {
+          case 'text':
+            // For text elements
+            jsonElement.text = element.content || '';
+            jsonElement.fontFamily = element.fontFamily || 'Roboto';
+            jsonElement.fontSize = element.fontSize || 24;
+            jsonElement.color = element.color || '#000000';
+            break;
+            
+          case 'image':
+          case 'shape': // Handle shapes as images
+            // For images, use the source as URL
+            if (element.src) {
+              jsonElement.url = element.src;
+            } else if (element.type === 'shape') {
+              // If it's a shape with no src, generate an SVG representation
+              jsonElement.url = this.getShapeAsBase64(element);
+            } else {
+              // Default placeholder for missing images
+              jsonElement.url = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+            }
+            break;
+        }
+        
+        return jsonElement;
+      })
+    };
+    
+    return templateJson;
+  }
+  
+  // Helper method to convert an image URL to base64 placeholder
+  // In a real application, this would actually fetch and convert the image
+  getImageAsBase64Placeholder(imageUrl: string): string {
+    // If it's a local asset, try to convert it
+    if (imageUrl.startsWith('assets/') || imageUrl.startsWith('./assets/') || imageUrl.startsWith('/assets/')) {
+      try {
+        // For local assets that might be already cached in the browser
+        return this.convertLocalImageToBase64(imageUrl);
+      } catch (e) {
+        console.warn('Could not convert local image to base64:', e);
+      }
+    }
+    
+    // Extract the filename from the URL for a more informative placeholder
+    const filename = imageUrl.split('/').pop() || 'image';
+    
+    // For demonstration purposes, we're returning a base64 placeholder
+    // with the original URL embedded in a comment
+    // In a real implementation, you would use the Canvas API to load and convert the image
+    
+    // Create a simple colored rectangle as a placeholder
+    const svgContent = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+        <rect width="200" height="200" fill="#e0e0e0"/>
+        <text x="50%" y="50%" font-family="Arial" font-size="12" fill="#333" text-anchor="middle">${filename}</text>
+        <!-- Original URL: ${imageUrl} -->
+      </svg>
+    `;
+    
+    // Convert SVG to base64
+    return `data:image/svg+xml;base64,${btoa(svgContent.trim())}`;
+  }
+  
+  // This method attempts to convert a local image to base64 synchronously
+  // Note: This works for images that are already loaded/cached in the browser
+  // For production use, an asynchronous approach is recommended
+  convertLocalImageToBase64(imageUrl: string): string {
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) {
+      throw new Error('Could not get canvas context');
+    }
+    
+    // Create an image element
+    const img = new Image();
+    
+    // Set a flag to track if the image is loaded
+    let isLoaded = false;
+    
+    // Set up the onload handler that will set the flag
+    img.onload = () => {
+      isLoaded = true;
+    };
+    
+    // Set the source to start loading
+    img.src = imageUrl;
+    
+    // If the image is already cached, the onload event might have fired
+    // before we had a chance to set the handler
+    if (img.complete) {
+      isLoaded = true;
+    }
+    
+    // If image isn't loaded yet, we can't convert it synchronously
+    if (!isLoaded) {
+      throw new Error('Image not loaded');
+    }
+    
+    // Draw the image on the canvas
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    
+    // Convert canvas to data URL
+    try {
+      return canvas.toDataURL('image/png');
+    } catch (e) {
+      // This can happen with cross-origin images
+      console.error('Error converting to data URL:', e);
+      throw e;
+    }
+  }
+  
+  // Helper method to convert a shape element to base64
+  getShapeAsBase64(element: CanvasElement): string {
+    const width = element.width || 100;
+    const height = element.height || 100;
+    const color = element.color || '#3498db';
+    const shape = element.shape || 'rectangle';
+    
+    let svgContent = '';
+    
+    switch (shape) {
+      case 'circle':
+        const radius = Math.min(width, height) / 2;
+        svgContent = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+            <circle cx="${width/2}" cy="${height/2}" r="${radius}" fill="${color}"/>
+          </svg>
+        `;
+        break;
+      case 'triangle':
+        svgContent = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+            <polygon points="${width/2},0 ${width},${height} 0,${height}" fill="${color}"/>
+          </svg>
+        `;
+        break;
+      case 'ellipse':
+        svgContent = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+            <ellipse cx="${width/2}" cy="${height/2}" rx="${width/2}" ry="${height/2}" fill="${color}"/>
+          </svg>
+        `;
+        break;
+      default: // rectangle or any other shape
+        svgContent = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+            <rect width="${width}" height="${height}" fill="${color}"/>
+          </svg>
+        `;
+    }
+    
+    // Convert SVG to base64
+    return `data:image/svg+xml;base64,${btoa(svgContent.trim())}`;
   }
 
   // Cancel editing
