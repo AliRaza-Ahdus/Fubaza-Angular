@@ -915,3 +915,4 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     this.showShapeSelector = false;
   }
 }
+
