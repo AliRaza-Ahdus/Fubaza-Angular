@@ -561,13 +561,17 @@
               </button>
               <button class="image-edit-btn" (click)="flipImage('horizontal')">
                 <mat-icon>flip</mat-icon>
-                <span>Flip</span>
+                <span>Flip H</span>
+              </button>
+              <button class="image-edit-btn" (click)="flipImage('vertical')">
+                <mat-icon>flip</mat-icon>
+                <span>Flip V</span>
               </button>
               <button class="image-edit-btn" (click)="rotateImage(90)">
                 <mat-icon>rotate_right</mat-icon>
                 <span>Rotate</span>
               </button>
-              <button class="image-edit-btn" (click)="toggleBackgroundRemoval()">
+              <button class="image-edit-btn" (click)="toggleBackgroundRemoval()" [ngClass]="{'active': isBackgroundRemovalActive()}">
                 <mat-icon>content_cut</mat-icon>
                 <span>Remove BG</span>
               </button>
@@ -811,7 +815,8 @@
                [style.width.px]="cropWidth"
                [style.height.px]="cropHeight"
                [style.top.px]="cropTop"
-               [style.left.px]="cropLeft">
+               [style.left.px]="cropLeft"
+               (mousedown)="startCropDrag($event)">
             <div class="resize-handle top-left" (mousedown)="startCropResize('top-left', $event)"></div>
             <div class="resize-handle top-right" (mousedown)="startCropResize('top-right', $event)"></div>
             <div class="resize-handle bottom-left" (mousedown)="startCropResize('bottom-left', $event)"></div>

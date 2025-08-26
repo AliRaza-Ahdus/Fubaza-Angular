@@ -779,7 +779,13 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   cropImage(): void {
     if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
     
-    this.currentImageToCrop = this.canvasElements[this.selectedElement];
+    const selectedImage = this.canvasElements[this.selectedElement];
+    if (!selectedImage.src) {
+      console.error('No image source found');
+      return;
+    }
+    
+    this.currentImageToCrop = { ...selectedImage };
     this.cropWidth = this.currentImageToCrop.width / 2;
     this.cropHeight = this.currentImageToCrop.height / 2;
     this.cropTop = this.currentImageToCrop.height / 4;
@@ -795,7 +801,119 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   startCropResize(handle: string, event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    // Logic for crop resizing would go here
+    
+    this.isResizing = true;
+    this.resizeHandle = handle;
+    this.dragStartX = event.clientX;
+    this.dragStartY = event.clientY;
+    this.elementStartX = this.cropLeft;
+    this.elementStartY = this.cropTop;
+    this.elementStartWidth = this.cropWidth;
+    this.elementStartHeight = this.cropHeight;
+    
+    const cropResizeMouseMove = (moveEvent: MouseEvent) => {
+      moveEvent.preventDefault();
+      const dx = moveEvent.clientX - this.dragStartX;
+      const dy = moveEvent.clientY - this.dragStartY;
+      
+      switch (handle) {
+        case 'top-left':
+          this.cropLeft = Math.min(this.elementStartX + dx, this.elementStartX + this.elementStartWidth - 20);
+          this.cropTop = Math.min(this.elementStartY + dy, this.elementStartY + this.elementStartHeight - 20);
+          this.cropWidth = Math.max(20, this.elementStartWidth - dx);
+          this.cropHeight = Math.max(20, this.elementStartHeight - dy);
+          break;
+        case 'top-right':
+          this.cropTop = Math.min(this.elementStartY + dy, this.elementStartY + this.elementStartHeight - 20);
+          this.cropWidth = Math.max(20, this.elementStartWidth + dx);
+          this.cropHeight = Math.max(20, this.elementStartHeight - dy);
+          break;
+        case 'bottom-left':
+          this.cropLeft = Math.min(this.elementStartX + dx, this.elementStartX + this.elementStartWidth - 20);
+          this.cropWidth = Math.max(20, this.elementStartWidth - dx);
+          this.cropHeight = Math.max(20, this.elementStartHeight + dy);
+          break;
+        case 'bottom-right':
+          this.cropWidth = Math.max(20, this.elementStartWidth + dx);
+          this.cropHeight = Math.max(20, this.elementStartHeight + dy);
+          break;
+      }
+      
+      // Apply aspect ratio if needed
+      if (this.cropAspectRatio && this.cropAspectRatio !== 'free') {
+        const [width, height] = this.cropAspectRatio.split(':').map(Number);
+        const ratio = width / height;
+        
+        if (handle.includes('right')) {
+          this.cropHeight = this.cropWidth / ratio;
+        } else {
+          this.cropWidth = this.cropHeight * ratio;
+        }
+      }
+    };
+    
+    const cropResizeMouseUp = () => {
+      document.removeEventListener('mousemove', cropResizeMouseMove);
+      document.removeEventListener('mouseup', cropResizeMouseUp);
+      this.isResizing = false;
+    };
+    
+    document.addEventListener('mousemove', cropResizeMouseMove);
+    document.addEventListener('mouseup', cropResizeMouseUp);
+  }
+  
+  startCropDrag(event: MouseEvent): void {
+    // Prevent event bubbling to parent
+    event.stopPropagation();
+    
+    // Only handle primary button (left click)
+    if (event.button !== 0) return;
+    
+    // Ignore clicks on resize handles
+    if ((event.target as HTMLElement).classList.contains('resize-handle')) return;
+    
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startCropLeft = this.cropLeft;
+    const startCropTop = this.cropTop;
+    
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+      
+      // Calculate new position
+      const newLeft = startCropLeft + dx;
+      const newTop = startCropTop + dy;
+      
+      // Get image boundaries for constraint checking
+      const cropImage = document.querySelector('.crop-container img') as HTMLImageElement;
+      const cropContainer = document.querySelector('.crop-container') as HTMLDivElement;
+      
+      if (cropImage && cropContainer) {
+        const imgRect = cropImage.getBoundingClientRect();
+        const containerRect = cropContainer.getBoundingClientRect();
+        
+        // Calculate image position relative to container
+        const imgOffsetLeft = imgRect.left - containerRect.left;
+        const imgOffsetTop = imgRect.top - containerRect.top;
+        
+        // Constrain crop area to image boundaries
+        this.cropLeft = Math.max(imgOffsetLeft, Math.min(imgOffsetLeft + imgRect.width - this.cropWidth, newLeft));
+        this.cropTop = Math.max(imgOffsetTop, Math.min(imgOffsetTop + imgRect.height - this.cropHeight, newTop));
+      } else {
+        // Fallback if we can't get image boundaries
+        this.cropLeft = newLeft;
+        this.cropTop = newTop;
+      }
+    };
+    
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
   
   applyCropAspectRatio(): void {
@@ -804,38 +922,307 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     const [width, height] = this.cropAspectRatio.split(':').map(Number);
     const ratio = width / height;
     
+    // Adjust height based on current width
     this.cropHeight = this.cropWidth / ratio;
+    
+    // Make sure crop area stays within image bounds
+    if (this.cropTop + this.cropHeight > this.currentImageToCrop!.height) {
+      this.cropHeight = this.currentImageToCrop!.height - this.cropTop;
+      this.cropWidth = this.cropHeight * ratio;
+    }
   }
   
   applyCrop(): void {
-    // In a real implementation, this would apply cropping to the image
-    // using canvas or an image processing library
-    this.closeCropDialog();
+    if (!this.currentImageToCrop || this.selectedElement === null) {
+      this.closeCropDialog();
+      return;
+    }
+    
+    if (!this.currentImageToCrop.src) {
+      console.error('No image source found');
+      this.closeCropDialog();
+      return;
+    }
+    
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) {
+      console.error('Failed to get canvas context');
+      this.closeCropDialog();
+      return;
+    }
+    
+    // Load the image
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      // Get the scale factor (original image vs element dimensions)
+      const scaleX = img.width / this.currentImageToCrop!.width;
+      const scaleY = img.height / this.currentImageToCrop!.height;
+      
+      // Set canvas size to the crop dimensions
+      canvas.width = this.cropWidth * scaleX;
+      canvas.height = this.cropHeight * scaleY;
+      
+      // Draw the cropped portion
+      ctx.drawImage(
+        img,
+        this.cropLeft * scaleX,   // Source X
+        this.cropTop * scaleY,    // Source Y
+        this.cropWidth * scaleX,  // Source Width
+        this.cropHeight * scaleY, // Source Height
+        0, 0,                    // Destination X, Y
+        canvas.width,            // Destination Width
+        canvas.height            // Destination Height
+      );
+      
+      // Convert to data URL
+      const croppedImageDataUrl = canvas.toDataURL('image/png');
+      
+      // Update the element with cropped image
+      if (this.selectedElement !== null) {
+        this.canvasElements[this.selectedElement].src = croppedImageDataUrl;
+        
+        // Save to history
+        this.updateElement();
+      }
+      
+      this.closeCropDialog();
+    };
+    
+    img.onerror = () => {
+      console.error('Failed to load image for cropping');
+      this.closeCropDialog();
+    };
+    
+    img.src = this.currentImageToCrop.src;
   }
   
   flipImage(direction: 'horizontal' | 'vertical'): void {
     if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
     
     const element = this.canvasElements[this.selectedElement];
-    // In a real implementation, this would apply an actual transform to the image
-    // For now, we'll just log it
-    console.log(`Flipping image ${direction}`);
+    if (!element.src) {
+      console.error('No image source found');
+      return;
+    }
+    
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        console.error('Failed to get canvas context');
+        return;
+      }
+      
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      // Apply flip transformation
+      ctx.save();
+      if (direction === 'horizontal') {
+        ctx.translate(canvas.width, 0);
+        ctx.scale(-1, 1);
+      } else if (direction === 'vertical') {
+        ctx.translate(0, canvas.height);
+        ctx.scale(1, -1);
+      }
+      
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+      
+      // Convert to data URL and update the element
+      const flippedImageDataUrl = canvas.toDataURL('image/png');
+      element.src = flippedImageDataUrl;
+      
+      // Save to history
+      this.updateElement();
+    };
+    
+    img.onerror = () => {
+      console.error('Failed to load image for flipping');
+    };
+    
+    img.src = element.src;
   }
   
   rotateImage(degrees: number): void {
     if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
     
     const element = this.canvasElements[this.selectedElement];
-    if (!element.rotate) element.rotate = 0;
-    element.rotate = (element.rotate + degrees) % 360;
-    this.updateElement();
+    if (!element.src) {
+      console.error('No image source found');
+      return;
+    }
+    
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        console.error('Failed to get canvas context');
+        return;
+      }
+      
+      // Calculate new canvas dimensions for the rotated image
+      let newWidth, newHeight;
+      
+      if (degrees % 180 === 0) {
+        // 180 degree rotation - same dimensions
+        newWidth = img.width;
+        newHeight = img.height;
+      } else {
+        // 90 or 270 degree rotation - swap dimensions
+        newWidth = img.height;
+        newHeight = img.width;
+      }
+      
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      
+      // Apply rotation transformation
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((degrees * Math.PI) / 180);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      ctx.restore();
+      
+      // Convert to data URL and update the element
+      const rotatedImageDataUrl = canvas.toDataURL('image/png');
+      element.src = rotatedImageDataUrl;
+      
+      // If the rotation is 90 or 270 degrees, swap width and height of the element
+      if (degrees % 180 !== 0) {
+        const tempWidth = element.width;
+        element.width = element.height;
+        element.height = tempWidth;
+      }
+      
+      // Save to history
+      this.updateElement();
+    };
+    
+    img.onerror = () => {
+      console.error('Failed to load image for rotation');
+    };
+    
+    img.src = element.src;
+  }
+  
+  // Helper method to check if background removal is active
+  isBackgroundRemovalActive(): boolean {
+    if (this.selectedElement === null) return false;
+    if (!this.canvasElements[this.selectedElement]) return false;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (!element.filter) return false;
+    
+    return element.filter.includes('remove-background');
   }
   
   toggleBackgroundRemoval(): void {
     if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
     
-    // In a real app, this would call a background removal API
-    console.log('Background removal requested');
+    const element = this.canvasElements[this.selectedElement];
+    if (!element.src) {
+      console.error('No image source found');
+      return;
+    }
+    
+    // First check if background removal is already applied
+    if (element.filter && element.filter.includes('remove-background')) {
+      // Remove the background removal filter
+      element.filter = element.filter.replace('remove-background', '').trim();
+      if (element.filter === '') {
+        element.filter = 'none';
+      }
+      this.updateElement();
+      return;
+    }
+    
+    // In a real implementation, this would call a background removal API service
+    // For demo purposes, we'll use a canvas-based approach to apply a simple background removal effect
+    
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        console.error('Failed to get canvas context');
+        return;
+      }
+      
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      
+      // Get image data for processing
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      
+      // Simple background removal algorithm (uses corner pixel as background color)
+      // This is a simplistic approach - real background removal would use more sophisticated algorithms
+      const cornerPixel = {
+        r: data[0],
+        g: data[1],
+        b: data[2]
+      };
+      
+      const threshold = 50; // Color difference threshold
+      
+      // Process each pixel
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        
+        // Calculate color difference from the corner pixel
+        const colorDiff = Math.sqrt(
+          Math.pow(r - cornerPixel.r, 2) +
+          Math.pow(g - cornerPixel.g, 2) +
+          Math.pow(b - cornerPixel.b, 2)
+        );
+        
+        // If the color is close to the background color, make it transparent
+        if (colorDiff < threshold) {
+          data[i + 3] = 0; // Set alpha to 0 (transparent)
+        }
+      }
+      
+      // Put the processed image data back on the canvas
+      ctx.putImageData(imageData, 0, 0);
+      
+      // Convert to data URL and update the element
+      const processedImageDataUrl = canvas.toDataURL('image/png');
+      element.src = processedImageDataUrl;
+      
+      // Add a class or attribute to indicate background removal is applied
+      if (!element.filter || element.filter === 'none') {
+        element.filter = 'remove-background';
+      } else {
+        element.filter += ' remove-background';
+      }
+      
+      // Save to history
+      this.updateElement();
+    };
+    
+    img.onerror = () => {
+      console.error('Failed to load image for background removal');
+    };
+    
+    img.src = element.src;
   }
   
   // Export functions
