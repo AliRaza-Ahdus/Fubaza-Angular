@@ -147,8 +147,16 @@
                  [style.fontSize.px]="element.fontSize"
                  [style.color]="element.color"
                  [style.fontFamily]="element.fontFamily"
+                 [style.fontWeight]="element.fontWeight"
+                 [style.fontStyle]="element.fontStyle"
+                 [style.textDecoration]="element.textDecoration"
+                 [style.textAlign]="element.textAlign"
+                 [style.backgroundColor]="element.backgroundColor"
+                 [style.padding.px]="element.padding"
+                 [style.borderRadius.px]="element.borderRadius"
                  [contentEditable]="selectedElement === i"
-                 (blur)="updateElementContent(i, $event)">
+                 (blur)="updateElementContent(i, $event)"
+                 (focus)="selectedElement = i">
               {{ element.content }}
             </div>
             
@@ -156,12 +164,25 @@
             <img *ngIf="element.type === 'image'" 
                  [src]="element.src" 
                  [alt]="element.alt || 'Image'" 
-                 class="image-element">
+                 class="image-element"
+                 [style.objectFit]="element.objectFit || 'contain'"
+                 [style.objectPosition]="element.objectPosition || 'center'"
+                 [style.borderRadius.px]="element.borderRadius"
+                 [style.border]="element.border"
+                 [style.boxShadow]="element.boxShadow"
+                 [style.filter]="element.filter"
+                 [style.opacity]="element.opacity || 1">
             
             <!-- Shape element -->
             <div *ngIf="element.type === 'shape'" 
                  class="shape-element"
-                 [style.backgroundColor]="element.color">
+                 [style.backgroundColor]="element.color"
+                 [style.borderRadius.px]="element.shape === 'circle' ? element.width/2 : element.borderRadius"
+                 [style.clipPath]="element.shape === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : null"
+                 [style.boxShadow]="element.boxShadow"
+                 [style.opacity]="element.opacity || 1"
+                 [style.border]="element.border"
+                 [style.transform]="element.rotate ? 'rotate(' + element.rotate + 'deg)' : null">
             </div>
             
             <!-- Resize handles (only show for selected element) -->
@@ -220,12 +241,12 @@
       <!-- Text specific properties -->
       <div *ngIf="canvasElements[selectedElement].type === 'text'">
         <div class="property-group">
-          <label>Text</label>
+          <label>Text Content</label>
           <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()" class="text-editor"></textarea>
         </div>
         
         <div class="property-group">
-          <label>Appearance</label>
+          <label>Font</label>
           <div class="text-formatting">
             <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()" class="font-select">
               <option value="Arial">Arial</option>
@@ -252,6 +273,56 @@
             </div>
           </div>
         </div>
+        
+        <div class="property-group">
+          <label>Text Style</label>
+          <div class="style-buttons">
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].fontWeight === 'bold'}" 
+                    (click)="toggleTextStyle('fontWeight', 'bold')" title="Bold">
+              <mat-icon>format_bold</mat-icon>
+            </button>
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].fontStyle === 'italic'}" 
+                    (click)="toggleTextStyle('fontStyle', 'italic')" title="Italic">
+              <mat-icon>format_italic</mat-icon>
+            </button>
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textDecoration === 'underline'}" 
+                    (click)="toggleTextStyle('textDecoration', 'underline')" title="Underline">
+              <mat-icon>format_underlined</mat-icon>
+            </button>
+          </div>
+          <div class="alignment-buttons">
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'left'}" 
+                    (click)="setTextStyle('textAlign', 'left')" title="Align Left">
+              <mat-icon>format_align_left</mat-icon>
+            </button>
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'center'}" 
+                    (click)="setTextStyle('textAlign', 'center')" title="Align Center">
+              <mat-icon>format_align_center</mat-icon>
+            </button>
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'right'}" 
+                    (click)="setTextStyle('textAlign', 'right')" title="Align Right">
+              <mat-icon>format_align_right</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Background & Spacing</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Background</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].backgroundColor" (change)="updateElement()">
+            </div>
+            <div class="property-control">
+              <span>Padding (px)</span>
+              <input type="number" [(ngModel)]="canvasElements[selectedElement].padding" (change)="updateElement()" min="0" max="50">
+            </div>
+            <div class="property-control">
+              <span>Border Radius</span>
+              <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" min="0" max="50">
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Image specific properties -->
@@ -266,12 +337,81 @@
             <span>Replace Image</span>
           </button>
         </div>
+        
+        <div class="property-group">
+          <label>Image Appearance</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Object Fit</span>
+              <select [(ngModel)]="canvasElements[selectedElement].objectFit" (change)="updateElement()">
+                <option value="contain">Contain</option>
+                <option value="cover">Cover</option>
+                <option value="fill">Fill</option>
+                <option value="scale-down">Scale Down</option>
+              </select>
+            </div>
+            <div class="property-control">
+              <span>Border Radius</span>
+              <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" min="0" max="100">
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Effects</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Opacity</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1">
+              <span class="value-display">{{ canvasElements[selectedElement].opacity || 1 }}</span>
+            </div>
+            
+            <div class="property-control">
+              <span>Shadow</span>
+              <select [(ngModel)]="canvasElements[selectedElement].boxShadow" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="0 2px 5px rgba(0,0,0,0.1)">Light</option>
+                <option value="0 4px 8px rgba(0,0,0,0.2)">Medium</option>
+                <option value="0 8px 16px rgba(0,0,0,0.3)">Strong</option>
+              </select>
+            </div>
+            
+            <div class="property-control">
+              <span>Filter</span>
+              <select [(ngModel)]="canvasElements[selectedElement].filter" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="grayscale(100%)">Grayscale</option>
+                <option value="sepia(100%)">Sepia</option>
+                <option value="blur(2px)">Blur</option>
+                <option value="brightness(150%)">Brighten</option>
+                <option value="contrast(150%)">Contrast</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Border</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Border Style</span>
+              <select [(ngModel)]="canvasElements[selectedElement].border" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="1px solid #000">Thin</option>
+                <option value="2px solid #000">Medium</option>
+                <option value="3px solid #000">Thick</option>
+                <option value="1px dashed #000">Dashed</option>
+                <option value="1px dotted #000">Dotted</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Shape specific properties -->
       <div *ngIf="canvasElements[selectedElement].type === 'shape'">
         <div class="property-group">
-          <label>Shape Style</label>
+          <label>Shape Type</label>
           <div class="shape-controls">
             <div class="shape-selector">
               <span>Type</span>
@@ -279,12 +419,63 @@
                 <option value="rectangle">Rectangle</option>
                 <option value="circle">Circle</option>
                 <option value="triangle">Triangle</option>
+                <option value="ellipse">Ellipse</option>
+                <option value="diamond">Diamond</option>
               </select>
             </div>
             
             <div class="color-control">
               <span>Fill Color</span>
               <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Shape Properties</label>
+          <div class="property-controls">
+            <div class="property-control" *ngIf="canvasElements[selectedElement].shape === 'rectangle'">
+              <span>Border Radius</span>
+              <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" min="0" max="100">
+            </div>
+            
+            <div class="property-control">
+              <span>Opacity</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1">
+              <span class="value-display">{{ canvasElements[selectedElement].opacity || 1 }}</span>
+            </div>
+            
+            <div class="property-control">
+              <span>Rotation (°)</span>
+              <input type="number" [(ngModel)]="canvasElements[selectedElement].rotate" (change)="updateElement()" min="0" max="360">
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Border & Effects</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Border</span>
+              <select [(ngModel)]="canvasElements[selectedElement].border" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="1px solid #000">Thin</option>
+                <option value="2px solid #000">Medium</option>
+                <option value="3px solid #000">Thick</option>
+                <option value="1px dashed #000">Dashed</option>
+                <option value="1px dotted #000">Dotted</option>
+              </select>
+            </div>
+            
+            <div class="property-control">
+              <span>Shadow</span>
+              <select [(ngModel)]="canvasElements[selectedElement].boxShadow" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="0 2px 5px rgba(0,0,0,0.1)">Light</option>
+                <option value="0 4px 8px rgba(0,0,0,0.2)">Medium</option>
+                <option value="0 8px 16px rgba(0,0,0,0.3)">Strong</option>
+                <option value="0 0 8px rgba(0,0,255,0.3)">Glow</option>
+              </select>
             </div>
           </div>
         </div>
