@@ -33,6 +33,7 @@ interface CanvasElement {
   opacity?: number;
   boxShadow?: string;
   border?: string;
+  rotate?: number;
   // Text specific properties
   content?: string;
   color?: string;
@@ -44,6 +45,12 @@ interface CanvasElement {
   textDecoration?: string;
   textAlign?: string;
   padding?: number;
+  letterSpacing?: number;
+  lineHeight?: number;
+  textTransform?: string;
+  textStrokeWidth?: number;
+  textStrokeColor?: string;
+  textShadow?: string;
   // Image specific properties
   src?: string;
   alt?: string;
@@ -52,7 +59,15 @@ interface CanvasElement {
   filter?: string;
   // Shape specific properties
   shape?: string;
-  rotate?: number;
+  gradient?: string;
+  gradientType?: string;
+  gradientAngle?: number;
+  gradientStop1?: string;
+  gradientStop2?: string;
+  shadowColor?: string;
+  shadowBlur?: number;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
 }
 
 interface UploadItem {
@@ -216,6 +231,12 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
         newElement.backgroundColor = 'transparent';
         newElement.padding = 10;
         newElement.borderRadius = 0;
+        newElement.letterSpacing = 0;
+        newElement.lineHeight = 1.2;
+        newElement.textTransform = 'none';
+        newElement.textStrokeWidth = 0;
+        newElement.textStrokeColor = '#000000';
+        newElement.textShadow = 'none';
         break;
       case 'image':
         if (data && data.url) {
@@ -573,7 +594,7 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
   }
   
   // Text style controls
-  toggleTextStyle(property: 'fontWeight' | 'fontStyle' | 'textDecoration', value: string): void {
+  toggleTextStyle(property: 'fontWeight' | 'fontStyle' | 'textDecoration' | 'textTransform', value: string): void {
     if (this.selectedElement === null) return;
     
     const element = this.canvasElements[this.selectedElement];
@@ -607,5 +628,19 @@ export class TemplateEditorComponent implements OnInit, AfterViewInit {
     // Force update
     this.canvasElements = [...this.canvasElements];
     this.saveToHistory();
+  }
+  
+  // Update custom shadow
+  updateCustomShadow(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    const shadowColor = element.shadowColor || 'rgba(0,0,0,0.5)';
+    const blur = element.shadowBlur || 5;
+    const offsetX = element.shadowOffsetX || 0;
+    const offsetY = element.shadowOffsetY || 5;
+    
+    element.boxShadow = `${offsetX}px ${offsetY}px ${blur}px ${shadowColor}`;
+    this.updateElement();
   }
 }

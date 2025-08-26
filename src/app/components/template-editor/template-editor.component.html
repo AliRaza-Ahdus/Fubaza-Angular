@@ -62,9 +62,51 @@
             <mat-icon>image</mat-icon>
             <span>Image</span>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'shape')">
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'shape')" (click)="openShapeSelector()">
             <mat-icon>crop_square</mat-icon>
             <span>Shape</span>
+          </div>
+        </div>
+        
+        <!-- Shape Selector Expanded Panel -->
+        <div class="shapes-panel" *ngIf="showShapeSelector">
+          <div class="shapes-grid">
+            <div class="shape-option" (click)="addShapeToCanvas('rectangle')">
+              <div class="shape-preview rectangle"></div>
+              <span>Rectangle</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('circle')">
+              <div class="shape-preview circle"></div>
+              <span>Circle</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('triangle')">
+              <div class="shape-preview triangle"></div>
+              <span>Triangle</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('ellipse')">
+              <div class="shape-preview ellipse"></div>
+              <span>Ellipse</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('diamond')">
+              <div class="shape-preview diamond"></div>
+              <span>Diamond</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('hexagon')">
+              <div class="shape-preview hexagon"></div>
+              <span>Hexagon</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('star')">
+              <div class="shape-preview star"></div>
+              <span>Star</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('heart')">
+              <div class="shape-preview heart"></div>
+              <span>Heart</span>
+            </div>
+            <div class="shape-option" (click)="addShapeToCanvas('arrow')">
+              <div class="shape-preview arrow"></div>
+              <span>Arrow</span>
+            </div>
           </div>
         </div>
       </div>
@@ -189,6 +231,12 @@
                  [style.backgroundColor]="element.backgroundColor"
                  [style.padding.px]="element.padding"
                  [style.borderRadius.px]="element.borderRadius"
+                 [style.lineHeight]="element.lineHeight"
+                 [style.letterSpacing.px]="element.letterSpacing"
+                 [style.textTransform]="element.textTransform"
+                 [style.webkitTextStrokeWidth.px]="element.textStrokeWidth"
+                 [style.webkitTextStrokeColor]="element.textStrokeColor"
+                 [style.textShadow]="element.textShadow"
                  [contentEditable]="selectedElement === i"
                  (blur)="updateElementContent(i, $event)"
                  (focus)="selectedElement = i">
@@ -324,6 +372,10 @@
                     (click)="toggleTextStyle('textDecoration', 'underline')" title="Underline">
               <mat-icon>format_underlined</mat-icon>
             </button>
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textTransform === 'uppercase'}" 
+                    (click)="toggleTextStyle('textTransform', 'uppercase')" title="Uppercase">
+              <mat-icon>keyboard_capslock</mat-icon>
+            </button>
           </div>
           <div class="alignment-buttons">
             <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'left'}" 
@@ -338,6 +390,39 @@
                     (click)="setTextStyle('textAlign', 'right')" title="Align Right">
               <mat-icon>format_align_right</mat-icon>
             </button>
+            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'justify'}" 
+                    (click)="setTextStyle('textAlign', 'justify')" title="Justify">
+              <mat-icon>format_align_justify</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Font Settings</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Font Family</span>
+              <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="'Times New Roman', serif">Times New Roman</option>
+                <option value="Georgia, serif">Georgia</option>
+                <option value="'Courier New', monospace">Courier New</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="'Open Sans', sans-serif">Open Sans</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+                <option value="'Montserrat', sans-serif">Montserrat</option>
+              </select>
+            </div>
+            <div class="property-control">
+              <span>Letter Spacing</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].letterSpacing" (change)="updateElement()" min="-2" max="10" step="0.5">
+              <span class="value-display">{{ canvasElements[selectedElement].letterSpacing || 0 }}px</span>
+            </div>
+            <div class="property-control">
+              <span>Line Height</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].lineHeight" (change)="updateElement()" min="0.8" max="3" step="0.1">
+              <span class="value-display">{{ canvasElements[selectedElement].lineHeight || 1.2 }}</span>
+            </div>
           </div>
         </div>
         
@@ -355,6 +440,38 @@
             <div class="property-control">
               <span>Border Radius</span>
               <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" min="0" max="50">
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Advanced Text Effects</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Text Shadow</span>
+              <select [(ngModel)]="canvasElements[selectedElement].textShadow" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="1px 1px 2px rgba(0,0,0,0.3)">Light</option>
+                <option value="2px 2px 4px rgba(0,0,0,0.4)">Medium</option>
+                <option value="3px 3px 5px rgba(0,0,0,0.5)">Heavy</option>
+                <option value="0px 0px 8px rgba(0,0,255,0.7)">Neon</option>
+                <option value="0px 0px 3px white, 0px 0px 5px rgba(0,0,0,0.5)">Outline</option>
+              </select>
+            </div>
+            
+            <div class="property-control">
+              <span>Text Stroke</span>
+              <div class="stroke-controls">
+                <div class="stroke-width">
+                  <span>Width</span>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].textStrokeWidth" (change)="updateElement()" min="0" max="3" step="0.5">
+                  <span class="value-display">{{ canvasElements[selectedElement].textStrokeWidth || 0 }}px</span>
+                </div>
+                <div class="stroke-color">
+                  <span>Color</span>
+                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textStrokeColor" (change)="updateElement()">
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -456,12 +573,46 @@
                 <option value="triangle">Triangle</option>
                 <option value="ellipse">Ellipse</option>
                 <option value="diamond">Diamond</option>
+                <option value="hexagon">Hexagon</option>
+                <option value="star">Star</option>
+                <option value="heart">Heart</option>
+                <option value="arrow">Arrow</option>
               </select>
             </div>
             
             <div class="color-control">
               <span>Fill Color</span>
               <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Gradient</label>
+          <div class="property-controls">
+            <div class="property-control">
+              <span>Gradient Type</span>
+              <select [(ngModel)]="canvasElements[selectedElement].gradientType" (change)="updateGradient()">
+                <option value="">No Gradient</option>
+                <option value="linear">Linear</option>
+                <option value="radial">Radial</option>
+              </select>
+            </div>
+            
+            <div class="property-control" *ngIf="canvasElements[selectedElement].gradientType">
+              <span>First Color</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].gradientStop1" (change)="updateGradient()">
+            </div>
+            
+            <div class="property-control" *ngIf="canvasElements[selectedElement].gradientType">
+              <span>Second Color</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].gradientStop2" (change)="updateGradient()">
+            </div>
+            
+            <div class="property-control" *ngIf="canvasElements[selectedElement].gradientType === 'linear'">
+              <span>Angle (°)</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].gradientAngle" (change)="updateGradient()" min="0" max="360" step="15">
+              <span class="value-display">{{ canvasElements[selectedElement].gradientAngle || 0 }}°</span>
             </div>
           </div>
         </div>
@@ -498,6 +649,44 @@
                 <option value="2px solid #000">Medium</option>
                 <option value="3px solid #000">Thick</option>
                 <option value="1px dashed #000">Dashed</option>
+                <option value="1px dotted #000">Dotted</option>
+              </select>
+            </div>
+            
+            <div class="property-control">
+              <span>Shadow</span>
+              <select [(ngModel)]="canvasElements[selectedElement].boxShadow" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="0 2px 5px rgba(0,0,0,0.1)">Light</option>
+                <option value="0 4px 8px rgba(0,0,0,0.2)">Medium</option>
+                <option value="0 8px 16px rgba(0,0,0,0.3)">Strong</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            
+            <div class="shadow-custom-controls" *ngIf="canvasElements[selectedElement].boxShadow === 'custom'">
+              <div class="property-control">
+                <span>Shadow Color</span>
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].shadowColor" (change)="updateCustomShadow()">
+              </div>
+              <div class="property-control">
+                <span>Blur</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowBlur" (change)="updateCustomShadow()" min="0" max="20" step="1">
+                <span class="value-display">{{ canvasElements[selectedElement].shadowBlur || 0 }}px</span>
+              </div>
+              <div class="property-control">
+                <span>Offset X</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetX" (change)="updateCustomShadow()" min="-20" max="20" step="1">
+                <span class="value-display">{{ canvasElements[selectedElement].shadowOffsetX || 0 }}px</span>
+              </div>
+              <div class="property-control">
+                <span>Offset Y</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetY" (change)="updateCustomShadow()" min="-20" max="20" step="1">
+                <span class="value-display">{{ canvasElements[selectedElement].shadowOffsetY || 0 }}px</span>
+              </div>
+            </div>
+          </div>
+        </div>
                 <option value="1px dotted #000">Dotted</option>
               </select>
             </div>
