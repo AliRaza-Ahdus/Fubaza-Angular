@@ -10,6 +10,7 @@ import { PlayerDetailComponent } from './components/player-detail/player-detail.
 import { PlayerDetailResolver } from './components/player-detail/player-detail.resolver';
 import { ClubDetailResolver } from './components/club-detail/club-detail.resolver';
 import { TemplateEditorComponent } from './components/template-editor/template-editor.component';
+import { TemplatesComponent } from './components/templates/templates.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -47,7 +48,9 @@ export const routes: Routes = [
     resolve: { player: PlayerDetailResolver },
   },
   
-  { path: 'templates', component: TemplateEditorComponent },
+  { path: 'templates', component: TemplatesComponent },
+  { path: 'template-editor', component: TemplateEditorComponent },
+  { path: 'template-editor/:id', component: TemplateEditorComponent },
   { path: 'financial', component: DashboardComponent },
   { path: 'user-management', component: DashboardComponent },
   { path: 'media-library', component: DashboardComponent },

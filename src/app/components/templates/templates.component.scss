@@ -1,0 +1,92 @@
+// Main container styling to match club detail component style
+:host {
+  display: block;
+  padding: 20px;
+  background-color: #F9FAFB; // Light gray background like in the app
+  min-height: calc(100vh - 64px); // Adjust based on header height
+  color: #1F2937; // Default text color
+}
+
+// Template card styling to match the image style
+.grid > div {
+  aspect-ratio: 3/4;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  
+  img {
+    border-radius: 8px;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Filter button styling
+button {
+  &.rounded-md {
+    border-radius: 4px;
+  }
+  
+  &.bg-black {
+    background-color: #000;
+    color: white;
+    
+    &:hover {
+      background-color: #333;
+    }
+  }
+}
+
+// Search input
+input[type="text"] {
+  &:focus {
+    outline: none;
+    border-color: #000;
+  }
+}
+
+// Material Icons
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+// Empty state styling
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  input[type="text"] {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
