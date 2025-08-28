@@ -1,35 +1,43 @@
-<div class=" min-h-full w-full p-4">
+<div class="min-h-full w-full p-4">
   <h1 class="text-xl font-medium mb-6">{{ isEditMode ? 'Edit Template' : 'Add Templates' }}</h1>
   
-  <div class="mx-auto">
-    <!-- Template Image Upload -->
-    <div class="mb-8 text-center" style="gap: 10px;">
-      <div 
-        class="mx-auto overflow-hidden flex flex-col items-center justify-center cursor-pointer"
-        style="width: 128px; height: 128px; border-radius: 999px; opacity: 1;"
-        (click)="triggerFileInput()"
-      >
-        <div *ngIf="!imagePreview" class="flex flex-col items-center justify-center bg-gray-300" style="width: 100%; height: 100%;">
-          <span class="material-icons text-gray-500" style="width:64px; height:64px; font-size:64px; opacity:0.8; transform:rotate(0deg); display:inline-flex; align-items:center; justify-content:center;">photo_camera</span>
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="flex justify-center items-center py-20">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+  </div>
+  
+  <div *ngIf="!loading" class="mx-auto">
+    <form [formGroup]="form" (ngSubmit)="saveTemplate()">
+      <!-- Template Image Upload -->
+      <div class="mb-8 text-center" style="gap: 10px;">
+        <div 
+          class="mx-auto overflow-hidden flex flex-col items-center justify-center cursor-pointer"
+          style="width: 128px; height: 128px; border-radius: 999px; opacity: 1;"
+          (click)="triggerFileInput()"
+        >
+          <div *ngIf="!imagePreview" class="flex flex-col items-center justify-center bg-gray-300" style="width: 100%; height: 100%;">
+            <span class="material-icons text-gray-500" style="width:64px; height:64px; font-size:64px; opacity:0.8; transform:rotate(0deg); display:inline-flex; align-items:center; justify-content:center;">photo_camera</span>
+          </div>
+          <img *ngIf="imagePreview" [src]="imagePreview" alt="Template preview" class="w-full h-full object-cover">
         </div>
-        <img *ngIf="imagePreview" [src]="imagePreview" alt="Template preview" class="w-full h-full object-cover">
+        <p class="mt-1 text-center text-gray-500" 
+           style="font-family: 'Inter', sans-serif; font-weight: 600; font-style: normal; font-size: 1rem; line-height: 1.5; letter-spacing: 0.025em;">
+           Add New Template
+        </p>
+        <p class="text-xs text-gray-400">(JPG, JPG, PNG / max size: 10MB)</p>
+        <input 
+          type="file" 
+          id="template-image-input" 
+          class="hidden" 
+          accept="image/jpeg,image/jpg,image/png"
+          (change)="onFileSelected($event)"
+        >
+        <div *ngIf="form.get('image')?.touched && form.get('image')?.invalid" class="text-red-500 text-xs mt-1">
+          Template image is required
+        </div>
       </div>
-      <p class="mt-1 text-center text-gray-500" 
-         style="font-family: 'Inter', sans-serif; font-weight: 600; font-style: normal; font-size: 1rem; line-height: 1.5; letter-spacing: 0.025em;">
-         Add New Template
-      </p>
-      <p class="text-xs text-gray-400">(JPG, JPG, PNG / max size: 10MB)</p>
-      <input 
-        type="file" 
-        id="template-image-input" 
-        class="hidden" 
-        accept="image/jpeg,image/jpg,image/png"
-        (change)="onFileSelected($event)"
-      >
-    </div>
 
-    <!-- Form Fields -->
-    <div>
+      <!-- Form Fields -->
       <div class="mb-6">
         <div class="flex flex-wrap -mx-2">
           <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
@@ -43,35 +51,42 @@
               <option value="" disabled>Select a sport</option>
               <option *ngFor="let sport of sports" [value]="sport.id">{{ sport.name }}</option>
             </select>
+            <div *ngIf="form.get('sportId')?.touched && form.get('sportId')?.invalid" class="text-red-500 text-xs mt-1">
+              Sport is required
+            </div>
           </div>
           <div class="w-full md:w-1/2 px-2">
-            <label class="block text-sm mb-1 inter-label" for="template-name">Template Name</label>
+            <label class="block text-sm mb-1 inter-label" for="title">Template Name</label>
             <input 
               type="text" 
-              id="template-name" 
-              formControlName="name"
+              id="title" 
+              formControlName="title"
               placeholder="Enter your template name"
               class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 placeholder-gray-400 text-base input-equal-height"
               style="font-family: 'Inter', sans-serif; font-weight: 500;"
             >
+            <div *ngIf="form.get('title')?.touched && form.get('title')?.invalid" class="text-red-500 text-xs mt-1">
+              Template name is required
+            </div>
           </div>
         </div>
       </div>
       
-
-    </div>
-    
-    <!-- Action Buttons -->
-    <form [formGroup]="form" (ngSubmit)="saveTemplate()">
+      <!-- Action Buttons -->
       <div class="flex justify-end mt-6 gap-2">
         <button 
           type="button"
           class="py-2.5 px-5 rounded-lg border border-gray-300 bg-white text-black text-base font-medium transition-colors hover:bg-gray-100 focus:outline-none"
+          [disabled]="submitting"
           (click)="cancel()">Cancel</button>
         <button 
           type="submit"
-          class="py-2.5 px-5 rounded-lg bg-black text-white text-base font-medium transition-colors hover:bg-gray-800 focus:outline-none"
-        >Save & Publish</button>
+          class="py-2.5 px-5 rounded-lg bg-black text-white text-base font-medium transition-colors hover:bg-gray-800 focus:outline-none flex items-center"
+          [disabled]="submitting"
+        >
+          <span *ngIf="submitting" class="mr-2 animate-spin h-4 w-4 border-t-2 border-l-2 border-white rounded-full"></span>
+          Save & Publish
+        </button>
       </div>
     </form>
   </div>

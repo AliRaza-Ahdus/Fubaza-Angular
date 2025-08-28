@@ -31,8 +31,8 @@ export class TempleteService {
     return this.http.get<any>(`${this.baseUrl}/api/Templete/${id}`);
   }
   
-  // Create/Update template
-  saveTemplete(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/Templete`, formData);
+  // Add or update template
+  addOrUpdateTemplete(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/Templete/AddOrUpdatedTemplete`, formData);
   }
 }

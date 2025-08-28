@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TempleteService } from '../../../services/templete.service';
 import { Sport } from '../../../models/api-response.model';
 import { MatIconModule } from '@angular/material/icon';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-addupdate-templete',
@@ -19,24 +21,40 @@ export class AddupdateTempleteComponent implements OnInit {
   templateId: string | null = null;
   imagePreview: string | null = null;
   form: FormGroup;
+  loading: boolean = false;
+  submitting: boolean = false;
+  private baseUrl = environment.apiUrl;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private templeteService: TempleteService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http: HttpClient
   ) {
     this.form = this.fb.group({
-      name: ['', [Validators.required]],
+      title: ['', [Validators.required]],
       sportId: ['', [Validators.required]],
       image: [null, [Validators.required]]
     });
   }
 
   ngOnInit(): void {
+    this.loading = true;
+    
     // Fetch sports list dynamically
-    this.templeteService.getSportsList().subscribe(res => {
-      this.sports = res.data || [];
+    this.templeteService.getSportsList().subscribe({
+      next: (res) => {
+        this.sports = res.data || [];
+        if (this.sports.length && !this.isEditMode) {
+          this.form.patchValue({ sportId: this.sports[0].id });
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching sports:', error);
+        this.loading = false;
+      }
     });
 
     // Check if we're in edit mode by looking for an ID parameter
@@ -49,14 +67,32 @@ export class AddupdateTempleteComponent implements OnInit {
   }
 
   loadTemplateData(id: string): void {
-    // This would normally fetch data from a service
-    // For now, we'll just mock some data
-    this.form.patchValue({
-      name: 'Sample Template ' + id,
-      sportId: this.sports.length ? this.sports[0].id : '',
-      image: null
+    this.loading = true;
+    this.templeteService.getTempleteById(id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          const template = response.data;
+          // Update form fields with the template data
+          this.form.patchValue({
+            title: template.title,
+            sportId: template.sportId
+          });
+          
+          // If there's an image URL, show it in the preview
+          if (template.templeteUrl) {
+            this.imagePreview = template.templeteUrl;
+            // Make image optional if we already have one
+            this.form.get('image')?.setValidators(null);
+            this.form.get('image')?.updateValueAndValidity();
+          }
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading template data:', error);
+        this.loading = false;
+      }
     });
-    this.imagePreview = null;
   }
 
   onFileSelected(event: Event): void {
@@ -64,6 +100,7 @@ export class AddupdateTempleteComponent implements OnInit {
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
     this.form.patchValue({ image: file });
+    
     // Create a preview
     const reader = new FileReader();
     reader.onload = () => {
@@ -85,10 +122,40 @@ export class AddupdateTempleteComponent implements OnInit {
       this.form.markAllAsTouched();
       return;
     }
-    // Implement save/update logic here
-    console.log('Saving template:', this.form.value);
-    // Navigate back to templates list
-    this.router.navigate(['/list-templete']);
+
+    this.submitting = true;
+    
+    // Create FormData
+    const formData = new FormData();
+    formData.append('title', this.form.get('title')?.value);
+    formData.append('sportId', this.form.get('sportId')?.value);
+    
+    // Only append image if one is selected
+    const imageFile = this.form.get('image')?.value;
+    if (imageFile) {
+      formData.append('file', imageFile);
+    }
+    
+    // For update, include the template ID
+    if (this.isEditMode && this.templateId) {
+      formData.append('templeteId', this.templateId);
+    }
+    
+    // Send the request to add or update the template
+    this.http.post(`${this.baseUrl}/api/Templete/AddOrUpdatedTemplete`, formData).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.router.navigate(['/list-templete']);
+        } else {
+          console.error('Error saving template:', response.message);
+        }
+        this.submitting = false;
+      },
+      error: (error) => {
+        console.error('Error saving template:', error);
+        this.submitting = false;
+      }
+    });
   }
 
   cancel(): void {
