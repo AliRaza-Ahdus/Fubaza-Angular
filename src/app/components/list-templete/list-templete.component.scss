@@ -1,0 +1,100 @@
+// Main container styling to match club detail component style
+:host {
+  display: block;
+  padding: 20px;
+  background-color: #F9FAFB; // Light gray background like in the app
+  min-height: calc(100vh - 64px); // Adjust based on header height
+  color: #1F2937; // Default text color
+}
+
+// Template card styling - professional design with reduced height
+.template-card {
+  aspect-ratio: 4/3; // Changed from 3/4 to 4/3 to make it wider rather than taller
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  
+  img {
+    aspect-ratio: 4/3; // Changed from 3/4 to 4/3 to match the container
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+// Filter button styling with professional design
+.filter-btn {
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: hidden;
+  
+  &.bg-black {
+    background-color: #000;
+    color: white;
+    
+    &:hover {
+      background-color: #222;
+    }
+    
+    &:active {
+      background-color: #333;
+    }
+  }
+  
+  &:hover:not(.bg-black) {
+    background-color: #f3f4f6;
+    border-color: #e5e7eb;
+  }
+}
+
+// Search input styling exactly like club-detail component
+.activity-search-input {
+  height: 48px;
+  font-size: 1rem;
+  padding: 0 1rem;
+  padding-right: 2rem; // For the close button
+  border-radius: 0.5rem;
+  margin-left: auto;
+  border: 1px solid #e5e7eb;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 240px;
+  
+  &:focus {
+    border-color: #60a5fa;
+  }
+  
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+// Material Icons
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+// Empty state styling
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+}
