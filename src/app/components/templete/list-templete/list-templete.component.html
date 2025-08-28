@@ -38,7 +38,7 @@
 <div *ngIf="!loading && templates.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
   <div *ngFor="let template of templates" class="template-card relative group bg-white rounded-xl overflow-hidden shadow-sm">
     <div class="overflow-hidden relative">
-      <img *ngIf="template.templeteUrl" [src]="template.templeteUrl" [alt]="template.title" class="w-full h-40 object-cover">
+      <img *ngIf="template.templeteUrl" [src]="getTemplateImageUrl(template)" [alt]="template.title" class="w-full h-40 object-cover">
       <div *ngIf="!template.templeteUrl" class="w-full h-40 bg-gray-200 flex items-center justify-center">
         <span class="material-icons text-gray-400 text-4xl">image</span>
       </div>

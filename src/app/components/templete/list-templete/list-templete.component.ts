@@ -20,7 +20,6 @@ export class ListTempleteComponent implements OnInit {
   selectedSportId: string = '';
   searchQuery: string = '';
   loading: boolean = false;
-  baseUrl = environment.apiUrl;
   
   currentPage: number = 1;
   pageSize: number = 10;
@@ -62,14 +61,8 @@ export class ListTempleteComponent implements OnInit {
     this.templeteService.getTempletesBySport(request).subscribe({
       next: (response) => {
         if (response.success) {
-          // Process templates to handle image URLs
-          this.templates = response.data.items.map(template => {
-            if (template.templeteUrl) {
-              // Ensure the URL is properly formatted by removing any duplicate slashes
-              template.templeteUrl = this.getFullImageUrl(template.templeteUrl);
-            }
-            return template;
-          });
+          // Store templates directly
+          this.templates = response.data.items;
           this.totalCount = response.data.pagination.totalCount;
         } else {
           this.templates = [];
@@ -84,23 +77,8 @@ export class ListTempleteComponent implements OnInit {
     });
   }
 
-  // Helper method to construct the full image URL
-  getFullImageUrl(relativePath: string): string {
-    // Check if URL is already absolute (starts with http)
-    if (relativePath.startsWith('http')) {
-      return relativePath;
-    }
-    
-    // Remove leading slash from path if present
-    const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
-    
-    // Remove trailing slash from baseUrl if present
-    const cleanBaseUrl = this.baseUrl.endsWith('/') 
-      ? this.baseUrl.substring(0, this.baseUrl.length - 1) 
-      : this.baseUrl;
-    
-    // Combine to create the full URL
-    return `${cleanBaseUrl}/${cleanPath}`;
+  getTemplateImageUrl(template: Templete): string {
+    return template.templeteUrl ? `${environment.apiUrl}/${template.templeteUrl}` : '';
   }
 
   setFilter(sportId: string): void {

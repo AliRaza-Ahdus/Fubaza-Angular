@@ -66,25 +66,6 @@ export class AddupdateTempleteComponent implements OnInit {
     }
   }
 
-  // Helper method to construct the full image URL
-  getFullImageUrl(relativePath: string): string {
-    // Check if URL is already absolute (starts with http)
-    if (relativePath.startsWith('http')) {
-      return relativePath;
-    }
-    
-    // Remove leading slash from path if present
-    const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
-    
-    // Remove trailing slash from baseUrl if present
-    const cleanBaseUrl = this.baseUrl.endsWith('/') 
-      ? this.baseUrl.substring(0, this.baseUrl.length - 1) 
-      : this.baseUrl;
-    
-    // Combine to create the full URL
-    return `${cleanBaseUrl}/${cleanPath}`;
-  }
-
   loadTemplateData(id: string): void {
     this.loading = true;
     this.templeteService.getTempleteById(id).subscribe({
@@ -99,7 +80,7 @@ export class AddupdateTempleteComponent implements OnInit {
           
           // If there's an image URL, show it in the preview
           if (template.templeteUrl) {
-            this.imagePreview = this.getFullImageUrl(template.templeteUrl);
+            this.imagePreview = `${environment.apiUrl}/${template.templeteUrl}`;
             // Make image optional if we already have one
             this.form.get('image')?.setValidators(null);
             this.form.get('image')?.updateValueAndValidity();
