@@ -79,13 +79,13 @@ interface UploadItem {
 }
 
 @Component({
-  selector: 'app-templete-editor',
-  templateUrl: './templete-editor.component.html',
-  styleUrls: ['./templete-editor.component.scss'],
+  selector: 'app-editor-templete',
+  templateUrl: './editor-templete.component.html',
+  styleUrls: ['./editor-templete.component.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule]
 })
-export class TempleteEditorComponent implements OnInit, AfterViewInit {
+export class EditorTempleteComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') canvasRef!: ElementRef;
   @ViewChild('fileUpload') fileUploadRef!: ElementRef;
 
