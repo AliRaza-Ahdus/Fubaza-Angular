@@ -28,7 +28,7 @@ export class TempleteService {
   
   // Get template by ID (for edit mode)
   getTempleteById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/Templete/${id}`);
+    return this.http.get<any>(`${this.baseUrl}/api/Templete/GetTemplete/${id}`);
   }
   
   // Add or update template
