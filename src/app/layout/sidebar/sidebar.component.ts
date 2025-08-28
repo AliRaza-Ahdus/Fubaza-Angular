@@ -35,7 +35,7 @@ export class SidebarComponent {
         { name: 'Players', icon: 'sports_soccer', route: '/player-overview', active: false }
       ]
     },
-    { name: 'Templates', icon: 'description', route: '/templete-editor', active: false },
+    { name: 'Templates', icon: 'description', route: '/list-templete', active: false },
     { name: 'Revenue', icon: 'credit_card', active: false, },
     { name: 'User Management', icon: 'person', active: false,  },
     { name: 'Media Library', icon: 'photo_library', active: false, }

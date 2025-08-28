@@ -10,7 +10,7 @@ import { PlayerDetailComponent } from './components/player-detail/player-detail.
 import { PlayerDetailResolver } from './components/player-detail/player-detail.resolver';
 import { ClubDetailResolver } from './components/club-detail/club-detail.resolver';
 import { ListTempleteComponent } from './components/templete/list-templete/list-templete.component';
-import { TempleteEditorComponent } from './components/templete/editor-templete/editor-templete.component';
+import { EditorTempleteComponent } from './components/templete/editor-templete/editor-templete.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -49,8 +49,8 @@ export const routes: Routes = [
   },
   
   { path: 'list-templete', component: ListTempleteComponent },
-  { path: 'templete-editor', component: TempleteEditorComponent },
-  { path: 'templete-editor/:id', component: TempleteEditorComponent },
+  { path: 'templete-editor', component: EditorTempleteComponent },
+  { path: 'templete-editor/:id', component: EditorTempleteComponent },
   { path: 'financial', component: DashboardComponent },
   { path: 'user-management', component: DashboardComponent },
   { path: 'media-library', component: DashboardComponent },
