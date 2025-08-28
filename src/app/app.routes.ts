@@ -9,8 +9,8 @@ import { ClubDetailComponent } from './components/club-detail/club-detail.compon
 import { PlayerDetailComponent } from './components/player-detail/player-detail.component';
 import { PlayerDetailResolver } from './components/player-detail/player-detail.resolver';
 import { ClubDetailResolver } from './components/club-detail/club-detail.resolver';
-import { TemplateEditorComponent } from './components/template-editor/template-editor.component';
-import { ListTempleteComponent } from './components/list-templete/list-templete.component';
+import { ListTempleteComponent } from './components/templete/list-templete/list-templete.component';
+import { TemplateEditorComponent } from './components/templete/template-editor/template-editor.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
