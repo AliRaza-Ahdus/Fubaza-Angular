@@ -1,3 +1,20 @@
+// Templete Model
+export interface Templete {
+  id: string;
+  name: string;
+  license: string;
+  imageUrl?: string;
+}
+// Templete and Sports Models
+
+export interface Sport {
+  id: string;
+  name: string;
+  isDeleted: boolean;
+  playingPosition: string | null;
+}
+
+export type SportsListResponse = ApiResponse<Sport[]>;
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
