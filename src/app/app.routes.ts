@@ -11,6 +11,7 @@ import { PlayerDetailResolver } from './components/player-detail/player-detail.r
 import { ClubDetailResolver } from './components/club-detail/club-detail.resolver';
 import { ListTempleteComponent } from './components/templete/list-templete/list-templete.component';
 import { EditorTempleteComponent } from './components/templete/editor-templete/editor-templete.component';
+import { AddupdateTempleteComponent } from './components/templete/addupdate-templete/addupdate-templete.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -51,6 +52,8 @@ export const routes: Routes = [
   { path: 'list-templete', component: ListTempleteComponent },
   { path: 'templete-editor', component: EditorTempleteComponent },
   { path: 'templete-editor/:id', component: EditorTempleteComponent },
+  { path: 'add-templete', component: AddupdateTempleteComponent },
+  { path: 'edit-templete/:id', component: AddupdateTempleteComponent },
   { path: 'financial', component: DashboardComponent },
   { path: 'user-management', component: DashboardComponent },
   { path: 'media-library', component: DashboardComponent },
