@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { TempleteService } from '../../../services/templete.service';
 import { Sport, Templete, TempleteRequest } from '../../../models/api-response.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-list-templete',
@@ -19,6 +20,7 @@ export class ListTempleteComponent implements OnInit {
   selectedSportId: string = '';
   searchQuery: string = '';
   loading: boolean = false;
+  baseUrl = environment.apiUrl;
   
   currentPage: number = 1;
   pageSize: number = 10;
@@ -60,7 +62,14 @@ export class ListTempleteComponent implements OnInit {
     this.templeteService.getTempletesBySport(request).subscribe({
       next: (response) => {
         if (response.success) {
-          this.templates = response.data.items;
+          // Process templates to handle image URLs
+          this.templates = response.data.items.map(template => {
+            if (template.templeteUrl) {
+              // Ensure the URL is properly formatted by removing any duplicate slashes
+              template.templeteUrl = this.getFullImageUrl(template.templeteUrl);
+            }
+            return template;
+          });
           this.totalCount = response.data.pagination.totalCount;
         } else {
           this.templates = [];
@@ -73,6 +82,25 @@ export class ListTempleteComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  // Helper method to construct the full image URL
+  getFullImageUrl(relativePath: string): string {
+    // Check if URL is already absolute (starts with http)
+    if (relativePath.startsWith('http')) {
+      return relativePath;
+    }
+    
+    // Remove leading slash from path if present
+    const cleanPath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
+    
+    // Remove trailing slash from baseUrl if present
+    const cleanBaseUrl = this.baseUrl.endsWith('/') 
+      ? this.baseUrl.substring(0, this.baseUrl.length - 1) 
+      : this.baseUrl;
+    
+    // Combine to create the full URL
+    return `${cleanBaseUrl}/${cleanPath}`;
   }
 
   setFilter(sportId: string): void {
