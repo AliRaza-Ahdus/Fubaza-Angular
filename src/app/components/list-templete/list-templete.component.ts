@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-templates',
+  selector: 'app-list-templete',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './templates.component.html',
-  styleUrls: ['./templates.component.scss']
+  templateUrl: './list-templete.component.html',
+  styleUrls: ['./list-templete.component.scss']
 })
-export class TemplatesComponent implements OnInit {
+export class ListTempleteComponent implements OnInit {
   
   templates: any[] = [];
   filterType: string = 'all';
