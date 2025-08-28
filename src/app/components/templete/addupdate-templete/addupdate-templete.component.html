@@ -32,19 +32,38 @@
     <div>
       <div class="mb-6">
         <div class="flex flex-wrap -mx-2">
-          <div class="w-full px-2 mb-4 md:mb-0">
-            <label class="block text-sm mb-1" for="template-name">Template Name</label>
+          <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
+            <label class="block text-sm mb-1 inter-label" for="license">Select Sport</label>
+            <select
+              id="license"
+              [(ngModel)]="template.license"
+              class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 text-base input-equal-height"
+              style="font-family: 'Inter', sans-serif; font-weight: 500;"
+            >
+              <option value="" disabled selected>Select a sport</option>
+              <option value="Football">Football</option>
+              <option value="Basketball">Basketball</option>
+              <option value="Cricket">Cricket</option>
+              <option value="Tennis">Tennis</option>
+              <option value="Hockey">Hockey</option>
+              <option value="Volleyball">Volleyball</option>
+            </select>
+          </div>
+          <div class="w-full md:w-1/2 px-2">
+            <label class="block text-sm mb-1 inter-label" for="template-name">Template Name</label>
             <input 
               type="text" 
               id="template-name" 
               [(ngModel)]="template.name" 
               placeholder="Enter your template name"
-              class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 placeholder-gray-400 text-base"
+              class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 placeholder-gray-400 text-base input-equal-height"
               style="font-family: 'Inter', sans-serif; font-weight: 500;"
             >
           </div>
         </div>
       </div>
+      
+
     </div>
     
     <!-- Action Buttons -->
