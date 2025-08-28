@@ -1,9 +1,10 @@
 // Templete Model
 export interface Templete {
   id: string;
-  name: string;
-  license: string;
-  imageUrl?: string;
+  title: string;
+  templeteUrl: string | null;
+  sportName: string;
+  sportId: string;
 }
 // Templete and Sports Models
 
@@ -14,12 +15,18 @@ export interface Sport {
   playingPosition: string | null;
 }
 
-export type SportsListResponse = ApiResponse<Sport[]>;
+export interface SportsListResponse {
+  success: boolean;
+  message: string;
+  data: Sport[];
+  error: string[];
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data: T;
-  error?: any[];
+  error?: string[];
 }
 
 // Player Overview Types
@@ -129,4 +136,28 @@ export type ClubInfoResponse = ApiResponse<{
     joiningDate: string;
     clubOfficialUrl: string | null;
   }>;
-}>; 
+}>;
+
+export interface TempletesPagination {
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+}
+
+export interface TempletesResponse {
+  pagination: TempletesPagination;
+  items: Templete[];
+}
+
+export interface TempletesListResponse {
+  success: boolean;
+  message: string;
+  data: TempletesResponse;
+}
+
+export interface TempleteRequest {
+  sportId: string;
+  pageNumber: number;
+  pageSize: number;
+  searchTerm: string;
+}
