@@ -49,9 +49,13 @@ export class ClubDetailComponent {
 
   clubId: string | null = null;
 
+  // Loader
+  loadingTable = false;
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.loadingTable = true; // Start loader
     this.clubId = this.route.snapshot.paramMap.get('id');
     this.route.data.subscribe(({ data }) => {
       const apiData = data.data;
@@ -84,6 +88,7 @@ export class ClubDetailComponent {
         }))
       };
       this.setActiveTab('players');
+      this.loadingTable = false; // Stop loader after data is ready
     });
   }
 
@@ -98,6 +103,7 @@ export class ClubDetailComponent {
   }
 
   setActiveTab(tab: string) {
+    this.loadingTable = true; // Start loader
     this.activeTab = tab;
     this.searchValue = '';
     this.currentPage = 1;
@@ -109,9 +115,11 @@ export class ClubDetailComponent {
       this.members = [...this.club.allOfficials];
     }
     this.updatePagination();
+    this.loadingTable = false; // Stop loader after pagination
   }
 
   filterMembers() {
+    this.loadingTable = true; // Start loader
     if (this.activeTab === 'players') {
       if (!this.searchValue) {
         this.members = [...this.club.allMembers];
@@ -137,6 +145,7 @@ export class ClubDetailComponent {
     }
     this.currentPage = 1;
     this.updatePagination();
+    this.loadingTable = false; // Stop loader after filtering
   }
 
   updatePagination() {
@@ -169,4 +178,4 @@ export class ClubDetailComponent {
   get clubProfileUrl(): string {
     return this.club.clubUrl ? `${environment.apiUrl}/${this.club.clubUrl}` : 'assets/images/default-avatar.png';
   }
-} 
+}

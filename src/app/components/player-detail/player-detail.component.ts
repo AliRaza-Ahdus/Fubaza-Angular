@@ -40,9 +40,13 @@ export class PlayerDetailComponent implements OnInit {
 
   pagedData: any[] = [];
 
+  // Loader
+  loadingTable = false;
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.loadingTable = true; // Start loader
     this.playerId = this.route.snapshot.paramMap.get('id')!;
     this.route.data.subscribe((data) => {
       debugger;
@@ -92,6 +96,7 @@ export class PlayerDetailComponent implements OnInit {
         }))
       };
       this.filterCareer();
+      this.loadingTable = false; // Stop loader after data is ready
     });
   }
 
@@ -106,6 +111,7 @@ export class PlayerDetailComponent implements OnInit {
   }
 
   filterCareer() {
+    this.loadingTable = true; // Start loader
     let filteredCareer: any[];
     if (!this.searchValue) {
       filteredCareer = [...this.player.career];
@@ -117,6 +123,7 @@ export class PlayerDetailComponent implements OnInit {
     }
     this.currentPage = 1;
     this.updatePagination(filteredCareer);
+    this.loadingTable = false; // Stop loader after filtering
   }
 
   updatePagination(filteredCareer: any[]) {
@@ -140,4 +147,4 @@ export class PlayerDetailComponent implements OnInit {
       this.filterCareer();
     }
   }
-} 
+}
