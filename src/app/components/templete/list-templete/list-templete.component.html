@@ -19,9 +19,9 @@
       </div>
       <div class="relative md:ml-auto">
         <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm w-full" 
-          placeholder="Search" [(ngModel)]="searchQuery" (keyup.enter)="searchTemplates(searchQuery)">
+          placeholder="Search" [value]="searchQuery" (input)="onSearchInput($event)">
         <button *ngIf="searchQuery" class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600" 
-                (click)="searchQuery = ''; searchTemplates('')">
+                (click)="clearSearch()">
           <span class="material-icons">close</span>
         </button>
       </div>

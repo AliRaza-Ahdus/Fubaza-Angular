@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { TempleteService } from '../../../services/templete.service';
 import { Sport, Templete, TempleteRequest } from '../../../models/api-response.model';
 import { environment } from '../../../../environments/environment';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-templete',
@@ -21,11 +23,24 @@ export class ListTempleteComponent implements OnInit {
   searchQuery: string = '';
   loading: boolean = false;
   
+  // For search debounce
+  private searchSubject = new Subject<string>();
+  
   currentPage: number = 1;
   pageSize: number = 10;
   totalCount: number = 0;
 
-  constructor(private templeteService: TempleteService) { }
+  constructor(private templeteService: TempleteService) {
+    // Set up debounced search
+    this.searchSubject.pipe(
+      debounceTime(300), // Wait for 300ms pause in events
+      distinctUntilChanged() // Only emit if value is different from previous
+    ).subscribe(searchTerm => {
+      this.searchQuery = searchTerm;
+      this.currentPage = 1; // Reset to first page when searching
+      this.loadTemplates();
+    });
+  }
 
   ngOnInit(): void {
     this.loading = true;
@@ -87,10 +102,16 @@ export class ListTempleteComponent implements OnInit {
     this.loadTemplates();
   }
 
-  searchTemplates(query: string): void {
-    this.searchQuery = query;
-    this.currentPage = 1; // Reset to first page when searching
-    this.loadTemplates();
+  // Method for handling search input changes
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value);
+  }
+
+  // Method for clearing search
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchSubject.next('');
   }
 
   shouldShowEmptyState(): boolean {
