@@ -22,7 +22,7 @@
         </div>
         <p class="mt-1 text-center text-gray-500" 
            style="font-family: 'Inter', sans-serif; font-weight: 600; font-style: normal; font-size: 1rem; line-height: 1.5; letter-spacing: 0.025em;">
-           Add New Template
+           {{ isEditMode ? 'Update Template' : 'Add New Template' }}
         </p>
         <p class="text-xs text-gray-400">(JPG, JPG, PNG / max size: 10MB)</p>
         <input 
@@ -48,7 +48,7 @@
               class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 text-base input-equal-height"
               style="font-family: 'Inter', sans-serif; font-weight: 500;"
             >
-              <option value="" disabled>Select a sport</option>
+              <option value="" disabled selected>Select a sport</option>
               <option *ngFor="let sport of sports" [value]="sport.id">{{ sport.name }}</option>
             </select>
             <div *ngIf="form.get('sportId')?.touched && form.get('sportId')?.invalid" class="text-red-500 text-xs mt-1">

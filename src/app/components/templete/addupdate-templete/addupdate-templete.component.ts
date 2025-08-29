@@ -42,28 +42,28 @@ export class AddupdateTempleteComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     
+    // Check if we're in edit mode by looking for an ID parameter
+    this.templateId = this.route.snapshot.paramMap.get('id');
+    this.isEditMode = !!this.templateId;
+    
     // Fetch sports list dynamically
     this.templeteService.getSportsList().subscribe({
       next: (res) => {
         this.sports = res.data || [];
-        if (this.sports.length && !this.isEditMode) {
-          this.form.patchValue({ sportId: this.sports[0].id });
+        
+        // Only in edit mode, load the template data
+        if (this.isEditMode && this.templateId) {
+          this.loadTemplateData(this.templateId);
+        } else {
+          // In add mode, we don't pre-select any sport
+          this.loading = false;
         }
-        this.loading = false;
       },
       error: (error) => {
         console.error('Error fetching sports:', error);
         this.loading = false;
       }
     });
-
-    // Check if we're in edit mode by looking for an ID parameter
-    this.templateId = this.route.snapshot.paramMap.get('id');
-    this.isEditMode = !!this.templateId;
-    if (this.isEditMode && this.templateId) {
-      // Fetch template data if in edit mode
-      this.loadTemplateData(this.templateId);
-    }
   }
 
   loadTemplateData(id: string): void {
