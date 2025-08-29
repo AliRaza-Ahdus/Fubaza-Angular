@@ -28,6 +28,21 @@
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   }
+  
+  // Active state styling (when clicked)
+  &.active {
+    box-shadow: 0 0 0 2px #000, 0 8px 24px rgba(0, 0, 0, 0.16);
+    transform: translateY(-5px);
+  }
+}
+
+.edit-overlay {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 // Perfect square container
@@ -47,6 +62,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.hover-title {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  padding-top: 20px;
 }
 
 .filter-btn {

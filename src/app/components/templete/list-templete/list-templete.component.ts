@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -22,12 +23,13 @@ export class ListTempleteComponent implements OnInit {
   selectedSportId: string = '';
   searchQuery: string = '';
   loading: boolean = false;
+  activeTemplateId: string | null = null;
   
   // For search debounce
   private searchSubject = new Subject<string>();
   
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 20;
   totalCount: number = 0;
 
   constructor(private templeteService: TempleteService) {
@@ -40,6 +42,16 @@ export class ListTempleteComponent implements OnInit {
       this.currentPage = 1; // Reset to first page when searching
       this.loadTemplates();
     });
+  }
+
+  // Close active template when clicking elsewhere
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Check if click is outside any template card
+    const clickedElement = event.target as HTMLElement;
+    if (!clickedElement.closest('.template-card')) {
+      this.activeTemplateId = null;
+    }
   }
 
   ngOnInit(): void {
@@ -65,6 +77,7 @@ export class ListTempleteComponent implements OnInit {
 
   loadTemplates(): void {
     this.loading = true;
+    this.activeTemplateId = null; // Reset active template when loading new data
     
     const request: TempleteRequest = {
       sportId: this.selectedSportId,
@@ -112,6 +125,24 @@ export class ListTempleteComponent implements OnInit {
   clearSearch(): void {
     this.searchQuery = '';
     this.searchSubject.next('');
+  }
+
+  // Handle template hover
+  onTemplateHover(template: Templete): void {
+    // You can add additional hover behavior here if needed
+    // Currently, hover effects are handled by CSS
+  }
+
+  // Handle template click
+  onTemplateClick(template: Templete, event: MouseEvent): void {
+    event.stopPropagation(); // Prevent document click from immediately closing it
+    
+    // Toggle active state for the clicked template
+    if (this.activeTemplateId === template.id) {
+      this.activeTemplateId = null;
+    } else {
+      this.activeTemplateId = template.id;
+    }
   }
 
   shouldShowEmptyState(): boolean {
