@@ -98,61 +98,67 @@
     </div>
 
     <div class="card p-4 md:p-6">
-        <div class="overflow-x-auto">
-            <table mat-table [dataSource]="pagedData" matSort class="w-full">
-                <!-- Player Column -->
-                <ng-container matColumnDef="player">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Player Name</th>
-                    <td mat-cell *matCellDef="let element">
-                        <div class="flex items-center">
-                            <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center mr-3 overflow-hidden">
-                                <img [src]="element.player.avatar" [alt]="element.player.name" title="Player avatar" class="w-full h-full object-cover">
+        <div class="relative">
+            <!-- Loader Overlay -->
+            <div *ngIf="loadingTable" class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+            </div>
+            <div class="overflow-x-auto">
+                <table mat-table [dataSource]="pagedData" matSort class="w-full">
+                    <!-- Player Column -->
+                    <ng-container matColumnDef="player">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Player Name</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="flex items-center">
+                                <div class="avatar h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center mr-3 overflow-hidden">
+                                    <img [src]="element.player.avatar" [alt]="element.player.name" title="Player avatar" class="w-full h-full object-cover">
+                                </div>
+                                <span class="font-medium">{{ element.player.name }}</span>
                             </div>
-                            <span class="font-medium">{{ element.player.name }}</span>
-                        </div>
-                    </td>
-                </ng-container>
-                <!-- Club Column -->
-                <ng-container matColumnDef="club">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Club</th>
-                    <td mat-cell *matCellDef="let element">{{ element.club }}</td>
-                </ng-container>
-                <!-- Position Column -->
-                <ng-container matColumnDef="position">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
-                    <td mat-cell *matCellDef="let element">{{ element.position }}</td>
-                </ng-container>
-                <!-- DOB Column -->
-                <ng-container matColumnDef="dob">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>DOB</th>
-                    <td mat-cell *matCellDef="let element">{{ element.dob }}</td>
-                </ng-container>
-                <!-- Subscription Plan Column -->
-                <ng-container matColumnDef="subscriptionPlan">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Subscription Plan</th>
-                    <td mat-cell *matCellDef="let element">
-                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-neutral-200 text-neutral-700">
-                            {{ element.subscriptionPlan }}
-                        </span>
-                    </td>
-                </ng-container>
-                <!-- Subscription Date Column -->
-                <ng-container matColumnDef="subscriptionDate">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Subscription Date</th>
-                    <td mat-cell *matCellDef="let element">{{ element.subscriptionDate }}</td>
-                </ng-container>
-                <!-- Actions Column -->
-                <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef class="text-center">Action</th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
-                        <button mat-icon-button class="action-icon-btn" aria-label="View" matTooltip="View" matTooltipPosition="left" (click)="viewPlayer(element.id)">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
+                        </td>
+                    </ng-container>
+                    <!-- Club Column -->
+                    <ng-container matColumnDef="club">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Club</th>
+                        <td mat-cell *matCellDef="let element">{{ element.club }}</td>
+                    </ng-container>
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="position">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Position</th>
+                        <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+                    </ng-container>
+                    <!-- DOB Column -->
+                    <ng-container matColumnDef="dob">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>DOB</th>
+                        <td mat-cell *matCellDef="let element">{{ element.dob }}</td>
+                    </ng-container>
+                    <!-- Subscription Plan Column -->
+                    <ng-container matColumnDef="subscriptionPlan">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Subscription Plan</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="px-3 py-1 rounded-full text-xs font-medium bg-neutral-200 text-neutral-700">
+                                {{ element.subscriptionPlan }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <!-- Subscription Date Column -->
+                    <ng-container matColumnDef="subscriptionDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Subscription Date</th>
+                        <td mat-cell *matCellDef="let element">{{ element.subscriptionDate }}</td>
+                    </ng-container>
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef class="text-center">Action</th>
+                        <td mat-cell *matCellDef="let element" class="text-center">
+                            <button mat-icon-button class="action-icon-btn" aria-label="View" matTooltip="View" matTooltipPosition="left" (click)="viewPlayer(element.id)">
+                                <mat-icon>visibility</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
         </div>
     </div>
 

@@ -49,6 +49,7 @@ export class ClubOverviewComponent implements OnInit {
   totalPages = 1;
   pagedData: ClubItem[] = [];
   totalCount = 0;
+  loadingTable = false; // <-- Add this line
   
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -86,6 +87,7 @@ export class ClubOverviewComponent implements OnInit {
   }
 
   loadClubs() {
+    this.loadingTable = true; // Start loader
     const request = {
       sportId: this.activeTab,
       pageNumber: this.currentPage,
@@ -115,6 +117,9 @@ export class ClubOverviewComponent implements OnInit {
           subscription: item.subscriptionPlan
         }));
       }
+      this.loadingTable = false; // Stop loader
+    }, error => {
+      this.loadingTable = false; // Stop loader on error
     });
   }
 

@@ -53,6 +53,7 @@ export class PlayerOverviewComponent implements OnInit {
   
   // Selection
   selectedIds: string[] = [];
+  loadingTable = false;
   
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -91,6 +92,7 @@ export class PlayerOverviewComponent implements OnInit {
   }
 
   loadPlayers() {
+    this.loadingTable = true; // Start loader
     const request = {
       sportId: this.activeTab,
       pageNumber: this.currentPage,
@@ -126,6 +128,9 @@ export class PlayerOverviewComponent implements OnInit {
           })
         }));
       }
+      this.loadingTable = false; // Stop loader
+    }, error => {
+      this.loadingTable = false; // Stop loader on error
     });
   }
 
