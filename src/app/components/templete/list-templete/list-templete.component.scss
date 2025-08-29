@@ -22,6 +22,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  width: 100%;
 
   &:hover {
     transform: translateY(-5px);
@@ -29,11 +30,23 @@
   }
 }
 
-// For responsive aspect ratio
-.aspect-ratio-container {
-  width: 100%;
+// Perfect square container
+.square-container {
   position: relative;
+  width: 100%;
+  padding-bottom: 100%; // Creates a 1:1 aspect ratio (square)
   overflow: hidden;
+}
+
+.square-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-btn {
