@@ -150,3 +150,24 @@
   }
   text-align: center;
 }
+
+// Infinite scroll loading
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.scroll-tracker {
+  height: 10px;
+  width: 100%;
+  visibility: hidden; /* Hide it but keep it in the DOM */
+  margin-top: 10px;
+}

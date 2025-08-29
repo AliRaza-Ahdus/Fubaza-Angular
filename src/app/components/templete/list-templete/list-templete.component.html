@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<!-- Loading Indicator -->
+<!-- Initial Loading Indicator -->
 <div *ngIf="loading" class="flex justify-center items-center py-20">
   <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
 </div>
@@ -67,6 +67,19 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Load More Indicator -->
+<div *ngIf="loadingMore" class="flex justify-center items-center py-8 mt-4">
+  <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
+</div>
+
+<!-- Scroll tracker element - IMPORTANT! -->
+<div #scrollTracker class="scroll-tracker"></div>
+
+<!-- All Loaded Indicator -->
+<div *ngIf="!loading && !loadingMore && templates.length > 0 && allLoaded" class="text-center text-gray-500 py-6 mt-2">
+  <p class="text-sm">No more templates to load</p>
 </div>
 
 <!-- Empty State -->
