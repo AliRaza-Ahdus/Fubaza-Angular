@@ -51,9 +51,9 @@
           <span class="material-icons text-gray-400 text-4xl">image</span>
         </div>
 
-        <!-- Template title (shown on hover) -->
+        <!-- Template title (shown on hover) - INCREASED FONT SIZE -->
         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-          <div class="hover-title opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-base font-semibold text-center px-3 w-full" style="text-shadow:0 1px 3px #000;">
+          <div class="hover-title opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-lg sm:text-xl font-semibold text-center px-3 w-full" style="text-shadow:0 1px 3px #000;">
             {{ template.title }}
           </div>
         </div>
@@ -77,9 +77,9 @@
 <!-- Scroll tracker element - IMPORTANT! -->
 <div #scrollTracker class="scroll-tracker"></div>
 
-<!-- All Loaded Indicator -->
+<!-- All Loaded Indicator - INCREASED FONT SIZE -->
 <div *ngIf="!loading && !loadingMore && templates.length > 0 && allLoaded" class="text-center text-gray-500 py-6 mt-2">
-  <p class="text-sm">No more templates to load</p>
+  <p class="text-lg md:text-xl font-medium">No more templates to load</p>
 </div>
 
 <!-- Empty State -->
