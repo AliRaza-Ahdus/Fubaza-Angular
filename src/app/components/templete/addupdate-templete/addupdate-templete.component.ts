@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TempleteService } from '../../../services/templete.service';
-import { Sport } from '../../../models/api-response.model';
+import { Sport, TempleteType } from '../../../models/api-response.model';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
@@ -17,6 +17,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class AddupdateTempleteComponent implements OnInit {
   sports: Sport[] = [];
+  templeteTypes: TempleteType[] = [];
   isEditMode: boolean = false;
   templateId: string | null = null;
   imagePreview: string | null = null;
@@ -35,6 +36,7 @@ export class AddupdateTempleteComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', [Validators.required]],
       sportId: ['', [Validators.required]],
+      templeteType: ['', [Validators.required]],
       image: [null, [Validators.required]]
     });
   }
@@ -46,23 +48,24 @@ export class AddupdateTempleteComponent implements OnInit {
     this.templateId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.templateId;
     
-    // Fetch sports list dynamically
-    this.templeteService.getSportsList().subscribe({
-      next: (res) => {
-        this.sports = res.data || [];
-        
-        // Only in edit mode, load the template data
-        if (this.isEditMode && this.templateId) {
-          this.loadTemplateData(this.templateId);
-        } else {
-          // In add mode, we don't pre-select any sport
-          this.loading = false;
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching sports:', error);
+    // Fetch sports list and template types dynamically
+    Promise.all([
+      this.templeteService.getSportsList().toPromise(),
+      this.templeteService.getTempleteTypes().toPromise()
+    ]).then(([sportsRes, templeteTypesRes]) => {
+      this.sports = sportsRes?.data || [];
+      this.templeteTypes = templeteTypesRes?.data || [];
+      
+      // Only in edit mode, load the template data
+      if (this.isEditMode && this.templateId) {
+        this.loadTemplateData(this.templateId);
+      } else {
+        // In add mode, we don't pre-select any sport or template type
         this.loading = false;
       }
+    }).catch((error) => {
+      console.error('Error fetching data:', error);
+      this.loading = false;
     });
   }
 
@@ -75,7 +78,8 @@ export class AddupdateTempleteComponent implements OnInit {
           // Update form fields with the template data
           this.form.patchValue({
             title: template.title,
-            sportId: template.sportId
+            sportId: template.sportId,
+            templeteType: template.templeteTypeId
           });
           
           // If there's an image URL, show it in the preview
@@ -129,6 +133,7 @@ export class AddupdateTempleteComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.form.get('title')?.value);
     formData.append('sportId', this.form.get('sportId')?.value);
+    formData.append('templeteType', this.form.get('templeteType')?.value);
     
     // Only append image if one is selected
     const imageFile = this.form.get('image')?.value;

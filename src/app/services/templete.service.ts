@@ -7,7 +7,8 @@ import {
   SportsListResponse, 
   Templete, 
   TempletesListResponse, 
-  TempleteRequest 
+  TempleteRequest,
+  TempleteTypesListResponse
 } from '../models/api-response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -19,6 +20,11 @@ export class TempleteService {
   // GET sports list
   getSportsList(): Observable<SportsListResponse> {
     return this.http.get<SportsListResponse>(`${this.baseUrl}/api/lookup/sports`);
+  }
+
+  // GET template types list
+  getTempleteTypes(): Observable<TempleteTypesListResponse> {
+    return this.http.get<TempleteTypesListResponse>(`${this.baseUrl}/api/lookUp/GetTempleteType`);
   }
 
   // POST to fetch templates by sport

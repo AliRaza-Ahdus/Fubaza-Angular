@@ -161,3 +161,16 @@ export interface TempleteRequest {
   pageSize: number;
   searchTerm: string;
 }
+
+// Template Type Models
+export interface TempleteType {
+  id: number;
+  name: string;
+}
+
+export interface TempleteTypesListResponse {
+  success: boolean;
+  message: string;
+  data: TempleteType[];
+  error: string[];
+}

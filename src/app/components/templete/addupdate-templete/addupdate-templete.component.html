@@ -39,7 +39,8 @@
 
       <!-- Form Fields -->
       <div class="mb-6">
-        <div class="flex flex-wrap -mx-2">
+        <!-- First Row: Sport and Template Type -->
+        <div class="flex flex-wrap -mx-2 mb-4">
           <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
             <label class="block text-sm mb-1 inter-label" for="sportId">Select Sport</label>
             <select
@@ -56,6 +57,25 @@
             </div>
           </div>
           <div class="w-full md:w-1/2 px-2">
+            <label class="block text-sm mb-1 inter-label" for="templeteType">Template Type</label>
+            <select
+              id="templeteType"
+              formControlName="templeteType"
+              class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition-all duration-200 text-base input-equal-height"
+              style="font-family: 'Inter', sans-serif; font-weight: 500;"
+            >
+              <option value="" disabled selected>Select template type</option>
+              <option *ngFor="let type of templeteTypes" [value]="type.id">{{ type.name }}</option>
+            </select>
+            <div *ngIf="form.get('templeteType')?.touched && form.get('templeteType')?.invalid" class="text-red-500 text-xs mt-1">
+              Template type is required
+            </div>
+          </div>
+        </div>
+        
+        <!-- Second Row: Template Name -->
+        <div class="flex flex-wrap -mx-2">
+          <div class="w-full px-2">
             <label class="block text-sm mb-1 inter-label" for="title">Template Name</label>
             <input 
               type="text" 
