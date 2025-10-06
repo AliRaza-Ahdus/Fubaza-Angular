@@ -8,24 +8,38 @@
   </div>
 
   <div class="members-section">
-    <div class="activity-tracker-controls flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+    <div class="activity-tracker-controls flex flex-col gap-4 mb-4">
       <!-- Sports filter tabs - scrollable on mobile -->
-      <div class="filters flex overflow-x-auto pb-2 hide-scrollbar gap-2">
-        <button *ngFor="let sport of sports" 
-                class="filter-btn rounded-lg px-5 py-2 text-base font-medium whitespace-nowrap flex-shrink-0" 
-                [ngClass]="selectedSportId === sport.id ? 'bg-black text-white' : 'bg-transparent text-black'" 
-                (click)="setFilter(sport.id)">
-          {{ sport.name }}
-        </button>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="filters flex overflow-x-auto pb-2 hide-scrollbar gap-2">
+          <button *ngFor="let sport of sports" 
+                  class="filter-btn rounded-lg px-5 py-2 text-base font-medium whitespace-nowrap flex-shrink-0" 
+                  [ngClass]="selectedSportId === sport.id ? 'bg-black text-white' : 'bg-transparent text-black'" 
+                  (click)="setFilter(sport.id)">
+            {{ sport.name }}
+          </button>
+        </div>
+        <!-- Search input -->
+        <div class="relative w-full md:w-auto">
+          <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm w-full" 
+            placeholder="Search" [value]="searchQuery" (input)="onSearchInput($event)">
+          <button *ngIf="searchQuery" class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600" 
+                  (click)="clearSearch()">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
       </div>
-      <!-- Search input -->
-      <div class="relative w-full md:w-auto md:ml-auto">
-        <input type="text" class="activity-search-input border border-neutral-200 rounded px-3 py-1 text-sm w-full" 
-          placeholder="Search" [value]="searchQuery" (input)="onSearchInput($event)">
-        <button *ngIf="searchQuery" class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600" 
-                (click)="clearSearch()">
-          <span class="material-icons">close</span>
-        </button>
+      
+      <!-- Template Type filter dropdown -->
+      <div class="flex items-center gap-2">
+        <label class="text-sm font-medium text-gray-700">Filter by Type:</label>
+        <select 
+          class="border border-neutral-200 rounded px-3 py-1 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+          [value]="selectedTempleteType || ''" 
+          (change)="setTempleteTypeFilter($event)">
+          <option value="">All Types</option>
+          <option *ngFor="let type of templeteTypes" [value]="type.id">{{ type.name }}</option>
+        </select>
       </div>
     </div>
   </div>

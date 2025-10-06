@@ -160,6 +160,7 @@ export interface TempleteRequest {
   pageNumber: number;
   pageSize: number;
   searchTerm: string;
+  templeteType?: number; // Changed from string to number to match the ID
 }
 
 // Template Type Models

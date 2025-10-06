@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { TempleteService } from '../../../services/templete.service';
-import { Sport, Templete, TempleteRequest } from '../../../models/api-response.model';
+import { Sport, Templete, TempleteRequest, TempleteType } from '../../../models/api-response.model';
 import { environment } from '../../../../environments/environment';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
@@ -19,7 +19,9 @@ import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 export class ListTempleteComponent implements OnInit, OnDestroy {
   templates: Templete[] = [];
   sports: Sport[] = [];
+  templeteTypes: TempleteType[] = [];
   selectedSportId: string = '';
+  selectedTempleteType: number | null = null; // Changed to number type
   searchQuery: string = '';
   loading: boolean = false;
   loadingMore: boolean = false;
@@ -66,23 +68,26 @@ export class ListTempleteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loading = true;
     
-    // Get sports list
-    this.templeteService.getSportsList().subscribe({
-      next: (response) => {
-        if (response.success && response.data.length > 0) {
-          this.sports = response.data;
-          // Select first sport by default
-          this.selectedSportId = this.sports[0].id;
-          // Load templates for this sport
-          this.loadTemplates();
-        } else {
-          this.loading = false;
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching sports:', error);
-        this.loading = false;
+    // Get sports list and template types
+    Promise.all([
+      this.templeteService.getSportsList().toPromise(),
+      this.templeteService.getTempleteTypes().toPromise()
+    ]).then(([sportsRes, templeteTypesRes]) => {
+      if (sportsRes?.success && sportsRes.data.length > 0) {
+        this.sports = sportsRes.data;
+        // Select first sport by default
+        this.selectedSportId = this.sports[0].id;
       }
+      
+      if (templeteTypesRes?.success) {
+        this.templeteTypes = templeteTypesRes.data;
+      }
+      
+      // Load templates
+      this.loadTemplates();
+    }).catch((error) => {
+      console.error('Error fetching data:', error);
+      this.loading = false;
     });
   }
 
@@ -139,6 +144,11 @@ export class ListTempleteComponent implements OnInit, OnDestroy {
       pageSize: this.pageSize,
       searchTerm: this.searchQuery
     };
+
+    // Add templeteType filter if selected
+    if (this.selectedTempleteType !== null) {
+      request.templeteType = this.selectedTempleteType;
+    }
     
     this.templeteService.getTempletesBySport(request).subscribe({
       next: (response) => {
@@ -180,6 +190,11 @@ export class ListTempleteComponent implements OnInit, OnDestroy {
       pageSize: this.pageSize,
       searchTerm: this.searchQuery
     };
+
+    // Add templeteType filter if selected
+    if (this.selectedTempleteType !== null) {
+      request.templeteType = this.selectedTempleteType;
+    }
     
     this.templeteService.getTempletesBySport(request).subscribe({
       next: (response) => {
@@ -211,6 +226,14 @@ export class ListTempleteComponent implements OnInit, OnDestroy {
     if (this.selectedSportId === sportId) return;
     
     this.selectedSportId = sportId;
+    this.resetList();
+    this.loadTemplates();
+  }
+
+  setTempleteTypeFilter(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const value = target.value;
+    this.selectedTempleteType = value ? parseInt(value, 10) : null;
     this.resetList();
     this.loadTemplates();
   }
