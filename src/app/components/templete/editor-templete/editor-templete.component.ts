@@ -510,6 +510,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Basic drag and drop functionality
   onDragStart(event: DragEvent, elementType: string, data?: any): void {
+    console.log('onDragStart called:', elementType, data);
     this.isDraggingElement = true;
     if (event.dataTransfer) {
       event.dataTransfer.setData('elementType', elementType);
@@ -525,6 +526,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   onDragOver(event: DragEvent): void {
+    console.log('onDragOver called');
     event.preventDefault();
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'copy';
@@ -532,10 +534,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   onDrop(event: DragEvent): void {
+    console.log('onDrop called');
     event.preventDefault();
     if (!event.dataTransfer) return;
 
     const elementType = event.dataTransfer.getData('elementType') as 'text' | 'image' | 'shape' | 'line' | 'icon';
+    console.log('Element type:', elementType);
     if (!elementType) return;
 
     const elementDataString = event.dataTransfer.getData('elementData');
@@ -543,14 +547,18 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (elementDataString) {
       try {
         elementData = JSON.parse(elementDataString);
+        console.log('Element data:', elementData);
       } catch (e) {
         console.warn('Failed to parse element data:', e);
       }
     }
 
     const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
+    console.log('Canvas rect:', canvasRect);
+    console.log('Event clientX/Y:', event.clientX, event.clientY);
     const x = event.clientX - canvasRect.left;
     const y = event.clientY - canvasRect.top;
+    console.log('Calculated drop position:', x, y);
 
     this.addElementToCanvas(elementType, elementData, x, y);
   }
