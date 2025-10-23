@@ -6,7 +6,7 @@
       <span>Elements</span>
     </button>
     <button [ngClass]="{'active': activeMobilePanel === 'canvas'}" (click)="toggleMobilePanel('canvas')">
-      <mat-icon>edit</mat-icon>
+      <mat-icon>brush</mat-icon>
       <span>Canvas</span>
     </button>
     <button [ngClass]="{'active': activeMobilePanel === 'properties'}" (click)="toggleMobilePanel('properties')" [disabled]="selectedElement === null">
@@ -18,7 +18,7 @@
   <div class="template-editor-header">
     <div class="header-left">
       <div class="app-logo">
-        <mat-icon>dashboard_customize</mat-icon>
+        <mat-icon>design_services</mat-icon>
         <h2 class="template-editor-title">Template Studio</h2>
       </div>
       <div class="template-info">
@@ -43,7 +43,7 @@
       </button>
       <div class="export-btn-wrapper">
         <button class="export-btn" (click)="toggleExportOptions()">
-          <mat-icon>file_download</mat-icon>
+          <mat-icon>download</mat-icon>
           <span>Export</span>
         </button>
         <div class="export-options" *ngIf="showExportOptions">
@@ -66,109 +66,422 @@
   <div class="template-editor-main">
     <div class="template-sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}">
       <div class="sidebar-section">
-        <h3 class="sidebar-title">Elements</h3>
-        <div class="elements-list">
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'text')">
-            <mat-icon>text_fields</mat-icon>
-            <span>Text</span>
+        <h3 class="sidebar-title">Text Elements</h3>
+        <div class="text-elements-grid">
+          <div class="text-element-item" (click)="addTextElement('heading')" 
+               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'heading'})" (dragend)="onDragEnd()">
+            <mat-icon>format_h1</mat-icon>
+            <div class="element-preview">
+              <span class="preview-text heading-preview">Heading</span>
+            </div>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'image')">
-            <mat-icon>image</mat-icon>
-            <span>Image</span>
+          <div class="text-element-item" (click)="addTextElement('subheading')" 
+               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'subheading'})" (dragend)="onDragEnd()">
+            <mat-icon>format_h2</mat-icon>
+            <div class="element-preview">
+              <span class="preview-text subheading-preview">Subheading</span>
+            </div>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'shape')" (click)="openShapeSelector()">
-            <mat-icon>crop_square</mat-icon>
-            <span>Shape</span>
+          <div class="text-element-item" (click)="addTextElement('body')" 
+               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'body'})" (dragend)="onDragEnd()">
+            <mat-icon>article</mat-icon>
+            <div class="element-preview">
+              <span class="preview-text body-preview">Body Text</span>
+            </div>
           </div>
-        </div>
-        
-        <!-- Shape Selector Expanded Panel -->
-        <div class="shapes-panel" *ngIf="showShapeSelector">
-          <h3 class="shapes-title">Select Shape</h3>
-          <div class="shapes-grid">
-            <div class="shape-option" (click)="addShapeToCanvas('rectangle')">
-              <div class="shape-preview rectangle"></div>
-              <span>Rectangle</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('circle')">
-              <div class="shape-preview circle"></div>
-              <span>Circle</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('triangle')">
-              <div class="shape-preview triangle"></div>
-              <span>Triangle</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('ellipse')">
-              <div class="shape-preview ellipse"></div>
-              <span>Ellipse</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('diamond')">
-              <div class="shape-preview diamond"></div>
-              <span>Diamond</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('hexagon')">
-              <div class="shape-preview hexagon"></div>
-              <span>Hexagon</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('star')">
-              <div class="shape-preview star"></div>
-              <span>Star</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('heart')">
-              <div class="shape-preview heart"></div>
-              <span>Heart</span>
-            </div>
-            <div class="shape-option" (click)="addShapeToCanvas('arrow')">
-              <div class="shape-preview arrow"></div>
-              <span>Arrow</span>
+          <div class="text-element-item" (click)="addTextElement('caption')" 
+               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'caption'})" (dragend)="onDragEnd()">
+            <mat-icon>text_fields_alt</mat-icon>
+            <div class="element-preview">
+              <span class="preview-text caption-preview">Caption</span>
             </div>
           </div>
         </div>
       </div>
       
       <div class="sidebar-section">
-        <h3 class="sidebar-title">Social Media Templates</h3>
-        <div class="template-presets">
-          <div class="preset-item" (click)="setCanvasSize('instagram')">
-            <div class="preset-preview instagram">
-              <img src="assets/icons/instagram.svg" alt="Instagram" *ngIf="false">
-              <span>Instagram</span>
-            </div>
-            <span>Instagram Post</span>
+        <h3 class="sidebar-title">Media & Shapes</h3>
+        <div class="elements-list">
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'image')" (dragend)="onDragEnd()">
+            <mat-icon>photo</mat-icon>
+            <span>Image</span>
           </div>
-          <div class="preset-item" (click)="setCanvasSize('facebook')">
-            <div class="preset-preview facebook">
-              <img src="assets/icons/facebook.svg" alt="Facebook" *ngIf="false">
-              <span>Facebook</span>
-            </div>
-            <span>Facebook Post</span>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'shape')" (dragend)="onDragEnd()" (click)="openShapeSelector()">
+            <mat-icon>shapes</mat-icon>
+            <span>Shape</span>
           </div>
-          <div class="preset-item" (click)="setCanvasSize('twitter')">
-            <div class="preset-preview twitter">
-              <img src="assets/icons/twitter.svg" alt="Twitter" *ngIf="false">
-              <span>Twitter</span>
-            </div>
-            <span>Twitter Post</span>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'line')" (dragend)="onDragEnd()">
+            <mat-icon>show_chart</mat-icon>
+            <span>Line</span>
           </div>
-          <div class="preset-item" (click)="setCanvasSize('story')">
-            <div class="preset-preview story">
-              <span>Story</span>
-            </div>
-            <span>Instagram Story</span>
+          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'icon')" (dragend)="onDragEnd()">
+            <mat-icon>star</mat-icon>
+            <span>Icon</span>
           </div>
-          <div class="preset-item" (click)="setCanvasSize('youtube')">
-            <div class="preset-preview youtube">
-              <img src="assets/icons/youtube.svg" alt="YouTube" *ngIf="false">
-              <span>YouTube</span>
+        </div>
+        
+        <!-- Shape Selector Expanded Panel -->
+        <div class="shapes-panel" *ngIf="showShapeSelector">
+          <h3 class="shapes-title">Select Shape</h3>
+          
+          <!-- Basic Shapes -->
+          <div class="shape-category">
+            <h4 class="shape-category-title">Basic Shapes</h4>
+            <div class="shapes-grid">
+              <div class="shape-option" (click)="addShapeToCanvas('rectangle')">
+                <div class="shape-preview rectangle"></div>
+                <span>Rectangle</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('circle')">
+                <div class="shape-preview circle"></div>
+                <span>Circle</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('ellipse')">
+                <div class="shape-preview ellipse"></div>
+                <span>Ellipse</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('square')">
+                <div class="shape-preview square"></div>
+                <span>Square</span>
+              </div>
             </div>
-            <span>YouTube Thumbnail</span>
           </div>
-          <div class="preset-item" (click)="setCanvasSize('linkedin')">
-            <div class="preset-preview linkedin">
-              <img src="assets/icons/linkedin.svg" alt="LinkedIn" *ngIf="false">
-              <span>LinkedIn</span>
+          
+          <!-- Geometric Shapes -->
+          <div class="shape-category">
+            <h4 class="shape-category-title">Geometric</h4>
+            <div class="shapes-grid">
+              <div class="shape-option" (click)="addShapeToCanvas('triangle')">
+                <div class="shape-preview triangle"></div>
+                <span>Triangle</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('diamond')">
+                <div class="shape-preview diamond"></div>
+                <span>Diamond</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('hexagon')">
+                <div class="shape-preview hexagon"></div>
+                <span>Hexagon</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('octagon')">
+                <div class="shape-preview octagon"></div>
+                <span>Octagon</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('pentagon')">
+                <div class="shape-preview pentagon"></div>
+                <span>Pentagon</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('star')">
+                <div class="shape-preview star"></div>
+                <span>Star</span>
+              </div>
             </div>
-            <span>LinkedIn Post</span>
+          </div>
+          
+          <!-- Lines & Arrows -->
+          <div class="shape-category">
+            <h4 class="shape-category-title">Lines & Arrows</h4>
+            <div class="shapes-grid">
+              <div class="shape-option" (click)="addShapeToCanvas('line')">
+                <div class="shape-preview line"></div>
+                <span>Line</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('arrow-right')">
+                <div class="shape-preview arrow-right"></div>
+                <span>Arrow</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('arrow-left')">
+                <div class="shape-preview arrow-left"></div>
+                <span>Left Arrow</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('arrow-up')">
+                <div class="shape-preview arrow-up"></div>
+                <span>Up Arrow</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('arrow-down')">
+                <div class="shape-preview arrow-down"></div>
+                <span>Down Arrow</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('double-arrow')">
+                <div class="shape-preview double-arrow"></div>
+                <span>Double Arrow</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Special Shapes -->
+          <div class="shape-category">
+            <h4 class="shape-category-title">Special</h4>
+            <div class="shapes-grid">
+              <div class="shape-option" (click)="addShapeToCanvas('heart')">
+                <div class="shape-preview heart"></div>
+                <span>Heart</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('speech-bubble')">
+                <div class="shape-preview speech-bubble"></div>
+                <span>Speech Bubble</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('burst')">
+                <div class="shape-preview burst"></div>
+                <span>Burst</span>
+              </div>
+              <div class="shape-option" (click)="addShapeToCanvas('cloud')">
+                <div class="shape-preview cloud"></div>
+                <span>Cloud</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Canvas Presets</h3>
+        <div class="canvas-presets">
+          <!-- Fixed Canvas Presets -->
+          <div class="preset-group">
+            <h4 class="preset-group-title">Standard Sizes</h4>
+            <div class="preset-buttons">
+              <button class="preset-btn" (click)="setCanvasSize('square')">
+                <span class="preset-name">Square</span>
+                <span class="preset-dimensions">1080×1080</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('portrait')">
+                <span class="preset-name">Portrait</span>
+                <span class="preset-dimensions">1080×1920</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('landscape')">
+                <span class="preset-name">Landscape</span>
+                <span class="preset-dimensions">1920×1080</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('custom')">
+                <span class="preset-name">Custom</span>
+                <span class="preset-dimensions">{{canvasWidth}}×{{canvasHeight}}</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Social Media Presets -->
+          <div class="preset-group">
+            <h4 class="preset-group-title">Social Media</h4>
+            <div class="preset-buttons">
+              <button class="preset-btn" (click)="setCanvasSize('instagram')">
+                <span class="preset-name">Instagram Post</span>
+                <span class="preset-dimensions">1080×1080</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('story')">
+                <span class="preset-name">Instagram Story</span>
+                <span class="preset-dimensions">1080×1920</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('facebook')">
+                <span class="preset-name">Facebook Post</span>
+                <span class="preset-dimensions">1200×630</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('twitter')">
+                <span class="preset-name">Twitter Post</span>
+                <span class="preset-dimensions">1200×675</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('youtube')">
+                <span class="preset-name">YouTube Thumbnail</span>
+                <span class="preset-dimensions">1280×720</span>
+              </button>
+              <button class="preset-btn" (click)="setCanvasSize('linkedin')">
+                <span class="preset-name">LinkedIn Post</span>
+                <span class="preset-dimensions">1200×627</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Color Palette Section -->
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Color Palette</h3>
+        <div class="color-palette-container">
+          <div class="palette-tabs">
+            <button class="palette-tab" [ngClass]="{'active': activePaletteTab === 'saved'}" (click)="activePaletteTab = 'saved'">Saved</button>
+            <button class="palette-tab" [ngClass]="{'active': activePaletteTab === 'recent'}" (click)="activePaletteTab = 'recent'">Recent</button>
+            <button class="palette-tab" [ngClass]="{'active': activePaletteTab === 'brand'}" (click)="activePaletteTab = 'brand'">Brand</button>
+          </div>
+          
+          <!-- Saved Colors -->
+          <div class="palette-content" *ngIf="activePaletteTab === 'saved'">
+            <div class="color-swatches">
+              <div class="color-swatch" 
+                   *ngFor="let color of savedColors" 
+                   [style.background-color]="color"
+                   (click)="selectColor(color)"
+                   (contextmenu)="removeColor(color, $event)"
+                   [title]="color">
+              </div>
+              <div class="add-color-swatch" (click)="openColorPicker()">
+                <mat-icon>add</mat-icon>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Recent Colors -->
+          <div class="palette-content" *ngIf="activePaletteTab === 'recent'">
+            <div class="color-swatches">
+              <div class="color-swatch" 
+                   *ngFor="let color of recentColors" 
+                   [style.background-color]="color"
+                   (click)="selectColor(color)"
+                   [title]="color">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Brand Colors -->
+          <div class="palette-content" *ngIf="activePaletteTab === 'brand'">
+            <div class="brand-palette-controls">
+              <button class="brand-btn" (click)="saveBrandPalette()">Save Current as Brand</button>
+              <button class="brand-btn" (click)="loadBrandPalette()">Load Brand Palette</button>
+            </div>
+            <div class="color-swatches">
+              <div class="color-swatch" 
+                   *ngFor="let color of brandColors" 
+                   [style.background-color]="color"
+                   (click)="selectColor(color)"
+                   [title]="color">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Color Picker -->
+          <div class="advanced-color-picker" *ngIf="showColorPicker">
+            <div class="color-picker-header">
+              <h4>Color Picker</h4>
+              <button class="close-picker" (click)="closeColorPicker()">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <div class="color-picker-content">
+              <input type="color" [(ngModel)]="pickerColor" (change)="updatePickerColor()">
+              <div class="color-inputs">
+                <div class="color-input-group">
+                  <label>HEX</label>
+                  <input type="text" [(ngModel)]="hexColor" (change)="updateFromHex()">
+                </div>
+                <div class="color-input-group">
+                  <label>RGB</label>
+                  <div class="rgb-inputs">
+                    <input type="number" [(ngModel)]="rgbColor.r" (change)="updateFromRGB()" min="0" max="255">
+                    <input type="number" [(ngModel)]="rgbColor.g" (change)="updateFromRGB()" min="0" max="255">
+                    <input type="number" [(ngModel)]="rgbColor.b" (change)="updateFromRGB()" min="0" max="255">
+                  </div>
+                </div>
+              </div>
+              <div class="opacity-control">
+                <label>Opacity: {{colorOpacity || 1}}</label>
+                <input type="range" [(ngModel)]="colorOpacity" min="0" max="1" step="0.1">
+              </div>
+              <button class="add-to-palette-btn" (click)="addToPalette()">Add to Palette</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas Background Section -->
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">Canvas Background</h3>
+        <div class="background-controls">
+          <div class="background-type-selector">
+            <button class="bg-type-btn" 
+                    [ngClass]="{'active': canvasBackground.type === 'color'}"
+                    (click)="setBackgroundType('color')">
+              <mat-icon>palette</mat-icon>
+              <span>Color</span>
+            </button>
+            <button class="bg-type-btn" 
+                    [ngClass]="{'active': canvasBackground.type === 'gradient'}"
+                    (click)="setBackgroundType('gradient')">
+              <mat-icon>gradient</mat-icon>
+              <span>Gradient</span>
+            </button>
+            <button class="bg-type-btn" 
+                    [ngClass]="{'active': canvasBackground.type === 'image'}"
+                    (click)="setBackgroundType('image')">
+              <mat-icon>image</mat-icon>
+              <span>Image</span>
+            </button>
+          </div>
+          
+          <!-- Solid Color Background -->
+          <div class="bg-options" *ngIf="canvasBackground.type === 'color'">
+            <div class="color-picker-group">
+              <label>Background Color</label>
+              <input type="color" [(ngModel)]="canvasBackground.color" (change)="updateCanvasBackground()">
+            </div>
+          </div>
+          
+          <!-- Gradient Background -->
+          <div class="bg-options" *ngIf="canvasBackground.type === 'gradient'">
+            <div class="gradient-controls">
+              <div class="gradient-type">
+                <label>Gradient Type</label>
+                <select [(ngModel)]="canvasBackground.gradientType" (change)="updateCanvasBackground()">
+                  <option value="linear">Linear</option>
+                  <option value="radial">Radial</option>
+                </select>
+              </div>
+              <div class="gradient-colors">
+                <div class="color-stop">
+                  <label>Color 1</label>
+                  <input type="color" [(ngModel)]="canvasBackground.gradientColor1" (change)="updateCanvasBackground()">
+                </div>
+                <div class="color-stop">
+                  <label>Color 2</label>
+                  <input type="color" [(ngModel)]="canvasBackground.gradientColor2" (change)="updateCanvasBackground()">
+                </div>
+              </div>
+              <div class="gradient-angle" *ngIf="canvasBackground.gradientType === 'linear'">
+                <label>Angle: {{canvasBackground.gradientAngle || 45}}°</label>
+                <input type="range" [(ngModel)]="canvasBackground.gradientAngle" 
+                       (change)="updateCanvasBackground()" min="0" max="360" step="15">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Image Background -->
+          <div class="bg-options" *ngIf="canvasBackground.type === 'image'">
+            <div class="image-bg-controls">
+              <button class="upload-bg-btn" (click)="triggerBackgroundUpload()">
+                <mat-icon>cloud_upload</mat-icon>
+                <span>Upload Background</span>
+              </button>
+              <input type="file" #backgroundUpload style="display: none" 
+                     (change)="onBackgroundSelected($event)" accept="image/*">
+              
+              <div class="bg-image-preview" *ngIf="canvasBackground.imageUrl">
+                <img [src]="canvasBackground.imageUrl" alt="Background">
+                <button class="remove-bg-btn" (click)="removeBackgroundImage()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+              
+              <div class="bg-image-options" *ngIf="canvasBackground.imageUrl">
+                <div class="bg-option">
+                  <label>Opacity: {{canvasBackground.opacity || 1}}</label>
+                  <input type="range" [(ngModel)]="canvasBackground.opacity" 
+                         (change)="updateCanvasBackground()" min="0.1" max="1" step="0.1">
+                </div>
+                <div class="bg-option">
+                  <label>Blur: {{canvasBackground.blur || 0}}px</label>
+                  <input type="range" [(ngModel)]="canvasBackground.blur" 
+                         (change)="updateCanvasBackground()" min="0" max="10" step="1">
+                </div>
+                <div class="bg-option">
+                  <label>Overlay Color</label>
+                  <input type="color" [(ngModel)]="canvasBackground.overlayColor" 
+                         (change)="updateCanvasBackground()">
+                </div>
+                <div class="bg-option">
+                  <label>Overlay Opacity: {{canvasBackground.overlayOpacity || 0}}</label>
+                  <input type="range" [(ngModel)]="canvasBackground.overlayOpacity" 
+                         (change)="updateCanvasBackground()" min="0" max="1" step="0.1">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -199,33 +512,49 @@
     <div class="canvas-container" [ngClass]="{'mobile-active': activeMobilePanel === 'canvas'}">
       <div class="canvas-toolbar">
         <div class="toolbar-section">
-          <div class="canvas-size-controls">
-            <button class="size-btn" (click)="setCanvasSize('small')">Small</button>
-            <button class="size-btn" (click)="setCanvasSize('medium')">Medium</button>
-            <button class="size-btn" (click)="setCanvasSize('large')">Large</button>
-            <button class="size-btn custom" (click)="openCustomSizeDialog()" title="Custom Size">
-              <mat-icon>settings</mat-icon>
+          <div class="canvas-info">
+            <span class="canvas-dimensions">{{canvasWidth}} x {{canvasHeight}} px</span>
+            <button class="tool-btn" (click)="openCustomSizeDialog()" title="Change Canvas Size">
+              <mat-icon>photo_size_select_large</mat-icon>
             </button>
           </div>
         </div>
+        
         <div class="toolbar-section">
           <div class="canvas-tools">
             <button class="tool-btn" [ngClass]="{'active': showGrid}" (click)="toggleGrid()" title="Toggle Grid">
-              <mat-icon>grid_on</mat-icon>
+              <mat-icon>grid_4x4</mat-icon>
             </button>
             <button class="tool-btn" [ngClass]="{'active': snapToGrid}" (click)="toggleSnapToGrid()" title="Snap to Grid">
               <mat-icon>grid_goldenratio</mat-icon>
             </button>
             <button class="tool-btn" [ngClass]="{'active': showAlignmentGuides}" (click)="toggleAlignmentGuides()" title="Alignment Guides">
-              <mat-icon>align_vertical_center</mat-icon>
+              <mat-icon>align_horizontal_center</mat-icon>
             </button>
-            <button class="tool-btn" (click)="duplicatePage()" title="Duplicate Page">
-              <mat-icon>content_copy</mat-icon>
+            <button class="tool-btn" [ngClass]="{'active': showRulers}" (click)="toggleRulers()" title="Rulers">
+              <mat-icon>straighten</mat-icon>
             </button>
           </div>
         </div>
+        
+        <div class="toolbar-section">
+          <div class="view-controls">
+            <button class="view-btn" (click)="fitToScreen()" title="Fit to Screen">
+              <mat-icon>fit_screen</mat-icon>
+            </button>
+            <button class="view-btn" (click)="actualSize()" title="Actual Size (100%)">
+              <mat-icon>aspect_ratio</mat-icon>
+            </button>
+            <button class="view-btn" (click)="centerCanvas()" title="Center Canvas">
+              <mat-icon>center_focus_strong</mat-icon>
+            </button>
+          </div>
+        </div>
+        
         <div class="toolbar-section">
           <div class="zoom-controls">
+            <button class="zoom-btn" (click)="setZoom(25)" title="25%">25%</button>
+            <button class="zoom-btn" (click)="setZoom(50)" title="50%">50%</button>
             <button class="zoom-btn" (click)="zoom(-10)" title="Zoom Out">
               <mat-icon>zoom_out</mat-icon>
             </button>
@@ -233,14 +562,35 @@
             <button class="zoom-btn" (click)="zoom(10)" title="Zoom In">
               <mat-icon>zoom_in</mat-icon>
             </button>
+            <button class="zoom-btn" (click)="setZoom(100)" title="100%">100%</button>
+            <button class="zoom-btn" (click)="setZoom(200)" title="200%">200%</button>
           </div>
         </div>
       </div>
       
-      <div class="canvas-workspace" [style.transform]="'scale(' + zoomLevel/100 + ')'" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
-        <div class="canvas" #canvas [style.width.px]="canvasWidth" [style.height.px]="canvasHeight" [ngClass]="{'show-grid': showGrid}">
+      <div class="canvas-workspace" 
+           [style.transform]="'scale(' + zoomLevel/100 + ') translate(' + panX + 'px, ' + panY + 'px)'" 
+           [style.transform-origin]="'center center'"
+           (drop)="onDrop($event)" 
+           (dragover)="onDragOver($event)"
+           (mousedown)="startPan($event)"
+           (wheel)="onWheel($event)">
+           
+        <!-- Rulers -->
+        <div class="rulers" *ngIf="showRulers">
+          <div class="ruler horizontal-ruler"></div>
+          <div class="ruler vertical-ruler"></div>
+        </div>
+        
+        <div class="canvas" #canvas 
+             [style.width.px]="canvasWidth" 
+             [style.height.px]="canvasHeight" 
+             [ngClass]="{'show-grid': showGrid}"
+             [style.background]="getCanvasBackgroundStyle()">
+             
           <!-- Grid overlay for snap-to-grid -->
-          <div class="grid-overlay" *ngIf="showGrid"></div>
+          <div class="grid-overlay" *ngIf="showGrid"
+               [style.background-size]="gridSize + 'px ' + gridSize + 'px'"></div>
           
           <!-- Alignment guides -->
           <div class="alignment-guides" *ngIf="showAlignmentGuides && selectedElement !== null">
@@ -254,24 +604,32 @@
           <!-- Canvas elements will be rendered here -->
           <div *ngFor="let element of canvasElements; let i = index" 
                class="canvas-element" 
-               [ngClass]="{'selected': selectedElement === i}" 
+               [ngClass]="{'selected': selectedElement === i, 'locked': element.locked, 'hidden': element.hidden}" 
                [style.left.px]="element.x" 
                [style.top.px]="element.y"
                [style.width.px]="element.width"
                [style.height.px]="element.height"
+               [style.z-index]="i + 1"
+               [style.transform]="getElementTransform(element)"
+               [style.opacity]="element.hidden ? 0 : (element.opacity || 1)"
+               [style.pointer-events]="element.locked ? 'none' : 'auto'"
+               [style.mix-blend-mode]="element.blendMode || 'normal'"
                (mousedown)="selectElement(i, $event)">
             
             <!-- Text element -->
             <div *ngIf="element.type === 'text'" 
                  class="text-element" 
                  [style.fontSize.px]="element.fontSize"
-                 [style.color]="element.color"
+                 [style.color]="getTextColor(element)"
+                 [style.background]="getTextGradient(element)"
+                 [style.webkitBackgroundClip]="element.textGradientType && element.textGradientType !== 'none' ? 'text' : 'unset'"
+                 [style.webkitTextFillColor]="element.textGradientType && element.textGradientType !== 'none' ? 'transparent' : 'unset'"
                  [style.fontFamily]="element.fontFamily"
                  [style.fontWeight]="element.fontWeight"
                  [style.fontStyle]="element.fontStyle"
                  [style.textDecoration]="element.textDecoration"
                  [style.textAlign]="element.textAlign"
-                 [style.backgroundColor]="element.backgroundColor"
+                 [style.backgroundColor]="getTextBackgroundColor(element)"
                  [style.padding.px]="element.padding"
                  [style.borderRadius.px]="element.borderRadius"
                  [style.lineHeight]="element.lineHeight"
@@ -280,6 +638,8 @@
                  [style.webkitTextStrokeWidth.px]="element.textStrokeWidth"
                  [style.webkitTextStrokeColor]="element.textStrokeColor"
                  [style.textShadow]="element.textShadow"
+                 [style.transform]="getTextTransform(element)"
+                 [style.opacity]="element.opacity || 1"
                  [contentEditable]="selectedElement === i"
                  (blur)="updateElementContent(i, $event)"
                  (focus)="selectedElement = i">
@@ -296,19 +656,38 @@
                  [style.borderRadius.px]="element.borderRadius"
                  [style.border]="element.border"
                  [style.boxShadow]="element.boxShadow"
-                 [style.filter]="element.filter"
-                 [style.opacity]="element.opacity || 1">
+                 [style.filter]="getImageFilter(element)"
+                 [style.opacity]="element.opacity || 1"
+                 [style.clipPath]="getImageMask(element)">
             
             <!-- Shape element -->
             <div *ngIf="element.type === 'shape'" 
                  class="shape-element"
-                 [style.backgroundColor]="element.color"
-                 [style.borderRadius.px]="element.shape === 'circle' ? element.width/2 : element.borderRadius"
-                 [style.clipPath]="element.shape === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : null"
+                 [style.background]="getShapeBackground(element)"
+                 [style.borderRadius.px]="getShapeBorderRadius(element)"
+                 [style.clipPath]="getShapeClipPath(element)"
                  [style.boxShadow]="element.boxShadow"
                  [style.opacity]="element.opacity || 1"
-                 [style.border]="element.border"
-                 [style.transform]="element.rotate ? 'rotate(' + element.rotate + 'deg)' : null">
+                 [style.border]="element.border">
+            </div>
+
+            <!-- Line element -->
+            <div *ngIf="element.type === 'line'" 
+                 class="line-element"
+                 [style.backgroundColor]="element.color"
+                 [style.height.px]="element.lineWidth || 2"
+                 [style.opacity]="element.opacity || 1">
+            </div>
+
+            <!-- Icon element -->
+            <div *ngIf="element.type === 'icon'" 
+                 class="icon-element"
+                 [style.backgroundImage]="'url(' + element.src + ')'"
+                 [style.backgroundSize]="'contain'"
+                 [style.backgroundRepeat]="'no-repeat'"
+                 [style.backgroundPosition]="'center'"
+                 [style.filter]="getIconFilter(element)"
+                 [style.opacity]="element.opacity || 1">
             </div>
             
             <!-- Resize handles (only show for selected element) -->
@@ -323,23 +702,142 @@
       </div>
     </div>
     
-    <div class="properties-panel" *ngIf="selectedElement !== null" [ngClass]="{'mobile-active': activeMobilePanel === 'properties'}">
-      <h3 class="panel-title">Properties</h3>
+    <div class="properties-panel" [ngClass]="{'mobile-active': activeMobilePanel === 'properties'}">
       
-      <div class="quick-actions">
-        <button class="action-btn" title="Bring Forward" (click)="bringForward()">
-          <mat-icon>flip_to_front</mat-icon>
-        </button>
-        <button class="action-btn" title="Send Backward" (click)="sendBackward()">
-          <mat-icon>flip_to_back</mat-icon>
-        </button>
-        <button class="action-btn" title="Duplicate" (click)="duplicateElement(selectedElement)">
-          <mat-icon>content_copy</mat-icon>
-        </button>
-        <button class="action-btn delete" title="Delete" (click)="deleteElement(selectedElement)">
-          <mat-icon>delete</mat-icon>
-        </button>
+      <!-- Layer Management Panel -->
+      <div class="layer-management" *ngIf="canvasElements.length > 0">
+        <div class="layer-header">
+          <h3 class="panel-title">Layers</h3>
+          <div class="layer-actions">
+            <button class="layer-action-btn" title="Select All" (click)="selectAllElements()">
+              <mat-icon>checklist</mat-icon>
+            </button>
+            <button class="layer-action-btn" title="Group Selected" (click)="groupSelectedElements()" 
+                    [disabled]="selectedElements.length < 2">
+              <mat-icon>group</mat-icon>
+            </button>
+            <button class="layer-action-btn" title="Ungroup Selected" (click)="ungroupSelectedElements()"
+                    [disabled]="!hasGroupedElements()">
+              <mat-icon>ungroup</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="layers-list">
+          <div class="layer-item" 
+               *ngFor="let element of canvasElements; let i = index; trackBy: trackByElementId"
+               [ngClass]="{'selected': selectedElement === i || selectedElements.includes(i), 
+                          'locked': element.locked, 
+                          'hidden': element.hidden}"
+               (click)="selectLayer(i, $event)"
+               (dblclick)="startLayerRename(i)">
+            
+            <div class="layer-content">
+              <div class="layer-icon">
+                <mat-icon *ngIf="element.type === 'text'">text_fields</mat-icon>
+                <mat-icon *ngIf="element.type === 'image'">photo</mat-icon>
+                <mat-icon *ngIf="element.type === 'shape'">shapes</mat-icon>
+                <mat-icon *ngIf="element.type === 'line'">show_chart</mat-icon>
+              </div>
+              
+              <div class="layer-info">
+                <span class="layer-name" *ngIf="!element.editing">
+                  {{ element.layerName || getDefaultLayerName(element, i) }}
+                </span>
+                <input class="layer-name-input" 
+                       *ngIf="element.editing"
+                       [(ngModel)]="element.layerName" 
+                       (blur)="finishLayerRename(i)"
+                       (keydown.enter)="finishLayerRename(i)"
+                       (keydown.escape)="cancelLayerRename(i)">
+                <div class="layer-details">
+                  <span class="layer-type">{{ element.type | titlecase }}</span>
+                  <span class="layer-size">{{ element.width }}x{{ element.height }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="layer-controls">
+              <button class="layer-control-btn" 
+                      [ngClass]="{'active': !element.hidden}"
+                      (click)="toggleLayerVisibility(i, $event)" 
+                      title="Toggle Visibility">
+                <mat-icon>{{ element.hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              <button class="layer-control-btn" 
+                      [ngClass]="{'active': element.locked}"
+                      (click)="toggleLayerLock(i, $event)" 
+                      title="Toggle Lock">
+                <mat-icon>{{ element.locked ? 'lock' : 'lock_open' }}</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+      
+      <!-- Element Properties (only show if element is selected) -->
+      <div class="element-properties" *ngIf="selectedElement !== null">
+        <h3 class="panel-title">Properties</h3>
+        
+        <div class="quick-actions">
+          <button class="action-btn" title="Bring to Front" (click)="bringToFront()">
+            <mat-icon>flip_to_front</mat-icon>
+          </button>
+          <button class="action-btn" title="Bring Forward" (click)="bringForward()">
+            <mat-icon>keyboard_arrow_up</mat-icon>
+          </button>
+          <button class="action-btn" title="Send Backward" (click)="sendBackward()">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+          <button class="action-btn" title="Send to Back" (click)="sendToBack()">
+            <mat-icon>flip_to_back</mat-icon>
+          </button>
+          <button class="action-btn" title="Duplicate" (click)="duplicateElement(selectedElement)">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button class="action-btn" title="Reset Transform" (click)="resetElementTransform()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button class="action-btn delete" title="Delete" (click)="deleteElement(selectedElement)">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </div>
+        
+        <!-- Alignment Tools -->
+        <div class="alignment-tools">
+          <h4 class="tools-title">Alignment</h4>
+          <div class="alignment-grid">
+            <button class="align-btn" (click)="alignElement('left')" title="Align Left">
+              <mat-icon>align_horizontal_left</mat-icon>
+            </button>
+            <button class="align-btn" (click)="alignElement('center-horizontal')" title="Center Horizontal">
+              <mat-icon>align_horizontal_center</mat-icon>
+            </button>
+            <button class="align-btn" (click)="alignElement('right')" title="Align Right">
+              <mat-icon>align_horizontal_right</mat-icon>
+            </button>
+            <button class="align-btn" (click)="alignElement('top')" title="Align Top">
+              <mat-icon>align_vertical_top</mat-icon>
+            </button>
+            <button class="align-btn" (click)="alignElement('center-vertical')" title="Center Vertical">
+              <mat-icon>align_vertical_center</mat-icon>
+            </button>
+            <button class="align-btn" (click)="alignElement('bottom')" title="Align Bottom">
+              <mat-icon>align_vertical_bottom</mat-icon>
+            </button>
+          </div>
+          
+          <div class="distribution-tools" *ngIf="selectedElements.length > 2">
+            <button class="distribute-btn" (click)="distributeElements('horizontal')" title="Distribute Horizontally">
+              <mat-icon>align_horizontal_left</mat-icon>
+              <span>Horizontal</span>
+            </button>
+            <button class="distribute-btn" (click)="distributeElements('vertical')" title="Distribute Vertically">
+              <mat-icon>align_vertical_top</mat-icon>
+              <span>Vertical</span>
+            </button>
+          </div>
+        </div>
       
       <!-- Common properties -->
       <div class="property-group">
@@ -417,7 +915,7 @@
             </button>
             <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textTransform === 'uppercase'}" 
                     (click)="toggleTextStyle('textTransform', 'uppercase')" title="Uppercase">
-              <mat-icon>keyboard_capslock</mat-icon>
+              <mat-icon>text_rotation_none</mat-icon>
             </button>
           </div>
           <div class="alignment-buttons">
@@ -488,32 +986,168 @@
         </div>
         
         <div class="property-group">
-          <label>Advanced Text Effects</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Text Shadow</span>
-              <select [(ngModel)]="canvasElements[selectedElement].textShadow" (change)="updateElement()">
-                <option value="none">None</option>
-                <option value="1px 1px 2px rgba(0,0,0,0.3)">Light</option>
-                <option value="2px 2px 4px rgba(0,0,0,0.4)">Medium</option>
-                <option value="3px 3px 5px rgba(0,0,0,0.5)">Heavy</option>
-                <option value="0px 0px 8px rgba(0,0,255,0.7)">Neon</option>
-                <option value="0px 0px 3px white, 0px 0px 5px rgba(0,0,0,0.5)">Outline</option>
-              </select>
+          <label>Text Effects</label>
+          <div class="text-effects-tabs">
+            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'stroke'}" (click)="activeTextEffectTab = 'stroke'">Stroke</button>
+            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'shadow'}" (click)="activeTextEffectTab = 'shadow'">Shadow</button>
+            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'gradient'}" (click)="activeTextEffectTab = 'gradient'">Gradient</button>
+            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'highlight'}" (click)="activeTextEffectTab = 'highlight'">Highlight</button>
+          </div>
+          
+          <!-- Stroke Tab -->
+          <div class="effect-content" *ngIf="activeTextEffectTab === 'stroke'">
+            <div class="property-controls">
+              <div class="property-control">
+                <span>Stroke Width: {{canvasElements[selectedElement].textStrokeWidth || 0}}px</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].textStrokeWidth" 
+                       (change)="updateElement()" min="0" max="5" step="0.5">
+              </div>
+              <div class="property-control">
+                <span>Stroke Color</span>
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].textStrokeColor" (change)="updateElement()">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Shadow Tab -->
+          <div class="effect-content" *ngIf="activeTextEffectTab === 'shadow'">
+            <div class="property-controls">
+              <div class="property-control">
+                <span>Shadow Preset</span>
+                <select [(ngModel)]="canvasElements[selectedElement].textShadow" (change)="updateElement()">
+                  <option value="none">None</option>
+                  <option value="1px 1px 2px rgba(0,0,0,0.3)">Light</option>
+                  <option value="2px 2px 4px rgba(0,0,0,0.4)">Medium</option>
+                  <option value="3px 3px 5px rgba(0,0,0,0.5)">Heavy</option>
+                  <option value="0px 0px 8px rgba(0,0,255,0.7)">Neon Blue</option>
+                  <option value="0px 0px 8px rgba(255,0,0,0.7)">Neon Red</option>
+                  <option value="0px 0px 3px white, 0px 0px 5px rgba(0,0,0,0.5)">Outline</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+              
+              <div class="custom-shadow-controls" *ngIf="canvasElements[selectedElement].textShadow === 'custom'">
+                <div class="property-control">
+                  <span>Shadow Color</span>
+                  <input type="color" [(ngModel)]="canvasElements[selectedElement].customShadowColor" (change)="updateCustomTextShadow()">
+                </div>
+                <div class="property-control">
+                  <span>Blur: {{canvasElements[selectedElement].customShadowBlur || 0}}px</span>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowBlur" 
+                         (change)="updateCustomTextShadow()" min="0" max="20" step="1">
+                </div>
+                <div class="property-control">
+                  <span>Offset X: {{canvasElements[selectedElement].customShadowX || 0}}px</span>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowX" 
+                         (change)="updateCustomTextShadow()" min="-20" max="20" step="1">
+                </div>
+                <div class="property-control">
+                  <span>Offset Y: {{canvasElements[selectedElement].customShadowY || 0}}px</span>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowY" 
+                         (change)="updateCustomTextShadow()" min="-20" max="20" step="1">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Gradient Tab -->
+          <div class="effect-content" *ngIf="activeTextEffectTab === 'gradient'">
+            <div class="property-controls">
+              <div class="property-control">
+                <span>Gradient Type</span>
+                <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()">
+                  <option value="none">None</option>
+                  <option value="linear">Linear</option>
+                  <option value="radial">Radial</option>
+                </select>
+              </div>
+              
+              <div class="gradient-controls" *ngIf="canvasElements[selectedElement].textGradientType !== 'none'">
+                <div class="property-control">
+                  <span>Color 1</span>
+                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()">
+                </div>
+                <div class="property-control">
+                  <span>Color 2</span>
+                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()">
+                </div>
+                <div class="property-control" *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
+                  <span>Angle: {{canvasElements[selectedElement].textGradientAngle || 45}}°</span>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" 
+                         (change)="updateTextGradient()" min="0" max="360" step="15">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Highlight Tab -->
+          <div class="effect-content" *ngIf="activeTextEffectTab === 'highlight'">
+            <div class="property-controls">
+              <div class="property-control">
+                <span>Highlight Style</span>
+                <select [(ngModel)]="canvasElements[selectedElement].highlightStyle" (change)="updateElement()">
+                  <option value="none">None</option>
+                  <option value="solid">Solid Background</option>
+                  <option value="marker">Marker Highlight</option>
+                  <option value="underline">Underline</option>
+                  <option value="box">Box Highlight</option>
+                </select>
+              </div>
+              
+              <div class="highlight-controls" *ngIf="canvasElements[selectedElement].highlightStyle !== 'none'">
+                <div class="property-control">
+                  <span>Highlight Color</span>
+                  <input type="color" [(ngModel)]="canvasElements[selectedElement].highlightColor" (change)="updateElement()">
+                </div>
+                <div class="property-control">
+                  <span>Opacity: {{canvasElements[selectedElement].highlightOpacity || 0.3}}</span>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].highlightOpacity" 
+                         (change)="updateElement()" min="0.1" max="1" step="0.1">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Text Transform</label>
+          <div class="text-transform-controls">
+            <div class="transform-actions">
+              <button class="transform-btn" (click)="rotateText(-90)" title="Rotate Left">
+                <mat-icon>rotate_left</mat-icon>
+              </button>
+              <button class="transform-btn" (click)="rotateText(90)" title="Rotate Right">
+                <mat-icon>rotate_right</mat-icon>
+              </button>
+              <button class="transform-btn" (click)="flipText('horizontal')" title="Flip Horizontal">
+                <mat-icon>flip</mat-icon>
+              </button>
+              <button class="transform-btn" (click)="flipText('vertical')" title="Flip Vertical">
+                <mat-icon>flip</mat-icon>
+              </button>
             </div>
             
             <div class="property-control">
-              <span>Text Stroke</span>
-              <div class="stroke-controls">
-                <div class="stroke-width">
-                  <span>Width</span>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].textStrokeWidth" (change)="updateElement()" min="0" max="3" step="0.5">
-                  <span class="value-display">{{ canvasElements[selectedElement].textStrokeWidth || 0 }}px</span>
-                </div>
-                <div class="stroke-color">
-                  <span>Color</span>
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textStrokeColor" (change)="updateElement()">
-                </div>
+              <span>Rotation: {{canvasElements[selectedElement].textRotation || 0}}°</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textRotation" 
+                     (change)="updateElement()" min="-180" max="180" step="5">
+            </div>
+            
+            <div class="property-control">
+              <span>Text Path</span>
+              <select [(ngModel)]="canvasElements[selectedElement].textPath" (change)="updateElement()">
+                <option value="none">None</option>
+                <option value="arc">Arc</option>
+                <option value="circle">Circle</option>
+                <option value="wave">Wave</option>
+              </select>
+            </div>
+            
+            <div class="path-controls" *ngIf="canvasElements[selectedElement].textPath !== 'none'">
+              <div class="property-control">
+                <span>Path Strength: {{canvasElements[selectedElement].textPathStrength || 50}}</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].textPathStrength" 
+                       (change)="updateElement()" min="0" max="100" step="5">
               </div>
             </div>
           </div>
@@ -553,30 +1187,183 @@
         </div>
         
         <div class="property-group">
-          <label>Image Editing</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <button class="image-edit-btn" (click)="cropImage()">
-                <mat-icon>crop</mat-icon>
-                <span>Crop</span>
+          <label>Image Transform</label>
+          <div class="image-transform-grid">
+            <button class="image-edit-btn" (click)="cropImage()">
+              <mat-icon>crop</mat-icon>
+              <span>Crop</span>
+            </button>
+            <button class="image-edit-btn" (click)="scaleImage()">
+              <mat-icon>transform</mat-icon>
+              <span>Scale</span>
+            </button>
+            <button class="image-edit-btn" (click)="rotateImage(-90)">
+              <mat-icon>rotate_left</mat-icon>
+              <span>Rotate Left</span>
+            </button>
+            <button class="image-edit-btn" (click)="rotateImage(90)">
+              <mat-icon>rotate_right</mat-icon>
+              <span>Rotate Right</span>
+            </button>
+            <button class="image-edit-btn" (click)="flipImage('horizontal')">
+              <mat-icon>flip</mat-icon>
+              <span>Flip H</span>
+            </button>
+            <button class="image-edit-btn" (click)="flipImage('vertical')">
+              <mat-icon>flip</mat-icon>
+              <span>Flip V</span>
+            </button>
+          </div>
+          
+          <div class="aspect-ratio-controls">
+            <label>
+              <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].lockAspectRatio" (change)="updateElement()">
+              Lock Aspect Ratio
+            </label>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Image Filters</label>
+          <div class="filter-tabs">
+            <button class="filter-tab" [ngClass]="{'active': activeImageFilterTab === 'basic'}" (click)="activeImageFilterTab = 'basic'">Basic</button>
+            <button class="filter-tab" [ngClass]="{'active': activeImageFilterTab === 'advanced'}" (click)="activeImageFilterTab = 'advanced'">Advanced</button>
+            <button class="filter-tab" [ngClass]="{'active': activeImageFilterTab === 'blend'}" (click)="activeImageFilterTab = 'blend'">Blend</button>
+          </div>
+          
+          <!-- Basic Filters -->
+          <div class="filter-content" *ngIf="activeImageFilterTab === 'basic'">
+            <div class="filter-sliders">
+              <div class="filter-control">
+                <span>Brightness: {{canvasElements[selectedElement].brightness || 100}}%</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].brightness" 
+                       (change)="updateImageFilters()" min="0" max="200" step="5" value="100">
+              </div>
+              <div class="filter-control">
+                <span>Contrast: {{canvasElements[selectedElement].contrast || 100}}%</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].contrast" 
+                       (change)="updateImageFilters()" min="0" max="200" step="5" value="100">
+              </div>
+              <div class="filter-control">
+                <span>Saturation: {{canvasElements[selectedElement].saturation || 100}}%</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].saturation" 
+                       (change)="updateImageFilters()" min="0" max="200" step="5" value="100">
+              </div>
+              <div class="filter-control">
+                <span>Hue Rotate: {{canvasElements[selectedElement].hueRotate || 0}}°</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].hueRotate" 
+                       (change)="updateImageFilters()" min="0" max="360" step="15" value="0">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Advanced Filters -->
+          <div class="filter-content" *ngIf="activeImageFilterTab === 'advanced'">
+            <div class="filter-sliders">
+              <div class="filter-control">
+                <span>Blur: {{canvasElements[selectedElement].blur || 0}}px</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].blur" 
+                       (change)="updateImageFilters()" min="0" max="10" step="0.5" value="0">
+              </div>
+              <div class="filter-control">
+                <span>Sepia: {{canvasElements[selectedElement].sepia || 0}}%</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].sepia" 
+                       (change)="updateImageFilters()" min="0" max="100" step="5" value="0">
+              </div>
+              <div class="filter-control">
+                <span>Grayscale: {{canvasElements[selectedElement].grayscale || 0}}%</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].grayscale" 
+                       (change)="updateImageFilters()" min="0" max="100" step="5" value="0">
+              </div>
+              <div class="filter-control">
+                <span>Invert: {{canvasElements[selectedElement].invert || 0}}%</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].invert" 
+                       (change)="updateImageFilters()" min="0" max="100" step="5" value="0">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Blend Modes -->
+          <div class="filter-content" *ngIf="activeImageFilterTab === 'blend'">
+            <div class="blend-controls">
+              <div class="property-control">
+                <span>Blend Mode</span>
+                <select [(ngModel)]="canvasElements[selectedElement].blendMode" (change)="updateElement()">
+                  <option value="normal">Normal</option>
+                  <option value="multiply">Multiply</option>
+                  <option value="screen">Screen</option>
+                  <option value="overlay">Overlay</option>
+                  <option value="soft-light">Soft Light</option>
+                  <option value="hard-light">Hard Light</option>
+                  <option value="color-dodge">Color Dodge</option>
+                  <option value="color-burn">Color Burn</option>
+                  <option value="darken">Darken</option>
+                  <option value="lighten">Lighten</option>
+                  <option value="difference">Difference</option>
+                  <option value="exclusion">Exclusion</option>
+                  <option value="luminosity">Luminosity</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="filter-presets">
+            <button class="preset-filter-btn" (click)="applyFilterPreset('none')">Reset</button>
+            <button class="preset-filter-btn" (click)="applyFilterPreset('vintage')">Vintage</button>
+            <button class="preset-filter-btn" (click)="applyFilterPreset('blackwhite')">B&W</button>
+            <button class="preset-filter-btn" (click)="applyFilterPreset('warm')">Warm</button>
+            <button class="preset-filter-btn" (click)="applyFilterPreset('cool')">Cool</button>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>Image Masking</label>
+          <div class="masking-controls">
+            <div class="mask-options">
+              <button class="mask-btn" [ngClass]="{'active': canvasElements[selectedElement].maskType === 'rectangle'}"
+                      (click)="applyMask('rectangle')">
+                <mat-icon>crop_square</mat-icon>
+                <span>Rectangle</span>
               </button>
-              <button class="image-edit-btn" (click)="flipImage('horizontal')">
-                <mat-icon>flip</mat-icon>
-                <span>Flip H</span>
+              <button class="mask-btn" [ngClass]="{'active': canvasElements[selectedElement].maskType === 'circle'}"
+                      (click)="applyMask('circle')">
+                <mat-icon>radio_button_unchecked</mat-icon>
+                <span>Circle</span>
               </button>
-              <button class="image-edit-btn" (click)="flipImage('vertical')">
-                <mat-icon>flip</mat-icon>
-                <span>Flip V</span>
+              <button class="mask-btn" [ngClass]="{'active': canvasElements[selectedElement].maskType === 'custom'}"
+                      (click)="applyMask('custom')">
+                <mat-icon>gesture</mat-icon>
+                <span>Custom</span>
               </button>
-              <button class="image-edit-btn" (click)="rotateImage(90)">
-                <mat-icon>rotate_right</mat-icon>
-                <span>Rotate</span>
-              </button>
-              <button class="image-edit-btn" (click)="toggleBackgroundRemoval()" [ngClass]="{'active': isBackgroundRemovalActive()}">
-                <mat-icon>content_cut</mat-icon>
-                <span>Remove BG</span>
+              <button class="mask-btn" (click)="removeMask()">
+                <mat-icon>clear</mat-icon>
+                <span>Remove</span>
               </button>
             </div>
+            
+            <div class="mask-properties" *ngIf="canvasElements[selectedElement].maskType">
+              <div class="property-control">
+                <span>Feather: {{canvasElements[selectedElement].maskFeather || 0}}px</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].maskFeather" 
+                       (change)="updateElement()" min="0" max="20" step="1">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="property-group">
+          <label>PNG Transparency & Background Removal</label>
+          <div class="transparency-controls">
+            <button class="image-edit-btn" (click)="toggleBackgroundRemoval()" 
+                    [ngClass]="{'active': isBackgroundRemovalActive()}">
+              <mat-icon>content_cut</mat-icon>
+              <span>Remove Background</span>
+            </button>
+            <button class="image-edit-btn" (click)="preserveTransparency()"
+                    [ngClass]="{'active': canvasElements[selectedElement].preserveTransparency}">
+              <mat-icon>transparency</mat-icon>
+              <span>Preserve PNG Alpha</span>
+            </button>
           </div>
         </div>
         

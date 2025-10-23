@@ -23,17 +23,29 @@ interface TemplateType {
 
 interface CanvasElement {
   id: string;
-  type: 'text' | 'image' | 'shape';
+  type: 'text' | 'image' | 'shape' | 'line' | 'icon' | 'group';
   x: number;
   y: number;
   width: number;
   height: number;
+  
+  // Layer properties
+  layerName?: string;
+  name?: string;
+  locked?: boolean;
+  hidden?: boolean;
+  visible?: boolean;
+  editing?: boolean;
+  zIndex?: number;
+  
   // Common properties
   borderRadius?: number;
   opacity?: number;
   boxShadow?: string;
   border?: string;
   rotate?: number;
+  blendMode?: string;
+  
   // Text specific properties
   content?: string;
   color?: string;
@@ -51,12 +63,48 @@ interface CanvasElement {
   textStrokeWidth?: number;
   textStrokeColor?: string;
   textShadow?: string;
+  textOutline?: string;
+  textType?: 'heading' | 'subheading' | 'body' | 'caption';
+  
+  // Enhanced text effects
+  textGradientType?: 'none' | 'linear' | 'radial';
+  textGradientColor1?: string;
+  textGradientColor2?: string;
+  textGradientAngle?: number;
+  highlightStyle?: 'none' | 'solid' | 'marker' | 'underline' | 'box';
+  highlightColor?: string;
+  highlightOpacity?: number;
+  textRotation?: number;
+  textPath?: 'none' | 'arc' | 'circle' | 'wave';
+  textPathStrength?: number;
+  customShadowColor?: string;
+  customShadowBlur?: number;
+  customShadowX?: number;
+  customShadowY?: number;
+  
   // Image specific properties
   src?: string;
   alt?: string;
   objectFit?: string;
   objectPosition?: string;
   filter?: string;
+  lockAspectRatio?: boolean;
+  preserveTransparency?: boolean;
+  
+  // Image filters
+  brightness?: number;
+  contrast?: number;
+  saturation?: number;
+  hueRotate?: number;
+  blur?: number;
+  sepia?: number;
+  grayscale?: number;
+  invert?: number;
+  
+  // Image masking
+  maskType?: 'rectangle' | 'circle' | 'custom';
+  maskFeather?: number;
+  
   // Shape specific properties
   shape?: string;
   gradient?: string;
@@ -68,6 +116,37 @@ interface CanvasElement {
   shadowBlur?: number;
   shadowOffsetX?: number;
   shadowOffsetY?: number;
+  borderWidth?: number;
+  borderColor?: string;
+  
+  // Line specific properties
+  lineWidth?: number;
+  lineStyle?: 'solid' | 'dashed' | 'dotted';
+  startArrow?: boolean;
+  endArrow?: boolean;
+
+  // Group specific properties
+  children?: string[];
+}
+
+interface CanvasBackground {
+  type: 'color' | 'gradient' | 'image';
+  color?: string;
+  gradientType?: 'linear' | 'radial';
+  gradientColor1?: string;
+  gradientColor2?: string;
+  gradientAngle?: number;
+  imageUrl?: string;
+  opacity?: number;
+  blur?: number;
+  overlayColor?: string;
+  overlayOpacity?: number;
+}
+
+interface ColorPalette {
+  saved: string[];
+  recent: string[];
+  brand: string[];
 }
 
 interface UploadItem {
@@ -108,6 +187,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   canvasHeight: number = 600;
   canvasElements: CanvasElement[] = [];
   selectedElement: number | null = null;
+  selectedElements: number[] = [];
   isDragging: boolean = false;
   isResizing: boolean = false;
   dragStartX: number = 0;
@@ -167,6 +247,58 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   // Mobile responsiveness
   activeMobilePanel: 'sidebar' | 'canvas' | 'properties' = 'canvas';
+  
+  // Canvas background
+  canvasBackground: CanvasBackground = {
+    type: 'color',
+    color: '#ffffff'
+  };
+  
+  // Pan and zoom
+  panX: number = 0;
+  panY: number = 0;
+  isPanning: boolean = false;
+  panStartX: number = 0;
+  panStartY: number = 0;
+  
+  // Rulers
+  showRulers: boolean = false;
+  
+  // Color palette
+  savedColors: string[] = ['#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+  recentColors: string[] = [];
+  brandColors: string[] = [];
+  activePaletteTab: 'saved' | 'recent' | 'brand' = 'saved';
+  showColorPicker: boolean = false;
+  pickerColor: string = '#000000';
+  hexColor: string = '#000000';
+  rgbColor = { r: 0, g: 0, b: 0 };
+  colorOpacity: number = 1;
+  
+  // Enhanced canvas interactions
+  showSmartGuides: boolean = true;
+  snapToGuides: boolean = true;
+  guideLines: { x?: number; y?: number }[] = [];
+  selectionBox: { x: number; y: number; width: number; height: number } | null = null;
+  multiSelectStart: { x: number; y: number } | null = null;
+  isMultiSelecting: boolean = false;
+  elementHoverIndex: number | null = null;
+  lastSelectedElement: number | null = null;
+  
+  // Clipboard functionality
+  clipboardElements: CanvasElement[] = [];
+  
+  // Text effects
+  activeTextEffectTab: 'stroke' | 'shadow' | 'gradient' | 'highlight' = 'stroke';
+  
+  // Image filters
+  activeImageFilterTab: 'basic' | 'advanced' | 'blend' = 'basic';
+  
+  // View helpers
+  @ViewChild('backgroundUpload') backgroundUploadRef!: ElementRef;
+  
+  // Drag state tracking
+  isDraggingElement: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -199,9 +331,162 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboard(event: KeyboardEvent): void {
+    // Prevent default behavior for our shortcuts
+    const isInputFocused = event.target instanceof HTMLInputElement || 
+                          event.target instanceof HTMLTextAreaElement ||
+                          (event.target as HTMLElement)?.contentEditable === 'true';
+    
+    // Don't handle shortcuts when typing in inputs
+    if (isInputFocused) return;
+    
+    const ctrlKey = event.ctrlKey || event.metaKey;
+    const shiftKey = event.shiftKey;
+    
+    switch (event.key.toLowerCase()) {
+      case 'z':
+        if (ctrlKey && !shiftKey) {
+          event.preventDefault();
+          this.undo();
+        } else if (ctrlKey && shiftKey) {
+          event.preventDefault();
+          this.redo();
+        }
+        break;
+        
+      case 'y':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.redo();
+        }
+        break;
+        
+      case 'c':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.copyElements();
+        }
+        break;
+        
+      case 'v':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.pasteElements();
+        }
+        break;
+        
+      case 'd':
+        if (ctrlKey) {
+          event.preventDefault();
+          if (this.selectedElement !== null) {
+            this.duplicateElement(this.selectedElement);
+          }
+        }
+        break;
+        
+      case 'a':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.selectAllElements();
+        }
+        break;
+        
+      case 's':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.saveTemplate();
+        }
+        break;
+        
+      case 'p':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.exportAsPNG();
+        }
+        break;
+        
+      case 'g':
+        if (ctrlKey && !shiftKey) {
+          event.preventDefault();
+          this.groupSelectedElements();
+        } else if (ctrlKey && shiftKey) {
+          event.preventDefault();
+          this.ungroupSelectedElements();
+        }
+        break;
+        
+      case '0':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.fitToScreen();
+        }
+        break;
+        
+      case '=':
+      case '+':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.zoomIn();
+        }
+        break;
+        
+      case '-':
+        if (ctrlKey) {
+          event.preventDefault();
+          this.zoomOut();
+        }
+        break;
+        
+      case 'delete':
+      case 'backspace':
+        if (this.selectedElement !== null) {
+          event.preventDefault();
+          this.deleteElement(this.selectedElement);
+        }
+        break;
+        
+      case 'arrowup':
+        event.preventDefault();
+        this.moveElement(0, shiftKey ? -10 : -1);
+        break;
+        
+      case 'arrowdown':
+        event.preventDefault();
+        this.moveElement(0, shiftKey ? 10 : 1);
+        break;
+        
+      case 'arrowleft':
+        event.preventDefault();
+        this.moveElement(shiftKey ? -10 : -1, 0);
+        break;
+        
+      case 'arrowright':
+        event.preventDefault();
+        this.moveElement(shiftKey ? 10 : 1, 0);
+        break;
+    }
+  }
+
   ngAfterViewInit(): void {
     // Setup canvas
     this.setupCanvas();
+  }
+
+  // Mobile panel management
+  toggleMobilePanel(panel: 'sidebar' | 'canvas' | 'properties'): void {
+    this.activeMobilePanel = panel;
+    
+    // If properties panel is selected but no element is selected, 
+    // switch to canvas instead
+    if (panel === 'properties' && this.selectedElement === null) {
+      this.activeMobilePanel = 'canvas';
+    }
+  }
+
+  // Text element addition
+  addTextElement(textType: 'heading' | 'subheading' | 'body' | 'caption'): void {
+    this.addElementToCanvas('text', { textType });
   }
 
   setupCanvas(): void {
@@ -215,15 +500,28 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   resetCanvas(): void {
     this.canvasElements = [];
     this.selectedElement = null;
+    this.selectedElements = [];
+    this.selectionBox = null;
+    this.multiSelectStart = null;
+    this.isMultiSelecting = false;
+    this.guideLines = [];
     this.saveToHistory();
   }
 
   // Basic drag and drop functionality
-  onDragStart(event: DragEvent, elementType: string): void {
+  onDragStart(event: DragEvent, elementType: string, data?: any): void {
+    this.isDraggingElement = true;
     if (event.dataTransfer) {
       event.dataTransfer.setData('elementType', elementType);
+      if (data) {
+        event.dataTransfer.setData('elementData', JSON.stringify(data));
+      }
       event.dataTransfer.effectAllowed = 'copy';
     }
+  }
+
+  onDragEnd(): void {
+    this.isDraggingElement = false;
   }
 
   onDragOver(event: DragEvent): void {
@@ -237,18 +535,28 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     event.preventDefault();
     if (!event.dataTransfer) return;
 
-    const elementType = event.dataTransfer.getData('elementType') as 'text' | 'image' | 'shape';
+    const elementType = event.dataTransfer.getData('elementType') as 'text' | 'image' | 'shape' | 'line' | 'icon';
     if (!elementType) return;
+
+    const elementDataString = event.dataTransfer.getData('elementData');
+    let elementData = null;
+    if (elementDataString) {
+      try {
+        elementData = JSON.parse(elementDataString);
+      } catch (e) {
+        console.warn('Failed to parse element data:', e);
+      }
+    }
 
     const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
     const x = event.clientX - canvasRect.left;
     const y = event.clientY - canvasRect.top;
 
-    this.addElementToCanvas(elementType, null, x, y);
+    this.addElementToCanvas(elementType, elementData, x, y);
   }
 
   // Add element to canvas - core functionality
-  addElementToCanvas(elementType: 'text' | 'image' | 'shape', data?: any, x: number = 100, y: number = 100): void {
+  addElementToCanvas(elementType: 'text' | 'image' | 'shape' | 'line' | 'icon', data?: any, x: number = 100, y: number = 100): void {
     const newElement: CanvasElement = {
       id: `element_${Date.now()}`,
       type: elementType,
@@ -260,16 +568,32 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
     switch (elementType) {
       case 'text':
-        newElement.content = 'Click to edit text';
-        newElement.fontFamily = 'Arial';
-        newElement.fontSize = 16;
+        // Handle different text types from drag data
+        if (data && data.textType) {
+          const textDefaults = {
+            heading: { fontSize: 32, fontWeight: 'bold', content: 'Heading Text' },
+            subheading: { fontSize: 24, fontWeight: '600', content: 'Subheading Text' },
+            body: { fontSize: 16, fontWeight: 'normal', content: 'Body text content' },
+            caption: { fontSize: 12, fontWeight: 'normal', content: 'Caption text' }
+          };
+          const defaults = textDefaults[data.textType as keyof typeof textDefaults] || textDefaults.body;
+          newElement.content = defaults.content;
+          newElement.fontSize = defaults.fontSize;
+          newElement.fontWeight = defaults.fontWeight;
+          newElement.textType = data.textType;
+        } else {
+          newElement.content = 'Click to edit text';
+          newElement.fontSize = 16;
+          newElement.fontWeight = 'normal';
+        }
+        
+        newElement.fontFamily = 'Arial, sans-serif';
         newElement.color = '#000000';
-        newElement.textAlign = 'center';
-        newElement.fontWeight = 'normal';
+        newElement.textAlign = 'left';
         newElement.fontStyle = 'normal';
         newElement.textDecoration = 'none';
         newElement.backgroundColor = 'transparent';
-        newElement.padding = 10;
+        newElement.padding = 5;
         newElement.borderRadius = 0;
         newElement.letterSpacing = 0;
         newElement.lineHeight = 1.2;
@@ -303,6 +627,23 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         newElement.opacity = 1;
         newElement.rotate = 0;
         break;
+        
+      case 'line':
+        newElement.width = 200;
+        newElement.height = 2;
+        newElement.color = '#000000';
+        newElement.lineWidth = 2;
+        newElement.lineStyle = 'solid';
+        newElement.startArrow = false;
+        newElement.endArrow = false;
+        break;
+        
+      case 'icon':
+        newElement.width = 48;
+        newElement.height = 48;
+        newElement.src = 'assets/icons/default-icon.svg';
+        newElement.color = '#000000';
+        break;
     }
 
     this.canvasElements.push(newElement);
@@ -310,22 +651,195 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.saveToHistory();
   }
 
-  // Element selection and manipulation
-  selectElement(index: number, event: MouseEvent): void {
-    event.stopPropagation();
-    this.selectedElement = index;
+  // Add shape to canvas - specialized method for shapes
+  addShapeToCanvas(shapeType: string): void {
+    const newElement: CanvasElement = {
+      id: `element_${Date.now()}`,
+      type: 'shape',
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 200,
+      shape: shapeType,
+      color: '#3498db',
+      borderRadius: 0,
+      border: 'none',
+      boxShadow: 'none',
+      opacity: 1,
+      rotate: 0
+    };
+
+    // Customize based on shape type
+    switch (shapeType) {
+      case 'circle':
+        newElement.width = 150;
+        newElement.height = 150;
+        break;
+      case 'triangle':
+        newElement.width = 200;
+        newElement.height = 150;
+        break;
+      case 'hexagon':
+        newElement.width = 180;
+        newElement.height = 180;
+        break;
+      case 'octagon':
+        newElement.width = 180;
+        newElement.height = 180;
+        break;
+      case 'pentagon':
+        newElement.width = 180;
+        newElement.height = 180;
+        break;
+      case 'star':
+        newElement.width = 180;
+        newElement.height = 180;
+        break;
+      case 'line':
+        newElement.width = 200;
+        newElement.height = 2;
+        newElement.color = '#000000';
+        newElement.lineWidth = 2;
+        newElement.lineStyle = 'solid';
+        newElement.startArrow = false;
+        newElement.endArrow = false;
+        break;
+      case 'arrow-right':
+        newElement.width = 200;
+        newElement.height = 50;
+        break;
+      case 'arrow-left':
+        newElement.width = 200;
+        newElement.height = 50;
+        break;
+      case 'arrow-up':
+        newElement.width = 50;
+        newElement.height = 200;
+        break;
+      case 'arrow-down':
+        newElement.width = 50;
+        newElement.height = 200;
+        break;
+      case 'double-arrow':
+        newElement.width = 200;
+        newElement.height = 50;
+        break;
+      case 'heart':
+        newElement.width = 180;
+        newElement.height = 180;
+        break;
+      case 'speech-bubble':
+        newElement.width = 200;
+        newElement.height = 150;
+        break;
+      case 'burst':
+        newElement.width = 180;
+        newElement.height = 180;
+        break;
+      case 'cloud':
+        newElement.width = 200;
+        newElement.height = 120;
+        break;
+      default:
+        // rectangle or any other shape
+        break;
+    }
+
+    this.canvasElements.push(newElement);
+    this.selectedElement = this.canvasElements.length - 1;
+    this.saveToHistory();
+  }
+
+  // Canvas click handler for selection box
+  onCanvasClick(event: MouseEvent): void {
+    // Only start selection box if clicking on empty canvas area
+    if (event.target === event.currentTarget) {
+      // Clear selection if not holding Ctrl
+      if (!event.ctrlKey && !event.metaKey) {
+        this.selectedElement = null;
+        this.selectedElements = [];
+      }
+      
+      // Start selection box
+      this.isMultiSelecting = true;
+      this.multiSelectStart = { x: event.clientX, y: event.clientY };
+      this.selectionBox = {
+        x: event.clientX,
+        y: event.clientY,
+        width: 0,
+        height: 0
+      };
+    }
+  }
+
+  // Element hover handlers for visual feedback
+  onElementMouseEnter(index: number): void {
+    this.elementHoverIndex = index;
+  }
+
+  onElementMouseLeave(): void {
+    this.elementHoverIndex = null;
+  }
+
+  // Visual feedback methods
+  isElementSelected(index: number): boolean {
+    return this.selectedElement === index || this.selectedElements.includes(index);
+  }
+
+  isElementHovered(index: number): boolean {
+    return this.elementHoverIndex === index;
+  }
+
+  getElementClasses(index: number): string {
+    const classes = [];
     
-    // On mobile, automatically switch to properties panel when an element is selected
-    if (window.innerWidth < 768) { // 768px is our tablet breakpoint
-      this.activeMobilePanel = 'properties';
+    if (this.isElementSelected(index)) {
+      classes.push('selected');
     }
     
-    // Start drag operation
-    this.isDragging = true;
-    this.dragStartX = event.clientX;
-    this.dragStartY = event.clientY;
-    this.elementStartX = this.canvasElements[index].x;
-    this.elementStartY = this.canvasElements[index].y;
+    if (this.isElementHovered(index)) {
+      classes.push('hovered');
+    }
+    
+    if (this.selectedElements.length > 1 && this.selectedElements.includes(index)) {
+      classes.push('multi-selected');
+    }
+    
+    return classes.join(' ');
+  }
+
+  getSelectionBoxStyle(): any {
+    if (!this.selectionBox) return {};
+    
+    return {
+      left: `${this.selectionBox.x}px`,
+      top: `${this.selectionBox.y}px`,
+      width: `${this.selectionBox.width}px`,
+      height: `${this.selectionBox.height}px`
+    };
+  }
+
+  getGuideLineStyles(): any[] {
+    return this.guideLines.map(guide => {
+      if (guide.x !== undefined) {
+        return {
+          left: `${guide.x}px`,
+          top: '0',
+          width: '1px',
+          height: '100%',
+          backgroundColor: '#007acc'
+        };
+      } else if (guide.y !== undefined) {
+        return {
+          left: '0',
+          top: `${guide.y}px`,
+          width: '100%',
+          height: '1px',
+          backgroundColor: '#007acc'
+        };
+      }
+      return {};
+    });
   }
 
   startResize(index: number, handle: string, event: MouseEvent): void {
@@ -343,15 +857,67 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent): void {
-    if (this.selectedElement === null) return;
+    // Handle panning
+    if (this.isPanning) {
+      this.panX = event.clientX - this.panStartX;
+      this.panY = event.clientY - this.panStartY;
+      return;
+    }
+    
+    // Handle selection box
+    if (this.isMultiSelecting && this.multiSelectStart) {
+      const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
+      const currentX = event.clientX - canvasRect.left;
+      const currentY = event.clientY - canvasRect.top;
+      const startX = this.multiSelectStart.x - canvasRect.left;
+      const startY = this.multiSelectStart.y - canvasRect.top;
+      
+      this.selectionBox = {
+        x: Math.min(startX, currentX),
+        y: Math.min(startY, currentY),
+        width: Math.abs(currentX - startX),
+        height: Math.abs(currentY - startY)
+      };
+      return;
+    }
+    
+    if (this.selectedElement === null && this.selectedElements.length === 0) return;
     
     if (this.isDragging) {
       const dx = event.clientX - this.dragStartX;
       const dy = event.clientY - this.dragStartY;
       
-      this.canvasElements[this.selectedElement].x = this.elementStartX + dx;
-      this.canvasElements[this.selectedElement].y = this.elementStartY + dy;
-    } else if (this.isResizing) {
+      let newX = this.elementStartX + dx;
+      let newY = this.elementStartY + dy;
+      
+      // Calculate smart guides if enabled and only one element is selected
+      if (this.showSmartGuides && this.selectedElements.length <= 1 && this.selectedElement !== null) {
+        this.calculateSmartGuides(this.selectedElement, newX, newY);
+        
+        // Apply snapping if enabled
+        if (this.snapToGuides) {
+          const snappedPosition = this.getSnappedPosition(this.selectedElement, newX, newY);
+          newX = snappedPosition.x;
+          newY = snappedPosition.y;
+        }
+      }
+      
+      // Move selected elements
+      if (this.selectedElements.length > 1) {
+        // Multi-selection: move all selected elements relative to their original positions
+        this.selectedElements.forEach(index => {
+          const element = this.canvasElements[index];
+          const originalDx = element.x - this.elementStartX;
+          const originalDy = element.y - this.elementStartY;
+          element.x = newX + originalDx;
+          element.y = newY + originalDy;
+        });
+      } else if (this.selectedElement !== null) {
+        // Single selection
+        this.canvasElements[this.selectedElement].x = newX;
+        this.canvasElements[this.selectedElement].y = newY;
+      }
+    } else if (this.isResizing && this.selectedElement !== null) {
       const dx = event.clientX - this.dragStartX;
       const dy = event.clientY - this.dragStartY;
       
@@ -380,6 +946,16 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
           break;
       }
       
+      // Maintain aspect ratio for images if locked
+      if (element.type === 'image' && element.lockAspectRatio) {
+        const aspectRatio = this.elementStartWidth / this.elementStartHeight;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          element.height = element.width / aspectRatio;
+        } else {
+          element.width = element.height * aspectRatio;
+        }
+      }
+      
       // Ensure minimum dimensions
       element.width = Math.max(20, element.width);
       element.height = Math.max(20, element.height);
@@ -388,12 +964,207 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:mouseup')
   onMouseUp(): void {
+    // Complete selection box selection
+    if (this.isMultiSelecting && this.selectionBox) {
+      this.completeSelectionBox();
+      this.isMultiSelecting = false;
+      this.multiSelectStart = null;
+      this.selectionBox = null;
+      return;
+    }
+    
     if (this.isDragging || this.isResizing) {
       this.saveToHistory();
     }
     
     this.isDragging = false;
     this.isResizing = false;
+    this.isPanning = false;
+    
+    // Clear smart guides when dragging ends
+    this.guideLines = [];
+  }
+
+  // Complete selection box and select elements within it
+  completeSelectionBox(): void {
+    if (!this.selectionBox) return;
+    
+    const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
+    const selectionRect = {
+      left: this.selectionBox.x,
+      top: this.selectionBox.y,
+      right: this.selectionBox.x + this.selectionBox.width,
+      bottom: this.selectionBox.y + this.selectionBox.height
+    };
+    
+    const newSelection: number[] = [];
+    
+    this.canvasElements.forEach((element, index) => {
+      const elementRect = {
+        left: element.x,
+        top: element.y,
+        right: element.x + (element.width || 0),
+        bottom: element.y + (element.height || 0)
+      };
+      
+      // Check if element intersects with selection box
+      if (elementRect.left < selectionRect.right &&
+          elementRect.right > selectionRect.left &&
+          elementRect.top < selectionRect.bottom &&
+          elementRect.bottom > selectionRect.top) {
+        newSelection.push(index);
+      }
+    });
+    
+    // Update selection
+    if (newSelection.length > 0) {
+      this.selectedElements = newSelection;
+      this.selectedElement = newSelection[0];
+    }
+  }
+
+  // Smart guides calculation
+  calculateSmartGuides(selectedIndex: number, newX: number, newY: number): void {
+    if (!this.showSmartGuides) return;
+    
+    const selectedElement = this.canvasElements[selectedIndex];
+    const tolerance = 5; // pixels tolerance for snapping
+    
+    this.guideLines = [];
+    
+    // Check alignment with other elements
+    this.canvasElements.forEach((element, index) => {
+      if (index === selectedIndex) return;
+      
+      const elementRight = element.x + (element.width || 0);
+      const elementBottom = element.y + (element.height || 0);
+      const selectedRight = newX + (selectedElement.width || 0);
+      const selectedBottom = newY + (selectedElement.height || 0);
+      
+      // Horizontal alignment guides
+      if (Math.abs(newX - element.x) <= tolerance) {
+        this.guideLines.push({ x: element.x });
+      }
+      if (Math.abs(newX - elementRight) <= tolerance) {
+        this.guideLines.push({ x: elementRight });
+      }
+      if (Math.abs(selectedRight - element.x) <= tolerance) {
+        this.guideLines.push({ x: element.x });
+      }
+      if (Math.abs(selectedRight - elementRight) <= tolerance) {
+        this.guideLines.push({ x: elementRight });
+      }
+      
+      // Vertical alignment guides
+      if (Math.abs(newY - element.y) <= tolerance) {
+        this.guideLines.push({ y: element.y });
+      }
+      if (Math.abs(newY - elementBottom) <= tolerance) {
+        this.guideLines.push({ y: elementBottom });
+      }
+      if (Math.abs(selectedBottom - element.y) <= tolerance) {
+        this.guideLines.push({ y: element.y });
+      }
+      if (Math.abs(selectedBottom - elementBottom) <= tolerance) {
+        this.guideLines.push({ y: elementBottom });
+      }
+      
+      // Center alignment guides
+      const elementCenterX = element.x + (element.width || 0) / 2;
+      const elementCenterY = element.y + (element.height || 0) / 2;
+      const selectedCenterX = newX + (selectedElement.width || 0) / 2;
+      const selectedCenterY = newY + (selectedElement.height || 0) / 2;
+      
+      if (Math.abs(selectedCenterX - elementCenterX) <= tolerance) {
+        this.guideLines.push({ x: elementCenterX });
+      }
+      if (Math.abs(selectedCenterY - elementCenterY) <= tolerance) {
+        this.guideLines.push({ y: elementCenterY });
+      }
+    });
+    
+    // Canvas edge alignment guides
+    if (Math.abs(newX - 0) <= tolerance) {
+      this.guideLines.push({ x: 0 });
+    }
+    if (Math.abs(newX - this.canvasWidth) <= tolerance) {
+      this.guideLines.push({ x: this.canvasWidth });
+    }
+    if (Math.abs(newY - 0) <= tolerance) {
+      this.guideLines.push({ y: 0 });
+    }
+    if (Math.abs(newY - this.canvasHeight) <= tolerance) {
+      this.guideLines.push({ y: this.canvasHeight });
+    }
+    
+    // Canvas center guides
+    const canvasCenterX = this.canvasWidth / 2;
+    const canvasCenterY = this.canvasHeight / 2;
+    const selectedCenterX = newX + (selectedElement.width || 0) / 2;
+    const selectedCenterY = newY + (selectedElement.height || 0) / 2;
+    
+    if (Math.abs(selectedCenterX - canvasCenterX) <= tolerance) {
+      this.guideLines.push({ x: canvasCenterX });
+    }
+    if (Math.abs(selectedCenterY - canvasCenterY) <= tolerance) {
+      this.guideLines.push({ y: canvasCenterY });
+    }
+  }
+
+  // Get snapped position based on guide lines
+  getSnappedPosition(selectedIndex: number, newX: number, newY: number): { x: number; y: number } {
+    const selectedElement = this.canvasElements[selectedIndex];
+    const snapTolerance = 8; // pixels tolerance for snapping
+    let snappedX = newX;
+    let snappedY = newY;
+    
+    // Check for horizontal snapping
+    for (const guide of this.guideLines) {
+      if (guide.x !== undefined) {
+        // Left edge snapping
+        if (Math.abs(newX - guide.x) <= snapTolerance) {
+          snappedX = guide.x;
+          break;
+        }
+        // Right edge snapping
+        const rightEdge = newX + (selectedElement.width || 0);
+        if (Math.abs(rightEdge - guide.x) <= snapTolerance) {
+          snappedX = guide.x - (selectedElement.width || 0);
+          break;
+        }
+        // Center snapping
+        const centerX = newX + (selectedElement.width || 0) / 2;
+        if (Math.abs(centerX - guide.x) <= snapTolerance) {
+          snappedX = guide.x - (selectedElement.width || 0) / 2;
+          break;
+        }
+      }
+    }
+    
+    // Check for vertical snapping
+    for (const guide of this.guideLines) {
+      if (guide.y !== undefined) {
+        // Top edge snapping
+        if (Math.abs(newY - guide.y) <= snapTolerance) {
+          snappedY = guide.y;
+          break;
+        }
+        // Bottom edge snapping
+        const bottomEdge = newY + (selectedElement.height || 0);
+        if (Math.abs(bottomEdge - guide.y) <= snapTolerance) {
+          snappedY = guide.y - (selectedElement.height || 0);
+          break;
+        }
+        // Center snapping
+        const centerY = newY + (selectedElement.height || 0) / 2;
+        if (Math.abs(centerY - guide.y) <= snapTolerance) {
+          snappedY = guide.y - (selectedElement.height || 0) / 2;
+          break;
+        }
+      }
+    }
+    
+    return { x: snappedX, y: snappedY };
   }
 
   // Update element content
@@ -429,6 +1200,28 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
   }
   
+  // Select an element on the canvas
+  selectElement(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // If shift is held, add to multi-selection
+    if (event.shiftKey) {
+      if (this.selectedElements.includes(index)) {
+        // Remove from selection
+        this.selectedElements = this.selectedElements.filter(i => i !== index);
+      } else {
+        // Add to selection
+        this.selectedElements.push(index);
+      }
+    } else {
+      // Single selection - clear multi-selection
+      this.selectedElements = [];
+      this.selectedElement = index;
+    }
+    
+    this.lastSelectedElement = index;
+  }
+  
   // Duplicate an element
   duplicateElement(index: number): void {
     if (index >= 0 && index < this.canvasElements.length) {
@@ -447,6 +1240,18 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Canvas operations
   setCanvasSize(size: string): void {
     switch (size) {
+      case 'square':
+        this.canvasWidth = 1080;
+        this.canvasHeight = 1080;
+        break;
+      case 'portrait':
+        this.canvasWidth = 1080;
+        this.canvasHeight = 1920;
+        break;
+      case 'landscape':
+        this.canvasWidth = 1920;
+        this.canvasHeight = 1080;
+        break;
       case 'instagram':
         this.canvasWidth = 1080;
         this.canvasHeight = 1080;
@@ -456,8 +1261,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         this.canvasHeight = 630;
         break;
       case 'twitter':
-        this.canvasWidth = 1024;
-        this.canvasHeight = 512;
+        this.canvasWidth = 1200;
+        this.canvasHeight = 675;
         break;
       case 'story':
         this.canvasWidth = 1080;
@@ -471,6 +1276,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         this.canvasWidth = 1200;
         this.canvasHeight = 627;
         break;
+      case 'custom':
+        this.openCustomSizeDialog();
+        return;
       case 'small':
         this.canvasWidth = 600;
         this.canvasHeight = 400;
@@ -486,6 +1294,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.setupCanvas();
+    this.centerCanvas();
   }
 
   // Preview the template
@@ -496,7 +1305,143 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Simple zoom function
   zoom(delta: number): void {
-    this.zoomLevel = Math.max(10, Math.min(200, this.zoomLevel + delta));
+    this.zoomLevel = Math.max(10, Math.min(500, this.zoomLevel + delta));
+  }
+
+  // Enhanced zoom and view controls
+  setZoom(level: number): void {
+    this.zoomLevel = Math.max(10, Math.min(500, level));
+  }
+
+  fitToScreen(): void {
+    const workspaceRect = document.querySelector('.canvas-workspace')?.getBoundingClientRect();
+    if (!workspaceRect) return;
+    
+    const padding = 100;
+    const scaleX = (workspaceRect.width - padding) / this.canvasWidth;
+    const scaleY = (workspaceRect.height - padding) / this.canvasHeight;
+    const optimalScale = Math.min(scaleX, scaleY);
+    
+    this.zoomLevel = Math.max(10, Math.min(200, optimalScale * 100));
+    this.centerCanvas();
+  }
+
+  actualSize(): void {
+    this.zoomLevel = 100;
+    this.centerCanvas();
+  }
+
+  centerCanvas(): void {
+    this.panX = 0;
+    this.panY = 0;
+  }
+
+  // Pan controls
+  startPan(event: MouseEvent): void {
+    if (event.button === 1 || (event.button === 0 && event.ctrlKey)) {
+      this.isPanning = true;
+      this.panStartX = event.clientX - this.panX;
+      this.panStartY = event.clientY - this.panY;
+      event.preventDefault();
+    }
+  }
+
+  // Mouse wheel zoom
+  onWheel(event: WheelEvent): void {
+    if (event.ctrlKey) {
+      event.preventDefault();
+      const zoomDelta = event.deltaY > 0 ? -10 : 10;
+      this.zoom(zoomDelta);
+    }
+  }
+
+  // Grid and rulers
+  toggleRulers(): void {
+    this.showRulers = !this.showRulers;
+  }
+
+  // Canvas background methods
+  setBackgroundType(type: 'color' | 'gradient' | 'image'): void {
+    this.canvasBackground.type = type;
+    this.updateCanvasBackground();
+  }
+
+  updateCanvasBackground(): void {
+    // This method will be called when background properties change
+    // The actual styling is handled by getCanvasBackgroundStyle()
+  }
+
+  getCanvasBackgroundStyle(): string {
+    switch (this.canvasBackground.type) {
+      case 'color':
+        return this.canvasBackground.color || '#ffffff';
+        
+      case 'gradient':
+        if (this.canvasBackground.gradientType === 'linear') {
+          return `linear-gradient(${this.canvasBackground.gradientAngle || 45}deg, ${this.canvasBackground.gradientColor1 || '#ffffff'}, ${this.canvasBackground.gradientColor2 || '#000000'})`;
+        } else {
+          return `radial-gradient(circle, ${this.canvasBackground.gradientColor1 || '#ffffff'}, ${this.canvasBackground.gradientColor2 || '#000000'})`;
+        }
+        
+      case 'image':
+        if (this.canvasBackground.imageUrl) {
+          let style = `url('${this.canvasBackground.imageUrl}') center/cover no-repeat`;
+          if (this.canvasBackground.overlayColor && this.canvasBackground.overlayOpacity) {
+            const overlay = `linear-gradient(rgba(${this.hexToRgb(this.canvasBackground.overlayColor)}, ${this.canvasBackground.overlayOpacity}), rgba(${this.hexToRgb(this.canvasBackground.overlayColor)}, ${this.canvasBackground.overlayOpacity}))`;
+            style = `${overlay}, ${style}`;
+          }
+          return style;
+        }
+        return '#ffffff';
+        
+      default:
+        return '#ffffff';
+    }
+  }
+
+  triggerBackgroundUpload(): void {
+    if (this.backgroundUploadRef) {
+      this.backgroundUploadRef.nativeElement.click();
+    }
+  }
+
+  onBackgroundSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file.');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      if (e.target?.result) {
+        this.canvasBackground.imageUrl = e.target.result as string;
+        this.updateCanvasBackground();
+      }
+    };
+    
+    reader.readAsDataURL(file);
+    input.value = '';
+  }
+
+  removeBackgroundImage(): void {
+    this.canvasBackground.imageUrl = undefined;
+    this.updateCanvasBackground();
+  }
+
+  // Helper method to convert hex to RGB
+  private hexToRgb(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (result) {
+      const r = parseInt(result[1], 16);
+      const g = parseInt(result[2], 16);
+      const b = parseInt(result[3], 16);
+      return `${r}, ${g}, ${b}`;
+    }
+    return '255, 255, 255';
   }
 
   // Trigger file upload
@@ -933,15 +1878,399 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
   }
   
-  // Mobile panel management
-  toggleMobilePanel(panel: 'sidebar' | 'canvas' | 'properties'): void {
-    this.activeMobilePanel = panel;
-    
-    // If properties panel is selected but no element is selected, 
-    // switch to canvas instead
-    if (panel === 'properties' && this.selectedElement === null) {
-      this.activeMobilePanel = 'canvas';
+  // Keyboard shortcuts and clipboard functionality
+  copyElements(): void {
+    if (this.selectedElement !== null) {
+      // Copy the selected element
+      this.clipboardElements = [JSON.parse(JSON.stringify(this.canvasElements[this.selectedElement]))];
+    } else if (this.selectedElements.length > 0) {
+      // Copy multiple selected elements
+      this.clipboardElements = this.selectedElements.map(index => 
+        JSON.parse(JSON.stringify(this.canvasElements[index]))
+      );
     }
+  }
+
+  pasteElements(): void {
+    if (this.clipboardElements.length === 0) return;
+    
+    // Clear current selection
+    this.selectedElement = null;
+    this.selectedElements = [];
+    
+    // Paste elements with offset
+    const pastedElements: number[] = [];
+    
+    this.clipboardElements.forEach((element, index) => {
+      const newElement = JSON.parse(JSON.stringify(element));
+      newElement.id = `element_${Date.now()}_${index}`;
+      newElement.x += 20; // Offset pasted elements
+      newElement.y += 20;
+      
+      this.canvasElements.push(newElement);
+      pastedElements.push(this.canvasElements.length - 1);
+    });
+    
+    // Select the pasted elements
+    if (pastedElements.length === 1) {
+      this.selectedElement = pastedElements[0];
+    } else {
+      this.selectedElements = pastedElements;
+    }
+    
+    this.saveToHistory();
+  }
+
+  selectAllElements(): void {
+    this.selectedElements = this.canvasElements.map((_, index) => index);
+    this.selectedElement = null;
+  }
+
+  exportAsPNG(): void {
+    // Create a canvas to render the template
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    if (!ctx) {
+      console.error('Could not get canvas context for export');
+      return;
+    }
+    
+    canvas.width = this.canvasWidth;
+    canvas.height = this.canvasHeight;
+    
+    // Fill background
+    ctx.fillStyle = this.getCanvasBackgroundStyle();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw elements (simplified - in a real implementation you'd need to handle all element types)
+    this.canvasElements.forEach(element => {
+      ctx.save();
+      ctx.translate(element.x, element.y);
+      
+      if (element.rotate) {
+        ctx.rotate((element.rotate * Math.PI) / 180);
+      }
+      
+      // Draw based on element type
+      if (element.type === 'text') {
+        ctx.fillStyle = element.color || '#000000';
+        ctx.font = `${element.fontSize || 16}px ${element.fontFamily || 'Arial'}`;
+        ctx.textAlign = (element.textAlign as CanvasTextAlign) || 'left';
+        ctx.fillText(element.content || '', 0, element.fontSize || 16);
+      } else if (element.type === 'shape') {
+        ctx.fillStyle = element.color || '#3498db';
+        if (element.shape === 'rectangle') {
+          ctx.fillRect(0, 0, element.width, element.height);
+        } else if (element.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(element.width / 2, element.height / 2, Math.min(element.width, element.height) / 2, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+      } else if (element.type === 'image' && element.src) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        // Note: This is a simplified implementation. In practice, you'd need to handle async image loading
+        try {
+          // For demo purposes, we'll skip image rendering in export
+          // A real implementation would need to wait for all images to load
+        } catch (e) {
+          console.warn('Image export not implemented in this demo');
+        }
+      }
+      
+      ctx.restore();
+    });
+    
+    // Download the image
+    const link = document.createElement('a');
+    link.download = 'template.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+
+  zoomIn(): void {
+    this.zoom(10);
+  }
+
+  zoomOut(): void {
+    this.zoom(-10);
+  }
+
+  moveElement(deltaX: number, deltaY: number): void {
+    if (this.selectedElement !== null) {
+      this.canvasElements[this.selectedElement].x += deltaX;
+      this.canvasElements[this.selectedElement].y += deltaY;
+      this.updateElement();
+    } else if (this.selectedElements.length > 0) {
+      this.selectedElements.forEach(index => {
+        this.canvasElements[index].x += deltaX;
+        this.canvasElements[index].y += deltaY;
+      });
+      this.updateElement();
+    }
+  }
+
+  groupSelectedElements(): void {
+    if (this.selectedElements.length < 2) return;
+    
+    // Calculate group bounds
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    
+    this.selectedElements.forEach(index => {
+      const element = this.canvasElements[index];
+      minX = Math.min(minX, element.x);
+      minY = Math.min(minY, element.y);
+      maxX = Math.max(maxX, element.x + (element.width || 0));
+      maxY = Math.max(maxY, element.y + (element.height || 0));
+    });
+    
+    // Create group element
+    const groupElement: CanvasElement = {
+      id: `group_${Date.now()}`,
+      type: 'group',
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY,
+      children: this.selectedElements.map(index => this.canvasElements[index].id),
+      locked: false,
+      visible: true
+    };
+    
+    // Remove individual elements and add group
+    const elementsToRemove = [...this.selectedElements].sort((a, b) => b - a);
+    elementsToRemove.forEach(index => {
+      this.canvasElements.splice(index, 1);
+    });
+    
+    this.canvasElements.push(groupElement);
+    
+    // Select the new group
+    this.selectedElement = this.canvasElements.length - 1;
+    this.selectedElements = [];
+    
+    this.saveToHistory();
+  }
+
+  ungroupSelectedElements(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'group') return;
+    
+    const groupElement = this.canvasElements[this.selectedElement];
+    const childIds = groupElement.children || [];
+    
+    // In a real implementation, you'd need to store the original elements
+    // For now, we'll create placeholder elements based on the group position
+    const childElements: CanvasElement[] = [];
+    childIds.forEach((childId, index) => {
+      const childElement: CanvasElement = {
+        id: childId,
+        type: 'shape',
+        shape: 'rectangle',
+        x: groupElement.x + (index * 20),
+        y: groupElement.y + (index * 20),
+        width: 100,
+        height: 100,
+        color: '#3498db',
+        locked: false,
+        visible: true
+      };
+      childElements.push(childElement);
+    });
+    
+    // Remove group and add children
+    this.canvasElements.splice(this.selectedElement, 1);
+    this.canvasElements.push(...childElements);
+    
+    // Select the first child
+    this.selectedElement = this.canvasElements.length - childElements.length;
+    this.selectedElements = [];
+    
+    this.saveToHistory();
+  }
+  
+  // Element styling methods
+  getElementTransform(element: CanvasElement): string {
+    let transform = '';
+    
+    if (element.rotate && element.rotate !== 0) {
+      transform += `rotate(${element.rotate}deg) `;
+    }
+    
+    if (element.x !== undefined && element.y !== undefined) {
+      transform += `translate(${element.x}px, ${element.y}px)`;
+    }
+    
+    return transform.trim();
+  }
+  
+  getTextColor(element: CanvasElement): string {
+    if (element.type !== 'text') return '#000000';
+    
+    if (element.textGradientType && element.textGradientType !== 'none') {
+      return 'transparent';
+    }
+    
+    return element.color || '#000000';
+  }
+  
+  getTextGradient(element: CanvasElement): string {
+    if (element.type !== 'text' || !element.textGradientType || element.textGradientType === 'none') {
+      return 'none';
+    }
+    
+    const color1 = element.textGradientColor1 || '#000000';
+    const color2 = element.textGradientColor2 || '#ffffff';
+    const angle = element.textGradientAngle || 0;
+    
+    if (element.textGradientType === 'linear') {
+      return `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+    } else if (element.textGradientType === 'radial') {
+      return `radial-gradient(circle, ${color1}, ${color2})`;
+    }
+    
+    return 'none';
+  }
+  
+  getTextBackgroundColor(element: CanvasElement): string {
+    if (element.type !== 'text') return 'transparent';
+    return element.backgroundColor || 'transparent';
+  }
+  
+  getTextTransform(element: CanvasElement): string {
+    if (element.type !== 'text') return 'none';
+    
+    let transform = '';
+    
+    if (element.textRotation) {
+      transform += `rotate(${element.textRotation}deg) `;
+    }
+    
+    if (element.textPath && element.textPath !== 'none') {
+      // This would require more complex CSS for text path effects
+      // For now, we'll just return the rotation
+    }
+    
+    return transform.trim() || 'none';
+  }
+  
+  getImageFilter(element: CanvasElement): string {
+    if (element.type !== 'image' || !element.filter || element.filter === 'none') {
+      return 'none';
+    }
+    
+    let filterString = '';
+    
+    if (element.brightness && element.brightness !== 100) {
+      filterString += `brightness(${element.brightness}%) `;
+    }
+    
+    if (element.contrast && element.contrast !== 100) {
+      filterString += `contrast(${element.contrast}%) `;
+    }
+    
+    if (element.saturation && element.saturation !== 100) {
+      filterString += `saturate(${element.saturation}%) `;
+    }
+    
+    if (element.hueRotate && element.hueRotate !== 0) {
+      filterString += `hue-rotate(${element.hueRotate}deg) `;
+    }
+    
+    if (element.blur && element.blur > 0) {
+      filterString += `blur(${element.blur}px) `;
+    }
+    
+    if (element.sepia && element.sepia > 0) {
+      filterString += `sepia(${element.sepia}%) `;
+    }
+    
+    if (element.grayscale && element.grayscale > 0) {
+      filterString += `grayscale(${element.grayscale}%) `;
+    }
+    
+    if (element.invert && element.invert > 0) {
+      filterString += `invert(${element.invert}%) `;
+    }
+    
+    return filterString.trim() || 'none';
+  }
+  
+  getImageMask(element: CanvasElement): string {
+    if (element.type !== 'image' || !element.maskType || element.maskType === 'rectangle') {
+      return 'none';
+    }
+    
+    if (element.maskType === 'circle') {
+      return `clip-path: circle(50% at center);`;
+    } else if (element.maskType === 'custom') {
+      // Custom mask would require more complex implementation
+      return 'none';
+    }
+    
+    return 'none';
+  }
+  
+  getShapeBackground(element: CanvasElement): string {
+    if (element.type !== 'shape') return '#3498db';
+    
+    if (element.gradient && element.gradient !== 'none') {
+      return element.gradient;
+    }
+    
+    return element.color || '#3498db';
+  }
+  
+  getShapeBorderRadius(element: CanvasElement): number {
+    if (element.type !== 'shape') return 0;
+    
+    // For special shapes, we might want different border radius
+    if (element.shape === 'circle') {
+      return Math.min(element.width, element.height) / 2;
+    }
+    
+    return element.borderRadius || 0;
+  }
+  
+  getShapeClipPath(element: CanvasElement): string {
+    if (element.type !== 'shape' || !element.shape || element.shape === 'rectangle') {
+      return 'none';
+    }
+    
+    // Define clip paths for different shapes
+    switch (element.shape) {
+      case 'circle':
+        return 'circle(50% at center)';
+      case 'triangle':
+        return 'polygon(50% 0%, 0% 100%, 100% 100%)';
+      case 'hexagon':
+        return 'polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%)';
+      case 'octagon':
+        return 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)';
+      case 'pentagon':
+        return 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
+      case 'star':
+        return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+      case 'heart':
+        return 'path("M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z")';
+      case 'speech-bubble':
+        return 'polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 25% 100%, 25% 75%, 0% 75%)';
+      case 'burst':
+        return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+      case 'cloud':
+        return 'ellipse(60% 40% 40% 30%) ellipse(40% 50% 35% 25%) ellipse(70% 55% 30% 20%)';
+      default:
+        return 'none';
+    }
+  }
+  
+  getIconFilter(element: CanvasElement): string {
+    if (element.type !== 'icon' || !element.filter || element.filter === 'none') {
+      return 'none';
+    }
+    
+    // Similar to image filters but for icons
+    return this.getImageFilter(element);
   }
   
   // Text style controls
@@ -1030,6 +2359,255 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements[this.selectedElement - 1] = temp;
     this.selectedElement--;
     this.saveToHistory();
+  }
+  
+  // Layer management methods
+  hasGroupedElements(): boolean {
+    return this.canvasElements.some(element => element.type === 'group');
+  }
+  
+  trackByElementId(index: number, element: CanvasElement): string {
+    return element.id;
+  }
+  
+  selectLayer(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    this.selectedElement = index;
+    
+    // On mobile, automatically switch to properties panel when an element is selected
+    if (window.innerWidth < 768) {
+      this.activeMobilePanel = 'properties';
+    }
+  }
+  
+  startLayerRename(index: number): void {
+    const element = this.canvasElements[index];
+    if (!element) return;
+    
+    // Store the current name for potential cancellation
+    (element as any)['originalName'] = element.layerName || element.name;
+    element.editing = true;
+  }
+  
+  getDefaultLayerName(element: CanvasElement, index: number): string {
+    if (element.layerName) return element.layerName;
+    if (element.name) return element.name;
+    
+    // Generate default name based on type
+    const typeName = element.type.charAt(0).toUpperCase() + element.type.slice(1);
+    return `${typeName} ${index + 1}`;
+  }
+  
+  finishLayerRename(index: number): void {
+    const element = this.canvasElements[index];
+    if (!element) return;
+    
+    element.editing = false;
+    // Remove the temporary original name property
+    delete (element as any)['originalName'];
+    
+    this.saveToHistory();
+  }
+  
+  cancelLayerRename(index: number): void {
+    const element = this.canvasElements[index];
+    if (!element) return;
+    
+    // Restore original name if it was stored
+    if ((element as any)['originalName'] !== undefined) {
+      element.layerName = (element as any)['originalName'];
+    }
+    
+    element.editing = false;
+    delete (element as any)['originalName'];
+  }
+  
+  toggleLayerVisibility(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    const element = this.canvasElements[index];
+    if (!element) return;
+    
+    element.visible = !element.visible;
+    this.updateElement();
+  }
+  
+  toggleLayerLock(index: number, event: MouseEvent): void {
+    event.stopPropagation();
+    const element = this.canvasElements[index];
+    if (!element) return;
+    
+    element.locked = !element.locked;
+    this.updateElement();
+  }
+  
+  bringToFront(): void {
+    if (this.selectedElement === null || this.selectedElement >= this.canvasElements.length - 1) return;
+    
+    const element = this.canvasElements.splice(this.selectedElement, 1)[0];
+    this.canvasElements.push(element);
+    this.selectedElement = this.canvasElements.length - 1;
+    this.saveToHistory();
+  }
+  
+  sendToBack(): void {
+    if (this.selectedElement === null || this.selectedElement <= 0) return;
+    
+    const element = this.canvasElements.splice(this.selectedElement, 1)[0];
+    this.canvasElements.unshift(element);
+    this.selectedElement = 0;
+    this.saveToHistory();
+  }
+  
+  resetElementTransform(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    element.x = 100;
+    element.y = 100;
+    element.rotate = 0;
+    element.width = element.type === 'text' ? 200 : 200;
+    element.height = element.type === 'text' ? 50 : 150;
+    
+    this.updateElement();
+  }
+  
+  // Alignment methods
+  alignElement(alignment: string): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    const canvasCenterX = this.canvasWidth / 2;
+    const canvasCenterY = this.canvasHeight / 2;
+    
+    switch (alignment) {
+      case 'left':
+        element.x = 0;
+        break;
+      case 'center-horizontal':
+        element.x = canvasCenterX - (element.width / 2);
+        break;
+      case 'right':
+        element.x = this.canvasWidth - element.width;
+        break;
+      case 'top':
+        element.y = 0;
+        break;
+      case 'center-vertical':
+        element.y = canvasCenterY - (element.height / 2);
+        break;
+      case 'bottom':
+        element.y = this.canvasHeight - element.height;
+        break;
+    }
+    
+    this.updateElement();
+  }
+  
+  distributeElements(direction: 'horizontal' | 'vertical'): void {
+    const elementsToDistribute = this.selectedElements.length > 0 ? this.selectedElements : [this.selectedElement!];
+    if (elementsToDistribute.length < 3) return; // Need at least 3 elements to distribute
+    
+    // Sort elements by position
+    const sortedElements = elementsToDistribute
+      .map(index => ({ index, element: this.canvasElements[index] }))
+      .sort((a, b) => {
+        if (direction === 'horizontal') {
+          return a.element.x - b.element.x;
+        } else {
+          return a.element.y - b.element.y;
+        }
+      });
+    
+    // Calculate total space and spacing
+    const firstElement = sortedElements[0].element;
+    const lastElement = sortedElements[sortedElements.length - 1].element;
+    
+    let totalSpace: number;
+    let startPosition: number;
+    
+    if (direction === 'horizontal') {
+      totalSpace = (lastElement.x + lastElement.width) - firstElement.x;
+      startPosition = firstElement.x;
+    } else {
+      totalSpace = (lastElement.y + lastElement.height) - firstElement.y;
+      startPosition = firstElement.y;
+    }
+    
+    // Calculate spacing between elements
+    const totalElementsWidth = sortedElements.reduce((sum, item) => {
+      return sum + (direction === 'horizontal' ? item.element.width : item.element.height);
+    }, 0);
+    
+    const availableSpace = totalSpace - totalElementsWidth;
+    const spacing = availableSpace / (sortedElements.length - 1);
+    
+    // Distribute elements
+    let currentPosition = startPosition;
+    
+    sortedElements.forEach((item, i) => {
+      if (direction === 'horizontal') {
+        item.element.x = currentPosition;
+        currentPosition += item.element.width + spacing;
+      } else {
+        item.element.y = currentPosition;
+        currentPosition += item.element.height + spacing;
+      }
+    });
+    
+    this.updateElement();
+  }
+  
+  // Text effect methods
+  updateCustomTextShadow(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const shadowColor = element.customShadowColor || 'rgba(0,0,0,0.5)';
+    const blur = element.customShadowBlur || 5;
+    const offsetX = element.customShadowX || 0;
+    const offsetY = element.customShadowY || 5;
+    
+    element.textShadow = `${offsetX}px ${offsetY}px ${blur}px ${shadowColor}`;
+    this.updateElement();
+  }
+  
+  updateTextGradient(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    // Force update of text gradient
+    this.updateElement();
+  }
+  
+  rotateText(degrees: number): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.textRotation = (element.textRotation || 0) + degrees;
+    this.updateElement();
+  }
+  
+  flipText(direction: 'horizontal' | 'vertical'): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    // For text flipping, we can use CSS transforms or scale
+    // This is a simplified implementation
+    if (direction === 'horizontal') {
+      element.textTransform = element.textTransform === 'scaleX(-1)' ? 'none' : 'scaleX(-1)';
+    } else {
+      element.textTransform = element.textTransform === 'scaleY(-1)' ? 'none' : 'scaleY(-1)';
+    }
+    
+    this.updateElement();
   }
   
   // Page management
@@ -1432,6 +3010,128 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     img.src = element.src;
   }
   
+  // Image editing methods
+  scaleImage(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    // Reset to original aspect ratio or apply scaling
+    // This is a placeholder implementation
+    this.updateElement();
+  }
+  
+  updateImageFilters(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    // Rebuild the filter string from individual properties
+    let filterString = '';
+    
+    if (element.brightness && element.brightness !== 100) {
+      filterString += `brightness(${element.brightness}%) `;
+    }
+    
+    if (element.contrast && element.contrast !== 100) {
+      filterString += `contrast(${element.contrast}%) `;
+    }
+    
+    if (element.saturation && element.saturation !== 100) {
+      filterString += `saturate(${element.saturation}%) `;
+    }
+    
+    if (element.hueRotate && element.hueRotate !== 0) {
+      filterString += `hue-rotate(${element.hueRotate}deg) `;
+    }
+    
+    if (element.blur && element.blur > 0) {
+      filterString += `blur(${element.blur}px) `;
+    }
+    
+    if (element.sepia && element.sepia > 0) {
+      filterString += `sepia(${element.sepia}%) `;
+    }
+    
+    if (element.grayscale && element.grayscale > 0) {
+      filterString += `grayscale(${element.grayscale}%) `;
+    }
+    
+    if (element.invert && element.invert > 0) {
+      filterString += `invert(${element.invert}%) `;
+    }
+    
+    element.filter = filterString.trim() || 'none';
+    this.updateElement();
+  }
+  
+  applyFilterPreset(preset: string): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    
+    // Reset all filters first
+    element.brightness = 100;
+    element.contrast = 100;
+    element.saturation = 100;
+    element.hueRotate = 0;
+    element.blur = 0;
+    element.sepia = 0;
+    element.grayscale = 0;
+    element.invert = 0;
+    
+    // Apply preset
+    switch (preset) {
+      case 'vintage':
+        element.sepia = 30;
+        element.contrast = 110;
+        element.brightness = 110;
+        break;
+      case 'blackwhite':
+        element.grayscale = 100;
+        element.contrast = 120;
+        break;
+      case 'warm':
+        element.sepia = 20;
+        element.saturation = 120;
+        element.brightness = 105;
+        break;
+      case 'cool':
+        element.hueRotate = 180;
+        element.saturation = 90;
+        element.brightness = 105;
+        break;
+      case 'none':
+      default:
+        // Already reset above
+        break;
+    }
+    
+    this.updateImageFilters();
+  }
+  
+  applyMask(maskType: string): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    element.maskType = maskType as 'rectangle' | 'circle' | 'custom';
+    this.updateElement();
+  }
+  
+  removeMask(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    element.maskType = undefined;
+    this.updateElement();
+  }
+  
+  preserveTransparency(): void {
+    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    element.preserveTransparency = !element.preserveTransparency;
+    this.updateElement();
+  }
+  
   // Helper method to check if background removal is active
   isBackgroundRemovalActive(): boolean {
     if (this.selectedElement === null) return false;
@@ -1579,7 +3279,104 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Added missing method
   openShapeSelector(): void {
-    this.showShapeSelector = !this.showShapeSelector;
+    // Only open shape selector if not currently dragging
+    if (!this.isDraggingElement) {
+      this.showShapeSelector = !this.showShapeSelector;
+    }
+  }
+
+  // Color palette methods
+  selectColor(color: string): void {
+    // Add to recent colors if not already there
+    if (!this.recentColors.includes(color)) {
+      this.recentColors.unshift(color);
+      if (this.recentColors.length > 20) {
+        this.recentColors = this.recentColors.slice(0, 20);
+      }
+    }
+
+    // Apply color to selected element
+    if (this.selectedElement !== null) {
+      const element = this.canvasElements[this.selectedElement];
+      if (element.type === 'text') {
+        element.color = color;
+      } else if (element.type === 'shape') {
+        element.color = color;
+      }
+      this.updateElement();
+    }
+  }
+
+  removeColor(color: string, event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const index = this.savedColors.indexOf(color);
+    if (index > -1) {
+      this.savedColors.splice(index, 1);
+    }
+  }
+
+  openColorPicker(): void {
+    this.showColorPicker = true;
+    this.pickerColor = '#000000';
+    this.updatePickerColor();
+  }
+
+  closeColorPicker(): void {
+    this.showColorPicker = false;
+  }
+
+  updatePickerColor(): void {
+    this.hexColor = this.pickerColor;
+    const rgb = this.hexToRgbObject(this.pickerColor);
+    this.rgbColor = rgb;
+  }
+
+  updateFromHex(): void {
+    this.pickerColor = this.hexColor;
+    const rgb = this.hexToRgbObject(this.hexColor);
+    this.rgbColor = rgb;
+  }
+
+  updateFromRGB(): void {
+    const hex = this.rgbToHex(this.rgbColor.r, this.rgbColor.g, this.rgbColor.b);
+    this.hexColor = hex;
+    this.pickerColor = hex;
+  }
+
+  addToPalette(): void {
+    const color = this.pickerColor;
+    if (!this.savedColors.includes(color)) {
+      this.savedColors.push(color);
+    }
+    this.closeColorPicker();
+  }
+
+  saveBrandPalette(): void {
+    // Save current saved colors as brand colors
+    this.brandColors = [...this.savedColors];
+    alert('Brand palette saved!');
+  }
+
+  loadBrandPalette(): void {
+    // Load brand colors into saved colors
+    this.savedColors = [...this.brandColors];
+    alert('Brand palette loaded!');
+  }
+
+  // Helper methods for color conversion
+  private hexToRgbObject(hex: string): { r: number; g: number; b: number } {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+  }
+
+  private rgbToHex(r: number, g: number, b: number): string {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
   
   updateGradient(): void {
@@ -1597,24 +3394,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.updateElement();
-  }
-  
-  addShapeToCanvas(shapeType: string): void {
-    const newShape: CanvasElement = {
-      id: `shape-${Date.now()}`,
-      type: 'shape',
-      x: (this.canvasWidth - 150) / 2,
-      y: (this.canvasHeight - 150) / 2,
-      width: 150,
-      height: shapeType === 'circle' ? 150 : (shapeType === 'star' || shapeType === 'heart') ? 120 : 150,
-      shape: shapeType,
-      color: '#4c6ef5',
-      opacity: 1,
-      borderRadius: 0
-    };
-    
-    this.addElementToCanvas('shape', newShape);
-    this.showShapeSelector = false;
   }
 }
 
