@@ -65,37 +65,185 @@
   
   <div class="template-editor-main">
     <div class="template-sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}">
+      <!-- Text Elements Section -->
       <div class="sidebar-section">
-        <h3 class="sidebar-title">Text Elements</h3>
+        <h3 class="sidebar-title">
+          <mat-icon>text_fields</mat-icon>
+          Text Elements
+        </h3>
+        
+        <!-- Text Types Grid -->
         <div class="text-elements-grid">
           <div class="text-element-item" (click)="addTextElement('heading')" 
                draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'heading'})" (dragend)="onDragEnd()">
-            <mat-icon>format_h1</mat-icon>
+            <div class="text-icon">
+              <mat-icon>title</mat-icon>
+            </div>
             <div class="element-preview">
-              <span class="preview-text heading-preview">Heading</span>
+              <span class="preview-text heading-preview">Add a heading</span>
+              <span class="element-label">Heading</span>
             </div>
           </div>
+          
           <div class="text-element-item" (click)="addTextElement('subheading')" 
                draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'subheading'})" (dragend)="onDragEnd()">
-            <mat-icon>format_h2</mat-icon>
+            <div class="text-icon">
+              <mat-icon>format_h2</mat-icon>
+            </div>
             <div class="element-preview">
-              <span class="preview-text subheading-preview">Subheading</span>
+              <span class="preview-text subheading-preview">Add a subheading</span>
+              <span class="element-label">Subheading</span>
             </div>
           </div>
+          
           <div class="text-element-item" (click)="addTextElement('body')" 
                draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'body'})" (dragend)="onDragEnd()">
-            <mat-icon>article</mat-icon>
+            <div class="text-icon">
+              <mat-icon>article</mat-icon>
+            </div>
             <div class="element-preview">
-              <span class="preview-text body-preview">Body Text</span>
+              <span class="preview-text body-preview">Add a little bit of body text</span>
+              <span class="element-label">Body Text</span>
             </div>
           </div>
+          
           <div class="text-element-item" (click)="addTextElement('caption')" 
                draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'caption'})" (dragend)="onDragEnd()">
-            <mat-icon>text_fields_alt</mat-icon>
+            <div class="text-icon">
+              <mat-icon>text_fields_alt</mat-icon>
+            </div>
             <div class="element-preview">
-              <span class="preview-text caption-preview">Caption</span>
+              <span class="preview-text caption-preview">Add a caption</span>
+              <span class="element-label">Caption</span>
             </div>
           </div>
+        </div>
+
+        <!-- Typography Combos -->
+        <div class="typography-section">
+          <h4 class="subsection-title">Typography Combos</h4>
+          <div class="typography-combos">
+            <div class="combo-item" *ngFor="let combo of typographyCombos; trackBy: trackByCombo" 
+                 (click)="applyTypographyCombo(combo)">
+              <div class="combo-preview">
+                <div class="combo-heading" [ngStyle]="getComboHeadingStyle(combo)">{{ combo.headingText }}</div>
+                <div class="combo-body" [ngStyle]="getComboBodyStyle(combo)">{{ combo.bodyText }}</div>
+              </div>
+              <div class="combo-info">
+                <span class="combo-name">{{ combo.name }}</span>
+                <span class="combo-fonts">{{ combo.headingFont }} & {{ combo.bodyFont }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text Effects Quick Access -->
+        <div class="text-effects-section">
+          <h4 class="subsection-title">Text Effects</h4>
+          <div class="effects-quick-grid">
+            <button class="effect-btn" (click)="applyTextEffect('shadow')" 
+                    [class.active]="hasEffect('shadow')" title="Shadow">
+              <mat-icon>layers</mat-icon>
+              <span>Shadow</span>
+            </button>
+            <button class="effect-btn" (click)="applyTextEffect('outline')" 
+                    [class.active]="hasEffect('outline')" title="Outline">
+              <mat-icon>border_outer</mat-icon>
+              <span>Outline</span>
+            </button>
+            <button class="effect-btn" (click)="applyTextEffect('gradient')" 
+                    [class.active]="hasEffect('gradient')" title="Gradient">
+              <mat-icon>gradient</mat-icon>
+              <span>Gradient</span>
+            </button>
+            <button class="effect-btn" (click)="applyTextEffect('neon')" 
+                    [class.active]="hasEffect('neon')" title="Neon Glow">
+              <mat-icon>flare</mat-icon>
+              <span>Neon</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Font Library Section -->
+      <div class="sidebar-section">
+        <h3 class="sidebar-title">
+          <mat-icon>font_download</mat-icon>
+          Font Library
+        </h3>
+        
+        <!-- Font Search -->
+        <div class="font-search">
+          <mat-icon>search</mat-icon>
+          <input type="text" 
+                 [(ngModel)]="fontSearchQuery" 
+                 placeholder="Search fonts..." 
+                 (input)="filterFonts()">
+        </div>
+
+        <!-- Font Categories -->
+        <div class="font-categories">
+          <button class="category-btn" 
+                  [class.active]="activeFontCategory === 'all'"
+                  (click)="setFontCategory('all')">All</button>
+          <button class="category-btn" 
+                  [class.active]="activeFontCategory === 'sans-serif'"
+                  (click)="setFontCategory('sans-serif')">Sans-serif</button>
+          <button class="category-btn" 
+                  [class.active]="activeFontCategory === 'serif'"
+                  (click)="setFontCategory('serif')">Serif</button>
+          <button class="category-btn" 
+                  [class.active]="activeFontCategory === 'display'"
+                  (click)="setFontCategory('display')">Display</button>
+          <button class="category-btn" 
+                  [class.active]="activeFontCategory === 'handwriting'"
+                  (click)="setFontCategory('handwriting')">Script</button>
+        </div>
+
+        <!-- Font List -->
+        <div class="font-list">
+          <div class="font-item" *ngFor="let font of filteredFonts; trackBy: trackByFont" 
+               (click)="applyFont(font)"
+               [class.selected]="isSelectedFont(font)">
+            <div class="font-preview" [ngStyle]="getFontPreviewStyle(font)">
+              {{ font.previewText || 'The quick brown fox' }}
+            </div>
+            <div class="font-info">
+              <span class="font-name">{{ font.name }}</span>
+              <span class="font-category">{{ font.category }}</span>
+              <mat-icon class="premium-icon" *ngIf="font.premium">star</mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <!-- Font Pairing Suggestions -->
+        <div class="font-pairing-section" *ngIf="selectedElement !== null && canvasElements[selectedElement]?.type === 'text'">
+          <h4 class="subsection-title">Suggested Pairings</h4>
+          <div class="pairing-suggestions">
+            <div class="pairing-item" *ngFor="let pairing of fontPairingSuggestions" 
+                 (click)="applyFontPairing(pairing)">
+              <div class="pairing-preview">
+                <div class="pairing-primary" [ngStyle]="getPairingPrimaryStyle(pairing)">{{ pairing.primarySample }}</div>
+                <div class="pairing-secondary" [ngStyle]="getPairingSecondaryStyle(pairing)">{{ pairing.secondarySample }}</div>
+              </div>
+              <div class="pairing-info">
+                <span class="pairing-name">{{ pairing.name }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Font Upload -->
+        <div class="custom-font-upload">
+          <button class="upload-font-btn" (click)="triggerFontUpload()">
+            <mat-icon>upload</mat-icon>
+            <span>Upload Custom Font</span>
+          </button>
+          <input type="file" 
+                 #fontUploadRef 
+                 style="display: none" 
+                 accept=".ttf,.otf,.woff,.woff2"
+                 (change)="onFontFileSelected($event)">
         </div>
       </div>
       
@@ -808,131 +956,545 @@
         </div>
       </div>
       
-      <!-- Text specific properties -->
-      <div *ngIf="canvasElements[selectedElement].type === 'text'">
+      <!-- Advanced Text Properties -->
+      <div *ngIf="canvasElements[selectedElement].type === 'text'" class="advanced-text-properties">
+        <!-- Text Content & AI Tools -->
         <div class="property-group">
-          <label>Text Content</label>
-          <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()" class="text-editor"></textarea>
+          <div class="content-header">
+            <label>Text Content</label>
+            <div class="ai-tools">
+              <button class="ai-btn" (click)="openAIRewrite()" title="AI Rewrite">
+                <mat-icon>auto_fix_high</mat-icon>
+              </button>
+              <button class="ai-btn" (click)="openTranslateText()" title="Translate">
+                <mat-icon>translate</mat-icon>
+              </button>
+              <button class="ai-btn" (click)="startVoiceToText()" title="Voice to Text">
+                <mat-icon>mic</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="text-editor-container">
+            <textarea [(ngModel)]="canvasElements[selectedElement].content" 
+                      (change)="updateElement()" 
+                      class="advanced-text-editor"
+                      placeholder="Enter your text here..."></textarea>
+            <div class="text-tools">
+              <button class="tool-btn" (click)="checkAccessibility()" title="Accessibility Check">
+                <mat-icon>accessibility</mat-icon>
+              </button>
+              <button class="tool-btn" (click)="addHyperlink()" title="Add Link">
+                <mat-icon>link</mat-icon>
+              </button>
+              <span class="char-count">{{ (canvasElements[selectedElement].content || '').length }} chars</span>
+            </div>
+          </div>
         </div>
-        
+
+        <!-- Font Selection & Pairing -->
         <div class="property-group">
-          <label>Font</label>
-          <div class="text-formatting">
-            <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()" class="font-select">
-              <option value="Arial">Arial</option>
-              <option value="Helvetica">Helvetica</option>
-              <option value="Times New Roman">Times New Roman</option>
-              <option value="Courier New">Courier New</option>
-              <option value="Verdana">Verdana</option>
-              <option value="Georgia">Georgia</option>
-              <option value="Roboto">Roboto</option>
-              <option value="Open Sans">Open Sans</option>
-              <option value="Montserrat">Montserrat</option>
-            </select>
-            
-            <div class="text-controls">
-              <div class="font-size-control">
-                <span>Size</span>
-                <input type="number" [(ngModel)]="canvasElements[selectedElement].fontSize" (change)="updateElement()">
+          <label>
+            <mat-icon>font_download</mat-icon>
+            Font & Typography
+          </label>
+          <div class="font-selection">
+            <div class="current-font-display">
+              <div class="font-preview" [ngStyle]="getCurrentFontStyle()">
+                {{ canvasElements[selectedElement].fontFamily || 'Select Font' }}
               </div>
-              
-              <div class="color-control">
-                <span>Color</span>
-                <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()">
+              <button class="browse-fonts-btn" (click)="openFontBrowser()">
+                <mat-icon>library_books</mat-icon>
+                Browse Fonts
+              </button>
+            </div>
+            
+            <!-- Quick Font Size & Weight -->
+            <div class="font-quick-controls">
+              <div class="size-control">
+                <button class="size-btn" (click)="adjustFontSize(-2)">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <input type="number" 
+                       [(ngModel)]="canvasElements[selectedElement].fontSize" 
+                       (change)="updateElement()" 
+                       class="size-input"
+                       min="8" max="200">
+                <button class="size-btn" (click)="adjustFontSize(2)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <div class="weight-controls">
+                <button class="style-btn" 
+                        [class.active]="canvasElements[selectedElement].fontWeight === 'bold'"
+                        (click)="toggleTextStyle('fontWeight', 'bold')">
+                  <mat-icon>format_bold</mat-icon>
+                </button>
+                <button class="style-btn" 
+                        [class.active]="canvasElements[selectedElement].fontStyle === 'italic'"
+                        (click)="toggleTextStyle('fontStyle', 'italic')">
+                  <mat-icon>format_italic</mat-icon>
+                </button>
+                <button class="style-btn" 
+                        [class.active]="canvasElements[selectedElement].textDecoration === 'underline'"
+                        (click)="toggleTextStyle('textDecoration', 'underline')">
+                  <mat-icon>format_underlined</mat-icon>
+                </button>
               </div>
             </div>
           </div>
         </div>
-        
+        <!-- Color & Gradient Controls -->
         <div class="property-group">
-          <label>Text Style</label>
-          <div class="style-buttons">
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].fontWeight === 'bold'}" 
-                    (click)="toggleTextStyle('fontWeight', 'bold')" title="Bold">
-              <mat-icon>format_bold</mat-icon>
-            </button>
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].fontStyle === 'italic'}" 
-                    (click)="toggleTextStyle('fontStyle', 'italic')" title="Italic">
-              <mat-icon>format_italic</mat-icon>
-            </button>
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textDecoration === 'underline'}" 
-                    (click)="toggleTextStyle('textDecoration', 'underline')" title="Underline">
-              <mat-icon>format_underlined</mat-icon>
-            </button>
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textTransform === 'uppercase'}" 
-                    (click)="toggleTextStyle('textTransform', 'uppercase')" title="Uppercase">
-              <mat-icon>text_rotation_none</mat-icon>
-            </button>
+          <label>
+            <mat-icon>palette</mat-icon>
+            Color & Style
+          </label>
+          <div class="color-controls">
+            <div class="color-tabs">
+              <button class="color-tab" 
+                      [class.active]="activeColorTab === 'solid'"
+                      (click)="activeColorTab = 'solid'">Solid</button>
+              <button class="color-tab" 
+                      [class.active]="activeColorTab === 'gradient'"
+                      (click)="activeColorTab = 'gradient'">Gradient</button>
+            </div>
+            
+            <div class="color-content" *ngIf="activeColorTab === 'solid'">
+              <div class="color-picker-container">
+                <input type="color" 
+                       [(ngModel)]="canvasElements[selectedElement].color" 
+                       (change)="updateElement()" 
+                       class="color-input">
+                <div class="color-presets">
+                  <div class="color-preset" 
+                       *ngFor="let color of colorPresets" 
+                       [style.background-color]="color"
+                       (click)="applyColor(color)"
+                       [class.selected]="canvasElements[selectedElement].color === color"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="color-content" *ngIf="activeColorTab === 'gradient'">
+              <div class="gradient-controls">
+                <div class="gradient-type">
+                  <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()">
+                    <option value="">No Gradient</option>
+                    <option value="linear">Linear</option>
+                    <option value="radial">Radial</option>
+                  </select>
+                </div>
+                <div class="gradient-colors" *ngIf="canvasElements[selectedElement].textGradientType">
+                  <input type="color" 
+                         [(ngModel)]="canvasElements[selectedElement].textGradientColor1" 
+                         (change)="updateTextGradient()" 
+                         placeholder="Color 1">
+                  <input type="color" 
+                         [(ngModel)]="canvasElements[selectedElement].textGradientColor2" 
+                         (change)="updateTextGradient()" 
+                         placeholder="Color 2">
+                </div>
+                <div class="gradient-angle" *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
+                  <label>Angle: {{ canvasElements[selectedElement].textGradientAngle || 0 }}°</label>
+                  <input type="range" 
+                         [(ngModel)]="canvasElements[selectedElement].textGradientAngle" 
+                         (change)="updateTextGradient()" 
+                         min="0" max="360" step="15">
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="alignment-buttons">
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'left'}" 
-                    (click)="setTextStyle('textAlign', 'left')" title="Align Left">
+        </div>
+
+        <!-- Alignment & Positioning -->
+        <div class="property-group">
+          <label>
+            <mat-icon>format_align_center</mat-icon>
+            Alignment & Position
+          </label>
+          <div class="alignment-grid">
+            <button class="align-btn" 
+                    [class.active]="canvasElements[selectedElement].textAlign === 'left'"
+                    (click)="setTextStyle('textAlign', 'left')" 
+                    title="Align Left">
               <mat-icon>format_align_left</mat-icon>
             </button>
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'center'}" 
-                    (click)="setTextStyle('textAlign', 'center')" title="Align Center">
+            <button class="align-btn" 
+                    [class.active]="canvasElements[selectedElement].textAlign === 'center'"
+                    (click)="setTextStyle('textAlign', 'center')" 
+                    title="Align Center">
               <mat-icon>format_align_center</mat-icon>
             </button>
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'right'}" 
-                    (click)="setTextStyle('textAlign', 'right')" title="Align Right">
+            <button class="align-btn" 
+                    [class.active]="canvasElements[selectedElement].textAlign === 'right'"
+                    (click)="setTextStyle('textAlign', 'right')" 
+                    title="Align Right">
               <mat-icon>format_align_right</mat-icon>
             </button>
-            <button type="button" [ngClass]="{'active': canvasElements[selectedElement].textAlign === 'justify'}" 
-                    (click)="setTextStyle('textAlign', 'justify')" title="Justify">
+            <button class="align-btn" 
+                    [class.active]="canvasElements[selectedElement].textAlign === 'justify'"
+                    (click)="setTextStyle('textAlign', 'justify')" 
+                    title="Justify">
               <mat-icon>format_align_justify</mat-icon>
             </button>
           </div>
-        </div>
-        
-        <div class="property-group">
-          <label>Font Settings</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Font Family</span>
-              <select [(ngModel)]="canvasElements[selectedElement].fontFamily" (change)="updateElement()">
-                <option value="Arial, sans-serif">Arial</option>
-                <option value="'Times New Roman', serif">Times New Roman</option>
-                <option value="Georgia, serif">Georgia</option>
-                <option value="'Courier New', monospace">Courier New</option>
-                <option value="'Roboto', sans-serif">Roboto</option>
-                <option value="'Open Sans', sans-serif">Open Sans</option>
-                <option value="'Playfair Display', serif">Playfair Display</option>
-                <option value="'Montserrat', sans-serif">Montserrat</option>
-              </select>
+          
+          <div class="position-controls">
+            <div class="transform-controls">
+              <button class="transform-btn" (click)="rotateText(-90)" title="Rotate Left">
+                <mat-icon>rotate_left</mat-icon>
+              </button>
+              <span class="rotation-display">{{ canvasElements[selectedElement].rotate || 0 }}°</span>
+              <button class="transform-btn" (click)="rotateText(90)" title="Rotate Right">
+                <mat-icon>rotate_right</mat-icon>
+              </button>
             </div>
-            <div class="property-control">
-              <span>Letter Spacing</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].letterSpacing" (change)="updateElement()" min="-2" max="10" step="0.5">
-              <span class="value-display">{{ canvasElements[selectedElement].letterSpacing || 0 }}px</span>
-            </div>
-            <div class="property-control">
-              <span>Line Height</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].lineHeight" (change)="updateElement()" min="0.8" max="3" step="0.1">
-              <span class="value-display">{{ canvasElements[selectedElement].lineHeight || 1.2 }}</span>
+            <div class="flip-controls">
+              <button class="transform-btn" (click)="flipText('horizontal')" title="Flip Horizontal">
+                <mat-icon>flip</mat-icon>
+              </button>
+              <button class="transform-btn" (click)="flipText('vertical')" title="Flip Vertical">
+                <mat-icon style="transform: rotate(90deg)">flip</mat-icon>
+              </button>
             </div>
           </div>
         </div>
-        
+        <!-- Spacing & Typography Controls -->
         <div class="property-group">
-          <label>Background & Spacing</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Background</span>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].backgroundColor" (change)="updateElement()">
+          <label>
+            <mat-icon>format_line_spacing</mat-icon>
+            Spacing & Typography
+          </label>
+          <div class="spacing-controls">
+            <div class="spacing-row">
+              <div class="control-item">
+                <label>Letter Spacing</label>
+                <div class="control-input">
+                  <input type="range" 
+                         [(ngModel)]="canvasElements[selectedElement].letterSpacing" 
+                         (change)="updateElement()" 
+                         min="-5" max="20" step="0.1"
+                         class="slider">
+                  <span class="value">{{ canvasElements[selectedElement].letterSpacing || 0 }}px</span>
+                </div>
+              </div>
             </div>
-            <div class="property-control">
-              <span>Padding (px)</span>
-              <input type="number" [(ngModel)]="canvasElements[selectedElement].padding" (change)="updateElement()" min="0" max="50">
+            
+            <div class="spacing-row">
+              <div class="control-item">
+                <label>Line Height</label>
+                <div class="control-input">
+                  <input type="range" 
+                         [(ngModel)]="canvasElements[selectedElement].lineHeight" 
+                         (change)="updateElement()" 
+                         min="0.5" max="3" step="0.1"
+                         class="slider">
+                  <span class="value">{{ canvasElements[selectedElement].lineHeight || 1.2 }}</span>
+                </div>
+              </div>
             </div>
-            <div class="property-control">
-              <span>Border Radius</span>
-              <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" min="0" max="50">
+            
+            <div class="spacing-row">
+              <div class="control-item">
+                <label>Character Spacing</label>
+                <div class="control-input">
+                  <input type="range" 
+                         [(ngModel)]="canvasElements[selectedElement].wordSpacing" 
+                         (change)="updateElement()" 
+                         min="-10" max="50" step="1"
+                         class="slider">
+                  <span class="value">{{ canvasElements[selectedElement].wordSpacing || 0 }}px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto-fit and Smart Sizing -->
+          <div class="smart-controls">
+            <button class="smart-btn" 
+                    [class.active]="canvasElements[selectedElement].autoFit"
+                    (click)="toggleAutoFit()" 
+                    title="Auto-fit text size">
+              <mat-icon>fit_screen</mat-icon>
+              <span>Auto-fit</span>
+            </button>
+            <button class="smart-btn" 
+                    [class.active]="canvasElements[selectedElement].textWrap"
+                    (click)="toggleTextWrap()" 
+                    title="Text wrapping">
+              <mat-icon>wrap_text</mat-icon>
+              <span>Wrap</span>
+            </button>
+          </div>
+        </div>
+        <!-- Advanced Text Effects -->
+        <div class="property-group">
+          <label>
+            <mat-icon>auto_fix_high</mat-icon>
+            Text Effects
+          </label>
+          <div class="effects-grid">
+            <!-- Effect Presets -->
+            <div class="effect-presets">
+              <button class="preset-btn" 
+                      *ngFor="let preset of textEffectPresets" 
+                      (click)="applyTextEffectPreset(preset)"
+                      [title]="preset.name">
+                <div class="preset-preview" [ngStyle]="getEffectPreviewStyle(preset)">Aa</div>
+                <span>{{ preset.name }}</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Effect Tabs -->
+          <div class="effect-tabs">
+            <button class="effect-tab" 
+                    [class.active]="activeEffectTab === 'shadow'"
+                    (click)="activeEffectTab = 'shadow'">Shadow</button>
+            <button class="effect-tab" 
+                    [class.active]="activeEffectTab === 'outline'"
+                    (click)="activeEffectTab = 'outline'">Outline</button>
+            <button class="effect-tab" 
+                    [class.active]="activeEffectTab === 'highlight'"
+                    (click)="activeEffectTab = 'highlight'">Highlight</button>
+            <button class="effect-tab" 
+                    [class.active]="activeEffectTab === 'curve'"
+                    (click)="activeEffectTab = 'curve'">Curve</button>
+          </div>
+          
+          <!-- Shadow Controls -->
+          <div class="effect-panel" *ngIf="activeEffectTab === 'shadow'">
+            <div class="effect-controls">
+              <div class="control-row">
+                <label>Shadow Type</label>
+                <select [(ngModel)]="canvasElements[selectedElement].shadowType" (change)="updateTextShadow()">
+                  <option value="none">None</option>
+                  <option value="drop">Drop Shadow</option>
+                  <option value="inner">Inner Shadow</option>
+                  <option value="neon">Neon Glow</option>
+                  <option value="multiple">Multiple Shadows</option>
+                </select>
+              </div>
+              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
+                <label>Shadow Color</label>
+                <input type="color" 
+                       [(ngModel)]="canvasElements[selectedElement].shadowColor" 
+                       (change)="updateTextShadow()">
+              </div>
+              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
+                <label>Blur: {{ canvasElements[selectedElement].shadowBlur || 0 }}px</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].shadowBlur" 
+                       (change)="updateTextShadow()" 
+                       min="0" max="50" step="1">
+              </div>
+              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
+                <label>Offset X: {{ canvasElements[selectedElement].shadowOffsetX || 0 }}px</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].shadowOffsetX" 
+                       (change)="updateTextShadow()" 
+                       min="-50" max="50" step="1">
+              </div>
+              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
+                <label>Offset Y: {{ canvasElements[selectedElement].shadowOffsetY || 0 }}px</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].shadowOffsetY" 
+                       (change)="updateTextShadow()" 
+                       min="-50" max="50" step="1">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Outline Controls -->
+          <div class="effect-panel" *ngIf="activeEffectTab === 'outline'">
+            <div class="effect-controls">
+              <div class="control-row">
+                <label>Outline Width: {{ canvasElements[selectedElement].outlineWidth || 0 }}px</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].outlineWidth" 
+                       (change)="updateTextOutline()" 
+                       min="0" max="10" step="0.5">
+              </div>
+              <div class="control-row">
+                <label>Outline Color</label>
+                <input type="color" 
+                       [(ngModel)]="canvasElements[selectedElement].outlineColor" 
+                       (change)="updateTextOutline()">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Highlight Controls -->
+          <div class="effect-panel" *ngIf="activeEffectTab === 'highlight'">
+            <div class="effect-controls">
+              <div class="control-row">
+                <label>Background Color</label>
+                <input type="color" 
+                       [(ngModel)]="canvasElements[selectedElement].backgroundColor" 
+                       (change)="updateElement()">
+              </div>
+              <div class="control-row">
+                <label>Padding: {{ canvasElements[selectedElement].padding || 0 }}px</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].padding" 
+                       (change)="updateElement()" 
+                       min="0" max="50" step="1">
+              </div>
+              <div class="control-row">
+                <label>Border Radius: {{ canvasElements[selectedElement].borderRadius || 0 }}px</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].borderRadius" 
+                       (change)="updateElement()" 
+                       min="0" max="50" step="1">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Curved Text Controls -->
+          <div class="effect-panel" *ngIf="activeEffectTab === 'curve'">
+            <div class="effect-controls">
+              <div class="control-row">
+                <label>Curve Type</label>
+                <select [(ngModel)]="canvasElements[selectedElement].curveType" (change)="updateTextCurve()">
+                  <option value="none">None</option>
+                  <option value="arc">Arc</option>
+                  <option value="bridge">Bridge</option>
+                  <option value="bulge">Bulge</option>
+                  <option value="wave">Wave</option>
+                  <option value="circle">Circle</option>
+                </select>
+              </div>
+              <div class="control-row" *ngIf="canvasElements[selectedElement].curveType !== 'none'">
+                <label>Curve Amount: {{ canvasElements[selectedElement].curveAmount || 0 }}%</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].curveAmount" 
+                       (change)="updateTextCurve()" 
+                       min="-100" max="100" step="5">
+              </div>
             </div>
           </div>
         </div>
-        
+        <!-- Text Animations -->
         <div class="property-group">
-          <label>Text Effects</label>
+          <label>
+            <mat-icon>animation</mat-icon>
+            Text Animations
+          </label>
+          <div class="animation-controls">
+            <div class="animation-presets">
+              <button class="animation-btn" 
+                      *ngFor="let animation of textAnimations" 
+                      (click)="applyTextAnimation(animation)"
+                      [class.active]="canvasElements[selectedElement].animation === animation.type"
+                      [title]="animation.name">
+                <mat-icon>{{ animation.icon }}</mat-icon>
+                <span>{{ animation.name }}</span>
+              </button>
+            </div>
+            
+            <div class="animation-settings" *ngIf="canvasElements[selectedElement].animation">
+              <div class="control-row">
+                <label>Duration: {{ canvasElements[selectedElement].animationDuration || 1 }}s</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].animationDuration" 
+                       (change)="updateAnimation()" 
+                       min="0.1" max="5" step="0.1">
+              </div>
+              <div class="control-row">
+                <label>Delay: {{ canvasElements[selectedElement].animationDelay || 0 }}s</label>
+                <input type="range" 
+                       [(ngModel)]="canvasElements[selectedElement].animationDelay" 
+                       (change)="updateAnimation()" 
+                       min="0" max="3" step="0.1">
+              </div>
+              <div class="control-row">
+                <label>Loop</label>
+                <input type="checkbox" 
+                       [(ngModel)]="canvasElements[selectedElement].animationLoop" 
+                       (change)="updateAnimation()">
+              </div>
+            </div>
+            
+            <button class="preview-animation-btn" 
+                    (click)="previewAnimation()" 
+                    *ngIf="canvasElements[selectedElement].animation">
+              <mat-icon>play_arrow</mat-icon>
+              Preview Animation
+            </button>
+          </div>
+        </div>
+
+        <!-- Transparency & Opacity -->
+        <div class="property-group">
+          <label>
+            <mat-icon>opacity</mat-icon>
+            Transparency & Masking
+          </label>
+          <div class="transparency-controls">
+            <div class="control-row">
+              <label>Opacity: {{ getOpacityPercentage() }}%</label>
+              <input type="range" 
+                     [(ngModel)]="canvasElements[selectedElement].opacity" 
+                     (change)="updateElement()" 
+                     min="0" max="1" step="0.01"
+                     class="slider">
+            </div>
+            
+            <div class="masking-options">
+              <button class="mask-btn" 
+                      (click)="enableTextMasking()" 
+                      [class.active]="canvasElements[selectedElement].maskEnabled"
+                      title="Use text as mask for images">
+                <mat-icon>layers</mat-icon>
+                <span>Text as Mask</span>
+              </button>
+              <button class="mask-btn" 
+                      (click)="addTextToFrame()" 
+                      title="Add text to image frame">
+                <mat-icon>crop_free</mat-icon>
+                <span>Text in Frame</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Brand Kit & Accessibility -->
+        <div class="property-group">
+          <label>
+            <mat-icon>branding_watermark</mat-icon>
+            Brand Kit & Accessibility
+          </label>
+          <div class="brand-accessibility">
+            <div class="brand-controls">
+              <button class="brand-btn" (click)="applyBrandFont()" title="Apply brand font">
+                <mat-icon>business</mat-icon>
+                <span>Brand Font</span>
+              </button>
+              <button class="brand-btn" (click)="saveToBrandKit()" title="Save to brand kit">
+                <mat-icon>bookmark_add</mat-icon>
+                <span>Save Style</span>
+              </button>
+            </div>
+            
+            <div class="accessibility-checker">
+              <button class="accessibility-btn" 
+                      (click)="checkContrastRatio()" 
+                      [class.warning]="contrastRatio < 4.5"
+                      [class.good]="contrastRatio >= 4.5">
+                <mat-icon>accessibility</mat-icon>
+                <span>Contrast: {{ contrastRatio ? contrastRatio.toFixed(1) : 'Check' }}</span>
+              </button>
+              <div class="accessibility-info" *ngIf="contrastRatio">
+                <span class="status" [class.pass]="contrastRatio >= 4.5" [class.fail]="contrastRatio < 4.5">
+                  {{ contrastRatio >= 4.5 ? 'WCAG AA ✓' : 'WCAG AA ✗' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="property-group">
+          <label>Legacy Text Effects</label>
           <div class="text-effects-tabs">
             <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'stroke'}" (click)="activeTextEffectTab = 'stroke'">Stroke</button>
             <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'shadow'}" (click)="activeTextEffectTab = 'shadow'">Shadow</button>

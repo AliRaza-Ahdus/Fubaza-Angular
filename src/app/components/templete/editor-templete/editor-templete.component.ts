@@ -65,6 +65,25 @@ interface CanvasElement {
   textShadow?: string;
   textOutline?: string;
   textType?: 'heading' | 'subheading' | 'body' | 'caption';
+  wordSpacing?: number;
+  
+  // Advanced text effects
+  shadowType?: 'none' | 'drop' | 'inner' | 'neon' | 'multiple';
+  outlineWidth?: number;
+  outlineColor?: string;
+  curveType?: 'none' | 'arc' | 'bridge' | 'bulge' | 'wave' | 'circle';
+  curveAmount?: number;
+  
+  // Animation properties
+  animation?: string;
+  animationDuration?: number;
+  animationDelay?: number;
+  animationLoop?: boolean;
+  
+  // Smart text properties
+  autoFit?: boolean;
+  textWrap?: boolean;
+  maskEnabled?: boolean;
   
   // Enhanced text effects
   textGradientType?: 'none' | 'linear' | 'radial';
@@ -157,6 +176,51 @@ interface UploadItem {
   source?: 'local';
 }
 
+interface FontItem {
+  name: string;
+  family: string;
+  category: 'sans-serif' | 'serif' | 'display' | 'handwriting' | 'monospace';
+  premium: boolean;
+  previewText?: string;
+  weights?: number[];
+  styles?: string[];
+  source: 'google' | 'custom' | 'system';
+}
+
+interface TypographyCombo {
+  id: string;
+  name: string;
+  headingFont: string;
+  bodyFont: string;
+  headingText: string;
+  bodyText: string;
+  category: string;
+}
+
+interface FontPairing {
+  id: string;
+  name: string;
+  primaryFont: string;
+  secondaryFont: string;
+  primarySample: string;
+  secondarySample: string;
+}
+
+interface TextEffectPreset {
+  id: string;
+  name: string;
+  type: 'shadow' | 'outline' | 'gradient' | 'neon' | 'glitch' | 'vintage';
+  properties: any;
+}
+
+interface TextAnimation {
+  type: string;
+  name: string;
+  icon: string;
+  duration: number;
+  easing?: string;
+}
+
 @Component({
   selector: 'app-editor-templete',
   templateUrl: './editor-templete.component.html',
@@ -197,6 +261,29 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   elementStartWidth: number = 0;
   elementStartHeight: number = 0;
   zoomLevel: number = 100;
+
+  // Advanced Text Properties
+  fontSearchQuery: string = '';
+  activeFontCategory: string = 'all';
+  filteredFonts: FontItem[] = [];
+  fontLibrary: FontItem[] = [];
+  typographyCombos: TypographyCombo[] = [];
+  fontPairingSuggestions: FontPairing[] = [];
+  textEffectPresets: TextEffectPreset[] = [];
+  textAnimations: TextAnimation[] = [];
+  
+  // Text UI State
+  activeColorTab: string = 'solid';
+  activeEffectTab: string = 'shadow';
+  contrastRatio: number = 0;
+  
+  // Color presets
+  colorPresets: string[] = [
+    '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
+    '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080',
+    '#FFC0CB', '#A52A2A', '#808080', '#000080', '#008000',
+    '#FF4500', '#DA70D6', '#32CD32', '#FFD700', '#40E0D0'
+  ];
   
   // Add a property to store the generated template JSON
   templateJsonData: any = null;
@@ -359,6 +446,15 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Initialize filtered canvas elements
     this.filteredCanvasElements = [...this.canvasElements];
+    
+    // Initialize text features
+    this.initializeFontLibrary();
+    this.initializeTypographyCombos();
+    this.initializeTextEffectPresets();
+    this.initializeTextAnimations();
+    
+    // Load Google Fonts
+    this.loadGoogleFonts();
     
     // Add window resize listener
     this.handleWindowResize();
@@ -532,10 +628,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Text element addition
-  addTextElement(textType: 'heading' | 'subheading' | 'body' | 'caption'): void {
-    this.addElementToCanvas('text', { textType });
-  }
+  // Text element addition - use the comprehensive method below
 
   setupCanvas(): void {
     if (this.canvasRef && this.canvasRef.nativeElement) {
@@ -3784,6 +3877,753 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.updateElement();
+  }
+
+  // ========================================
+  // ADVANCED TEXT FEATURES IMPLEMENTATION
+  // ========================================
+
+  // Font Library Initialization
+  initializeFontLibrary(): void {
+    this.fontLibrary = [
+      // System Fonts
+      { name: 'Arial', family: 'Arial, sans-serif', category: 'sans-serif', premium: false, source: 'system' },
+      { name: 'Helvetica', family: 'Helvetica, Arial, sans-serif', category: 'sans-serif', premium: false, source: 'system' },
+      { name: 'Times New Roman', family: '"Times New Roman", serif', category: 'serif', premium: false, source: 'system' },
+      { name: 'Georgia', family: 'Georgia, serif', category: 'serif', premium: false, source: 'system' },
+      { name: 'Courier New', family: '"Courier New", monospace', category: 'monospace', premium: false, source: 'system' },
+      
+      // Google Fonts (Popular ones)
+      { name: 'Roboto', family: '"Roboto", sans-serif', category: 'sans-serif', premium: false, source: 'google' },
+      { name: 'Open Sans', family: '"Open Sans", sans-serif', category: 'sans-serif', premium: false, source: 'google' },
+      { name: 'Montserrat', family: '"Montserrat", sans-serif', category: 'sans-serif', premium: false, source: 'google' },
+      { name: 'Lato', family: '"Lato", sans-serif', category: 'sans-serif', premium: false, source: 'google' },
+      { name: 'Poppins', family: '"Poppins", sans-serif', category: 'sans-serif', premium: false, source: 'google' },
+      { name: 'Source Sans Pro', family: '"Source Sans Pro", sans-serif', category: 'sans-serif', premium: false, source: 'google' },
+      
+      { name: 'Playfair Display', family: '"Playfair Display", serif', category: 'serif', premium: false, source: 'google' },
+      { name: 'Merriweather', family: '"Merriweather", serif', category: 'serif', premium: false, source: 'google' },
+      { name: 'Lora', family: '"Lora", serif', category: 'serif', premium: false, source: 'google' },
+      
+      { name: 'Dancing Script', family: '"Dancing Script", cursive', category: 'handwriting', premium: false, source: 'google' },
+      { name: 'Pacifico', family: '"Pacifico", cursive', category: 'handwriting', premium: false, source: 'google' },
+      { name: 'Great Vibes', family: '"Great Vibes", cursive', category: 'handwriting', premium: false, source: 'google' },
+      
+      { name: 'Bebas Neue', family: '"Bebas Neue", cursive', category: 'display', premium: false, source: 'google' },
+      { name: 'Oswald', family: '"Oswald", sans-serif', category: 'display', premium: false, source: 'google' },
+      { name: 'Anton', family: '"Anton", sans-serif', category: 'display', premium: false, source: 'google' },
+      
+      // Premium fonts (mock data)
+      { name: 'Proxima Nova', family: '"Proxima Nova", sans-serif', category: 'sans-serif', premium: true, source: 'custom' },
+      { name: 'Avenir', family: '"Avenir", sans-serif', category: 'sans-serif', premium: true, source: 'custom' },
+      { name: 'Brandon Grotesque', family: '"Brandon Grotesque", sans-serif', category: 'display', premium: true, source: 'custom' }
+    ];
+    
+    this.filteredFonts = [...this.fontLibrary];
+  }
+
+  // Typography Combos Initialization
+  initializeTypographyCombos(): void {
+    this.typographyCombos = [
+      {
+        id: '1',
+        name: 'Modern Clean',
+        headingFont: 'Montserrat',
+        bodyFont: 'Open Sans',
+        headingText: 'Bold Heading',
+        bodyText: 'Clean body text',
+        category: 'modern'
+      },
+      {
+        id: '2',
+        name: 'Classic Elegant',
+        headingFont: 'Playfair Display',
+        bodyFont: 'Lora',
+        headingText: 'Elegant Title',
+        bodyText: 'Readable content',
+        category: 'classic'
+      },
+      {
+        id: '3',
+        name: 'Tech Minimal',
+        headingFont: 'Roboto',
+        bodyFont: 'Source Sans Pro',
+        headingText: 'Tech Header',
+        bodyText: 'Minimal description',
+        category: 'tech'
+      },
+      {
+        id: '4',
+        name: 'Creative Bold',
+        headingFont: 'Bebas Neue',
+        bodyFont: 'Lato',
+        headingText: 'CREATIVE',
+        bodyText: 'Bold statement text',
+        category: 'creative'
+      },
+      {
+        id: '5',
+        name: 'Luxury Style',
+        headingFont: 'Playfair Display',
+        bodyFont: 'Montserrat',
+        headingText: 'Luxury Brand',
+        bodyText: 'Premium quality',
+        category: 'luxury'
+      }
+    ];
+  }
+
+  // Text Effect Presets
+  initializeTextEffectPresets(): void {
+    this.textEffectPresets = [
+      {
+        id: '1',
+        name: 'Drop Shadow',
+        type: 'shadow',
+        properties: {
+          textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+          shadowType: 'drop'
+        }
+      },
+      {
+        id: '2',
+        name: 'Neon Glow',
+        type: 'neon',
+        properties: {
+          textShadow: '0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff',
+          color: '#ffffff',
+          shadowType: 'neon'
+        }
+      },
+      {
+        id: '3',
+        name: 'Gold Gradient',
+        type: 'gradient',
+        properties: {
+          background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+          webkitBackgroundClip: 'text',
+          webkitTextFillColor: 'transparent',
+          textGradientType: 'linear',
+          textGradientColor1: '#FFD700',
+          textGradientColor2: '#FFA500'
+        }
+      },
+      {
+        id: '4',
+        name: 'Vintage',
+        type: 'vintage',
+        properties: {
+          color: '#8B4513',
+          textShadow: '2px 2px 0px #654321',
+          filter: 'sepia(0.5)'
+        }
+      },
+      {
+        id: '5',
+        name: 'Glitch',
+        type: 'glitch',
+        properties: {
+          textShadow: '2px 0 #ff0000, -2px 0 #00ffff',
+          animation: 'glitch 0.3s infinite'
+        }
+      }
+    ];
+  }
+
+  // Text Animations
+  initializeTextAnimations(): void {
+    this.textAnimations = [
+      { type: 'fadeIn', name: 'Fade In', icon: 'visibility', duration: 1 },
+      { type: 'slideUp', name: 'Slide Up', icon: 'keyboard_arrow_up', duration: 0.8 },
+      { type: 'slideDown', name: 'Slide Down', icon: 'keyboard_arrow_down', duration: 0.8 },
+      { type: 'slideLeft', name: 'Slide Left', icon: 'keyboard_arrow_left', duration: 0.8 },
+      { type: 'slideRight', name: 'Slide Right', icon: 'keyboard_arrow_right', duration: 0.8 },
+      { type: 'bounce', name: 'Bounce', icon: 'sports_volleyball', duration: 1.2 },
+      { type: 'pulse', name: 'Pulse', icon: 'favorite', duration: 1 },
+      { type: 'typewriter', name: 'Typewriter', icon: 'keyboard', duration: 2 },
+      { type: 'flipX', name: 'Flip X', icon: 'flip', duration: 0.6 },
+      { type: 'flipY', name: 'Flip Y', icon: 'flip', duration: 0.6 },
+      { type: 'rotateIn', name: 'Rotate In', icon: 'rotate_right', duration: 0.8 },
+      { type: 'zoomIn', name: 'Zoom In', icon: 'zoom_in', duration: 0.5 },
+      { type: 'elastic', name: 'Elastic', icon: 'timeline', duration: 1.5 }
+    ];
+  }
+
+  // Load Google Fonts dynamically
+  loadGoogleFonts(): void {
+    const googleFonts = this.fontLibrary
+      .filter(font => font.source === 'google')
+      .map(font => font.name.replace(/\s+/g, '+'))
+      .join('|');
+    
+    if (googleFonts) {
+      const link = document.createElement('link');
+      link.href = `https://fonts.googleapis.com/css2?family=${googleFonts}:wght@300;400;500;600;700&display=swap`;
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+  }
+
+  // Text Element Creation Methods
+  addTextElement(type: string): void {
+    const textDefaults = this.getTextDefaults(type);
+    
+    const newElement: CanvasElement = {
+      id: `text_${Date.now()}`,
+      type: 'text',
+      x: 100,
+      y: 100,
+      width: textDefaults.width,
+      height: textDefaults.height,
+      content: textDefaults.content,
+      fontFamily: textDefaults.fontFamily,
+      fontSize: textDefaults.fontSize,
+      fontWeight: textDefaults.fontWeight,
+      color: textDefaults.color,
+      textAlign: 'left',
+      textType: type as any,
+      lineHeight: 1.2,
+      letterSpacing: 0,
+      visible: true,
+      locked: false
+    };
+
+    this.canvasElements.push(newElement);
+    this.selectedElement = this.canvasElements.length - 1;
+    this.saveToHistory();
+    this.filterLayers();
+  }
+
+  private getTextDefaults(type: string): any {
+    const defaults: { [key: string]: any } = {
+      heading: {
+        content: 'Add a heading',
+        fontSize: 48,
+        fontWeight: 'bold',
+        fontFamily: 'Montserrat, sans-serif',
+        color: '#000000',
+        width: 400,
+        height: 60
+      },
+      subheading: {
+        content: 'Add a subheading',
+        fontSize: 32,
+        fontWeight: '600',
+        fontFamily: 'Montserrat, sans-serif',
+        color: '#333333',
+        width: 350,
+        height: 45
+      },
+      body: {
+        content: 'Add a little bit of body text',
+        fontSize: 16,
+        fontWeight: 'normal',
+        fontFamily: 'Open Sans, sans-serif',
+        color: '#666666',
+        width: 300,
+        height: 100
+      },
+      caption: {
+        content: 'Add a caption',
+        fontSize: 12,
+        fontWeight: 'normal',
+        fontFamily: 'Open Sans, sans-serif',
+        color: '#999999',
+        width: 200,
+        height: 20
+      }
+    };
+    
+    return defaults[type] || defaults['body'];
+  }
+
+  // Font Management Methods
+  filterFonts(): void {
+    let filtered = [...this.fontLibrary];
+    
+    // Filter by category
+    if (this.activeFontCategory !== 'all') {
+      filtered = filtered.filter(font => font.category === this.activeFontCategory);
+    }
+    
+    // Filter by search query
+    if (this.fontSearchQuery.trim()) {
+      const query = this.fontSearchQuery.toLowerCase();
+      filtered = filtered.filter(font => 
+        font.name.toLowerCase().includes(query) ||
+        font.category.toLowerCase().includes(query)
+      );
+    }
+    
+    this.filteredFonts = filtered;
+  }
+
+  setFontCategory(category: string): void {
+    this.activeFontCategory = category;
+    this.filterFonts();
+  }
+
+  applyFont(font: FontItem): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.fontFamily = font.family;
+    this.updateElement();
+    this.generateFontPairingSuggestions(font);
+  }
+
+  isSelectedFont(font: FontItem): boolean {
+    if (this.selectedElement === null) return false;
+    const element = this.canvasElements[this.selectedElement];
+    return element.type === 'text' && element.fontFamily === font.family;
+  }
+
+  getFontPreviewStyle(font: FontItem): any {
+    return {
+      fontFamily: font.family,
+      fontSize: '16px'
+    };
+  }
+
+  // Typography Combo Methods
+  applyTypographyCombo(combo: TypographyCombo): void {
+    // This would apply the combo to selected elements or create new elements
+    // Implementation depends on specific requirements
+    console.log('Applying typography combo:', combo);
+  }
+
+  getComboHeadingStyle(combo: TypographyCombo): any {
+    return {
+      fontFamily: `"${combo.headingFont}", sans-serif`,
+      fontSize: '18px',
+      fontWeight: 'bold',
+      marginBottom: '4px'
+    };
+  }
+
+  getComboBodyStyle(combo: TypographyCombo): any {
+    return {
+      fontFamily: `"${combo.bodyFont}", sans-serif`,
+      fontSize: '14px',
+      fontWeight: 'normal'
+    };
+  }
+
+  trackByCombo(index: number, combo: TypographyCombo): string {
+    return combo.id;
+  }
+
+  trackByFont(index: number, font: FontItem): string {
+    return font.name;
+  }
+
+  // Font Pairing Methods
+  generateFontPairingSuggestions(selectedFont: FontItem): void {
+    // Generate suggestions based on the selected font
+    const pairings = this.getFontPairings(selectedFont);
+    this.fontPairingSuggestions = pairings.slice(0, 5); // Show top 5
+  }
+
+  private getFontPairings(font: FontItem): FontPairing[] {
+    // Simplified pairing logic - in real app, this would be more sophisticated
+    const allPairings = [
+      {
+        id: '1',
+        name: 'Modern & Clean',
+        primaryFont: 'Montserrat',
+        secondaryFont: 'Open Sans',
+        primarySample: 'Bold Title',
+        secondarySample: 'Supporting text'
+      },
+      {
+        id: '2',
+        name: 'Classic & Elegant',
+        primaryFont: 'Playfair Display',
+        secondaryFont: 'Lora',
+        primarySample: 'Elegant Header',
+        secondarySample: 'Readable body'
+      }
+    ];
+    
+    return allPairings.filter(pairing => 
+      pairing.primaryFont === font.name || pairing.secondaryFont === font.name
+    );
+  }
+
+  applyFontPairing(pairing: FontPairing): void {
+    // Apply pairing to selected elements
+    console.log('Applying font pairing:', pairing);
+  }
+
+  getPairingPrimaryStyle(pairing: FontPairing): any {
+    return {
+      fontFamily: `"${pairing.primaryFont}", sans-serif`,
+      fontSize: '16px',
+      fontWeight: 'bold'
+    };
+  }
+
+  getPairingSecondaryStyle(pairing: FontPairing): any {
+    return {
+      fontFamily: `"${pairing.secondaryFont}", sans-serif`,
+      fontSize: '14px',
+      fontWeight: 'normal'
+    };
+  }
+
+  // Color Management Methods
+  applyColor(color: string): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.color = color;
+    this.updateElement();
+    this.calculateContrastRatio();
+  }
+
+  getCurrentFontStyle(): any {
+    if (this.selectedElement === null) return {};
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return {};
+    
+    return {
+      fontFamily: element.fontFamily,
+      fontSize: '18px',
+      fontWeight: element.fontWeight || 'normal'
+    };
+  }
+
+  // Font Size Adjustment
+  adjustFontSize(delta: number): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const currentSize = element.fontSize || 16;
+    const newSize = Math.max(8, Math.min(200, currentSize + delta));
+    element.fontSize = newSize;
+    this.updateElement();
+  }
+
+  // Text Effects Methods
+  applyTextEffect(effectType: string): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    switch (effectType) {
+      case 'shadow':
+        element.textShadow = '2px 2px 4px rgba(0,0,0,0.5)';
+        break;
+      case 'outline':
+        element.outlineWidth = 1;
+        element.outlineColor = '#000000';
+        break;
+      case 'gradient':
+        element.textGradientType = 'linear';
+        element.textGradientColor1 = '#FF6B6B';
+        element.textGradientColor2 = '#4ECDC4';
+        break;
+      case 'neon':
+        element.textShadow = '0 0 10px #00ffff, 0 0 20px #00ffff';
+        element.color = '#ffffff';
+        break;
+    }
+    
+    this.updateElement();
+  }
+
+  hasEffect(effectType: string): boolean {
+    if (this.selectedElement === null) return false;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return false;
+    
+    switch (effectType) {
+      case 'shadow':
+        return !!(element.textShadow && element.textShadow !== 'none');
+      case 'outline':
+        return !!(element.outlineWidth && element.outlineWidth > 0);
+      case 'gradient':
+        return !!(element.textGradientType && element.textGradientType !== 'none');
+      case 'neon':
+        return !!(element.textShadow && element.textShadow.includes('0 0'));
+      default:
+        return false;
+    }
+  }
+
+  applyTextEffectPreset(preset: TextEffectPreset): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    // Apply preset properties to element
+    Object.assign(element, preset.properties);
+    this.updateElement();
+  }
+
+  getEffectPreviewStyle(preset: TextEffectPreset): any {
+    const baseStyle = {
+      fontFamily: 'Arial, sans-serif',
+      fontSize: '24px',
+      fontWeight: 'bold',
+      display: 'inline-block',
+      padding: '4px 8px'
+    };
+    
+    return { ...baseStyle, ...preset.properties };
+  }
+
+  // Text Shadow Methods
+  updateTextShadow(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const shadowType = element.shadowType || 'none';
+    const color = element.shadowColor || 'rgba(0,0,0,0.5)';
+    const blur = element.shadowBlur || 4;
+    const offsetX = element.shadowOffsetX || 2;
+    const offsetY = element.shadowOffsetY || 2;
+    
+    switch (shadowType) {
+      case 'drop':
+        element.textShadow = `${offsetX}px ${offsetY}px ${blur}px ${color}`;
+        break;
+      case 'inner':
+        element.textShadow = `inset ${offsetX}px ${offsetY}px ${blur}px ${color}`;
+        break;
+      case 'neon':
+        element.textShadow = `0 0 ${blur}px ${color}, 0 0 ${blur * 2}px ${color}`;
+        break;
+      case 'multiple':
+        element.textShadow = `${offsetX}px ${offsetY}px ${blur}px ${color}, ${offsetX * 2}px ${offsetY * 2}px ${blur * 2}px ${color}`;
+        break;
+      default:
+        element.textShadow = 'none';
+    }
+    
+    this.updateElement();
+  }
+
+  // Text Outline Methods
+  updateTextOutline(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const width = element.outlineWidth || 0;
+    const color = element.outlineColor || '#000000';
+    
+    if (width > 0) {
+      element.textStrokeWidth = width;
+      element.textStrokeColor = color;
+    } else {
+      element.textStrokeWidth = 0;
+      element.textStrokeColor = 'transparent';
+    }
+    
+    this.updateElement();
+  }
+
+  // Text Curve Methods
+  updateTextCurve(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    // This would implement curved text functionality
+    // For now, we'll store the curve properties
+    this.updateElement();
+  }
+
+  // Text Animation Methods
+  applyTextAnimation(animation: TextAnimation): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.animation = animation.type;
+    element.animationDuration = animation.duration;
+    element.animationDelay = 0;
+    element.animationLoop = false;
+    
+    this.updateElement();
+  }
+
+  updateAnimation(): void {
+    if (this.selectedElement === null) return;
+    this.updateElement();
+  }
+
+  previewAnimation(): void {
+    if (this.selectedElement === null) return;
+    
+    // Trigger animation preview
+    const elementDOM = document.querySelector(`[data-element-index="${this.selectedElement}"]`);
+    if (elementDOM) {
+      elementDOM.classList.add('animate-preview');
+      setTimeout(() => {
+        elementDOM.classList.remove('animate-preview');
+      }, 3000);
+    }
+  }
+
+  // Smart Text Features
+  toggleAutoFit(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.autoFit = !element.autoFit;
+    this.updateElement();
+  }
+
+  toggleTextWrap(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.textWrap = !element.textWrap;
+    this.updateElement();
+  }
+
+  // Text Masking Methods
+  enableTextMasking(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    element.maskEnabled = !element.maskEnabled;
+    this.updateElement();
+  }
+
+  addTextToFrame(): void {
+    // Implementation for text as frame functionality
+    console.log('Adding text to frame');
+  }
+
+  // AI and Smart Features
+  openAIRewrite(): void {
+    // Open AI rewrite dialog
+    console.log('Opening AI rewrite tool');
+  }
+
+  openTranslateText(): void {
+    // Open translation dialog
+    console.log('Opening translation tool');
+  }
+
+  startVoiceToText(): void {
+    // Start voice to text functionality
+    console.log('Starting voice to text');
+  }
+
+  addHyperlink(): void {
+    // Add hyperlink to text
+    console.log('Adding hyperlink');
+  }
+
+  // Accessibility Methods
+  checkAccessibility(): void {
+    this.calculateContrastRatio();
+  }
+
+  checkContrastRatio(): void {
+    this.calculateContrastRatio();
+  }
+
+  private calculateContrastRatio(): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const textColor = element.color || '#000000';
+    const bgColor = element.backgroundColor || '#ffffff';
+    
+    this.contrastRatio = this.getContrastRatio(textColor, bgColor);
+  }
+
+  private getContrastRatio(color1: string, color2: string): number {
+    const rgb1 = this.hexToRgbObject(color1);
+    const rgb2 = this.hexToRgbObject(color2);
+    
+    const l1 = this.getLuminance(rgb1.r, rgb1.g, rgb1.b);
+    const l2 = this.getLuminance(rgb2.r, rgb2.g, rgb2.b);
+    
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  private getLuminance(r: number, g: number, b: number): number {
+    const [rs, gs, bs] = [r, g, b].map(c => {
+      c = c / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    
+    return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+  }
+
+  // Brand Kit Methods
+  applyBrandFont(): void {
+    // Apply brand font from brand kit
+    console.log('Applying brand font');
+  }
+
+  saveToBrandKit(): void {
+    // Save current text style to brand kit
+    console.log('Saving to brand kit');
+  }
+
+  // Custom Font Upload
+  triggerFontUpload(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.ttf,.otf,.woff,.woff2';
+    input.onchange = (e) => this.onFontFileSelected(e);
+    input.click();
+  }
+
+  onFontFileSelected(event: any): void {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    
+    // Handle font file upload
+    console.log('Font file selected:', file.name);
+    // In a real implementation, you would upload the font and add it to the font library
+  }
+
+  // Font Browser
+  openFontBrowser(): void {
+    // Open font browser dialog or expand font library
+    console.log('Opening font browser');
+  }
+
+  // Helper method for template
+  getOpacityPercentage(): number {
+    if (this.selectedElement !== null) {
+      return Math.round((this.canvasElements[this.selectedElement].opacity || 1) * 100);
+    }
+    return 100;
   }
 }
 
