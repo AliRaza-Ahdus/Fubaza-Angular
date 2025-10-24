@@ -526,7 +526,7 @@
           <!-- Canvas elements will be rendered here -->
           <div *ngFor="let element of canvasElements; let i = index" 
                class="canvas-element" 
-               [ngClass]="{'selected': selectedElement === i, 'locked': element.locked, 'hidden': element.hidden, 'multi-selected': selectedElements.length > 1 && selectedElements.includes(i)}" 
+               [ngClass]="getElementClasses(i)" 
                [attr.data-selection-index]="selectedElements.length > 1 && selectedElements.includes(i) ? (selectedElements.indexOf(i) + 1) : null"
                [attr.data-element-index]="i"
                [style.left.px]="element.x" 
@@ -538,6 +538,8 @@
                [style.opacity]="element.hidden ? 0 : (element.opacity || 1)"
                [style.pointer-events]="element.locked ? 'none' : 'auto'"
                [style.mix-blend-mode]="element.blendMode || 'normal'"
+               (mouseenter)="onElementMouseEnter(i)"
+               (mouseleave)="onElementMouseLeave()"
                (mousedown)="selectElement(i, $event)">
             
             <!-- Text element -->

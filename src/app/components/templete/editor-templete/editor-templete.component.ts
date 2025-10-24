@@ -1127,6 +1127,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     let newX = this.elementStartX + dx;
     let newY = this.elementStartY + dy;
 
+    // Apply snap-to-grid if enabled
+    if (this.snapToGrid) {
+      newX = Math.round(newX / this.gridSize) * this.gridSize;
+      newY = Math.round(newY / this.gridSize) * this.gridSize;
+    }
+
     // Constrain movement within canvas bounds if enabled
     if (this.constrainToCanvas) {
       const element = this.selectedElements.length > 0 ? this.canvasElements[this.selectedElements[0]] : this.canvasElements[this.selectedElement!];
