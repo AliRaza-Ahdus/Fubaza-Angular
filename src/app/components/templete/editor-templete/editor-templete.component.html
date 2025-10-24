@@ -586,7 +586,10 @@
              [style.width.px]="canvasWidth" 
              [style.height.px]="canvasHeight" 
              [ngClass]="{'show-grid': showGrid}"
-             [style.background]="getCanvasBackgroundStyle()">
+             [style.background]="getCanvasBackgroundStyle()"
+             (drop)="onDrop($event)" 
+             (dragover)="onDragOver($event)"
+             (click)="onCanvasClick($event)">
              
           <!-- Grid overlay for snap-to-grid -->
           <div class="grid-overlay" *ngIf="showGrid"
@@ -675,6 +678,7 @@
             <div *ngIf="element.type === 'line'" 
                  class="line-element"
                  [style.backgroundColor]="element.color"
+                 [style.width.px]="element.width"
                  [style.height.px]="element.lineWidth || 2"
                  [style.opacity]="element.opacity || 1">
             </div>

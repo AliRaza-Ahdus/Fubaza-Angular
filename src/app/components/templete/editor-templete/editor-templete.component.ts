@@ -510,7 +510,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Basic drag and drop functionality
   onDragStart(event: DragEvent, elementType: string, data?: any): void {
-    console.log('onDragStart called:', elementType, data);
     this.isDraggingElement = true;
     if (event.dataTransfer) {
       event.dataTransfer.setData('elementType', elementType);
@@ -526,7 +525,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   onDragOver(event: DragEvent): void {
-    console.log('onDragOver called');
     event.preventDefault();
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'copy';
@@ -534,12 +532,15 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   onDrop(event: DragEvent): void {
-    console.log('onDrop called');
     event.preventDefault();
     if (!event.dataTransfer) return;
+    
+    if (!this.canvasRef || !this.canvasRef.nativeElement) {
+      console.warn('Canvas reference not available');
+      return;
+    }
 
     const elementType = event.dataTransfer.getData('elementType') as 'text' | 'image' | 'shape' | 'line' | 'icon';
-    console.log('Element type:', elementType);
     if (!elementType) return;
 
     const elementDataString = event.dataTransfer.getData('elementData');
@@ -547,18 +548,21 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (elementDataString) {
       try {
         elementData = JSON.parse(elementDataString);
-        console.log('Element data:', elementData);
       } catch (e) {
         console.warn('Failed to parse element data:', e);
       }
     }
 
     const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
-    console.log('Canvas rect:', canvasRect);
-    console.log('Event clientX/Y:', event.clientX, event.clientY);
-    const x = event.clientX - canvasRect.left;
-    const y = event.clientY - canvasRect.top;
-    console.log('Calculated drop position:', x, y);
+    
+    // Calculate position relative to canvas, accounting for zoom and pan transforms
+    const rawX = event.clientX - canvasRect.left;
+    const rawY = event.clientY - canvasRect.top;
+    
+    // Account for zoom level and pan transforms
+    const scale = this.zoomLevel / 100;
+    const x = (rawX / scale) - (this.panX / scale);
+    const y = (rawY / scale) - (this.panY / scale);
 
     this.addElementToCanvas(elementType, elementData, x, y);
   }
@@ -875,10 +879,17 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     // Handle selection box
     if (this.isMultiSelecting && this.multiSelectStart) {
       const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
-      const currentX = event.clientX - canvasRect.left;
-      const currentY = event.clientY - canvasRect.top;
-      const startX = this.multiSelectStart.x - canvasRect.left;
-      const startY = this.multiSelectStart.y - canvasRect.top;
+      const rawCurrentX = event.clientX - canvasRect.left;
+      const rawCurrentY = event.clientY - canvasRect.top;
+      const rawStartX = this.multiSelectStart.x - canvasRect.left;
+      const rawStartY = this.multiSelectStart.y - canvasRect.top;
+      
+      // Account for zoom and pan transforms
+      const scale = this.zoomLevel / 100;
+      const currentX = (rawCurrentX / scale) - (this.panX / scale);
+      const currentY = (rawCurrentY / scale) - (this.panY / scale);
+      const startX = (rawStartX / scale) - (this.panX / scale);
+      const startY = (rawStartY / scale) - (this.panY / scale);
       
       this.selectionBox = {
         x: Math.min(startX, currentX),
@@ -895,8 +906,13 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       const dx = event.clientX - this.dragStartX;
       const dy = event.clientY - this.dragStartY;
       
-      let newX = this.elementStartX + dx;
-      let newY = this.elementStartY + dy;
+      // Account for zoom scale when dragging elements
+      const scale = this.zoomLevel / 100;
+      const scaledDx = dx / scale;
+      const scaledDy = dy / scale;
+      
+      let newX = this.elementStartX + scaledDx;
+      let newY = this.elementStartY + scaledDy;
       
       // Calculate smart guides if enabled and only one element is selected
       if (this.showSmartGuides && this.selectedElements.length <= 1 && this.selectedElement !== null) {
@@ -1228,6 +1244,22 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.lastSelectedElement = index;
+    
+    // Start dragging for the selected element
+    this.startElementDrag(index, event);
+  }
+
+  // Start dragging an element
+  startElementDrag(index: number, event: MouseEvent): void {
+    if (index < 0 || index >= this.canvasElements.length) return;
+    
+    this.isDragging = true;
+    this.dragStartX = event.clientX;
+    this.dragStartY = event.clientY;
+    this.elementStartX = this.canvasElements[index].x;
+    this.elementStartY = this.canvasElements[index].y;
+    this.elementStartWidth = this.canvasElements[index].width;
+    this.elementStartHeight = this.canvasElements[index].height;
   }
   
   // Duplicate an element
