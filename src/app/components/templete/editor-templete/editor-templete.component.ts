@@ -218,6 +218,40 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   uploads: UploadItem[] = [];
   showShapeSelector: boolean = false;
   
+  // Shape selector enhancements
+  shapeSearchQuery: string = '';
+  activeShapeCategory: string = 'all';
+  filteredShapes: any[] = [];
+  allShapes: any[] = [
+    // Basic Shapes
+    { type: 'rectangle', name: 'Rectangle', category: 'basic', icon: 'crop_square' },
+    { type: 'circle', name: 'Circle', category: 'basic', icon: 'radio_button_unchecked' },
+    { type: 'ellipse', name: 'Ellipse', category: 'basic', icon: 'radio_button_unchecked' },
+    { type: 'square', name: 'Square', category: 'basic', icon: 'crop_square' },
+    
+    // Geometric Shapes
+    { type: 'triangle', name: 'Triangle', category: 'geometric', icon: 'change_history' },
+    { type: 'diamond', name: 'Diamond', category: 'geometric', icon: 'diamond' },
+    { type: 'hexagon', name: 'Hexagon', category: 'geometric', icon: 'hexagon' },
+    { type: 'octagon', name: 'Octagon', category: 'geometric', icon: 'stop' },
+    { type: 'pentagon', name: 'Pentagon', category: 'geometric', icon: 'pentagon' },
+    { type: 'star', name: 'Star', category: 'geometric', icon: 'star' },
+    
+    // Lines & Arrows
+    { type: 'line', name: 'Line', category: 'lines', icon: 'show_chart' },
+    { type: 'arrow-right', name: 'Arrow', category: 'lines', icon: 'arrow_right' },
+    { type: 'arrow-left', name: 'Left Arrow', category: 'lines', icon: 'arrow_left' },
+    { type: 'arrow-up', name: 'Up Arrow', category: 'lines', icon: 'arrow_up' },
+    { type: 'arrow-down', name: 'Down Arrow', category: 'lines', icon: 'arrow_down' },
+    { type: 'double-arrow', name: 'Double Arrow', category: 'lines', icon: 'compare_arrows' },
+    
+    // Special Shapes
+    { type: 'heart', name: 'Heart', category: 'special', icon: 'favorite' },
+    { type: 'speech-bubble', name: 'Speech Bubble', category: 'special', icon: 'chat_bubble' },
+    { type: 'burst', name: 'Burst', category: 'special', icon: 'flash_on' },
+    { type: 'cloud', name: 'Cloud', category: 'special', icon: 'cloud' }
+  ];
+  
   // Dialogs
   showCustomSizeDialog: boolean = false;
   customWidth: number = 800;
@@ -311,6 +345,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Initialize pages
     this.pages[0] = this.canvasElements;
+    
+    // Initialize filtered shapes
+    this.filteredShapes = [...this.allShapes];
     
     // Add window resize listener
     this.handleWindowResize();
@@ -762,6 +799,70 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.saveToHistory();
   }
 
+  // Shape selector methods
+  setActiveCategory(category: string): void {
+    this.activeShapeCategory = category;
+    this.filterShapes();
+  }
+
+  filterShapes(): void {
+    let filtered = [...this.allShapes];
+    
+    // Filter by category
+    if (this.activeShapeCategory !== 'all') {
+      filtered = filtered.filter(shape => shape.category === this.activeShapeCategory);
+    }
+    
+    // Filter by search query
+    if (this.shapeSearchQuery.trim()) {
+      const query = this.shapeSearchQuery.toLowerCase().trim();
+      filtered = filtered.filter(shape => 
+        shape.name.toLowerCase().includes(query) || 
+        shape.type.toLowerCase().includes(query)
+      );
+    }
+    
+    this.filteredShapes = filtered;
+  }
+
+  clearShapeSearch(): void {
+    this.shapeSearchQuery = '';
+    this.filterShapes();
+  }
+
+  onShapeHover(shape: any, event: MouseEvent): void {
+    // Add visual feedback for shape hover
+    const target = event.target as HTMLElement;
+    target.style.transform = 'scale(1.05)';
+  }
+
+  onShapeLeave(): void {
+    // Reset hover effects
+    const hoveredElements = document.querySelectorAll('.shape-option:hover');
+    hoveredElements.forEach(el => {
+      (el as HTMLElement).style.transform = '';
+    });
+  }
+
+  getShapeIcon(shapeType: string): string {
+    const shape = this.allShapes.find(s => s.type === shapeType);
+    return shape ? shape.icon : 'crop_square';
+  }
+
+  getShapeIconClass(shapeType: string): string {
+    // Return CSS class for shape icon styling
+    return `shape-icon-${shapeType}`;
+  }
+
+  getShapeVisualClass(shapeType: string): string {
+    // Return CSS class for shape visual preview
+    return `shape-visual-${shapeType}`;
+  }
+
+  trackByShape(index: number, shape: any): string {
+    return shape.type;
+  }
+
   // Canvas click handler for selection box
   onCanvasClick(event: MouseEvent): void {
     // Only start selection box if clicking on empty canvas area
@@ -903,16 +1004,27 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (this.selectedElement === null && this.selectedElements.length === 0) return;
     
     if (this.isDragging) {
-      const dx = event.clientX - this.dragStartX;
-      const dy = event.clientY - this.dragStartY;
-      
-      // Account for zoom scale when dragging elements
+      // Get the canvas workspace element to calculate proper coordinates
+      const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
+      if (!canvasWorkspace) return;
+
+      const workspaceRect = canvasWorkspace.getBoundingClientRect();
+
+      // Convert screen coordinates to canvas workspace coordinates
+      const mouseX = event.clientX - workspaceRect.left;
+      const mouseY = event.clientY - workspaceRect.top;
+
+      // Account for zoom and pan transforms
       const scale = this.zoomLevel / 100;
-      const scaledDx = dx / scale;
-      const scaledDy = dy / scale;
-      
-      let newX = this.elementStartX + scaledDx;
-      let newY = this.elementStartY + scaledDy;
+      const canvasX = (mouseX / scale) - (this.panX / scale);
+      const canvasY = (mouseY / scale) - (this.panY / scale);
+
+      // Calculate the delta from the initial drag position
+      const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
+      const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
+
+      let newX = this.elementStartX + dx;
+      let newY = this.elementStartY + dy;
       
       // Calculate smart guides if enabled and only one element is selected
       if (this.showSmartGuides && this.selectedElements.length <= 1 && this.selectedElement !== null) {
@@ -942,8 +1054,24 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         this.canvasElements[this.selectedElement].y = newY;
       }
     } else if (this.isResizing && this.selectedElement !== null) {
-      const dx = event.clientX - this.dragStartX;
-      const dy = event.clientY - this.dragStartY;
+      // Get the canvas workspace element to calculate proper coordinates
+      const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
+      if (!canvasWorkspace) return;
+
+      const workspaceRect = canvasWorkspace.getBoundingClientRect();
+
+      // Convert screen coordinates to canvas workspace coordinates
+      const mouseX = event.clientX - workspaceRect.left;
+      const mouseY = event.clientY - workspaceRect.top;
+
+      // Account for zoom and pan transforms
+      const scale = this.zoomLevel / 100;
+      const canvasX = (mouseX / scale) - (this.panX / scale);
+      const canvasY = (mouseY / scale) - (this.panY / scale);
+
+      // Calculate the delta from the initial resize position
+      const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
+      const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
       
       const element = this.canvasElements[this.selectedElement];
       
@@ -1275,66 +1403,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.selectedElement = this.canvasElements.length - 1;
       this.saveToHistory();
     }
-  }
-
-  // Canvas operations
-  setCanvasSize(size: string): void {
-    switch (size) {
-      case 'square':
-        this.canvasWidth = 1080;
-        this.canvasHeight = 1080;
-        break;
-      case 'portrait':
-        this.canvasWidth = 1080;
-        this.canvasHeight = 1920;
-        break;
-      case 'landscape':
-        this.canvasWidth = 1920;
-        this.canvasHeight = 1080;
-        break;
-      case 'instagram':
-        this.canvasWidth = 1080;
-        this.canvasHeight = 1080;
-        break;
-      case 'facebook':
-        this.canvasWidth = 1200;
-        this.canvasHeight = 630;
-        break;
-      case 'twitter':
-        this.canvasWidth = 1200;
-        this.canvasHeight = 675;
-        break;
-      case 'story':
-        this.canvasWidth = 1080;
-        this.canvasHeight = 1920;
-        break;
-      case 'youtube':
-        this.canvasWidth = 1280;
-        this.canvasHeight = 720;
-        break;
-      case 'linkedin':
-        this.canvasWidth = 1200;
-        this.canvasHeight = 627;
-        break;
-      case 'custom':
-        this.openCustomSizeDialog();
-        return;
-      case 'small':
-        this.canvasWidth = 600;
-        this.canvasHeight = 400;
-        break;
-      case 'medium':
-        this.canvasWidth = 800;
-        this.canvasHeight = 600;
-        break;
-      case 'large':
-        this.canvasWidth = 1200;
-        this.canvasHeight = 800;
-        break;
-    }
-    
-    this.setupCanvas();
-    this.centerCanvas();
   }
 
   // Preview the template

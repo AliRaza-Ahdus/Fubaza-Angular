@@ -1061,6 +1061,121 @@ $space-4: 1rem; // 16px
       pointer-events: none;
     }
 
+    .shapes-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+
+      .shapes-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+        flex-shrink: 0;
+      }
+
+      .shapes-search {
+        flex: 1;
+        position: relative;
+        max-width: 200px;
+
+        mat-icon {
+          position: absolute;
+          left: 0.75rem;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 18px;
+          color: $text-muted;
+          pointer-events: none;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+          border: 2px solid rgba($border-color, 0.8);
+          border-radius: $radius-md;
+          background: rgba($panel-bg, 0.9);
+          color: $text-primary;
+          font-size: 0.875rem;
+          transition: all $transition-normal ease;
+
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+            background: $panel-bg;
+          }
+
+          &::placeholder {
+            color: $text-muted;
+          }
+        }
+      }
+    }
+
+    .shape-categories {
+      display: flex;
+      background: rgba($bg-secondary, 0.5);
+      border-radius: $radius-md;
+      padding: 0.25rem;
+      margin-bottom: 1.5rem;
+      gap: 0.25rem;
+      position: relative;
+      z-index: 1;
+
+      .category-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.75rem 0.5rem;
+        border: 2px solid transparent;
+        border-radius: $radius-md;
+        background: transparent;
+        color: $text-secondary;
+        cursor: pointer;
+        transition: all $transition-normal ease;
+        font-size: 0.75rem;
+        font-weight: 500;
+
+        &:hover {
+          background: rgba($panel-bg, 0.8);
+          color: $text-primary;
+        }
+
+        &.active {
+          background: $panel-bg;
+          border-color: $primary-color;
+          color: $primary-color;
+          box-shadow: 0 2px 8px rgba($primary-color, 0.2);
+
+          mat-icon {
+            color: $primary-color;
+            transform: scale(1.1);
+          }
+
+          span {
+            font-weight: 600;
+          }
+        }
+
+        mat-icon {
+          font-size: 16px;
+          transition: all $transition-normal ease;
+        }
+
+        span {
+          text-align: center;
+          transition: all $transition-normal ease;
+          letter-spacing: 0.025em;
+        }
+      }
+    }
+
     .shapes-title {
       font-size: 0.9rem;
       font-weight: 600;
@@ -1070,90 +1185,223 @@ $space-4: 1rem; // 16px
       z-index: 1;
     }
 
-    .shapes-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
+    .shapes-container {
       position: relative;
       z-index: 1;
 
-      @media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
-        grid-template-columns: repeat(3, 1fr);
+      .shapes-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+
+        @media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (min-width: $breakpoint-tablet) {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .shape-option {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          padding: 1rem;
+          border: 2px solid rgba($border-color, 0.7);
+          border-radius: $radius-md;
+          background: linear-gradient(135deg, $panel-bg 0%, rgba($bg-secondary, 0.5) 100%);
+          cursor: pointer;
+          transition: all $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+          min-height: 80px;
+
+          // Hover gradient overlay
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+              rgba($secondary-light, 0.2) 0%,
+              rgba($primary-50, 0.1) 100%
+            );
+            opacity: 0;
+            transition: opacity $transition-normal ease;
+            border-radius: inherit;
+          }
+
+          &:hover {
+            border-color: rgba($secondary-color, 0.6);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: $shadow-md;
+
+            &::before {
+              opacity: 1;
+            }
+
+            .shape-preview {
+              transform: scale(1.1);
+            }
+
+            mat-icon {
+              color: $secondary-color;
+              transform: scale(1.1) rotate(-5deg);
+              filter: drop-shadow(0 2px 4px rgba($secondary-color, 0.3));
+            }
+
+            .shape-label {
+              color: $secondary-dark;
+              font-weight: 600;
+            }
+          }
+
+          .shape-preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            position: relative;
+            transition: all $transition-normal ease;
+
+            .shape-icon {
+              mat-icon {
+                font-size: 24px;
+                width: 24px;
+                height: 24px;
+                color: $text-secondary;
+                transition: all $transition-normal ease;
+              }
+            }
+
+            .shape-visual {
+              position: absolute;
+              width: 32px;
+              height: 32px;
+              border-radius: 4px;
+              background: $primary-color;
+              opacity: 0.8;
+
+              // Shape-specific visual styles
+              &.shape-visual-circle {
+                border-radius: 50%;
+              }
+
+              &.shape-visual-triangle {
+                clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+              }
+
+              &.shape-visual-hexagon {
+                clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+              }
+
+              &.shape-visual-star {
+                clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+              }
+
+              &.shape-visual-heart {
+                background: $secondary-color;
+                clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+                transform: scale(0.8);
+              }
+            }
+          }
+
+          .shape-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: $text-primary;
+            text-align: center;
+            transition: all $transition-normal ease;
+            letter-spacing: 0.025em;
+            margin-top: 0.25rem;
+          }
+
+          .shape-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba($panel-bg, 0.95);
+            color: $text-primary;
+            padding: 0.5rem 0.75rem;
+            border-radius: $radius-md;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all $transition-normal ease;
+            box-shadow: $shadow-lg;
+            backdrop-filter: blur(8px);
+            z-index: 10;
+
+            &::after {
+              content: '';
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              border: 5px solid transparent;
+              border-top-color: rgba($panel-bg, 0.95);
+            }
+          }
+
+          &:hover .shape-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-5px);
+          }
+        }
       }
 
-      @media (min-width: $breakpoint-tablet) {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .shape-option {
+      .no-shapes {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
-        padding: 0.875rem;
-        border: 2px solid rgba($border-color, 0.7);
-        border-radius: $radius-md;
-        background: linear-gradient(135deg, $panel-bg 0%, rgba($bg-secondary, 0.5) 100%);
-        cursor: pointer;
-        transition: all $transition-normal cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        gap: 1rem;
+        padding: 2rem 1rem;
+        text-align: center;
 
-        // Hover gradient overlay
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(135deg,
-            rgba($secondary-light, 0.2) 0%,
-            rgba($primary-50, 0.1) 100%
-          );
-          opacity: 0;
-          transition: opacity $transition-normal ease;
-          border-radius: inherit;
+        mat-icon {
+          font-size: 48px;
+          color: $text-muted;
+          opacity: 0.5;
         }
 
-        &:hover {
-          border-color: rgba($secondary-color, 0.6);
-          transform: translateY(-2px) scale(1.03);
-          box-shadow: $shadow-md;
+        p {
+          font-size: 0.875rem;
+          color: $text-secondary;
+          margin: 0;
+        }
 
-          &::before {
-            opacity: 1;
+        .clear-search-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border: 2px solid rgba($border-color, 0.8);
+          border-radius: $radius-md;
+          background: transparent;
+          color: $text-secondary;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all $transition-normal ease;
+
+          &:hover {
+            border-color: $primary-color;
+            color: $primary-color;
+            background: rgba($primary-color, 0.05);
           }
 
           mat-icon {
-            color: $secondary-color;
-            transform: scale(1.1) rotate(-5deg);
-            filter: drop-shadow(0 2px 4px rgba($secondary-color, 0.3));
+            font-size: 18px;
           }
-
-          span {
-            color: $secondary-dark;
-            font-weight: 600;
-          }
-        }
-
-        mat-icon {
-          font-size: 22px;
-          width: 22px;
-          height: 22px;
-          color: $text-secondary;
-          transition: all $transition-normal ease;
-        }
-
-        span {
-          font-size: 0.75rem;
-          font-weight: 500;
-          color: $text-primary;
-          margin-top: 0.25rem;
-          text-align: center;
-          transition: all $transition-normal ease;
-          letter-spacing: 0.025em;
         }
       }
     }

@@ -122,171 +122,77 @@
         
         <!-- Shape Selector Expanded Panel -->
         <div class="shapes-panel" *ngIf="showShapeSelector">
-          <h3 class="shapes-title">Select Shape</h3>
-          
-          <!-- Basic Shapes -->
-          <div class="shape-category">
-            <h4 class="shape-category-title">Basic Shapes</h4>
-            <div class="shapes-grid">
-              <div class="shape-option" (click)="addShapeToCanvas('rectangle')">
-                <mat-icon>crop_square</mat-icon>
-                <span>Rectangle</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('circle')">
-                <mat-icon>radio_button_unchecked</mat-icon>
-                <span>Circle</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('ellipse')">
-                <mat-icon>radio_button_unchecked</mat-icon>
-                <span>Ellipse</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('square')">
-                <mat-icon>crop_square</mat-icon>
-                <span>Square</span>
-              </div>
+          <div class="shapes-header">
+            <h3 class="shapes-title">Select Shape</h3>
+            <div class="shapes-search">
+              <mat-icon>search</mat-icon>
+              <input type="text" 
+                     [(ngModel)]="shapeSearchQuery" 
+                     placeholder="Search shapes..." 
+                     (input)="filterShapes()">
             </div>
           </div>
           
-          <!-- Geometric Shapes -->
-          <div class="shape-category">
-            <h4 class="shape-category-title">Geometric</h4>
-            <div class="shapes-grid">
-              <div class="shape-option" (click)="addShapeToCanvas('triangle')">
-                <mat-icon>change_history</mat-icon>
-                <span>Triangle</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('diamond')">
-                <mat-icon>diamond</mat-icon>
-                <span>Diamond</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('hexagon')">
-                <mat-icon>hexagon</mat-icon>
-                <span>Hexagon</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('octagon')">
-                <mat-icon>stop</mat-icon>
-                <span>Octagon</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('pentagon')">
-                <mat-icon>pentagon</mat-icon>
-                <span>Pentagon</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('star')">
-                <mat-icon>star</mat-icon>
-                <span>Star</span>
+          <!-- Shape Categories Tabs -->
+          <div class="shape-categories">
+            <button class="category-tab" 
+                    [ngClass]="{'active': activeShapeCategory === 'all'}"
+                    (click)="setActiveCategory('all')">
+              <mat-icon>apps</mat-icon>
+              <span>All</span>
+            </button>
+            <button class="category-tab" 
+                    [ngClass]="{'active': activeShapeCategory === 'basic'}"
+                    (click)="setActiveCategory('basic')">
+              <mat-icon>crop_square</mat-icon>
+              <span>Basic</span>
+            </button>
+            <button class="category-tab" 
+                    [ngClass]="{'active': activeShapeCategory === 'geometric'}"
+                    (click)="setActiveCategory('geometric')">
+              <mat-icon>hexagon</mat-icon>
+              <span>Geometric</span>
+            </button>
+            <button class="category-tab" 
+                    [ngClass]="{'active': activeShapeCategory === 'lines'}"
+                    (click)="setActiveCategory('lines')">
+              <mat-icon>show_chart</mat-icon>
+              <span>Lines</span>
+            </button>
+            <button class="category-tab" 
+                    [ngClass]="{'active': activeShapeCategory === 'special'}"
+                    (click)="setActiveCategory('special')">
+              <mat-icon>star</mat-icon>
+              <span>Special</span>
+            </button>
+          </div>
+          <!-- Filtered Shapes Grid -->
+          <div class="shapes-container">
+            <div class="shapes-grid" *ngIf="filteredShapes.length > 0">
+              <div class="shape-option" 
+                   *ngFor="let shape of filteredShapes; trackBy: trackByShape"
+                   [attr.data-shape]="shape.type"
+                   (click)="addShapeToCanvas(shape.type)"
+                   (mouseenter)="onShapeHover(shape, $event)"
+                   (mouseleave)="onShapeLeave()">
+                <div class="shape-preview">
+                  <div class="shape-icon" [ngClass]="getShapeIconClass(shape.type)">
+                    <mat-icon>{{ getShapeIcon(shape.type) }}</mat-icon>
+                  </div>
+                  <div class="shape-visual" [ngClass]="getShapeVisualClass(shape.type)"></div>
+                </div>
+                <span class="shape-label">{{ shape.name }}</span>
+                <div class="shape-tooltip">{{ shape.name }}</div>
               </div>
             </div>
-          </div>
-          
-          <!-- Lines & Arrows -->
-          <div class="shape-category">
-            <h4 class="shape-category-title">Lines & Arrows</h4>
-            <div class="shapes-grid">
-              <div class="shape-option" (click)="addShapeToCanvas('line')">
-                <mat-icon>show_chart</mat-icon>
-                <span>Line</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('arrow-right')">
-                <mat-icon>arrow_right</mat-icon>
-                <span>Arrow</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('arrow-left')">
-                <mat-icon>arrow_left</mat-icon>
-                <span>Left Arrow</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('arrow-up')">
-                <mat-icon>arrow_up</mat-icon>
-                <span>Up Arrow</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('arrow-down')">
-                <mat-icon>arrow_down</mat-icon>
-                <span>Down Arrow</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('double-arrow')">
-                <mat-icon>compare_arrows</mat-icon>
-                <span>Double Arrow</span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Special Shapes -->
-          <div class="shape-category">
-            <h4 class="shape-category-title">Special</h4>
-            <div class="shapes-grid">
-              <div class="shape-option" (click)="addShapeToCanvas('heart')">
-                <mat-icon>favorite</mat-icon>
-                <span>Heart</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('speech-bubble')">
-                <mat-icon>chat_bubble</mat-icon>
-                <span>Speech Bubble</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('burst')">
-                <mat-icon>flash_on</mat-icon>
-                <span>Burst</span>
-              </div>
-              <div class="shape-option" (click)="addShapeToCanvas('cloud')">
-                <mat-icon>cloud</mat-icon>
-                <span>Cloud</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">Canvas Presets</h3>
-        <div class="canvas-presets">
-          <!-- Fixed Canvas Presets -->
-          <div class="preset-group">
-            <h4 class="preset-group-title">Standard Sizes</h4>
-            <div class="preset-buttons">
-              <button class="preset-btn" (click)="setCanvasSize('square')">
-                <span class="preset-name">Square</span>
-                <span class="preset-dimensions">1080×1080</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('portrait')">
-                <span class="preset-name">Portrait</span>
-                <span class="preset-dimensions">1080×1920</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('landscape')">
-                <span class="preset-name">Landscape</span>
-                <span class="preset-dimensions">1920×1080</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('custom')">
-                <span class="preset-name">Custom</span>
-                <span class="preset-dimensions">{{canvasWidth}}×{{canvasHeight}}</span>
-              </button>
-            </div>
-          </div>
-          
-          <!-- Social Media Presets -->
-          <div class="preset-group">
-            <h4 class="preset-group-title">Social Media</h4>
-            <div class="preset-buttons">
-              <button class="preset-btn" (click)="setCanvasSize('instagram')">
-                <span class="preset-name">Instagram Post</span>
-                <span class="preset-dimensions">1080×1080</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('story')">
-                <span class="preset-name">Instagram Story</span>
-                <span class="preset-dimensions">1080×1920</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('facebook')">
-                <span class="preset-name">Facebook Post</span>
-                <span class="preset-dimensions">1200×630</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('twitter')">
-                <span class="preset-name">Twitter Post</span>
-                <span class="preset-dimensions">1200×675</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('youtube')">
-                <span class="preset-name">YouTube Thumbnail</span>
-                <span class="preset-dimensions">1280×720</span>
-              </button>
-              <button class="preset-btn" (click)="setCanvasSize('linkedin')">
-                <span class="preset-name">LinkedIn Post</span>
-                <span class="preset-dimensions">1200×627</span>
+            
+            <!-- No Results Message -->
+            <div class="no-shapes" *ngIf="filteredShapes.length === 0 && shapeSearchQuery">
+              <mat-icon>search_off</mat-icon>
+              <p>No shapes found for "{{ shapeSearchQuery }}"</p>
+              <button class="clear-search-btn" (click)="clearShapeSearch()">
+                <mat-icon>clear</mat-icon>
+                Clear search
               </button>
             </div>
           </div>
