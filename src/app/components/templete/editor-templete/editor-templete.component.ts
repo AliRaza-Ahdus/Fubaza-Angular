@@ -357,6 +357,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     // Initialize filtered shapes
     this.filteredShapes = [...this.allShapes];
     
+    // Initialize filtered canvas elements
+    this.filteredCanvasElements = [...this.canvasElements];
+    
     // Add window resize listener
     this.handleWindowResize();
     window.addEventListener('resize', this.handleWindowResize.bind(this));
@@ -706,6 +709,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements.push(newElement);
     this.selectedElement = this.canvasElements.length - 1;
     this.saveToHistory();
+    this.filterLayers();
   }
 
   // Add shape to canvas - specialized method for shapes
@@ -1448,6 +1452,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.canvasElements.splice(index, 1);
       this.selectedElement = null;
       this.saveToHistory();
+      this.filterLayers();
     }
   }
   
@@ -1501,6 +1506,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.canvasElements.push(clone);
       this.selectedElement = this.canvasElements.length - 1;
       this.saveToHistory();
+      this.filterLayers();
     }
   }
 
@@ -2126,6 +2132,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.saveToHistory();
+    this.filterLayers();
   }
 
   selectAllElements(): void {
@@ -2258,6 +2265,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.selectedElements = [];
     
     this.saveToHistory();
+    this.filterLayers();
   }
 
   ungroupSelectedElements(): void {
@@ -2294,6 +2302,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.selectedElements = [];
     
     this.saveToHistory();
+    this.filterLayers();
   }
   
   // Element styling methods
@@ -2587,7 +2596,40 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   selectLayer(index: number, event: MouseEvent): void {
     event.stopPropagation();
-    this.selectedElement = index;
+    
+    // Handle shift-click for range selection
+    if (event.shiftKey && this.lastSelectedElement !== null) {
+      const startIndex = Math.min(this.lastSelectedElement, index);
+      const endIndex = Math.max(this.lastSelectedElement, index);
+      
+      // Clear previous selection and select range
+      this.selectedElements = [];
+      for (let i = startIndex; i <= endIndex; i++) {
+        this.selectedElements.push(i);
+      }
+      this.selectedElement = index;
+    } 
+    // Handle ctrl/cmd-click for multi-selection
+    else if (event.ctrlKey || event.metaKey) {
+      if (this.selectedElements.includes(index)) {
+        // Remove from selection
+        this.selectedElements = this.selectedElements.filter(i => i !== index);
+        if (this.selectedElement === index) {
+          this.selectedElement = this.selectedElements.length > 0 ? this.selectedElements[0] : null;
+        }
+      } else {
+        // Add to selection
+        this.selectedElements.push(index);
+        this.selectedElement = index;
+      }
+    } 
+    // Regular single selection
+    else {
+      this.selectedElement = index;
+      this.selectedElements = [];
+    }
+    
+    this.lastSelectedElement = index;
     
     // On mobile, automatically switch to properties panel when an element is selected
     if (window.innerWidth < 768) {
@@ -2655,6 +2697,137 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.updateElement();
   }
   
+  // Drag and drop layer reordering
+  draggedLayerIndex: number | null = null;
+  
+  // Layer isolation
+  isLayerIsolated: boolean = false;
+  isolatedLayers: number[] = [];
+  
+  // Layer search and filtering
+  layerSearchQuery: string = '';
+  filteredCanvasElements: CanvasElement[] = [];
+  
+  onLayerDragStart(event: DragEvent, index: number): void {
+    this.draggedLayerIndex = index;
+    event.dataTransfer!.effectAllowed = 'move';
+    event.dataTransfer!.setData('text/plain', index.toString());
+    
+    // Add visual feedback
+    const target = event.target as HTMLElement;
+    target.style.opacity = '0.5';
+  }
+  
+  onLayerDragOver(event: DragEvent, index: number): void {
+    event.preventDefault();
+    event.dataTransfer!.dropEffect = 'move';
+    
+    // Visual feedback for drop target
+    const target = event.target as HTMLElement;
+    const layerItem = target.closest('.layer-item') as HTMLElement;
+    if (layerItem && this.draggedLayerIndex !== null && this.draggedLayerIndex !== index) {
+      layerItem.style.borderTop = '2px solid #007acc';
+    }
+  }
+  
+  onLayerDrop(event: DragEvent, dropIndex: number): void {
+    event.preventDefault();
+    
+    const draggedIndex = parseInt(event.dataTransfer!.getData('text/plain'));
+    
+    if (draggedIndex === dropIndex || draggedIndex === null) return;
+    
+    // Reorder elements array
+    const draggedElement = this.canvasElements.splice(draggedIndex, 1)[0];
+    this.canvasElements.splice(dropIndex, 0, draggedElement);
+    
+    // Update selected element index if necessary
+    if (this.selectedElement === draggedIndex) {
+      this.selectedElement = dropIndex;
+    } else if (this.selectedElement !== null) {
+      if (draggedIndex < this.selectedElement && dropIndex >= this.selectedElement) {
+        this.selectedElement--;
+      } else if (draggedIndex > this.selectedElement && dropIndex <= this.selectedElement) {
+        this.selectedElement++;
+      } else if (this.selectedElement === dropIndex) {
+        this.selectedElement = draggedIndex;
+      }
+    }
+    
+    // Update selectedElements array
+    this.selectedElements = this.selectedElements.map(idx => {
+      if (idx === draggedIndex) return dropIndex;
+      if (draggedIndex < idx && dropIndex >= idx) return idx - 1;
+      if (draggedIndex > idx && dropIndex <= idx) return idx + 1;
+      if (idx === dropIndex) return draggedIndex;
+      return idx;
+    });
+    
+    this.saveToHistory();
+    this.updateElement();
+  }
+  
+  onLayerDragEnd(event: DragEvent): void {
+    this.draggedLayerIndex = null;
+    
+    // Remove visual feedback
+    const target = event.target as HTMLElement;
+    target.style.opacity = '';
+    
+    // Remove border styling from all layer items
+    const layerItems = document.querySelectorAll('.layer-item');
+    layerItems.forEach(item => {
+      (item as HTMLElement).style.borderTop = '';
+    });
+  }
+  
+  // Layer isolation functionality
+  isolateLayer(): void {
+    if (this.isLayerIsolated) {
+      // Exit isolation mode - show all layers
+      this.isLayerIsolated = false;
+      this.isolatedLayers.forEach(index => {
+        this.canvasElements[index].hidden = false;
+      });
+      this.isolatedLayers = [];
+    } else {
+      // Enter isolation mode - hide all except selected layers
+      const layersToIsolate = this.selectedElements.length > 0 ? this.selectedElements : 
+                             (this.selectedElement !== null ? [this.selectedElement] : []);
+      
+      if (layersToIsolate.length === 0) return;
+      
+      this.isLayerIsolated = true;
+      this.isolatedLayers = [...layersToIsolate];
+      
+      // Hide all layers except the isolated ones
+      this.canvasElements.forEach((element, index) => {
+        if (!layersToIsolate.includes(index)) {
+          element.hidden = true;
+        }
+      });
+    }
+    
+    this.updateElement();
+  }
+  
+  // Layer search and filtering
+  filterLayers(): void {
+    if (!this.layerSearchQuery.trim()) {
+      this.filteredCanvasElements = [...this.canvasElements];
+      return;
+    }
+    
+    const query = this.layerSearchQuery.toLowerCase().trim();
+    this.filteredCanvasElements = this.canvasElements.filter((element, index) => {
+      const layerName = element.layerName || this.getDefaultLayerName(element, index);
+      const elementType = element.type;
+      
+      return layerName.toLowerCase().includes(query) || 
+             elementType.toLowerCase().includes(query);
+    });
+  }
+  
   bringToFront(): void {
     if (this.selectedElement === null || this.selectedElement >= this.canvasElements.length - 1) return;
     
@@ -2662,6 +2835,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements.push(element);
     this.selectedElement = this.canvasElements.length - 1;
     this.saveToHistory();
+    this.filterLayers();
   }
   
   sendToBack(): void {
@@ -2671,6 +2845,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements.unshift(element);
     this.selectedElement = 0;
     this.saveToHistory();
+    this.filterLayers();
   }
   
   resetElementTransform(): void {

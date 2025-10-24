@@ -636,6 +636,10 @@
         <div class="layer-header">
           <h3 class="panel-title">Layers</h3>
           <div class="layer-actions">
+            <button class="layer-action-btn" title="Isolate Selected Layer" (click)="isolateLayer()" 
+                    [disabled]="selectedElement === null && selectedElements.length === 0">
+              <mat-icon>{{ isLayerIsolated ? 'visibility' : 'visibility_off' }}</mat-icon>
+            </button>
             <button class="layer-action-btn" title="Select All" (click)="selectAllElements()">
               <mat-icon>checklist</mat-icon>
             </button>
@@ -650,12 +654,27 @@
           </div>
         </div>
         
+        <div class="layer-search">
+          <input type="text" 
+                 placeholder="Search layers..." 
+                 [(ngModel)]="layerSearchQuery" 
+                 (input)="filterLayers()"
+                 class="layer-search-input">
+          <mat-icon class="search-icon">search</mat-icon>
+        </div>
+        
         <div class="layers-list">
           <div class="layer-item" 
-               *ngFor="let element of canvasElements; let i = index; trackBy: trackByElementId"
+               *ngFor="let element of filteredCanvasElements; let i = index; trackBy: trackByElementId"
                [ngClass]="{'selected': selectedElement === i || selectedElements.includes(i), 
                           'locked': element.locked, 
-                          'hidden': element.hidden}"
+                          'hidden': element.hidden,
+                          'dragging': draggedLayerIndex === i}"
+               [attr.draggable]="!element.locked"
+               (dragstart)="onLayerDragStart($event, i)"
+               (dragover)="onLayerDragOver($event, i)"
+               (drop)="onLayerDrop($event, i)"
+               (dragend)="onLayerDragEnd($event)"
                (click)="selectLayer(i, $event)"
                (dblclick)="startLayerRename(i)">
             

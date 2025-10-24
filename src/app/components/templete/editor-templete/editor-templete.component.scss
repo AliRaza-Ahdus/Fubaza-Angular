@@ -2990,6 +2990,42 @@ $space-4: 1rem; // 16px
       }
     }
 
+    .layer-search {
+      position: relative;
+      margin-bottom: 16px;
+
+      .layer-search-input {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 2px solid rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #374151;
+        font-size: 13px;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          background: white;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        &::placeholder {
+          color: #9ca3af;
+        }
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        color: #9ca3af;
+      }
+    }
+
     .layer-actions {
       display: flex;
       gap: 4px;
@@ -3047,6 +3083,13 @@ $space-4: 1rem; // 16px
 
         &.hidden {
           opacity: 0.5;
+        }
+
+        &.dragging {
+          opacity: 0.5;
+          transform: rotate(5deg);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          z-index: 1000;
         }
 
         .layer-content {
