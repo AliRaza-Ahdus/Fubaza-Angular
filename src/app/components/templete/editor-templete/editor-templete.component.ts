@@ -319,6 +319,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   elementHoverIndex: number | null = null;
   lastSelectedElement: number | null = null;
   
+  // Canvas constraints
+  constrainToCanvas: boolean = false;
+  
   // Clipboard functionality
   clipboardElements: CanvasElement[] = [];
   
@@ -331,6 +334,11 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // View helpers
   @ViewChild('backgroundUpload') backgroundUploadRef!: ElementRef;
   
+  // Enhanced drag behavior with requestAnimationFrame for smoother performance
+  private dragAnimationFrame: number | null = null;
+  private lastDragTime: number = 0;
+  private readonly dragThrottleMs: number = 16; // ~60fps
+
   // Drag state tracking
   isDraggingElement: boolean = false;
 
@@ -976,22 +984,20 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.panY = event.clientY - this.panStartY;
       return;
     }
-    
-    // Handle selection box
-    if (this.isMultiSelecting && this.multiSelectStart) {
+
+    // Handle selection box (disable when dragging)
+    if (this.isMultiSelecting && this.multiSelectStart && !this.isDragging) {
       const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
       const rawCurrentX = event.clientX - canvasRect.left;
       const rawCurrentY = event.clientY - canvasRect.top;
-      const rawStartX = this.multiSelectStart.x - canvasRect.left;
-      const rawStartY = this.multiSelectStart.y - canvasRect.top;
-      
+
       // Account for zoom and pan transforms
       const scale = this.zoomLevel / 100;
       const currentX = (rawCurrentX / scale) - (this.panX / scale);
       const currentY = (rawCurrentY / scale) - (this.panY / scale);
-      const startX = (rawStartX / scale) - (this.panX / scale);
-      const startY = (rawStartY / scale) - (this.panY / scale);
-      
+      const startX = (this.multiSelectStart.x - canvasRect.left) / scale - (this.panX / scale);
+      const startY = (this.multiSelectStart.y - canvasRect.top) / scale - (this.panY / scale);
+
       this.selectionBox = {
         x: Math.min(startX, currentX),
         y: Math.min(startY, currentY),
@@ -1000,59 +1006,26 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       };
       return;
     }
-    
+
     if (this.selectedElement === null && this.selectedElements.length === 0) return;
-    
+
     if (this.isDragging) {
-      // Get the canvas workspace element to calculate proper coordinates
-      const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
-      if (!canvasWorkspace) return;
-
-      const workspaceRect = canvasWorkspace.getBoundingClientRect();
-
-      // Convert screen coordinates to canvas workspace coordinates
-      const mouseX = event.clientX - workspaceRect.left;
-      const mouseY = event.clientY - workspaceRect.top;
-
-      // Account for zoom and pan transforms
-      const scale = this.zoomLevel / 100;
-      const canvasX = (mouseX / scale) - (this.panX / scale);
-      const canvasY = (mouseY / scale) - (this.panY / scale);
-
-      // Calculate the delta from the initial drag position
-      const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
-      const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
-
-      let newX = this.elementStartX + dx;
-      let newY = this.elementStartY + dy;
-      
-      // Calculate smart guides if enabled and only one element is selected
-      if (this.showSmartGuides && this.selectedElements.length <= 1 && this.selectedElement !== null) {
-        this.calculateSmartGuides(this.selectedElement, newX, newY);
-        
-        // Apply snapping if enabled
-        if (this.snapToGuides) {
-          const snappedPosition = this.getSnappedPosition(this.selectedElement, newX, newY);
-          newX = snappedPosition.x;
-          newY = snappedPosition.y;
-        }
+      // Throttle drag updates for smoother performance
+      const currentTime = Date.now();
+      if (currentTime - this.lastDragTime < this.dragThrottleMs) {
+        return;
       }
-      
-      // Move selected elements
-      if (this.selectedElements.length > 1) {
-        // Multi-selection: move all selected elements relative to their original positions
-        this.selectedElements.forEach(index => {
-          const element = this.canvasElements[index];
-          const originalDx = element.x - this.elementStartX;
-          const originalDy = element.y - this.elementStartY;
-          element.x = newX + originalDx;
-          element.y = newY + originalDy;
-        });
-      } else if (this.selectedElement !== null) {
-        // Single selection
-        this.canvasElements[this.selectedElement].x = newX;
-        this.canvasElements[this.selectedElement].y = newY;
+      this.lastDragTime = currentTime;
+
+      // Cancel any pending animation frame
+      if (this.dragAnimationFrame) {
+        cancelAnimationFrame(this.dragAnimationFrame);
       }
+
+      // Use requestAnimationFrame for smooth drag updates
+      this.dragAnimationFrame = requestAnimationFrame(() => {
+        this.performDragUpdate(event);
+      });
     } else if (this.isResizing && this.selectedElement !== null) {
       // Get the canvas workspace element to calculate proper coordinates
       const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
@@ -1072,9 +1045,10 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       // Calculate the delta from the initial resize position
       const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
       const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
-      
+
       const element = this.canvasElements[this.selectedElement];
-      
+
+      // Enhanced resize logic with aspect ratio constraints
       switch (this.resizeHandle) {
         case 'top-left':
           element.x = this.elementStartX + dx;
@@ -1097,7 +1071,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
           element.height = this.elementStartHeight + dy;
           break;
       }
-      
+
       // Maintain aspect ratio for images if locked
       if (element.type === 'image' && element.lockAspectRatio) {
         const aspectRatio = this.elementStartWidth / this.elementStartHeight;
@@ -1107,15 +1081,130 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
           element.width = element.height * aspectRatio;
         }
       }
-      
-      // Ensure minimum dimensions
+
+      // Ensure minimum dimensions with better constraints
       element.width = Math.max(20, element.width);
       element.height = Math.max(20, element.height);
+
+      // Update cursor based on resize handle
+      this.updateResizeCursor();
+    }
+  }
+
+  // Separate drag update method for better performance
+  private performDragUpdate(event: MouseEvent): void {
+    // Add dragging class to selected elements for visual feedback
+    if (this.selectedElements.length > 0) {
+      this.selectedElements.forEach(index => {
+        const element = document.querySelector(`[data-element-index="${index}"]`);
+        if (element) element.classList.add('dragging');
+      });
+    } else if (this.selectedElement !== null) {
+      const element = document.querySelector(`[data-element-index="${this.selectedElement}"]`);
+      if (element) element.classList.add('dragging');
+    }
+
+    // Get the canvas workspace element to calculate proper coordinates
+    const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
+    if (!canvasWorkspace) return;
+
+    const workspaceRect = canvasWorkspace.getBoundingClientRect();
+
+    // Convert screen coordinates to canvas workspace coordinates with improved precision
+    const mouseX = event.clientX - workspaceRect.left;
+    const mouseY = event.clientY - workspaceRect.top;
+
+    // Account for zoom and pan transforms with higher precision
+    const scale = this.zoomLevel / 100;
+    const canvasX = (mouseX / scale) - (this.panX / scale);
+    const canvasY = (mouseY / scale) - (this.panY / scale);
+
+    // Calculate the delta from the initial drag position with sub-pixel precision
+    const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
+    const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
+
+    // Apply smooth movement with optional constraints
+    let newX = this.elementStartX + dx;
+    let newY = this.elementStartY + dy;
+
+    // Constrain movement within canvas bounds if enabled
+    if (this.constrainToCanvas) {
+      const element = this.selectedElements.length > 0 ? this.canvasElements[this.selectedElements[0]] : this.canvasElements[this.selectedElement!];
+      const elementWidth = element.width || 0;
+      const elementHeight = element.height || 0;
+
+      newX = Math.max(0, Math.min(newX, this.canvasWidth - elementWidth));
+      newY = Math.max(0, Math.min(newY, this.canvasHeight - elementHeight));
+    }
+
+    // Calculate smart guides if enabled and only one element is selected
+    if (this.showSmartGuides && this.selectedElements.length <= 1 && this.selectedElement !== null) {
+      this.calculateSmartGuides(this.selectedElement, newX, newY);
+
+      // Apply snapping if enabled
+      if (this.snapToGuides) {
+        const snappedPosition = this.getSnappedPosition(this.selectedElement, newX, newY);
+        newX = snappedPosition.x;
+        newY = snappedPosition.y;
+      }
+    }
+
+    // Move selected elements with improved multi-selection handling
+    if (this.selectedElements.length > 1) {
+      // Multi-selection: move all selected elements relative to their original positions
+      this.selectedElements.forEach(index => {
+        const element = this.canvasElements[index];
+        const originalDx = element.x - this.elementStartX;
+        const originalDy = element.y - this.elementStartY;
+        element.x = newX + originalDx;
+        element.y = newY + originalDy;
+      });
+    } else if (this.selectedElement !== null) {
+      // Single selection with smooth movement
+      this.canvasElements[this.selectedElement].x = newX;
+      this.canvasElements[this.selectedElement].y = newY;
+    }
+
+    // Update cursor to indicate dragging
+    document.body.style.cursor = 'grabbing';
+  }
+
+  // Update cursor based on resize handle
+  updateResizeCursor(): void {
+    if (this.resizeHandle) {
+      switch (this.resizeHandle) {
+        case 'top-left':
+        case 'bottom-right':
+          document.body.style.cursor = 'nw-resize';
+          break;
+        case 'top-right':
+        case 'bottom-left':
+          document.body.style.cursor = 'ne-resize';
+          break;
+        case 'top':
+        case 'bottom':
+          document.body.style.cursor = 'ns-resize';
+          break;
+        case 'left':
+        case 'right':
+          document.body.style.cursor = 'ew-resize';
+          break;
+        default:
+          document.body.style.cursor = 'default';
+      }
+    } else {
+      document.body.style.cursor = 'default';
     }
   }
 
   @HostListener('document:mouseup')
   onMouseUp(): void {
+    // Cancel any pending animation frame
+    if (this.dragAnimationFrame) {
+      cancelAnimationFrame(this.dragAnimationFrame);
+      this.dragAnimationFrame = null;
+    }
+
     // Complete selection box selection
     if (this.isMultiSelecting && this.selectionBox) {
       this.completeSelectionBox();
@@ -1135,6 +1224,10 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Clear smart guides when dragging ends
     this.guideLines = [];
+    
+    // Remove dragging class from all elements
+    const draggedElements = document.querySelectorAll('.dragging');
+    draggedElements.forEach(el => el.classList.remove('dragging'));
   }
 
   // Complete selection box and select elements within it
@@ -2446,6 +2539,14 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   toggleAlignmentGuides(): void {
     this.showAlignmentGuides = !this.showAlignmentGuides;
+  }
+  
+  toggleSmartGuides(): void {
+    this.showSmartGuides = !this.showSmartGuides;
+  }
+  
+  toggleSnapToGuides(): void {
+    this.snapToGuides = !this.snapToGuides;
   }
   
   // Layer ordering

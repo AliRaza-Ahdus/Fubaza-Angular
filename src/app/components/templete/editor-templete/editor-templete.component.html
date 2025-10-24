@@ -437,8 +437,11 @@
             <button class="tool-btn" [ngClass]="{'active': showAlignmentGuides}" (click)="toggleAlignmentGuides()" title="Alignment Guides">
               <mat-icon>align_horizontal_center</mat-icon>
             </button>
-            <button class="tool-btn" [ngClass]="{'active': showRulers}" (click)="toggleRulers()" title="Rulers">
-              <mat-icon>straighten</mat-icon>
+            <button class="tool-btn" [ngClass]="{'active': showSmartGuides}" (click)="toggleSmartGuides()" title="Smart Guides">
+              <mat-icon>grid_goldenratio</mat-icon>
+            </button>
+            <button class="tool-btn" [ngClass]="{'active': snapToGuides}" (click)="toggleSnapToGuides()" title="Snap to Guides">
+              <mat-icon>magnet</mat-icon>
             </button>
           </div>
         </div>
@@ -510,10 +513,22 @@
             <div class="guide top-edge" *ngIf="showTopEdgeGuide"></div>
             <div class="guide bottom-edge" *ngIf="showBottomEdgeGuide"></div>
           </div>
+          
+          <!-- Smart guides -->
+          <div class="smart-guides" *ngIf="showSmartGuides && guideLines.length > 0">
+            <div class="guide-line" 
+                 *ngFor="let guide of guideLines" 
+                 [ngClass]="{'horizontal': guide.y !== undefined, 'vertical': guide.x !== undefined}"
+                 [style.left.px]="guide.x"
+                 [style.top.px]="guide.y">
+            </div>
+          </div>
           <!-- Canvas elements will be rendered here -->
           <div *ngFor="let element of canvasElements; let i = index" 
                class="canvas-element" 
-               [ngClass]="{'selected': selectedElement === i, 'locked': element.locked, 'hidden': element.hidden}" 
+               [ngClass]="{'selected': selectedElement === i, 'locked': element.locked, 'hidden': element.hidden, 'multi-selected': selectedElements.length > 1 && selectedElements.includes(i)}" 
+               [attr.data-selection-index]="selectedElements.length > 1 && selectedElements.includes(i) ? (selectedElements.indexOf(i) + 1) : null"
+               [attr.data-element-index]="i"
                [style.left.px]="element.x" 
                [style.top.px]="element.y"
                [style.width.px]="element.width"
