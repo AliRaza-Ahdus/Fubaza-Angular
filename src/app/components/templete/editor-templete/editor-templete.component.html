@@ -2144,16 +2144,21 @@
             <div class="resize-handle bottom-right" (mousedown)="startCropResize('bottom-right', $event)"></div>
           </div>
         </div>
-        <div class="crop-aspect-ratio">
-          <span>Aspect Ratio:</span>
-          <select [(ngModel)]="cropAspectRatio" (change)="applyCropAspectRatio()">
-            <option value="free">Free</option>
-            <option value="1:1">1:1 (Square)</option>
-            <option value="4:3">4:3</option>
-            <option value="16:9">16:9</option>
-            <option value="3:4">3:4 (Portrait)</option>
-            <option value="9:16">9:16 (Portrait)</option>
-          </select>
+        <div class="crop-controls">
+          <div class="crop-aspect-ratio">
+            <span>Aspect Ratio:</span>
+            <select [(ngModel)]="cropAspectRatio" (change)="applyCropAspectRatio()">
+              <option value="free">🆓 Free Form</option>
+              <option value="1:1">⬜ 1:1 (Square)</option>
+              <option value="4:3">📺 4:3 (Standard)</option>
+              <option value="16:9">📱 16:9 (Widescreen)</option>
+              <option value="3:4">📄 3:4 (Portrait)</option>
+              <option value="9:16">📱 9:16 (Mobile)</option>
+            </select>
+          </div>
+          <div class="crop-dimensions">
+            <span>Crop Size: {{cropWidth}} × {{cropHeight}} px</span>
+          </div>
         </div>
       </div>
       <div class="dialog-footer">

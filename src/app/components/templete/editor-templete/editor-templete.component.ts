@@ -3160,25 +3160,49 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   // Image editing functions
   cropImage(): void {
-    if (this.selectedElement === null || this.canvasElements[this.selectedElement].type !== 'image') return;
+    if (this.selectedElement === null) {
+      console.warn('No element selected for cropping');
+      return;
+    }
+
+    const selectedElement = this.canvasElements[this.selectedElement];
+    if (!selectedElement || selectedElement.type !== 'image') {
+      console.warn('Selected element is not an image');
+      return;
+    }
     
-    const selectedImage = this.canvasElements[this.selectedElement];
-    if (!selectedImage.src) {
+    if (!selectedElement.src) {
       console.error('No image source found');
       return;
     }
     
-    this.currentImageToCrop = { ...selectedImage };
-    this.cropWidth = this.currentImageToCrop.width / 2;
-    this.cropHeight = this.currentImageToCrop.height / 2;
-    this.cropTop = this.currentImageToCrop.height / 4;
-    this.cropLeft = this.currentImageToCrop.width / 4;
+    // Reset crop dialog values
+    this.currentImageToCrop = { ...selectedElement };
+    
+    // Set initial crop area to center of image (50% of image size)
+    const initialCropRatio = 0.6; // 60% of image
+    this.cropWidth = Math.max(100, this.currentImageToCrop.width * initialCropRatio);
+    this.cropHeight = Math.max(100, this.currentImageToCrop.height * initialCropRatio);
+    this.cropTop = (this.currentImageToCrop.height - this.cropHeight) / 2;
+    this.cropLeft = (this.currentImageToCrop.width - this.cropWidth) / 2;
+    this.cropAspectRatio = 'free';
+    
+    console.log('Opening crop dialog for image:', this.currentImageToCrop.layerName);
     this.showCropDialog = true;
   }
   
   closeCropDialog(): void {
     this.showCropDialog = false;
     this.currentImageToCrop = null;
+    
+    // Reset crop values
+    this.cropWidth = 200;
+    this.cropHeight = 200;
+    this.cropTop = 0;
+    this.cropLeft = 0;
+    this.cropAspectRatio = 'free';
+    
+    console.log('Crop dialog closed');
   }
   
   startCropResize(handle: string, event: MouseEvent): void {
@@ -3300,41 +3324,111 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
   
   applyCropAspectRatio(): void {
-    if (!this.cropAspectRatio || this.cropAspectRatio === 'free') return;
+    if (!this.cropAspectRatio || this.cropAspectRatio === 'free' || !this.currentImageToCrop) return;
     
     const [width, height] = this.cropAspectRatio.split(':').map(Number);
+    if (!width || !height) return;
+    
     const ratio = width / height;
+    const imageWidth = this.currentImageToCrop.width;
+    const imageHeight = this.currentImageToCrop.height;
     
-    // Adjust height based on current width
-    this.cropHeight = this.cropWidth / ratio;
+    // Calculate new dimensions maintaining aspect ratio
+    let newWidth = this.cropWidth;
+    let newHeight = newWidth / ratio;
     
-    // Make sure crop area stays within image bounds
-    if (this.cropTop + this.cropHeight > this.currentImageToCrop!.height) {
-      this.cropHeight = this.currentImageToCrop!.height - this.cropTop;
-      this.cropWidth = this.cropHeight * ratio;
+    // If height exceeds image bounds, adjust based on height
+    if (newHeight > imageHeight) {
+      newHeight = imageHeight;
+      newWidth = newHeight * ratio;
     }
+    
+    // If width exceeds image bounds, adjust based on width
+    if (newWidth > imageWidth) {
+      newWidth = imageWidth;
+      newHeight = newWidth / ratio;
+    }
+    
+    // Update crop dimensions
+    this.cropWidth = Math.round(newWidth);
+    this.cropHeight = Math.round(newHeight);
+    
+    // Ensure crop area stays within image bounds
+    if (this.cropLeft + this.cropWidth > imageWidth) {
+      this.cropLeft = imageWidth - this.cropWidth;
+    }
+    if (this.cropTop + this.cropHeight > imageHeight) {
+      this.cropTop = imageHeight - this.cropHeight;
+    }
+    
+    // Ensure crop area doesn't go negative
+    this.cropLeft = Math.max(0, this.cropLeft);
+    this.cropTop = Math.max(0, this.cropTop);
+    
+    // Validate final boundaries
+    this.validateCropBoundaries();
+    
+    console.log('Applied aspect ratio:', this.cropAspectRatio, 'New dimensions:', { width: this.cropWidth, height: this.cropHeight });
+  }
+
+  private validateCropBoundaries(): void {
+    if (!this.currentImageToCrop) return;
+
+    const maxWidth = this.currentImageToCrop.width;
+    const maxHeight = this.currentImageToCrop.height;
+
+    // Ensure crop area stays within image bounds
+    this.cropWidth = Math.max(10, Math.min(this.cropWidth, maxWidth));
+    this.cropHeight = Math.max(10, Math.min(this.cropHeight, maxHeight));
+    
+    // Adjust position if crop area exceeds bounds
+    if (this.cropLeft + this.cropWidth > maxWidth) {
+      this.cropLeft = maxWidth - this.cropWidth;
+    }
+    if (this.cropTop + this.cropHeight > maxHeight) {
+      this.cropTop = maxHeight - this.cropHeight;
+    }
+    
+    // Ensure position doesn't go negative
+    this.cropLeft = Math.max(0, this.cropLeft);
+    this.cropTop = Math.max(0, this.cropTop);
   }
   
   applyCrop(): void {
     if (!this.currentImageToCrop || this.selectedElement === null) {
+      console.warn('No image to crop or no element selected');
       this.closeCropDialog();
       return;
     }
     
     if (!this.currentImageToCrop.src) {
-      console.error('No image source found');
+      console.error('No image source found for cropping');
       this.closeCropDialog();
       return;
     }
+
+    // Validate crop dimensions
+    if (this.cropWidth <= 0 || this.cropHeight <= 0) {
+      console.error('Invalid crop dimensions');
+      return;
+    }
+
+    // Validate and fix boundaries before processing
+    this.validateCropBoundaries();
     
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
     if (!ctx) {
-      console.error('Failed to get canvas context');
+      console.error('Failed to get canvas context for cropping');
       this.closeCropDialog();
       return;
     }
+
+    console.log('Starting crop operation...', {
+      cropArea: { x: this.cropLeft, y: this.cropTop, width: this.cropWidth, height: this.cropHeight },
+      originalSize: { width: this.currentImageToCrop.width, height: this.currentImageToCrop.height }
+    });
     
     // Load the image
     const img = new Image();
@@ -3365,10 +3459,22 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       
       // Update the element with cropped image
       if (this.selectedElement !== null) {
-        this.canvasElements[this.selectedElement].src = croppedImageDataUrl;
+        const element = this.canvasElements[this.selectedElement];
+        element.src = croppedImageDataUrl;
+        
+        // Update element dimensions to match crop area
+        element.width = this.cropWidth;
+        element.height = this.cropHeight;
+        
+        // Update layer name to indicate it's cropped
+        if (!element.layerName?.includes('(Cropped)')) {
+          element.layerName = `${element.layerName || 'Image'} (Cropped)`;
+        }
         
         // Save to history
         this.updateElement();
+        
+        console.log('Image cropped successfully:', element.layerName);
       }
       
       this.closeCropDialog();
