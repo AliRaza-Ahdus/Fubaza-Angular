@@ -368,6 +368,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   // Mobile responsiveness
   activeMobilePanel: 'sidebar' | 'canvas' | 'properties' = 'canvas';
+  isMobileDevice: boolean = false;
+  screenWidth: number = 0;
+  screenHeight: number = 0;
   
   // Canvas background
   canvasBackground: CanvasBackground = {
@@ -432,6 +435,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
+    // Initialize responsive detection
+    this.initializeResponsiveDetection();
+    
     // Initialize with empty canvas
     this.resetCanvas();
     
@@ -617,16 +623,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.setupCanvas();
   }
 
-  // Mobile panel management
-  toggleMobilePanel(panel: 'sidebar' | 'canvas' | 'properties'): void {
-    this.activeMobilePanel = panel;
-    
-    // If properties panel is selected but no element is selected, 
-    // switch to canvas instead
-    if (panel === 'properties' && this.selectedElement === null) {
-      this.activeMobilePanel = 'canvas';
-    }
-  }
+  // Mobile panel management - removed duplicate, using enhanced version below
 
   // Text element addition - use the comprehensive method below
 
@@ -799,6 +796,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         break;
     }
 
+    // Set default layer name based on element type
+    if (!newElement.layerName) {
+      const elementCount = this.canvasElements.filter(el => el.type === elementType).length + 1;
+      newElement.layerName = this.getDefaultLayerName(newElement, elementCount - 1);
+    }
+
     this.canvasElements.push(newElement);
     this.selectedElement = this.canvasElements.length - 1;
     this.saveToHistory();
@@ -898,6 +901,10 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         // rectangle or any other shape
         break;
     }
+
+    // Set default layer name for shape
+    const shapeCount = this.canvasElements.filter(el => el.type === 'shape' && el.shape === shapeType).length + 1;
+    newElement.layerName = `${shapeType.charAt(0).toUpperCase() + shapeType.slice(1)} ${shapeCount}`;
 
     this.canvasElements.push(newElement);
     this.selectedElement = this.canvasElements.length - 1;
@@ -3848,7 +3855,11 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     alert('Brand palette loaded!');
   }
 
-  // Helper methods for color conversion
+  // Helper methods for color conversion and utilities
+  generateUniqueId(): string {
+    return 'element_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
   private hexToRgbObject(hex: string): { r: number; g: number; b: number } {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
@@ -3924,53 +3935,69 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Typography Combos Initialization
   initializeTypographyCombos(): void {
-    this.typographyCombos = [
-      {
-        id: '1',
-        name: 'Modern Clean',
-        headingFont: 'Montserrat',
-        bodyFont: 'Open Sans',
-        headingText: 'Bold Heading',
-        bodyText: 'Clean body text',
-        category: 'modern'
-      },
-      {
-        id: '2',
-        name: 'Classic Elegant',
-        headingFont: 'Playfair Display',
-        bodyFont: 'Lora',
-        headingText: 'Elegant Title',
-        bodyText: 'Readable content',
-        category: 'classic'
-      },
-      {
-        id: '3',
-        name: 'Tech Minimal',
-        headingFont: 'Roboto',
-        bodyFont: 'Source Sans Pro',
-        headingText: 'Tech Header',
-        bodyText: 'Minimal description',
-        category: 'tech'
-      },
-      {
-        id: '4',
-        name: 'Creative Bold',
-        headingFont: 'Bebas Neue',
-        bodyFont: 'Lato',
-        headingText: 'CREATIVE',
-        bodyText: 'Bold statement text',
-        category: 'creative'
-      },
-      {
-        id: '5',
-        name: 'Luxury Style',
-        headingFont: 'Playfair Display',
-        bodyFont: 'Montserrat',
-        headingText: 'Luxury Brand',
-        bodyText: 'Premium quality',
-        category: 'luxury'
-      }
-    ];
+    try {
+      this.typographyCombos = [
+        {
+          id: 'combo-1',
+          name: 'Modern Clean',
+          headingFont: 'Montserrat',
+          bodyFont: 'Open Sans',
+          headingText: 'Modern Heading',
+          bodyText: 'Clean and professional body text for modern designs',
+          category: 'modern'
+        },
+        {
+          id: 'combo-2',
+          name: 'Classic Elegant',
+          headingFont: 'Playfair Display',
+          bodyFont: 'Lora',
+          headingText: 'Elegant Title',
+          bodyText: 'Sophisticated and readable content with classic styling',
+          category: 'classic'
+        },
+        {
+          id: 'combo-3',
+          name: 'Tech Minimal',
+          headingFont: 'Roboto',
+          bodyFont: 'Source Sans Pro',
+          headingText: 'Tech Header',
+          bodyText: 'Clean minimal text for technical and digital content',
+          category: 'tech'
+        },
+        {
+          id: 'combo-4',
+          name: 'Creative Bold',
+          headingFont: 'Bebas Neue',
+          bodyFont: 'Lato',
+          headingText: 'CREATIVE IMPACT',
+          bodyText: 'Bold and expressive text for creative projects',
+          category: 'creative'
+        },
+        {
+          id: 'combo-5',
+          name: 'Luxury Style',
+          headingFont: 'Playfair Display',
+          bodyFont: 'Montserrat',
+          headingText: 'Luxury Brand',
+          bodyText: 'Premium quality text for luxury and high-end designs',
+          category: 'luxury'
+        },
+        {
+          id: 'combo-6',
+          name: 'Sports Dynamic',
+          headingFont: 'Bebas Neue',
+          bodyFont: 'Roboto',
+          headingText: 'SPORTS POWER',
+          bodyText: 'Dynamic text perfect for sports and action themes',
+          category: 'sports'
+        }
+      ];
+      
+      console.log('Typography combos initialized:', this.typographyCombos.length);
+    } catch (error) {
+      console.error('Error initializing typography combos:', error);
+      this.typographyCombos = [];
+    }
   }
 
   // Text Effect Presets
@@ -4148,14 +4175,16 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Filter by search query
     if (this.fontSearchQuery.trim()) {
-      const query = this.fontSearchQuery.toLowerCase();
+      const query = this.fontSearchQuery.toLowerCase().trim();
       filtered = filtered.filter(font => 
         font.name.toLowerCase().includes(query) ||
-        font.category.toLowerCase().includes(query)
+        font.category.toLowerCase().includes(query) ||
+        font.family?.toLowerCase().includes(query)
       );
     }
     
     this.filteredFonts = filtered;
+    console.log(`Font filter applied: ${filtered.length} fonts found (category: ${this.activeFontCategory}, query: "${this.fontSearchQuery}")`);
   }
 
   setFontCategory(category: string): void {
@@ -4169,9 +4198,34 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     const element = this.canvasElements[this.selectedElement];
     if (element.type !== 'text') return;
     
+    // Load Google Font if needed
+    if (font.source === 'google') {
+      this.loadGoogleFont(font.name);
+    }
+    
     element.fontFamily = font.family;
     this.updateElement();
     this.generateFontPairingSuggestions(font);
+    
+    console.log('Applied font:', font.name, 'to element:', element.layerName);
+  }
+
+  private loadGoogleFont(fontName: string): void {
+    // Check if font is already loaded
+    const fontId = `google-font-${fontName.replace(/\s+/g, '-').toLowerCase()}`;
+    if (document.getElementById(fontId)) {
+      return; // Font already loaded
+    }
+
+    // Create link element for Google Font
+    const link = document.createElement('link');
+    link.id = fontId;
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}:wght@300;400;500;600;700;800;900&display=swap`;
+    
+    document.head.appendChild(link);
+    
+    console.log('Loading Google Font:', fontName);
   }
 
   isSelectedFont(font: FontItem): boolean {
@@ -4189,30 +4243,106 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Typography Combo Methods
   applyTypographyCombo(combo: TypographyCombo): void {
-    // This would apply the combo to selected elements or create new elements
-    // Implementation depends on specific requirements
-    console.log('Applying typography combo:', combo);
+    if (!combo) {
+      console.error('No typography combo provided');
+      return;
+    }
+
+    // Create two text elements - heading and body
+    const canvasRect = document.querySelector('.canvas')?.getBoundingClientRect();
+    if (!canvasRect) {
+      console.error('Canvas element not found');
+      return;
+    }
+
+    // Add heading element
+    const headingElement: CanvasElement = {
+      id: this.generateUniqueId(),
+      type: 'text' as const,
+      content: combo.headingText,
+      x: 50,
+      y: 50,
+      width: 300,
+      height: 60,
+      fontSize: 32,
+      fontFamily: combo.headingFont,
+      fontWeight: 'bold',
+      color: '#333333',
+      textAlign: 'left' as const,
+      opacity: 1,
+      layerName: `${combo.name} Heading`
+    };
+
+    // Add body element below heading
+    const bodyElement: CanvasElement = {
+      id: this.generateUniqueId(),
+      type: 'text' as const,
+      content: combo.bodyText,
+      x: 50,
+      y: 120,
+      width: 400,
+      height: 80,
+      fontSize: 16,
+      fontFamily: combo.bodyFont,
+      fontWeight: 'normal',
+      color: '#666666',
+      textAlign: 'left' as const,
+      opacity: 1,
+      layerName: `${combo.name} Body`
+    };
+
+    // Add both elements to canvas
+    this.canvasElements.push(headingElement);
+    this.canvasElements.push(bodyElement);
+
+    // Select the heading element
+    this.selectedElement = this.canvasElements.length - 2;
+    
+    // Update layers display
+    this.filterLayers();
+
+    console.log('Applied typography combo:', combo.name);
   }
 
   getComboHeadingStyle(combo: TypographyCombo): any {
     return {
-      fontFamily: `"${combo.headingFont}", sans-serif`,
+      fontFamily: this.getFontFamilyWithFallback(combo.headingFont),
       fontSize: '18px',
       fontWeight: 'bold',
-      marginBottom: '4px'
+      marginBottom: '4px',
+      color: '#333333',
+      lineHeight: '1.2'
     };
   }
 
   getComboBodyStyle(combo: TypographyCombo): any {
     return {
-      fontFamily: `"${combo.bodyFont}", sans-serif`,
+      fontFamily: this.getFontFamilyWithFallback(combo.bodyFont),
       fontSize: '14px',
-      fontWeight: 'normal'
+      fontWeight: 'normal',
+      color: '#666666',
+      lineHeight: '1.4'
     };
   }
 
+  private getFontFamilyWithFallback(fontName: string): string {
+    // Ensure proper font family with system fallbacks
+    const fontFallbacks: { [key: string]: string } = {
+      'Montserrat': '"Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      'Open Sans': '"Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      'Playfair Display': '"Playfair Display", Georgia, serif',
+      'Lora': '"Lora", Georgia, serif',
+      'Roboto': '"Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      'Source Sans Pro': '"Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+      'Bebas Neue': '"Bebas Neue", Impact, sans-serif',
+      'Lato': '"Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    };
+
+    return fontFallbacks[fontName] || `"${fontName}", sans-serif`;
+  }
+
   trackByCombo(index: number, combo: TypographyCombo): string {
-    return combo.id;
+    return combo?.id || index.toString();
   }
 
   trackByFont(index: number, font: FontItem): string {
@@ -4624,6 +4754,135 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       return Math.round((this.canvasElements[this.selectedElement].opacity || 1) * 100);
     }
     return 100;
+  }
+
+  // Responsive detection and handling
+  initializeResponsiveDetection(): void {
+    this.updateScreenSize();
+    this.detectMobileDevice();
+    
+    // Listen for window resize
+    window.addEventListener('resize', () => {
+      this.updateScreenSize();
+      this.handleResponsiveLayout();
+    });
+
+    // Listen for orientation change
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        this.updateScreenSize();
+        this.handleResponsiveLayout();
+      }, 100);
+    });
+  }
+
+  private updateScreenSize(): void {
+    this.screenWidth = window.innerWidth;
+    this.screenHeight = window.innerHeight;
+  }
+
+  private detectMobileDevice(): boolean {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    this.isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase()) || 
+                         window.innerWidth <= 768;
+    return this.isMobileDevice;
+  }
+
+  private handleResponsiveLayout(): void {
+    // Adjust canvas size for mobile
+    if (this.screenWidth <= 576) {
+      // Mobile layout adjustments
+      this.adjustMobileLayout();
+    } else if (this.screenWidth <= 768) {
+      // Tablet layout adjustments
+      this.adjustTabletLayout();
+    } else {
+      // Desktop layout adjustments
+      this.adjustDesktopLayout();
+    }
+  }
+
+  private adjustMobileLayout(): void {
+    // Ensure mobile panel is active
+    if (this.activeMobilePanel === 'properties' && this.selectedElement === null) {
+      this.activeMobilePanel = 'canvas';
+    }
+    
+    // Optimize zoom for mobile
+    if (this.zoomLevel > 100) {
+      this.setZoom(75);
+    }
+  }
+
+  private adjustTabletLayout(): void {
+    // Tablet-specific adjustments
+    if (this.zoomLevel > 150) {
+      this.setZoom(100);
+    }
+  }
+
+  private adjustDesktopLayout(): void {
+    // Desktop-specific adjustments
+    // Reset to canvas view on desktop
+    this.activeMobilePanel = 'canvas';
+  }
+
+  // Enhanced mobile panel management
+  toggleMobilePanel(panel: 'sidebar' | 'canvas' | 'properties'): void {
+    if (this.activeMobilePanel === panel) {
+      // If already active, close it (go to canvas)
+      this.activeMobilePanel = 'canvas';
+    } else {
+      this.activeMobilePanel = panel;
+    }
+  }
+
+  // Touch gesture support for mobile
+  private touchStartX: number = 0;
+  private touchStartY: number = 0;
+
+  onTouchStart(event: TouchEvent): void {
+    if (event.touches.length === 1) {
+      this.touchStartX = event.touches[0].clientX;
+      this.touchStartY = event.touches[0].clientY;
+    }
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (event.touches.length === 1 && this.screenWidth <= 768) {
+      const touchCurrentX = event.touches[0].clientX;
+      const deltaX = touchCurrentX - this.touchStartX;
+      
+      // Swipe navigation for mobile
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          // Swipe right - go to previous panel
+          this.navigateMobilePanels('prev');
+        } else {
+          // Swipe left - go to next panel
+          this.navigateMobilePanels('next');
+        }
+        this.touchStartX = touchCurrentX;
+      }
+    }
+  }
+
+  private navigateMobilePanels(direction: 'prev' | 'next'): void {
+    const panels: ('sidebar' | 'canvas' | 'properties')[] = ['sidebar', 'canvas', 'properties'];
+    const currentIndex = panels.indexOf(this.activeMobilePanel);
+    
+    if (direction === 'next') {
+      const nextIndex = (currentIndex + 1) % panels.length;
+      this.activeMobilePanel = panels[nextIndex];
+    } else {
+      const prevIndex = currentIndex === 0 ? panels.length - 1 : currentIndex - 1;
+      this.activeMobilePanel = panels[prevIndex];
+    }
+
+    // Don't allow properties panel if no element selected
+    if (this.activeMobilePanel === 'properties' && this.selectedElement === null) {
+      this.navigateMobilePanels(direction);
+    }
   }
 }
 

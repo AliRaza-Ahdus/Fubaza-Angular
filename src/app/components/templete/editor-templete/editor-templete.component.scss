@@ -6,6 +6,10 @@ $breakpoint-tablet: 768px;
 $breakpoint-laptop: 992px;
 $breakpoint-desktop: 1200px;
 
+// Mobile navigation height for consistent spacing
+$mobile-nav-height: 60px;
+$header-height: 64px;
+
 // Premium Enhanced Color palette with sophisticated design system
 $primary-color: #6366f1; // Indigo-500 - Modern primary
 $primary-dark: #4338ca; // Indigo-600
@@ -279,6 +283,12 @@ $space-4: 1rem; // 16px
   overflow: hidden;
   color: $text-primary;
   background-color: $bg-color;
+  
+  // Ensure proper height calculations on mobile
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    padding-bottom: $mobile-nav-height; // Space for mobile navigation
+  }
 }
 
 // Mobile Navigation
@@ -292,7 +302,7 @@ $space-4: 1rem; // 16px
   backdrop-filter: blur(10px);
   border-top: 1px solid $border-color;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-  z-index: 100;
+  z-index: 150; // Higher than sidebar and properties panel
   justify-content: space-around;
   align-items: center;
   padding: 0 8px;
@@ -310,7 +320,7 @@ $space-4: 1rem; // 16px
     border: none;
     padding: 8px 12px;
     width: 33.33%;
-    height: 48px;
+    height: $mobile-nav-height;
     color: $text-secondary;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 12px;
@@ -321,23 +331,28 @@ $space-4: 1rem; // 16px
       content: '';
       position: absolute;
       top: 0;
-      left: -100%;
+      left: 0;
       width: 100%;
       height: 100%;
       background: $primary-gradient;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(0.8);
     }
 
     &.active {
       color: white;
+      background: transparent;
 
       &::before {
         opacity: 1;
+        transform: scale(1);
       }
 
-      transform: translateY(-2px) scale(1.05);
+      transform: translateY(-2px);
       animation: bounceIn $transition-bounce;
+      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
     }
 
     &:hover:not(.active) {
@@ -860,26 +875,88 @@ $space-4: 1rem; // 16px
 }
 
 // Main Layout
-.template-editor-main {
+.template-editor-body {
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
 
-  /* Mobile panel visibility */
+  /* Mobile panel visibility and positioning */
   @media (max-width: #{$breakpoint-tablet - 1px}) {
-    .template-sidebar,
+    position: relative;
+    
+    .sidebar,
     .canvas-container,
     .properties-panel {
-      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-100%);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
       &.mobile-active {
-        display: flex;
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+        z-index: 50;
       }
+    }
+    
+    .canvas-container.mobile-active {
+      z-index: 30;
+    }
+    
+    .properties-panel.mobile-active {
+      z-index: 40;
+      transform: translateX(0);
     }
   }
 }
 
+.template-editor-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 // Sidebar Styles
+.sidebar {
+  width: 320px;
+  height: 100%;
+  background: linear-gradient(145deg, $panel-bg 0%, rgba($bg-secondary, 0.8) 100%);
+  border-right: 1px solid rgba($border-color, 0.8);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  backdrop-filter: blur(12px);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Mobile positioning
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    position: absolute;
+    top: 64px; // Below header
+    left: 0;
+    right: 0;
+    bottom: 60px; // Above mobile navigation
+    width: 100%;
+    transform: translateX(-100%);
+    z-index: 20;
+    border-right: none;
+    border-bottom: 1px solid rgba($border-color, 0.8);
+
+    &.mobile-active {
+      transform: translateX(0);
+    }
+  }
+}
+
 .template-sidebar {
   width: 320px;
   height: 100%;
@@ -2534,10 +2611,28 @@ $space-4: 1rem; // 16px
   display: flex;
   flex-direction: column;
   background: #f8fafc;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
 
   &.mobile-active {
     transform: translateX(0);
+    z-index: 50; // Ensure it appears above other panels on mobile
+  }
+
+  // Better mobile responsiveness
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    position: absolute;
+    top: 64px; // Below header
+    left: 0;
+    right: 0;
+    bottom: 60px; // Above mobile navigation
+    transform: translateX(-100%);
+    z-index: 30;
+
+    &.mobile-active {
+      transform: translateX(0);
+    }
   }
 
   .canvas-toolbar {
@@ -2966,10 +3061,28 @@ $space-4: 1rem; // 16px
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.mobile-active {
     transform: translateX(0);
+  }
+
+  // Better mobile responsiveness
+  @media (max-width: #{$breakpoint-tablet - 1px}) {
+    position: absolute;
+    top: 64px; // Below header
+    left: 0;
+    right: 0;
+    bottom: 60px; // Above mobile navigation
+    width: 100%;
+    transform: translateX(100%);
+    z-index: 40;
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+    &.mobile-active {
+      transform: translateX(0);
+    }
   }
 
   .layer-management {
@@ -5285,50 +5398,124 @@ $space-4: 1rem; // 16px
   .typography-combos {
     display: grid;
     gap: 12px;
+    grid-template-columns: 1fr;
+
+    @media (min-width: $breakpoint-tablet) {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
 
     .combo-item {
       padding: 16px;
-      border: 1px solid $border-color;
+      border: 2px solid $border-color;
       border-radius: 12px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      background: $panel-bg;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(135deg, $panel-bg 0%, rgba($bg-secondary, 0.5) 100%);
+      position: relative;
+      overflow: hidden;
+
+      // Subtle background pattern
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent 49%, rgba($primary-color, 0.02) 50%, transparent 51%);
+        pointer-events: none;
+      }
 
       &:hover {
         border-color: $primary-color;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+        box-shadow: 0 8px 25px rgba($primary-color, 0.15);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, $panel-bg 0%, rgba($primary-light, 0.3) 100%);
+
+        .combo-preview {
+          .combo-heading {
+            color: $primary-color;
+          }
+        }
+
+        &::before {
+          background: linear-gradient(45deg, transparent 49%, rgba($primary-color, 0.05) 50%, transparent 51%);
+        }
+      }
+
+      &:active {
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.1);
       }
 
       .combo-preview {
-        margin-bottom: 8px;
+        margin-bottom: 12px;
+        position: relative;
+        z-index: 1;
 
         .combo-heading {
-          font-size: 16px;
+          font-size: 18px;
           font-weight: 700;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
           color: $text-primary;
+          transition: color 0.3s ease;
+          line-height: 1.2;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
 
         .combo-body {
-          font-size: 13px;
+          font-size: 14px;
           color: $text-secondary;
+          line-height: 1.4;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          -webkit-box-orient: vertical;
         }
       }
 
       .combo-info {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid rgba($border-color, 0.5);
+        padding-top: 8px;
+
         .combo-name {
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 600;
           color: $primary-color;
           display: block;
+          margin-bottom: 2px;
         }
 
         .combo-fonts {
           font-size: 11px;
           color: $text-muted;
-          margin-top: 2px;
+          font-style: italic;
         }
+      }
+    }
+
+    .combo-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      color: $text-muted;
+      font-size: 14px;
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        margin-bottom: 8px;
+        opacity: 0.6;
+        animation: pulse 2s infinite;
       }
     }
   }
@@ -6566,42 +6753,684 @@ $space-4: 1rem; // 16px
   100% { transform: scale(1); }
 }
 
-// Responsive design for text features
+// Enhanced Responsive Design for All Devices
+/* ========================================
+   MOBILE-FIRST RESPONSIVE DESIGN
+   ======================================== */
+
+// Mobile-only visibility controls
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: $breakpoint-tablet) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+@media (min-width: $breakpoint-tablet) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+// Mobile devices (320px - 576px)
+@media (max-width: $breakpoint-mobile) {
+  .template-editor-container {
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .template-editor-header {
+    flex-direction: column;
+    padding: 8px 12px;
+    gap: 8px;
+
+    .header-left {
+      width: 100%;
+      justify-content: space-between;
+
+      .app-logo {
+        h2 {
+          font-size: 18px;
+        }
+      }
+
+      .template-info {
+        flex-direction: column;
+        gap: 4px;
+
+        .template-name-input,
+        .template-type-select {
+          font-size: 14px;
+          padding: 6px 8px;
+        }
+      }
+    }
+
+    .header-actions {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .history-controls,
+      .export-btn-wrapper {
+        .history-btn,
+        .export-btn,
+        .preview-btn {
+          padding: 8px 12px;
+          font-size: 14px;
+
+          mat-icon {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+
+  .mobile-nav-buttons {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: $panel-bg;
+    border-top: 2px solid $border-color;
+    z-index: 1000;
+    padding: 8px 0;
+
+    button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      border: none;
+      background: transparent;
+      color: $text-muted;
+      font-size: 11px;
+      transition: all 0.3s ease;
+
+      mat-icon {
+        font-size: 20px;
+      }
+
+      &.active {
+        color: $primary-color;
+        background: rgba(99, 102, 241, 0.1);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .template-editor-body {
+    padding-bottom: 80px; // Space for mobile nav
+    height: calc(100vh - 120px);
+    overflow: hidden;
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 900;
+      background: $panel-bg;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      padding: 120px 16px 100px;
+
+      &.mobile-active {
+        transform: translateX(0);
+      }
+
+      .sidebar-section {
+        margin-bottom: 24px;
+
+        .section-title {
+          font-size: 16px;
+          margin-bottom: 12px;
+        }
+      }
+    }
+
+    .canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 800;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      padding: 120px 16px 100px;
+
+      &.mobile-active {
+        transform: translateX(0);
+      }
+
+      .canvas-workspace {
+        width: 100%;
+        height: calc(100vh - 220px);
+        overflow: auto;
+        border-radius: 8px;
+
+        .canvas {
+          margin: 0 auto;
+          min-width: 300px;
+          transform-origin: center top;
+        }
+      }
+
+      .canvas-controls {
+        position: absolute;
+        bottom: 100px;
+        left: 16px;
+        right: 16px;
+        background: $panel-bg;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid $border-color;
+
+        .zoom-controls {
+          display: flex;
+          justify-content: center;
+          gap: 8px;
+
+          button {
+            padding: 8px 12px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+
+    .properties-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 900;
+      background: $panel-bg;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      padding: 120px 16px 100px;
+
+      &.mobile-active {
+        transform: translateX(0);
+      }
+
+      .properties-content {
+        .property-group {
+          margin-bottom: 20px;
+          padding: 16px 12px;
+
+          label {
+            font-size: 14px;
+            margin-bottom: 12px;
+          }
+
+          .control-row {
+            margin-bottom: 12px;
+
+            label {
+              font-size: 12px;
+              margin-bottom: 6px;
+            }
+
+            input,
+            select {
+              font-size: 14px;
+              padding: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Text feature mobile optimizations
   .text-elements-grid {
     grid-template-columns: 1fr;
     gap: 8px;
 
     .text-element-item {
-      padding: 10px;
+      padding: 12px;
+      border-radius: 8px;
 
       .text-icon {
         width: 28px;
         height: 28px;
-        margin-right: 10px;
+        margin-right: 12px;
+      }
+
+      .element-preview {
+        .preview-text {
+          font-size: 13px;
+        }
+
+        .element-label {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  .font-categories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+
+    .category-btn {
+      font-size: 11px;
+      padding: 8px 6px;
+    }
+  }
+
+  .font-list {
+    max-height: 250px;
+
+    .font-item {
+      padding: 10px;
+
+      .font-preview {
+        font-size: 15px;
+      }
+
+      .font-info {
+        .font-name {
+          font-size: 11px;
+        }
+
+        .font-category {
+          font-size: 9px;
+        }
       }
     }
   }
 
   .effects-quick-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+
+    .effect-btn {
+      padding: 10px 6px;
+      font-size: 10px;
+
+      mat-icon {
+        font-size: 14px;
+      }
+    }
   }
 
   .animation-presets {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
+    gap: 8px;
+
+    .animation-btn {
+      padding: 10px 8px;
+      font-size: 11px;
+
+      mat-icon {
+        font-size: 16px;
+      }
+    }
   }
 
   .advanced-text-properties .property-group {
-    padding: 16px;
+    padding: 12px;
+    margin-bottom: 16px;
+
+    .color-tabs {
+      .color-tab {
+        font-size: 11px;
+        padding: 6px 8px;
+      }
+    }
+
+    .alignment-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+
+      .align-btn {
+        width: 36px;
+        height: 36px;
+
+        mat-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+// Small tablets (576px - 768px)
+@media (min-width: $breakpoint-mobile) and (max-width: $breakpoint-tablet) {
+  .template-editor-container {
+    padding: 0;
+  }
+
+  .template-editor-header {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    .header-left {
+      min-width: 300px;
+
+      .template-info {
+        .template-name-input,
+        .template-type-select {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .header-actions {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
+  .mobile-nav-buttons {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: $panel-bg;
+    border-top: 1px solid $border-color;
+    z-index: 1000;
+    padding: 10px 0;
+
+    button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 8px;
+      border: none;
+      background: transparent;
+      color: $text-muted;
+      font-size: 12px;
+      transition: all 0.3s ease;
+
+      mat-icon {
+        font-size: 22px;
+      }
+
+      &.active {
+        color: $primary-color;
+        background: rgba(99, 102, 241, 0.1);
+      }
+    }
+  }
+
+  .template-editor-body {
+    padding-bottom: 70px;
+    height: calc(100vh - 140px);
+
+    .sidebar {
+      width: 100vw;
+      padding: 140px 20px 80px;
+
+      &.mobile-active {
+        transform: translateX(0);
+      }
+    }
+
+    .canvas-container {
+      width: 100vw;
+      padding: 140px 20px 80px;
+
+      &.mobile-active {
+        transform: translateX(0);
+      }
+
+      .canvas-workspace {
+        height: calc(100vh - 240px);
+
+        .canvas {
+          min-width: 400px;
+        }
+      }
+    }
+
+    .properties-panel {
+      width: 100vw;
+      padding: 140px 20px 80px;
+
+      &.mobile-active {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  .text-elements-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .effects-quick-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .animation-presets {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .font-categories {
-    flex-direction: column;
-    gap: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 
     .category-btn {
+      flex: 1;
+      min-width: 80px;
+    }
+  }
+}
+
+// Large tablets (768px - 992px)
+@media (min-width: $breakpoint-tablet) and (max-width: $breakpoint-laptop) {
+  .mobile-nav-buttons {
+    display: none;
+  }
+
+  .template-editor-body {
+    display: grid;
+    grid-template-columns: 280px 1fr 300px;
+    gap: 0;
+    height: calc(100vh - 80px);
+
+    .sidebar {
+      position: relative;
+      transform: none;
       width: 100%;
-      text-align: center;
+      padding: 16px;
+      overflow-y: auto;
+      border-right: 1px solid $border-color;
+    }
+
+    .canvas-container {
+      position: relative;
+      transform: none;
+      width: 100%;
+      padding: 16px;
+      overflow: auto;
+
+      .canvas-workspace {
+        height: 100%;
+        
+        .canvas {
+          min-width: 500px;
+        }
+      }
+    }
+
+    .properties-panel {
+      position: relative;
+      transform: none;
+      width: 100%;
+      padding: 16px;
+      overflow-y: auto;
+      border-left: 1px solid $border-color;
+    }
+  }
+
+  .advanced-text-properties .property-group {
+    padding: 18px;
+
+    .alignment-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+// Desktop (992px and up)
+@media (min-width: $breakpoint-laptop) {
+  .mobile-nav-buttons {
+    display: none;
+  }
+
+  .template-editor-body {
+    display: grid;
+    grid-template-columns: 320px 1fr 360px;
+    gap: 0;
+    height: calc(100vh - 80px);
+
+    .sidebar {
+      position: relative;
+      transform: none;
+      width: 100%;
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 1px solid $border-color;
+    }
+
+    .canvas-container {
+      position: relative;
+      transform: none;
+      width: 100%;
+      padding: 20px;
+      overflow: auto;
+
+      .canvas-workspace {
+        height: 100%;
+        
+        .canvas {
+          min-width: 600px;
+        }
+      }
+    }
+
+    .properties-panel {
+      position: relative;
+      transform: none;
+      width: 100%;
+      padding: 20px;
+      overflow-y: auto;
+      border-left: 1px solid $border-color;
+    }
+  }
+
+  .text-elements-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .effects-quick-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .animation-presets {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .advanced-text-properties .property-group {
+    padding: 20px;
+
+    .alignment-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .color-presets {
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+    }
+  }
+}
+
+// Large Desktop (1200px and up)
+@media (min-width: $breakpoint-desktop) {
+  .template-editor-body {
+    grid-template-columns: 380px 1fr 400px;
+
+    .canvas-workspace {
+      .canvas {
+        min-width: 800px;
+      }
+    }
+  }
+
+  .text-elements-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .advanced-text-properties .property-group {
+    padding: 24px;
+  }
+}
+
+// Orientation handling
+@media (orientation: landscape) and (max-height: 600px) {
+  .template-editor-header {
+    padding: 8px 16px;
+
+    .app-logo h2 {
+      font-size: 16px;
+    }
+
+    .header-actions {
+      .history-btn,
+      .export-btn,
+      .preview-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+
+        mat-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .mobile-nav-buttons {
+    padding: 6px 0;
+
+    button {
+      padding: 6px 4px;
+      font-size: 10px;
+
+      mat-icon {
+        font-size: 18px;
+      }
     }
   }
 }

@@ -63,8 +63,8 @@
     </div>
   </div>
   
-  <div class="template-editor-main">
-    <div class="template-sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}">
+  <div class="template-editor-body">
+    <div class="sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}">
       <!-- Text Elements Section -->
       <div class="sidebar-section">
         <h3 class="sidebar-title">
@@ -121,10 +121,15 @@
 
         <!-- Typography Combos -->
         <div class="typography-section">
-          <h4 class="subsection-title">Typography Combos</h4>
+          <h4 class="subsection-title">
+            <mat-icon>font_download</mat-icon>
+            Typography Combos
+          </h4>
           <div class="typography-combos">
-            <div class="combo-item" *ngFor="let combo of typographyCombos; trackBy: trackByCombo" 
-                 (click)="applyTypographyCombo(combo)">
+            <div class="combo-item" 
+                 *ngFor="let combo of typographyCombos; trackBy: trackByCombo" 
+                 (click)="applyTypographyCombo(combo)"
+                 [title]="'Click to add ' + combo.name + ' typography combo to canvas'">
               <div class="combo-preview">
                 <div class="combo-heading" [ngStyle]="getComboHeadingStyle(combo)">{{ combo.headingText }}</div>
                 <div class="combo-body" [ngStyle]="getComboBodyStyle(combo)">{{ combo.bodyText }}</div>
@@ -133,6 +138,12 @@
                 <span class="combo-name">{{ combo.name }}</span>
                 <span class="combo-fonts">{{ combo.headingFont }} & {{ combo.bodyFont }}</span>
               </div>
+            </div>
+            
+            <!-- Loading state -->
+            <div *ngIf="typographyCombos.length === 0" class="combo-loading">
+              <mat-icon>hourglass_empty</mat-icon>
+              <span>Loading typography combos...</span>
             </div>
           </div>
         </div>
@@ -631,7 +642,9 @@
            (drop)="onDrop($event)" 
            (dragover)="onDragOver($event)"
            (mousedown)="startPan($event)"
-           (wheel)="onWheel($event)">
+           (wheel)="onWheel($event)"
+           (touchstart)="onTouchStart($event)"
+           (touchmove)="onTouchMove($event)">
            
         <!-- Rulers -->
         <div class="rulers" *ngIf="showRulers">
@@ -773,6 +786,18 @@
               <div class="resize-handle bottom-right" (mousedown)="startResize(i, 'bottom-right', $event)"></div>
             </div>
           </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Canvas Controls -->
+      <div class="canvas-controls mobile-only">
+        <div class="zoom-controls">
+          <button class="zoom-btn" (click)="setZoom(50)" title="50%">50%</button>
+          <button class="zoom-btn" (click)="setZoom(75)" title="75%">75%</button>
+          <button class="zoom-btn" (click)="setZoom(100)" title="100%">100%</button>
+          <button class="zoom-btn" (click)="fitToScreen()" title="Fit">
+            <mat-icon>fit_screen</mat-icon>
+          </button>
         </div>
       </div>
     </div>
