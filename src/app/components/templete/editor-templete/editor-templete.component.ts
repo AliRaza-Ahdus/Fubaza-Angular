@@ -3873,12 +3873,64 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     console.log('New share link generated');
   }
 
-  // Added missing method
+  // Shape selector methods
   openShapeSelector(): void {
     // Only open shape selector if not currently dragging
     if (!this.isDraggingElement) {
       this.showShapeSelector = !this.showShapeSelector;
     }
+  }
+
+  closeShapeSelector(): void {
+    this.showShapeSelector = false;
+  }
+
+  triggerImageUpload(): void {
+    // Create file input element
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = false;
+    
+    input.onchange = (event: any) => {
+      const file = event.target.files[0];
+      if (file) {
+        this.handleFileUpload(file);
+      }
+    };
+    
+    input.click();
+  }
+
+  private handleFileUpload(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const imageUrl = e.target.result;
+      
+      // Create image element on canvas using existing method
+      const elementId = Date.now().toString();
+      const newElement: CanvasElement = {
+        id: elementId,
+        type: 'image',
+        x: 100,
+        y: 100,
+        width: 200,
+        height: 150,
+        src: imageUrl,
+        layerName: `Image ${this.canvasElements.length + 1}`,
+        zIndex: this.canvasElements.length,
+        opacity: 1,
+        visible: true,
+        locked: false
+      };
+      
+      this.canvasElements.push(newElement);
+      this.selectedElement = this.canvasElements.length - 1;
+      this.updateElement();
+      this.filterLayers();
+    };
+    
+    reader.readAsDataURL(file);
   }
 
   // Color palette methods

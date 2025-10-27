@@ -258,101 +258,201 @@
         </div>
       </div>
       
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">Media & Shapes</h3>
-        <div class="elements-list">
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'image')" (dragend)="onDragEnd()">
-            <mat-icon>photo</mat-icon>
-            <span>Image</span>
+      <div class="sidebar-section media-shapes-section">
+        <h3 class="sidebar-title">
+          <mat-icon class="title-icon">design_services</mat-icon>
+          Media & Shapes
+        </h3>
+        
+        <!-- Modern Element Grid -->
+        <div class="modern-elements-grid">
+          <div class="element-card image-card" 
+               draggable="true" 
+               (dragstart)="onDragStart($event, 'image')" 
+               (dragend)="onDragEnd()"
+               (click)="triggerImageUpload()">
+            <div class="element-icon-container">
+              <mat-icon class="element-icon">add_photo_alternate</mat-icon>
+              <div class="icon-background"></div>
+            </div>
+            <div class="element-info">
+              <span class="element-name">Image</span>
+              <span class="element-desc">Upload or drag photos</span>
+            </div>
+            <div class="element-action">
+              <mat-icon>add</mat-icon>
+            </div>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'shape')" (dragend)="onDragEnd()" (click)="openShapeSelector()">
-            <mat-icon>shapes</mat-icon>
-            <span>Shape</span>
+
+          <div class="element-card shape-card" 
+               draggable="true" 
+               (dragstart)="onDragStart($event, 'shape')" 
+               (dragend)="onDragEnd()" 
+               (click)="openShapeSelector()">
+            <div class="element-icon-container">
+              <mat-icon class="element-icon">category</mat-icon>
+              <div class="icon-background shape-bg"></div>
+            </div>
+            <div class="element-info">
+              <span class="element-name">Shape</span>
+              <span class="element-desc">Rectangles, circles & more</span>
+            </div>
+            <div class="element-action">
+              <mat-icon>expand_more</mat-icon>
+            </div>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'line')" (dragend)="onDragEnd()">
-            <mat-icon>show_chart</mat-icon>
-            <span>Line</span>
+
+          <div class="element-card line-card" 
+               draggable="true" 
+               (dragstart)="onDragStart($event, 'line')" 
+               (dragend)="onDragEnd()">
+            <div class="element-icon-container">
+              <mat-icon class="element-icon">timeline</mat-icon>
+              <div class="icon-background line-bg"></div>
+            </div>
+            <div class="element-info">
+              <span class="element-name">Line</span>
+              <span class="element-desc">Draw connecting lines</span>
+            </div>
+            <div class="element-action">
+              <mat-icon>add</mat-icon>
+            </div>
           </div>
-          <div class="element-item" draggable="true" (dragstart)="onDragStart($event, 'icon')" (dragend)="onDragEnd()">
-            <mat-icon>star</mat-icon>
-            <span>Icon</span>
+
+          <div class="element-card icon-card" 
+               draggable="true" 
+               (dragstart)="onDragStart($event, 'icon')" 
+               (dragend)="onDragEnd()">
+            <div class="element-icon-container">
+              <mat-icon class="element-icon">emoji_symbols</mat-icon>
+              <div class="icon-background icon-bg"></div>
+            </div>
+            <div class="element-info">
+              <span class="element-name">Icon</span>
+              <span class="element-desc">Add symbols & icons</span>
+            </div>
+            <div class="element-action">
+              <mat-icon>add</mat-icon>
+            </div>
           </div>
         </div>
         
-        <!-- Shape Selector Expanded Panel -->
-        <div class="shapes-panel" *ngIf="showShapeSelector">
-          <div class="shapes-header">
-            <h3 class="shapes-title">Select Shape</h3>
-            <div class="shapes-search">
-              <mat-icon>search</mat-icon>
+        <!-- Enhanced Shape Selector Panel -->
+        <div class="modern-shapes-panel" *ngIf="showShapeSelector">
+          <div class="shapes-panel-header">
+            <div class="panel-title-section">
+              <mat-icon class="panel-icon">category</mat-icon>
+              <h3 class="shapes-title">Select Shape</h3>
+            </div>
+            <button class="close-panel-btn" (click)="closeShapeSelector()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          
+          <!-- Enhanced Search -->
+          <div class="modern-shapes-search">
+            <div class="search-input-container">
+              <mat-icon class="search-icon">search</mat-icon>
               <input type="text" 
+                     class="search-input"
                      [(ngModel)]="shapeSearchQuery" 
-                     placeholder="Search shapes..." 
+                     placeholder="Find the perfect shape..." 
                      (input)="filterShapes()">
+              <button class="clear-search" *ngIf="shapeSearchQuery" (click)="clearShapeSearch()">
+                <mat-icon>clear</mat-icon>
+              </button>
             </div>
           </div>
           
-          <!-- Shape Categories Tabs -->
-          <div class="shape-categories">
-            <button class="category-tab" 
-                    [ngClass]="{'active': activeShapeCategory === 'all'}"
+          <!-- Modern Shape Categories -->
+          <div class="modern-shape-categories">
+            <button class="modern-category-btn" 
+                    [class.active]="activeShapeCategory === 'all'"
                     (click)="setActiveCategory('all')">
-              <mat-icon>apps</mat-icon>
-              <span>All</span>
+              <mat-icon class="category-icon">apps</mat-icon>
+              <span class="category-label">All</span>
+              <div class="category-indicator"></div>
             </button>
-            <button class="category-tab" 
-                    [ngClass]="{'active': activeShapeCategory === 'basic'}"
+            
+            <button class="modern-category-btn" 
+                    [class.active]="activeShapeCategory === 'basic'"
                     (click)="setActiveCategory('basic')">
-              <mat-icon>crop_square</mat-icon>
-              <span>Basic</span>
+              <mat-icon class="category-icon">crop_square</mat-icon>
+              <span class="category-label">Basic</span>
+              <div class="category-indicator"></div>
             </button>
-            <button class="category-tab" 
-                    [ngClass]="{'active': activeShapeCategory === 'geometric'}"
+            
+            <button class="modern-category-btn" 
+                    [class.active]="activeShapeCategory === 'geometric'"
                     (click)="setActiveCategory('geometric')">
-              <mat-icon>hexagon</mat-icon>
-              <span>Geometric</span>
+              <mat-icon class="category-icon">hexagon</mat-icon>
+              <span class="category-label">Geometric</span>
+              <div class="category-indicator"></div>
             </button>
-            <button class="category-tab" 
-                    [ngClass]="{'active': activeShapeCategory === 'lines'}"
+            
+            <button class="modern-category-btn" 
+                    [class.active]="activeShapeCategory === 'lines'"
                     (click)="setActiveCategory('lines')">
-              <mat-icon>show_chart</mat-icon>
-              <span>Lines</span>
+              <mat-icon class="category-icon">timeline</mat-icon>
+              <span class="category-label">Lines</span>
+              <div class="category-indicator"></div>
             </button>
-            <button class="category-tab" 
-                    [ngClass]="{'active': activeShapeCategory === 'special'}"
+            
+            <button class="modern-category-btn" 
+                    [class.active]="activeShapeCategory === 'special'"
                     (click)="setActiveCategory('special')">
-              <mat-icon>star</mat-icon>
-              <span>Special</span>
+              <mat-icon class="category-icon">auto_awesome</mat-icon>
+              <span class="category-label">Special</span>
+              <div class="category-indicator"></div>
             </button>
           </div>
-          <!-- Filtered Shapes Grid -->
-          <div class="shapes-container">
-            <div class="shapes-grid" *ngIf="filteredShapes.length > 0">
-              <div class="shape-option" 
+          <!-- Modern Shapes Grid -->
+          <div class="modern-shapes-container">
+            <div class="modern-shapes-grid" *ngIf="filteredShapes.length > 0">
+              <div class="modern-shape-card" 
                    *ngFor="let shape of filteredShapes; trackBy: trackByShape"
                    [attr.data-shape]="shape.type"
                    (click)="addShapeToCanvas(shape.type)"
                    (mouseenter)="onShapeHover(shape, $event)"
                    (mouseleave)="onShapeLeave()">
-                <div class="shape-preview">
-                  <div class="shape-icon" [ngClass]="getShapeIconClass(shape.type)">
-                    <mat-icon>{{ getShapeIcon(shape.type) }}</mat-icon>
+                
+                <div class="shape-preview-container">
+                  <div class="shape-background-glow"></div>
+                  <div class="shape-icon-wrapper">
+                    <mat-icon class="shape-main-icon">{{ getShapeIcon(shape.type) }}</mat-icon>
                   </div>
-                  <div class="shape-visual" [ngClass]="getShapeVisualClass(shape.type)"></div>
+                  <div class="shape-visual-preview" [ngClass]="getShapeVisualClass(shape.type)"></div>
                 </div>
-                <span class="shape-label">{{ shape.name }}</span>
-                <div class="shape-tooltip">{{ shape.name }}</div>
+                
+                <div class="shape-info">
+                  <span class="shape-name">{{ shape.name }}</span>
+                  <span class="shape-category-badge">{{ shape.category }}</span>
+                </div>
+                
+                <div class="shape-hover-overlay">
+                  <mat-icon class="add-shape-icon">add_circle</mat-icon>
+                  <span class="add-text">Add to Canvas</span>
+                </div>
               </div>
             </div>
             
-            <!-- No Results Message -->
-            <div class="no-shapes" *ngIf="filteredShapes.length === 0 && shapeSearchQuery">
-              <mat-icon>search_off</mat-icon>
-              <p>No shapes found for "{{ shapeSearchQuery }}"</p>
-              <button class="clear-search-btn" (click)="clearShapeSearch()">
-                <mat-icon>clear</mat-icon>
-                Clear search
-              </button>
+            <!-- Enhanced No Results -->
+            <div class="modern-no-results" *ngIf="filteredShapes.length === 0 && shapeSearchQuery">
+              <div class="no-results-icon">
+                <mat-icon>search_off</mat-icon>
+              </div>
+              <h4 class="no-results-title">No shapes found</h4>
+              <p class="no-results-message">Try a different search term or browse all shapes</p>
+              <div class="no-results-actions">
+                <button class="clear-search-btn" (click)="clearShapeSearch()">
+                  <mat-icon>refresh</mat-icon>
+                  Clear search
+                </button>
+                <button class="browse-all-btn" (click)="setActiveCategory('all'); clearShapeSearch()">
+                  <mat-icon>apps</mat-icon>
+                  Browse all
+                </button>
+              </div>
             </div>
           </div>
         </div>
