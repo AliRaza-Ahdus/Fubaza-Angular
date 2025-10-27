@@ -1083,9 +1083,9 @@ $space-4: 1rem; // 16px
 
 // Enhanced Sidebar Styles - Modern Design 2.0
 .sidebar {
-  width: 340px; // Slightly wider for better content
+  width: 360px; // Slightly wider for better content
   height: 100%;
-  background: $bg-glass;
+  background: linear-gradient(145deg, rgba($bg-color, 0.95) 0%, rgba($bg-secondary, 0.9) 100%);
   backdrop-filter: blur(20px);
   border-right: 1px solid rgba($border-color, 0.3);
   display: flex;
@@ -1095,6 +1095,7 @@ $space-4: 1rem; // 16px
   box-shadow: $shadow-glass;
   position: relative;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 1.5rem 0;
   
   // Glass morphism enhancement
   &::before {
@@ -1145,9 +1146,15 @@ $space-4: 1rem; // 16px
     z-index: 20;
     border-right: none;
     border-bottom: 1px solid rgba($border-color, 0.8);
+    padding: 1rem 0;
 
     &.mobile-active {
       transform: translateX(0);
+    }
+    
+    .sidebar-section {
+      margin: 0 1rem 1.5rem;
+      padding: 1.5rem;
     }
   }
 }
@@ -1207,32 +1214,39 @@ $space-4: 1rem; // 16px
   }
 
   .sidebar-section {
-    padding: 2rem 1.5rem;
-    border-bottom: 1px solid rgba($border-color, 0.3);
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 2rem;
+    background: $bg-glass;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba($border-color, 0.2);
+    border-radius: 20px;
     position: relative;
     z-index: 2;
     transition: all 0.3s ease;
+    box-shadow: $shadow-sm;
 
     &:hover {
-      background: rgba($primary-50, 0.3);
+      background: rgba($primary-50, 0.4);
+      border-color: rgba($primary-color, 0.2);
+      box-shadow: $shadow-md;
     }
 
     &:last-child {
-      border-bottom: none;
-      padding-bottom: 2rem;
+      margin-bottom: 1rem;
     }
 
     @media (min-width: $breakpoint-tablet) {
-      padding: 2rem 2rem;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2.5rem;
     }
 
     .sidebar-title {
-      font-size: 0.95rem;
-      font-weight: 800;
+      font-size: 1rem;
+      font-weight: 700;
       color: $text-primary;
-      margin: 0 0 1.75rem 0;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      margin: 0 0 1.5rem 0;
+      text-transform: none;
+      letter-spacing: 0.02em;
       position: relative;
       display: flex;
       align-items: center;
@@ -1243,38 +1257,24 @@ $space-4: 1rem; // 16px
         content: '';
         flex: 1;
         height: 2px;
-        background: $primary-gradient;
+        background: linear-gradient(90deg, $primary-color 0%, rgba($primary-color, 0.2) 100%);
         border-radius: 1px;
-        opacity: 0.6;
-      }
-      align-items: center;
-      gap: 0.75rem;
-
-      // Modern accent line
-      &::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(90deg,
-          $primary-color 0%,
-          $primary-color 100%
-        );
-        border-radius: 0.5px;
       }
 
       // Icon indicator
       &::before {
         content: '';
-        width: 6px;
-        height: 6px;
-        background: $primary-color;
+        width: 8px;
+        height: 8px;
+        background: $primary-gradient;
         border-radius: 50%;
         flex-shrink: 0;
+        box-shadow: 0 2px 4px rgba($primary-color, 0.3);
       }
 
       @media (min-width: $breakpoint-tablet) {
-        margin: 0 0 1.75rem 0;
-        font-size: 0.9rem;
+        margin: 0 0 2rem 0;
+        font-size: 1.05rem;
       }
     }
   }
@@ -1870,46 +1870,64 @@ $space-4: 1rem; // 16px
   
   // Enhanced Media & Shapes Section
   .media-shapes-section {
+    background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($secondary-color, 0.02) 100%);
+    
     .sidebar-title {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
+      margin-bottom: 2rem;
       
       .title-icon {
         background: $primary-gradient;
         color: white;
-        border-radius: 8px;
-        padding: 4px;
-        font-size: 20px;
-        width: 28px;
-        height: 28px;
+        border-radius: 12px;
+        padding: 8px;
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: $shadow-md;
+        box-shadow: $shadow-lg;
+        animation: pulse 2s ease-in-out infinite;
       }
     }
     
     .modern-elements-grid {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 1rem;
-      margin-top: 1.5rem;
+      margin-top: 0;
+      
+      @media (min-width: $breakpoint-mobile) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+      }
+      
+      @media (min-width: $breakpoint-laptop) {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
     }
     
     .element-card {
       display: flex;
+      flex-direction: row;
       align-items: center;
       gap: 1rem;
-      padding: 1.25rem;
-      background: $bg-glass;
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba($border-color, 0.3);
-      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      background: linear-gradient(135deg, rgba(white, 0.9) 0%, rgba(white, 0.7) 100%);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba($border-color, 0.1);
+      border-radius: 20px;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       position: relative;
       overflow: hidden;
+      text-align: left;
+      min-height: 80px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       
       &::before {
         content: '';
@@ -1918,27 +1936,32 @@ $space-4: 1rem; // 16px
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, transparent 50%);
+        background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($secondary-color, 0.04) 100%);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: all 0.4s ease;
+        z-index: 1;
       }
       
       &:hover {
-        transform: translateY(-2px) scale(1.02);
-        border-color: rgba($primary-color, 0.4);
-        box-shadow: $shadow-lg;
+        transform: translateY(-4px) scale(1.02);
+        border-color: rgba($primary-color, 0.3);
+        box-shadow: 0 12px 40px rgba($primary-color, 0.15);
         
         &::before {
           opacity: 1;
         }
         
         .element-icon {
-          transform: scale(1.1);
+          transform: scale(1.15) rotate(5deg);
         }
         
         .element-action {
           opacity: 1;
-          transform: scale(1);
+          transform: scale(1.1) rotate(90deg);
+        }
+        
+        .element-info .element-name {
+          color: $primary-color;
         }
       }
       
@@ -1947,15 +1970,17 @@ $space-4: 1rem; // 16px
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 48px;
-        height: 48px;
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+        z-index: 2;
         
         .element-icon {
           font-size: 24px;
           color: white;
           position: relative;
-          z-index: 2;
-          transition: transform 0.3s ease;
+          z-index: 3;
+          transition: all 0.4s ease;
         }
         
         .icon-background {
@@ -1964,8 +1989,9 @@ $space-4: 1rem; // 16px
           left: 0;
           right: 0;
           bottom: 0;
-          border-radius: 12px;
+          border-radius: 16px;
           background: $primary-gradient;
+          box-shadow: 0 4px 15px rgba($primary-color, 0.3);
           
           &.shape-bg {
             background: $secondary-gradient;
@@ -1983,31 +2009,42 @@ $space-4: 1rem; // 16px
       
       .element-info {
         flex: 1;
+        z-index: 2;
         
         .element-name {
           display: block;
-          font-weight: 600;
-          font-size: 0.95rem;
+          font-weight: 700;
+          font-size: 1rem;
           color: $text-primary;
           margin-bottom: 0.25rem;
+          transition: color 0.3s ease;
         }
         
         .element-desc {
           display: block;
           font-size: 0.8rem;
-          color: $text-secondary;
-          line-height: 1.3;
+          color: $text-muted;
+          line-height: 1.4;
+          font-weight: 500;
         }
       }
       
       .element-action {
-        opacity: 0.7;
-        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: rgba($primary-color, 0.1);
+        border-radius: 8px;
+        opacity: 0.6;
+        transition: all 0.4s ease;
         transform: scale(0.9);
+        z-index: 2;
         
         mat-icon {
           color: $primary-color;
-          font-size: 20px;
+          font-size: 18px;
         }
       }
       
@@ -2040,14 +2077,14 @@ $space-4: 1rem; // 16px
   
   // Enhanced Shapes Panel
   .modern-shapes-panel {
-    margin-top: 1.5rem;
-    background: $bg-glass;
+    margin-top: 2rem;
+    background: linear-gradient(135deg, rgba(white, 0.95) 0%, rgba(white, 0.8) 100%);
     backdrop-filter: blur(15px);
-    border-radius: 20px;
-    border: 1px solid rgba($border-color, 0.2);
-    box-shadow: $shadow-glass;
+    border-radius: 24px;
+    border: 1px solid rgba($border-color, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     overflow: hidden;
-    animation: scaleIn 0.3s ease-out;
+    animation: slideUp 0.4s ease-out;
     
     .shapes-panel-header {
       display: flex;
@@ -2158,9 +2195,13 @@ $space-4: 1rem; // 16px
     
     .modern-shape-categories {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
       gap: 0.5rem;
       padding: 0 1.5rem 1rem;
+      
+      @media (max-width: $breakpoint-mobile) {
+        grid-template-columns: repeat(3, 1fr);
+      }
       
       .modern-category-btn {
         display: flex;
@@ -2231,8 +2272,12 @@ $space-4: 1rem; // 16px
       
       .modern-shapes-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 1rem;
+        
+        @media (max-width: $breakpoint-mobile) {
+          grid-template-columns: repeat(2, 1fr);
+        }
         
         .modern-shape-card {
           position: relative;
