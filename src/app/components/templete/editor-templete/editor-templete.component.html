@@ -305,7 +305,8 @@
           <div class="element-card line-card" 
                draggable="true" 
                (dragstart)="onDragStart($event, 'line')" 
-               (dragend)="onDragEnd()">
+               (dragend)="onDragEnd()"
+               (click)="addElementToCanvas('line')">
             <div class="element-icon-container">
               <mat-icon class="element-icon">timeline</mat-icon>
               <div class="icon-background line-bg"></div>
@@ -322,7 +323,8 @@
           <div class="element-card icon-card" 
                draggable="true" 
                (dragstart)="onDragStart($event, 'icon')" 
-               (dragend)="onDragEnd()">
+               (dragend)="onDragEnd()"
+               (click)="addElementToCanvas('icon')">
             <div class="element-icon-container">
               <mat-icon class="element-icon">emoji_symbols</mat-icon>
               <div class="icon-background icon-bg"></div>

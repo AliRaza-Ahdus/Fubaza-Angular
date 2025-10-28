@@ -975,6 +975,31 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     return shape.type;
   }
 
+  // Line Element Creation Methods
+  addLineElement(): void {
+    this.addElementToCanvas('line');
+  }
+
+  // Icon Element Creation Methods  
+  addIconElement(): void {
+    this.addElementToCanvas('icon');
+  }
+
+  // Mobile Panel Management
+  setMobilePanel(panel: 'sidebar' | 'canvas' | 'properties'): void {
+    this.activeMobilePanel = panel;
+    
+    // If switching to properties but no element is selected, switch to canvas instead
+    if (panel === 'properties' && this.selectedElement === null) {
+      this.activeMobilePanel = 'canvas';
+    }
+  }
+
+  // Shape Selector Toggle
+  toggleShapeSelector(): void {
+    this.showShapeSelector = !this.showShapeSelector;
+  }
+
   // Canvas click handler for selection box
   onCanvasClick(event: MouseEvent): void {
     // Only start selection box if clicking on empty canvas area

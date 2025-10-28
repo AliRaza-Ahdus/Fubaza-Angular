@@ -6508,21 +6508,28 @@ $space-4: 1rem; // 16px
 // Text Elements Grid
 .text-elements-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
 
   .text-element-item {
     display: flex;
     align-items: center;
-    padding: 12px;
-    border: 2px solid $border-color;
-    border-radius: 12px;
+    padding: 1rem;
+    border: 2px solid rgba($border-color, 0.3);
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(135deg, $panel-bg 0%, $bg-secondary 100%);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background: linear-gradient(135deg, rgba(white, 0.9) 0%, rgba(white, 0.7) 100%);
+    backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 
     &::before {
       content: '';
@@ -6554,15 +6561,16 @@ $space-4: 1rem; // 16px
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
-      border-radius: 8px;
-      margin-right: 12px;
+      width: 40px;
+      height: 40px;
+      background: $primary-gradient;
+      border-radius: 12px;
+      margin-right: 1rem;
+      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
       
       mat-icon {
         color: white;
-        font-size: 18px;
+        font-size: 20px;
       }
     }
 
@@ -6846,8 +6854,8 @@ $space-4: 1rem; // 16px
 .font-categories {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 
   .category-btn {
     padding: 6px 12px;
@@ -6896,20 +6904,24 @@ $space-4: 1rem; // 16px
   }
 
   .font-item {
-    padding: 12px;
-    border: 1px solid transparent;
-    border-radius: 8px;
+    padding: 1rem;
+    border: 2px solid transparent;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 4px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, rgba(white, 0.8) 0%, rgba(white, 0.6) 100%);
+    backdrop-filter: blur(8px);
 
     &:hover {
-      background: $bg-secondary;
-      border-color: $border-color;
+      background: rgba($primary-color, 0.05);
+      border-color: rgba($primary-color, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba($primary-color, 0.15);
     }
 
     &.selected {
-      background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+      background: $primary-gradient;
       color: white;
 
       .font-info {
