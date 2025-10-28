@@ -1557,239 +1557,291 @@
           </div>
         </div>
 
-        <!-- Transparency & Opacity -->
-        <div class="property-group">
-          <label>
-            <mat-icon>opacity</mat-icon>
-            Transparency & Masking
-          </label>
-          <div class="transparency-controls">
-            <div class="control-row">
-              <label>Opacity: {{ getOpacityPercentage() }}%</label>
-              <input type="range" 
-                     [(ngModel)]="canvasElements[selectedElement].opacity" 
-                     (change)="updateElement()" 
-                     min="0" max="1" step="0.01"
-                     class="slider">
+        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
+            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
+              <mat-icon style="font-size: 16px; color: white;">opacity</mat-icon>
             </div>
-            
-            <div class="masking-options">
-              <button class="mask-btn" 
-                      (click)="enableTextMasking()" 
-                      [class.active]="canvasElements[selectedElement].maskEnabled"
-                      title="Use text as mask for images">
-                <mat-icon>layers</mat-icon>
+            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Transparency & Masking</span>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Opacity</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" 
+                     (change)="updateElement()" min="0" max="1" step="0.01"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{ getOpacityPercentage() }}%</span>
+            </div>
+          </div>
+          
+          <div style="margin-top: 0.875rem;">
+            <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280; display: block; margin-bottom: 0.5rem;">Masking Options</span>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem;">
+              <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+                      [style.background]="canvasElements[selectedElement].maskEnabled ? '#10b981' : '#f8fafc'"
+                      [style.color]="canvasElements[selectedElement].maskEnabled ? 'white' : '#374151'"
+                      [style.border-color]="canvasElements[selectedElement].maskEnabled ? '#059669' : '#e2e8f0'"
+                      (click)="enableTextMasking()" title="Use text as mask for images">
+                <mat-icon style="font-size: 14px;">layers</mat-icon>
                 <span>Text as Mask</span>
               </button>
-              <button class="mask-btn" 
-                      (click)="addTextToFrame()" 
-                      title="Add text to image frame">
-                <mat-icon>crop_free</mat-icon>
+              <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+                      (click)="addTextToFrame()" title="Add text to image frame">
+                <mat-icon style="font-size: 14px;">crop_free</mat-icon>
                 <span>Text in Frame</span>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Brand Kit & Accessibility -->
-        <div class="property-group">
-          <label>
-            <mat-icon>branding_watermark</mat-icon>
-            Brand Kit & Accessibility
-          </label>
-          <div class="brand-accessibility">
-            <div class="brand-controls">
-              <button class="brand-btn" (click)="applyBrandFont()" title="Apply brand font">
-                <mat-icon>business</mat-icon>
-                <span>Brand Font</span>
-              </button>
-              <button class="brand-btn" (click)="saveToBrandKit()" title="Save to brand kit">
-                <mat-icon>bookmark_add</mat-icon>
-                <span>Save Style</span>
-              </button>
+        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
+            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
+              <mat-icon style="font-size: 16px; color: white;">branding_watermark</mat-icon>
             </div>
-            
-            <div class="accessibility-checker">
-              <button class="accessibility-btn" 
-                      (click)="checkContrastRatio()" 
-                      [class.warning]="contrastRatio < 4.5"
-                      [class.good]="contrastRatio >= 4.5">
-                <mat-icon>accessibility</mat-icon>
-                <span>Contrast: {{ contrastRatio ? contrastRatio.toFixed(1) : 'Check' }}</span>
-              </button>
-              <div class="accessibility-info" *ngIf="contrastRatio">
-                <span class="status" [class.pass]="contrastRatio >= 4.5" [class.fail]="contrastRatio < 4.5">
-                  {{ contrastRatio >= 4.5 ? 'WCAG AA ✓' : 'WCAG AA ✗' }}
-                </span>
-              </div>
+            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Brand Kit & Accessibility</span>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-bottom: 0.875rem;">
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+                    (click)="applyBrandFont()" title="Apply brand font">
+              <mat-icon style="font-size: 14px;">business</mat-icon>
+              <span>Brand Font</span>
+            </button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+                    (click)="saveToBrandKit()" title="Save to brand kit">
+              <mat-icon style="font-size: 14px;">bookmark_add</mat-icon>
+              <span>Save Style</span>
+            </button>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Accessibility Check</span>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+                    [style.background]="contrastRatio < 4.5 ? '#fef2f2' : '#f0fdf4'"
+                    [style.border-color]="contrastRatio < 4.5 ? '#fca5a5' : '#86efac'"
+                    (click)="checkContrastRatio()" title="Check contrast ratio">
+              <mat-icon style="font-size: 14px;">accessibility</mat-icon>
+              <span>Contrast: {{ contrastRatio ? contrastRatio.toFixed(1) : 'Check' }}</span>
+            </button>
+            <div *ngIf="contrastRatio" style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+              <span style="font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: #f0fdf4; color: #166534;" 
+                    [style.background]="contrastRatio >= 4.5 ? '#f0fdf4' : '#fef2f2'"
+                    [style.color]="contrastRatio >= 4.5 ? '#166534' : '#dc2626'">
+                {{ contrastRatio >= 4.5 ? 'WCAG AA ✓' : 'WCAG AA ✗' }}
+              </span>
             </div>
           </div>
         </div>
 
-        <div class="property-group">
-          <label>Legacy Text Effects</label>
-          <div class="text-effects-tabs">
-            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'stroke'}" (click)="activeTextEffectTab = 'stroke'">Stroke</button>
-            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'shadow'}" (click)="activeTextEffectTab = 'shadow'">Shadow</button>
-            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'gradient'}" (click)="activeTextEffectTab = 'gradient'">Gradient</button>
-            <button class="effect-tab" [ngClass]="{'active': activeTextEffectTab === 'highlight'}" (click)="activeTextEffectTab = 'highlight'">Highlight</button>
+        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
+            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
+              <mat-icon style="font-size: 16px; color: white;">animation</mat-icon>
+            </div>
+            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Text Animations</span>
           </div>
           
-          <!-- Stroke Tab -->
-          <div class="effect-content" *ngIf="activeTextEffectTab === 'stroke'">
-            <div class="property-controls">
-              <div class="property-control">
-                <span>Stroke Width: {{canvasElements[selectedElement].textStrokeWidth || 0}}px</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].textStrokeWidth" 
-                       (change)="updateElement()" min="0" max="5" step="0.5">
-              </div>
-              <div class="property-control">
-                <span>Stroke Color</span>
-                <input type="color" [(ngModel)]="canvasElements[selectedElement].textStrokeColor" (change)="updateElement()">
-              </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
+                    [style.background]="activeTextEffectTab === 'stroke' ? '#10b981' : '#f8fafc'"
+                    [style.color]="activeTextEffectTab === 'stroke' ? 'white' : '#374151'"
+                    [style.border-color]="activeTextEffectTab === 'stroke' ? '#059669' : '#e2e8f0'"
+                    (click)="activeTextEffectTab = 'stroke'">Stroke</button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
+                    [style.background]="activeTextEffectTab === 'shadow' ? '#10b981' : '#f8fafc'"
+                    [style.color]="activeTextEffectTab === 'shadow' ? 'white' : '#374151'"
+                    [style.border-color]="activeTextEffectTab === 'shadow' ? '#059669' : '#e2e8f0'"
+                    (click)="activeTextEffectTab = 'shadow'">Shadow</button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
+                    [style.background]="activeTextEffectTab === 'gradient' ? '#10b981' : '#f8fafc'"
+                    [style.color]="activeTextEffectTab === 'gradient' ? 'white' : '#374151'"
+                    [style.border-color]="activeTextEffectTab === 'gradient' ? '#059669' : '#e2e8f0'"
+                    (click)="activeTextEffectTab = 'gradient'">Gradient</button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
+                    [style.background]="activeTextEffectTab === 'highlight' ? '#10b981' : '#f8fafc'"
+                    [style.color]="activeTextEffectTab === 'highlight' ? 'white' : '#374151'"
+                    [style.border-color]="activeTextEffectTab === 'highlight' ? '#059669' : '#e2e8f0'"
+                    (click)="activeTextEffectTab = 'highlight'">Highlight</button>
+          </div>
+          
+          <div *ngIf="activeTextEffectTab === 'stroke'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Width</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textStrokeWidth" 
+                     (change)="updateElement()" min="0" max="5" step="0.5"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textStrokeWidth || 0}}px</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].textStrokeColor" (change)="updateElement()"
+                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
             </div>
           </div>
           
-          <!-- Shadow Tab -->
-          <div class="effect-content" *ngIf="activeTextEffectTab === 'shadow'">
-            <div class="property-controls">
-              <div class="property-control">
-                <span>Shadow Preset</span>
-                <select [(ngModel)]="canvasElements[selectedElement].textShadow" (change)="updateElement()">
-                  <option value="none">None</option>
-                  <option value="1px 1px 2px rgba(0,0,0,0.3)">Light</option>
-                  <option value="2px 2px 4px rgba(0,0,0,0.4)">Medium</option>
-                  <option value="3px 3px 5px rgba(0,0,0,0.5)">Heavy</option>
-                  <option value="0px 0px 8px rgba(0,0,255,0.7)">Neon Blue</option>
-                  <option value="0px 0px 8px rgba(255,0,0,0.7)">Neon Red</option>
-                  <option value="0px 0px 3px white, 0px 0px 5px rgba(0,0,0,0.5)">Outline</option>
-                  <option value="custom">Custom</option>
-                </select>
-              </div>
-              
-              <div class="custom-shadow-controls" *ngIf="canvasElements[selectedElement].textShadow === 'custom'">
-                <div class="property-control">
-                  <span>Shadow Color</span>
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].customShadowColor" (change)="updateCustomTextShadow()">
-                </div>
-                <div class="property-control">
-                  <span>Blur: {{canvasElements[selectedElement].customShadowBlur || 0}}px</span>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowBlur" 
-                         (change)="updateCustomTextShadow()" min="0" max="20" step="1">
-                </div>
-                <div class="property-control">
-                  <span>Offset X: {{canvasElements[selectedElement].customShadowX || 0}}px</span>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowX" 
-                         (change)="updateCustomTextShadow()" min="-20" max="20" step="1">
-                </div>
-                <div class="property-control">
-                  <span>Offset Y: {{canvasElements[selectedElement].customShadowY || 0}}px</span>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowY" 
-                         (change)="updateCustomTextShadow()" min="-20" max="20" step="1">
-                </div>
-              </div>
+          <div *ngIf="activeTextEffectTab === 'shadow'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Preset</span>
+              <select [(ngModel)]="canvasElements[selectedElement].textShadow" (change)="updateElement()"
+                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
+                <option value="none">None</option>
+                <option value="1px 1px 2px rgba(0,0,0,0.3)">Light</option>
+                <option value="2px 2px 4px rgba(0,0,0,0.4)">Medium</option>
+                <option value="3px 3px 5px rgba(0,0,0,0.5)">Heavy</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div *ngIf="canvasElements[selectedElement].textShadow === 'custom'" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Shadow Color</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].customShadowColor" (change)="updateCustomTextShadow()"
+                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
             </div>
           </div>
           
-          <!-- Gradient Tab -->
-          <div class="effect-content" *ngIf="activeTextEffectTab === 'gradient'">
-            <div class="property-controls">
-              <div class="property-control">
-                <span>Gradient Type</span>
-                <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()">
-                  <option value="none">None</option>
-                  <option value="linear">Linear</option>
-                  <option value="radial">Radial</option>
-                </select>
-              </div>
-              
-              <div class="gradient-controls" *ngIf="canvasElements[selectedElement].textGradientType !== 'none'">
-                <div class="property-control">
-                  <span>Color 1</span>
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()">
-                </div>
-                <div class="property-control">
-                  <span>Color 2</span>
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()">
-                </div>
-                <div class="property-control" *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
-                  <span>Angle: {{canvasElements[selectedElement].textGradientAngle || 45}}°</span>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" 
-                         (change)="updateTextGradient()" min="0" max="360" step="15">
-                </div>
-              </div>
+          <div *ngIf="activeTextEffectTab === 'gradient'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Type</span>
+              <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()"
+                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
+                <option value="none">None</option>
+                <option value="linear">Linear</option>
+                <option value="radial">Radial</option>
+              </select>
+            </div>
+            <div *ngIf="canvasElements[selectedElement].textGradientType !== 'none'" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Angle</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" 
+                     (change)="updateTextGradient()" min="0" max="360" step="15"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textGradientAngle || 45}}°</span>
             </div>
           </div>
           
-          <!-- Highlight Tab -->
-          <div class="effect-content" *ngIf="activeTextEffectTab === 'highlight'">
-            <div class="property-controls">
-              <div class="property-control">
-                <span>Highlight Style</span>
-                <select [(ngModel)]="canvasElements[selectedElement].highlightStyle" (change)="updateElement()">
-                  <option value="none">None</option>
-                  <option value="solid">Solid Background</option>
-                  <option value="marker">Marker Highlight</option>
-                  <option value="underline">Underline</option>
-                  <option value="box">Box Highlight</option>
-                </select>
+          <div *ngIf="activeTextEffectTab === 'gradient' && canvasElements[selectedElement].textGradientType !== 'none'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-top: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color 1</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()"
+                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color 2</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()"
+                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
+            </div>
+          </div>
+          
+          <div *ngIf="activeTextEffectTab === 'highlight'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Style</span>
+              <select [(ngModel)]="canvasElements[selectedElement].highlightStyle" (change)="updateElement()"
+                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
+                <option value="none">None</option>
+                <option value="solid">Solid</option>
+                <option value="marker">Marker</option>
+                <option value="underline">Underline</option>
+                <option value="box">Box</option>
+              </select>
+            </div>
+            <div *ngIf="canvasElements[selectedElement].highlightStyle !== 'none'" style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color</span>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].highlightColor" (change)="updateElement()"
+                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
+            </div>
+          </div>
+          
+          <div *ngIf="activeTextEffectTab === 'highlight' && canvasElements[selectedElement].highlightStyle !== 'none'" style="display: grid; grid-template-columns: 1fr; gap: 0.625rem; margin-top: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Opacity</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].highlightOpacity" 
+                     (change)="updateElement()" min="0.1" max="1" step="0.1"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].highlightOpacity || 0.3}}</span>
+            </div>
+          </div>
+          
+          <div *ngIf="canvasElements[selectedElement].textShadow === 'custom' && activeTextEffectTab === 'shadow'" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.625rem; margin-top: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Blur</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowBlur" 
+                     (change)="updateCustomTextShadow()" min="0" max="20" step="1"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].customShadowBlur || 0}}px</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.625rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">X Offset</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowX" 
+                       (change)="updateCustomTextShadow()" min="-20" max="20" step="1"
+                       style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+                <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].customShadowX || 0}}px</span>
               </div>
-              
-              <div class="highlight-controls" *ngIf="canvasElements[selectedElement].highlightStyle !== 'none'">
-                <div class="property-control">
-                  <span>Highlight Color</span>
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].highlightColor" (change)="updateElement()">
-                </div>
-                <div class="property-control">
-                  <span>Opacity: {{canvasElements[selectedElement].highlightOpacity || 0.3}}</span>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].highlightOpacity" 
-                         (change)="updateElement()" min="0.1" max="1" step="0.1">
-                </div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Y Offset</span>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowY" 
+                       (change)="updateCustomTextShadow()" min="-20" max="20" step="1"
+                       style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+                <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].customShadowY || 0}}px</span>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="property-group">
-          <label>Text Transform</label>
-          <div class="text-transform-controls">
-            <div class="transform-actions">
-              <button class="transform-btn" (click)="rotateText(-90)" title="Rotate Left">
-                <mat-icon>rotate_left</mat-icon>
-              </button>
-              <button class="transform-btn" (click)="rotateText(90)" title="Rotate Right">
-                <mat-icon>rotate_right</mat-icon>
-              </button>
-              <button class="transform-btn" (click)="flipText('horizontal')" title="Flip Horizontal">
-                <mat-icon>flip</mat-icon>
-              </button>
-              <button class="transform-btn" (click)="flipText('vertical')" title="Flip Vertical">
-                <mat-icon>flip</mat-icon>
-              </button>
+        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
+            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
+              <mat-icon style="font-size: 16px; color: white;">transform</mat-icon>
             </div>
-            
-            <div class="property-control">
-              <span>Rotation: {{canvasElements[selectedElement].textRotation || 0}}°</span>
+            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Text Transform</span>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+                    (click)="rotateText(-90)" title="Rotate Left">
+              <mat-icon style="font-size: 14px;">rotate_left</mat-icon>
+            </button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+                    (click)="rotateText(90)" title="Rotate Right">
+              <mat-icon style="font-size: 14px;">rotate_right</mat-icon>
+            </button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+                    (click)="flipText('horizontal')" title="Flip Horizontal">
+              <mat-icon style="font-size: 14px;">flip</mat-icon>
+            </button>
+            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+                    (click)="flipText('vertical')" title="Flip Vertical">
+              <mat-icon style="font-size: 14px; transform: rotate(90deg);">flip</mat-icon>
+            </button>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Rotation</span>
               <input type="range" [(ngModel)]="canvasElements[selectedElement].textRotation" 
-                     (change)="updateElement()" min="-180" max="180" step="5">
+                     (change)="updateElement()" min="-180" max="180" step="5"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textRotation || 0}}°</span>
             </div>
-            
-            <div class="property-control">
-              <span>Text Path</span>
-              <select [(ngModel)]="canvasElements[selectedElement].textPath" (change)="updateElement()">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Text Path</span>
+              <select [(ngModel)]="canvasElements[selectedElement].textPath" (change)="updateElement()"
+                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
                 <option value="none">None</option>
                 <option value="arc">Arc</option>
                 <option value="circle">Circle</option>
                 <option value="wave">Wave</option>
               </select>
             </div>
-            
-            <div class="path-controls" *ngIf="canvasElements[selectedElement].textPath !== 'none'">
-              <div class="property-control">
-                <span>Path Strength: {{canvasElements[selectedElement].textPathStrength || 50}}</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].textPathStrength" 
-                       (change)="updateElement()" min="0" max="100" step="5">
-              </div>
+          </div>
+          
+          <div *ngIf="canvasElements[selectedElement].textPath !== 'none'" style="display: grid; grid-template-columns: 1fr; gap: 0.625rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Path Strength</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textPathStrength" 
+                     (change)="updateElement()" min="0" max="100" step="5"
+                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
+              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textPathStrength || 50}}</span>
             </div>
           </div>
         </div>
