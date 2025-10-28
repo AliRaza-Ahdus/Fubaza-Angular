@@ -8860,3 +8860,99 @@ $space-4: 1rem; // 16px
 .page-transition-leave {
   animation: fadeIn 0.3s ease-in reverse;
 }
+
+// ========================================
+// PERFORMANCE OPTIMIZATIONS FOR DRAG
+// ========================================
+
+// GPU accelerated drag performance
+.dragging {
+  will-change: transform, opacity;
+  transform-origin: center;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  
+  // Smooth transitions during drag
+  transition: none !important; // Disable transitions during drag for better performance
+  
+  // Optimize rendering
+  contain: layout style paint;
+  
+  // Slight transparency for visual feedback
+  opacity: 0.9;
+  
+  // Add subtle shadow for depth
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  
+  // Prevent text selection during drag
+  user-select: none;
+  pointer-events: none;
+  
+  // Z-index to ensure dragged element stays on top
+  z-index: 9999;
+}
+
+// Canvas element optimizations
+.canvas-element {
+  // Optimize for frequent position updates
+  will-change: transform, left, top;
+  
+  // Hardware acceleration
+  transform: translateZ(0);
+  
+  // Smooth sub-pixel rendering
+  backface-visibility: hidden;
+  
+  // Optimize paint operations
+  contain: layout style;
+  
+  // Smooth transitions for non-drag movements
+  transition: left 0.1s ease-out, top 0.1s ease-out, transform 0.1s ease-out;
+  
+  &.selected {
+    // Faster rendering for selected elements
+    contain: layout style paint;
+  }
+  
+  &:hover:not(.dragging) {
+    // Only apply hover effects when not dragging
+    cursor: grab;
+  }
+}
+
+// Optimize canvas workspace
+.canvas-workspace {
+  // Optimize scrolling performance
+  will-change: scroll-position;
+  transform: translateZ(0);
+  
+  // Smooth scrolling
+  scroll-behavior: smooth;
+  
+  // Optimize composite layers
+  isolation: isolate;
+}
+
+// Selection box optimizations
+.selection-box {
+  will-change: width, height, transform;
+  pointer-events: none;
+  contain: layout style paint;
+  transform: translateZ(0);
+  
+  // Smooth rendering
+  backface-visibility: hidden;
+}
+
+// Smart guides performance
+.smart-guide {
+  will-change: transform, opacity;
+  pointer-events: none;
+  contain: strict;
+  transform: translateZ(0);
+}
+
+// Reduce paint operations on inactive elements
+.canvas-element:not(.selected):not(.dragging):not(:hover) {
+  contain: strict;
+}

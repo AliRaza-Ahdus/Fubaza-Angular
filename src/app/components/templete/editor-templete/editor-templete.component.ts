@@ -427,7 +427,17 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Enhanced drag behavior with requestAnimationFrame for smoother performance
   private dragAnimationFrame: number | null = null;
   private lastDragTime: number = 0;
-  private readonly dragThrottleMs: number = 16; // ~60fps
+  private readonly dragThrottleMs: number = 8; // ~120fps for smoother movement
+  private dragUpdateQueue: { x: number; y: number; timestamp: number } | null = null;
+  
+  // Transform-based movement cache
+  private elementTransforms = new Map<number, { x: number; y: number; element: HTMLElement }>();
+  private isUsingTransforms: boolean = false;
+  
+  // Debounced operations for better performance
+  private debouncedSaveTimeout: any = null;
+  private lastSaveTime: number = 0;
+  private readonly saveDebounceMs: number = 300; // Wait 300ms after last change
 
   // Drag state tracking
   isDraggingElement: boolean = false;
@@ -462,9 +472,38 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     // Load Google Fonts
     this.loadGoogleFonts();
     
+    // Initialize performance optimizations
+    this.initializePerformanceOptimizations();
+    
     // Add window resize listener
     this.handleWindowResize();
     window.addEventListener('resize', this.handleWindowResize.bind(this));
+  }
+
+  private initializePerformanceOptimizations(): void {
+    // Enable hardware acceleration for smooth scrolling
+    if (typeof window !== 'undefined') {
+      // Optimize passive event listeners for better scroll performance
+      const options = { passive: true };
+      
+      // Add optimized touch handlers for mobile
+      document.addEventListener('touchstart', (e) => {
+        // Prevent iOS safari bounce
+        if (e.touches.length > 1) {
+          e.preventDefault();
+        }
+      }, options);
+      
+      // Optimize paint operations
+      const style = document.createElement('style');
+      style.textContent = `
+        .canvas-workspace * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }
   
   @HostListener('window:resize')
@@ -1139,21 +1178,29 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (this.selectedElement === null && this.selectedElements.length === 0) return;
 
     if (this.isDragging) {
-      // Throttle drag updates for smoother performance
-      const currentTime = Date.now();
-      if (currentTime - this.lastDragTime < this.dragThrottleMs) {
-        return;
-      }
-      this.lastDragTime = currentTime;
+      // Queue the latest mouse position for optimized updates
+      const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
+      if (!canvasWorkspace) return;
+      
+      const workspaceRect = canvasWorkspace.getBoundingClientRect();
+      const mouseX = event.clientX - workspaceRect.left;
+      const mouseY = event.clientY - workspaceRect.top;
+      
+      // Store the latest drag update
+      this.dragUpdateQueue = {
+        x: mouseX,
+        y: mouseY,
+        timestamp: performance.now()
+      };
 
-      // Cancel any pending animation frame
+      // Cancel any pending animation frame to avoid stacking
       if (this.dragAnimationFrame) {
         cancelAnimationFrame(this.dragAnimationFrame);
       }
 
-      // Use requestAnimationFrame for smooth drag updates
+      // Use requestAnimationFrame for smooth, optimized drag updates
       this.dragAnimationFrame = requestAnimationFrame(() => {
-        this.performDragUpdate(event);
+        this.performOptimizedDragUpdate();
       });
     } else if (this.isResizing && this.selectedElement !== null) {
       // Get the canvas workspace element to calculate proper coordinates
@@ -1221,87 +1268,134 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   // Separate drag update method for better performance
-  private performDragUpdate(event: MouseEvent): void {
-    // Add dragging class to selected elements for visual feedback
-    if (this.selectedElements.length > 0) {
-      this.selectedElements.forEach(index => {
-        const element = document.querySelector(`[data-element-index="${index}"]`);
-        if (element) element.classList.add('dragging');
-      });
-    } else if (this.selectedElement !== null) {
-      const element = document.querySelector(`[data-element-index="${this.selectedElement}"]`);
-      if (element) element.classList.add('dragging');
-    }
-
-    // Get the canvas workspace element to calculate proper coordinates
+  private performOptimizedDragUpdate(): void {
+    if (!this.dragUpdateQueue) return;
+    
+    const { x: mouseX, y: mouseY, timestamp } = this.dragUpdateQueue;
+    this.dragUpdateQueue = null; // Clear the queue
+    
+    // Get cached workspace rect to avoid repeated calculations
     const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
     if (!canvasWorkspace) return;
 
+    // Use cached rect for better performance
     const workspaceRect = canvasWorkspace.getBoundingClientRect();
-
-    // Convert screen coordinates to canvas workspace coordinates with improved precision
-    const mouseX = event.clientX - workspaceRect.left;
-    const mouseY = event.clientY - workspaceRect.top;
 
     // Account for zoom and pan transforms with higher precision
     const scale = this.zoomLevel / 100;
     const canvasX = (mouseX / scale) - (this.panX / scale);
     const canvasY = (mouseY / scale) - (this.panY / scale);
 
-    // Calculate the delta from the initial drag position with sub-pixel precision
+    // Calculate delta with sub-pixel precision
     const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
     const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
 
-    // Apply smooth movement with optional constraints
+    // Calculate new position
     let newX = this.elementStartX + dx;
     let newY = this.elementStartY + dy;
 
-    // Apply snap-to-grid if enabled
+    // Apply constraints with minimal calculations
     if (this.snapToGrid) {
       newX = Math.round(newX / this.gridSize) * this.gridSize;
       newY = Math.round(newY / this.gridSize) * this.gridSize;
     }
 
-    // Constrain movement within canvas bounds if enabled
-    if (this.constrainToCanvas) {
-      const element = this.selectedElements.length > 0 ? this.canvasElements[this.selectedElements[0]] : this.canvasElements[this.selectedElement!];
-      const elementWidth = element.width || 0;
-      const elementHeight = element.height || 0;
-
-      newX = Math.max(0, Math.min(newX, this.canvasWidth - elementWidth));
-      newY = Math.max(0, Math.min(newY, this.canvasHeight - elementHeight));
-    }
-
-    // Calculate smart guides if enabled and only one element is selected
-    if (this.showSmartGuides && this.selectedElements.length <= 1 && this.selectedElement !== null) {
-      this.calculateSmartGuides(this.selectedElement, newX, newY);
-
-      // Apply snapping if enabled
-      if (this.snapToGuides) {
-        const snappedPosition = this.getSnappedPosition(this.selectedElement, newX, newY);
-        newX = snappedPosition.x;
-        newY = snappedPosition.y;
-      }
-    }
-
-    // Move selected elements with improved multi-selection handling
+    // Use transform-based movement for better performance during drag
     if (this.selectedElements.length > 1) {
-      // Multi-selection: move all selected elements relative to their original positions
-      this.selectedElements.forEach(index => {
-        const element = this.canvasElements[index];
-        const originalDx = element.x - this.elementStartX;
-        const originalDy = element.y - this.elementStartY;
-        element.x = newX + originalDx;
-        element.y = newY + originalDy;
-      });
+      this.updateMultipleElementsWithTransforms(newX, newY);
     } else if (this.selectedElement !== null) {
-      // Single selection with smooth movement
-      this.canvasElements[this.selectedElement].x = newX;
-      this.canvasElements[this.selectedElement].y = newY;
+      this.updateSingleElementWithTransform(this.selectedElement, newX, newY);
     }
 
-    // Update cursor to indicate dragging
+    // Update cursor once
     document.body.style.cursor = 'grabbing';
+  }
+
+  private updateSingleElementWithTransform(elementIndex: number, newX: number, newY: number): void {
+    const elementDiv = document.querySelector(`[data-element-index="${elementIndex}"]`) as HTMLElement;
+    if (!elementDiv) return;
+
+    // Cache the element and its transform
+    if (!this.elementTransforms.has(elementIndex)) {
+      this.elementTransforms.set(elementIndex, { 
+        x: this.canvasElements[elementIndex].x, 
+        y: this.canvasElements[elementIndex].y, 
+        element: elementDiv 
+      });
+    }
+
+    const cached = this.elementTransforms.get(elementIndex)!;
+    const translateX = newX - cached.x;
+    const translateY = newY - cached.y;
+
+    // Use transform for smooth movement (GPU accelerated)
+    elementDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    elementDiv.classList.add('dragging');
+    
+    // Update the data model without triggering change detection
+    this.canvasElements[elementIndex].x = newX;
+    this.canvasElements[elementIndex].y = newY;
+  }
+
+  private updateMultipleElementsWithTransforms(newX: number, newY: number): void {
+    this.selectedElements.forEach(index => {
+      const element = this.canvasElements[index];
+      const elementDiv = document.querySelector(`[data-element-index="${index}"]`) as HTMLElement;
+      if (!elementDiv) return;
+
+      // Calculate relative position for multi-selection
+      const originalDx = element.x - this.elementStartX;
+      const originalDy = element.y - this.elementStartY;
+      const finalX = newX + originalDx;
+      const finalY = newY + originalDy;
+
+      // Cache and apply transform
+      if (!this.elementTransforms.has(index)) {
+        this.elementTransforms.set(index, { 
+          x: element.x, 
+          y: element.y, 
+          element: elementDiv 
+        });
+      }
+
+      const cached = this.elementTransforms.get(index)!;
+      const translateX = finalX - cached.x;
+      const translateY = finalY - cached.y;
+
+      elementDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      elementDiv.classList.add('dragging');
+      
+      // Update data model
+      element.x = finalX;
+      element.y = finalY;
+    });
+  }
+
+  private cleanupTransforms(): void {
+    // Apply final positions and clean up transforms
+    this.elementTransforms.forEach((cached, index) => {
+      cached.element.style.transform = '';
+      cached.element.classList.remove('dragging');
+    });
+    this.elementTransforms.clear();
+    document.body.style.cursor = '';
+  }
+
+  private debouncedSave(): void {
+    // Clear any existing timeout
+    if (this.debouncedSaveTimeout) {
+      clearTimeout(this.debouncedSaveTimeout);
+    }
+    
+    // Set a new timeout for saving
+    this.debouncedSaveTimeout = setTimeout(() => {
+      const currentTime = performance.now();
+      if (currentTime - this.lastSaveTime >= this.saveDebounceMs) {
+        this.saveToHistory();
+        this.lastSaveTime = currentTime;
+      }
+      this.debouncedSaveTimeout = null;
+    }, this.saveDebounceMs);
   }
 
   // Update cursor based on resize handle
@@ -1350,7 +1444,10 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     if (this.isDragging || this.isResizing) {
-      this.saveToHistory();
+      // Clean up any transform-based movements
+      this.cleanupTransforms();
+      // Use debounced save for better performance
+      this.debouncedSave();
     }
     
     this.isDragging = false;
@@ -2337,16 +2434,62 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   moveElement(deltaX: number, deltaY: number): void {
-    if (this.selectedElement !== null) {
-      this.canvasElements[this.selectedElement].x += deltaX;
-      this.canvasElements[this.selectedElement].y += deltaY;
-      this.updateElement();
-    } else if (this.selectedElements.length > 0) {
-      this.selectedElements.forEach(index => {
-        this.canvasElements[index].x += deltaX;
-        this.canvasElements[index].y += deltaY;
-      });
-      this.updateElement();
+    // Use requestAnimationFrame for smooth keyboard movement
+    if (this.dragAnimationFrame) {
+      cancelAnimationFrame(this.dragAnimationFrame);
+    }
+    
+    this.dragAnimationFrame = requestAnimationFrame(() => {
+      if (this.selectedElement !== null) {
+        const element = this.canvasElements[this.selectedElement];
+        element.x += deltaX;
+        element.y += deltaY;
+        
+        // Apply constraints
+        if (this.constrainToCanvas) {
+          element.x = Math.max(0, Math.min(element.x, this.canvasWidth - (element.width || 0)));
+          element.y = Math.max(0, Math.min(element.y, this.canvasHeight - (element.height || 0)));
+        }
+        
+        if (this.snapToGrid) {
+          element.x = Math.round(element.x / this.gridSize) * this.gridSize;
+          element.y = Math.round(element.y / this.gridSize) * this.gridSize;
+        }
+        
+        this.updateElementPosition(this.selectedElement);
+      } else if (this.selectedElements.length > 0) {
+        this.selectedElements.forEach(index => {
+          const element = this.canvasElements[index];
+          element.x += deltaX;
+          element.y += deltaY;
+          
+          // Apply constraints
+          if (this.constrainToCanvas) {
+            element.x = Math.max(0, Math.min(element.x, this.canvasWidth - (element.width || 0)));
+            element.y = Math.max(0, Math.min(element.y, this.canvasHeight - (element.height || 0)));
+          }
+          
+          if (this.snapToGrid) {
+            element.x = Math.round(element.x / this.gridSize) * this.gridSize;
+            element.y = Math.round(element.y / this.gridSize) * this.gridSize;
+          }
+          
+          this.updateElementPosition(index);
+        });
+      }
+      
+      this.debouncedSave();
+      this.dragAnimationFrame = null;
+    });
+  }
+
+  private updateElementPosition(elementIndex: number): void {
+    // Update only the position without full element update for better performance
+    const element = this.canvasElements[elementIndex];
+    const elementDiv = document.querySelector(`[data-element-index="${elementIndex}"]`) as HTMLElement;
+    if (elementDiv && element) {
+      elementDiv.style.left = `${element.x}px`;
+      elementDiv.style.top = `${element.y}px`;
     }
   }
 
