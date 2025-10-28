@@ -1869,207 +1869,209 @@ $space-4: 1rem; // 16px
   // ========================================
   
   // Enhanced Media & Shapes Section
-  .media-shapes-section {
-    background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($secondary-color, 0.02) 100%);
+  .sidebar-section.media-shapes-section {
+    background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($secondary-color, 0.02) 100%) !important;
+    padding: 2rem 1.5rem !important;
     
     .sidebar-title {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
+      display: flex !important;
+      align-items: center !important;
+      gap: 1rem !important;
+      margin-bottom: 2rem !important;
+      font-size: 1.125rem !important;
       
       .title-icon {
-        background: $primary-gradient;
-        color: white;
-        border-radius: 12px;
-        padding: 8px;
-        font-size: 24px;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: $shadow-lg;
+        background: $primary-gradient !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 8px !important;
+        font-size: 24px !important;
+        width: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: $shadow-lg !important;
         animation: pulse 2s ease-in-out infinite;
       }
     }
     
     .modern-elements-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin-top: 0;
+      display: grid !important;
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+      margin-top: 0 !important;
       
       @media (min-width: $breakpoint-mobile) {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.25rem !important;
       }
       
       @media (min-width: $breakpoint-laptop) {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
       }
     }
     
     .element-card {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.25rem 1.5rem;
-      background: linear-gradient(135deg, rgba(white, 0.9) 0%, rgba(white, 0.7) 100%);
-      backdrop-filter: blur(15px);
-      border: 2px solid rgba($border-color, 0.1);
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-      position: relative;
-      overflow: hidden;
-      text-align: left;
-      min-height: 80px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 1rem !important;
+      padding: 1.25rem 1.5rem !important;
+      background: linear-gradient(135deg, rgba(white, 0.9) 0%, rgba(white, 0.7) 100%) !important;
+      backdrop-filter: blur(15px) !important;
+      border: 2px solid rgba($border-color, 0.1) !important;
+      border-radius: 20px !important;
+      cursor: pointer !important;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+      position: relative !important;
+      overflow: hidden !important;
+      text-align: left !important;
+      min-height: 80px !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
       
       &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($secondary-color, 0.04) 100%);
-        opacity: 0;
-        transition: all 0.4s ease;
-        z-index: 1;
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($secondary-color, 0.04) 100%) !important;
+        opacity: 0 !important;
+        transition: all 0.4s ease !important;
+        z-index: 1 !important;
       }
       
       &:hover {
-        transform: translateY(-4px) scale(1.02);
-        border-color: rgba($primary-color, 0.3);
-        box-shadow: 0 12px 40px rgba($primary-color, 0.15);
+        transform: translateY(-4px) scale(1.02) !important;
+        border-color: rgba($primary-color, 0.3) !important;
+        box-shadow: 0 12px 40px rgba($primary-color, 0.15) !important;
         
         &::before {
-          opacity: 1;
+          opacity: 1 !important;
         }
         
         .element-icon {
-          transform: scale(1.15) rotate(5deg);
+          transform: scale(1.15) rotate(5deg) !important;
         }
         
         .element-action {
-          opacity: 1;
-          transform: scale(1.1) rotate(90deg);
+          opacity: 1 !important;
+          transform: scale(1.1) rotate(90deg) !important;
         }
         
         .element-info .element-name {
-          color: $primary-color;
+          color: $primary-color !important;
         }
       }
       
       .element-icon-container {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 56px;
-        height: 56px;
-        flex-shrink: 0;
-        z-index: 2;
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 56px !important;
+        height: 56px !important;
+        flex-shrink: 0 !important;
+        z-index: 2 !important;
         
         .element-icon {
-          font-size: 24px;
-          color: white;
-          position: relative;
-          z-index: 3;
-          transition: all 0.4s ease;
+          font-size: 24px !important;
+          color: white !important;
+          position: relative !important;
+          z-index: 3 !important;
+          transition: all 0.4s ease !important;
         }
         
         .icon-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-radius: 16px;
-          background: $primary-gradient;
-          box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          border-radius: 16px !important;
+          background: $primary-gradient !important;
+          box-shadow: 0 4px 15px rgba($primary-color, 0.3) !important;
           
           &.shape-bg {
-            background: $secondary-gradient;
+            background: $secondary-gradient !important;
           }
           
           &.line-bg {
-            background: $accent-gradient;
+            background: $accent-gradient !important;
           }
           
           &.icon-bg {
-            background: $success-gradient;
+            background: $success-gradient !important;
           }
         }
       }
       
       .element-info {
-        flex: 1;
-        z-index: 2;
+        flex: 1 !important;
+        z-index: 2 !important;
         
         .element-name {
-          display: block;
-          font-weight: 700;
-          font-size: 1rem;
-          color: $text-primary;
-          margin-bottom: 0.25rem;
-          transition: color 0.3s ease;
+          display: block !important;
+          font-weight: 700 !important;
+          font-size: 1rem !important;
+          color: $text-primary !important;
+          margin-bottom: 0.25rem !important;
+          transition: color 0.3s ease !important;
         }
         
         .element-desc {
-          display: block;
-          font-size: 0.8rem;
-          color: $text-muted;
-          line-height: 1.4;
-          font-weight: 500;
+          display: block !important;
+          font-size: 0.8rem !important;
+          color: $text-muted !important;
+          line-height: 1.4 !important;
+          font-weight: 500 !important;
         }
       }
       
       .element-action {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        background: rgba($primary-color, 0.1);
-        border-radius: 8px;
-        opacity: 0.6;
-        transition: all 0.4s ease;
-        transform: scale(0.9);
-        z-index: 2;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 32px !important;
+        height: 32px !important;
+        background: rgba($primary-color, 0.1) !important;
+        border-radius: 8px !important;
+        opacity: 0.6 !important;
+        transition: all 0.4s ease !important;
+        transform: scale(0.9) !important;
+        z-index: 2 !important;
         
         mat-icon {
-          color: $primary-color;
-          font-size: 18px;
+          color: $primary-color !important;
+          font-size: 18px !important;
         }
       }
       
       // Specific card enhancements
       &.image-card:hover {
         .icon-background {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         }
       }
       
       &.shape-card:hover {
         .icon-background.shape-bg {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
         }
       }
       
       &.line-card:hover {
         .icon-background.line-bg {
-          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
         }
       }
       
       &.icon-card:hover {
         .icon-background.icon-bg {
-          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
         }
       }
     }
@@ -8948,6 +8950,1758 @@ $space-4: 1rem; // 16px
 .smart-guide {
   will-change: transform, opacity;
   pointer-events: none;
+  contain: layout style paint;
+  backface-visibility: hidden;
+}
+
+// ========================================
+// MODERN CARD-BASED SIDEBAR SECTIONS
+// ========================================
+
+// Typography Combos Section - Card Design
+.typography-section {
+  .subsection-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 1.25rem 0;
+    
+    .subsection-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: $primary-color;
+    }
+  }
+  
+  .typography-category-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    
+    .category-chip {
+      padding: 0.5rem 1rem;
+      border: 2px solid rgba($border-color, 0.6);
+      background: $panel-bg;
+      border-radius: 20px;
+      font-size: 0.813rem;
+      font-weight: 600;
+      color: $text-secondary;
+      cursor: pointer;
+      transition: all $transition-normal;
+      
+      &:hover {
+        border-color: $primary-color;
+        background: rgba($primary-50, 0.5);
+        color: $primary-color;
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+      }
+      
+      &.active {
+        background: $primary-gradient;
+        border-color: $primary-color;
+        color: white;
+        box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+      }
+    }
+  }
+  
+  .typography-combos-grid {
+    display: grid;
+    gap: 1rem;
+    
+    .combo-card {
+      background: $panel-bg;
+      border: 2px solid rgba($border-color, 0.5);
+      border-radius: $radius-lg;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all $transition-normal;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: $primary-gradient;
+        opacity: 0;
+        transition: opacity $transition-normal;
+      }
+      
+      &:hover {
+        border-color: $primary-color;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba($primary-color, 0.15);
+        
+        &::before {
+          opacity: 0.05;
+        }
+        
+        .combo-apply-btn {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      .combo-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        position: relative;
+        z-index: 1;
+        
+        .combo-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: $primary-color;
+        }
+        
+        .combo-badge {
+          padding: 0.25rem 0.75rem;
+          background: rgba($primary-color, 0.1);
+          color: $primary-color;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+      }
+      
+      .combo-preview-area {
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        background: rgba($bg-secondary, 0.3);
+        border-radius: 8px;
+        position: relative;
+        z-index: 1;
+        
+        .combo-heading {
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-bottom: 0.5rem;
+          line-height: 1.3;
+        }
+        
+        .combo-body {
+          font-size: 0.875rem;
+          line-height: 1.5;
+          opacity: 0.9;
+        }
+      }
+      
+      .combo-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        
+        .combo-details {
+          flex: 1;
+          
+          .combo-name {
+            display: block;
+            font-weight: 700;
+            color: $text-primary;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+          }
+          
+          .combo-fonts {
+            display: block;
+            font-size: 0.75rem;
+            color: $text-muted;
+          }
+        }
+        
+        .combo-apply-btn {
+          padding: 0.5rem;
+          background: $primary-gradient;
+          border: none;
+          border-radius: 50%;
+          color: white;
+          cursor: pointer;
+          opacity: 0;
+          transform: scale(0.8);
+          transition: all $transition-normal;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: $shadow-md;
+          
+          mat-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+          
+          &:hover {
+            transform: scale(1.1);
+            box-shadow: $shadow-lg;
+          }
+        }
+      }
+    }
+    
+    .combo-empty-state {
+      text-align: center;
+      padding: 2rem;
+      color: $text-muted;
+      
+      .empty-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 0.75rem;
+        opacity: 0.5;
+      }
+      
+      .empty-text {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+// Text Effects Section - Card Design
+.text-effects-section {
+  .subsection-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 1.25rem 0;
+    
+    .subsection-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: $accent-color;
+    }
+  }
+  
+  .effects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+    
+    .effect-card {
+      background: $panel-bg;
+      border: 2px solid rgba($border-color, 0.5);
+      border-radius: $radius-lg;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all $transition-normal;
+      position: relative;
+      text-align: center;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        transition: opacity $transition-normal;
+      }
+      
+      &.shadow-effect::before {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      }
+      
+      &.outline-effect::before {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 146, 60, 0.1) 100%);
+      }
+      
+      &.gradient-effect::before {
+        background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+      }
+      
+      &.neon-effect::before {
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%);
+      }
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: $shadow-lg;
+        
+        &::before {
+          opacity: 1;
+        }
+        
+        .effect-icon-wrapper {
+          transform: scale(1.15);
+        }
+      }
+      
+      &.active {
+        border-color: $primary-color;
+        
+        &::before {
+          opacity: 1;
+        }
+        
+        .effect-badge {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      .effect-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 0.75rem;
+        background: rgba($primary-color, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all $transition-normal;
+        position: relative;
+        z-index: 1;
+        
+        .effect-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          color: $primary-color;
+        }
+      }
+      
+      .shadow-effect & .effect-icon-wrapper {
+        background: rgba(99, 102, 241, 0.15);
+        .effect-icon { color: #6366f1; }
+      }
+      
+      .outline-effect & .effect-icon-wrapper {
+        background: rgba(245, 158, 11, 0.15);
+        .effect-icon { color: #f59e0b; }
+      }
+      
+      .gradient-effect & .effect-icon-wrapper {
+        background: rgba(236, 72, 153, 0.15);
+        .effect-icon { color: #ec4899; }
+      }
+      
+      .neon-effect & .effect-icon-wrapper {
+        background: rgba(6, 182, 212, 0.15);
+        .effect-icon { color: #06b6d4; }
+      }
+      
+      .effect-name {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-primary;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .effect-badge {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all $transition-normal;
+        z-index: 1;
+        
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          color: $success-color;
+        }
+      }
+    }
+  }
+}
+
+// Font Library Section - Card Design
+.font-library-section {
+  .sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    .title-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: $primary-color;
+    }
+  }
+  
+  .font-search-box {
+    position: relative;
+    margin-bottom: 1.25rem;
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: $text-muted;
+      pointer-events: none;
+    }
+    
+    .font-search-input {
+      width: 100%;
+      padding: 0.875rem 3rem 0.875rem 3rem;
+      border: 2px solid rgba($border-color, 0.6);
+      border-radius: 12px;
+      font-size: 0.875rem;
+      background: $panel-bg;
+      color: $text-primary;
+      transition: all $transition-normal;
+      
+      &::placeholder {
+        color: $text-muted;
+      }
+      
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+        background: white;
+      }
+    }
+    
+    .clear-search-btn {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0.375rem;
+      background: rgba($error-color, 0.1);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all $transition-fast;
+      
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: $error-color;
+      }
+      
+      &:hover {
+        background: rgba($error-color, 0.2);
+        transform: translateY(-50%) scale(1.1);
+      }
+    }
+  }
+  
+  .font-category-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($primary-color, 0.2);
+      border-radius: 2px;
+    }
+    
+    .font-category-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1rem;
+      background: $panel-bg;
+      border: 2px solid rgba($border-color, 0.5);
+      border-radius: 12px;
+      font-size: 0.813rem;
+      font-weight: 600;
+      color: $text-secondary;
+      cursor: pointer;
+      transition: all $transition-normal;
+      white-space: nowrap;
+      flex-shrink: 0;
+      
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+      
+      &:hover {
+        border-color: $primary-color;
+        background: rgba($primary-50, 0.5);
+        color: $primary-color;
+        transform: translateY(-2px);
+      }
+      
+      &.active {
+        background: $primary-gradient;
+        border-color: $primary-color;
+        color: white;
+        box-shadow: 0 4px 12px rgba($primary-color, 0.25);
+        
+        mat-icon {
+          color: white;
+        }
+      }
+    }
+  }
+  
+  .font-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 1.25rem;
+    padding-right: 0.5rem;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba($primary-color, 0.2);
+      border-radius: 3px;
+      
+      &:hover {
+        background: rgba($primary-color, 0.4);
+      }
+    }
+    
+    .font-card {
+      background: $panel-bg;
+      border: 2px solid rgba($border-color, 0.5);
+      border-radius: $radius-lg;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      transition: all $transition-normal;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: $primary-gradient;
+        opacity: 0;
+        transition: opacity $transition-normal;
+      }
+      
+      &:hover {
+        border-color: $primary-color;
+        transform: translateX(4px);
+        box-shadow: $shadow-md;
+        
+        &::before {
+          opacity: 0.05;
+        }
+      }
+      
+      &.selected {
+        border-color: $primary-color;
+        box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+        
+        &::before {
+          opacity: 0.08;
+        }
+        
+        .selected-icon {
+          opacity: 1;
+        }
+      }
+      
+      &.premium {
+        .font-card-footer {
+          .premium-icon {
+            opacity: 1;
+          }
+        }
+      }
+      
+      .font-preview-text {
+        font-size: 1.125rem;
+        margin-bottom: 0.75rem;
+        color: $text-primary;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .font-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        
+        .font-meta {
+          flex: 1;
+          
+          .font-family-name {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: $text-primary;
+            margin-bottom: 0.25rem;
+          }
+          
+          .font-category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.625rem;
+            background: rgba($secondary-color, 0.1);
+            color: $secondary-color;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+          }
+        }
+        
+        .font-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          
+          .premium-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: $accent-color;
+            opacity: 0.6;
+          }
+          
+          .selected-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: $success-color;
+            opacity: 0;
+            transition: opacity $transition-normal;
+          }
+        }
+      }
+    }
+  }
+  
+  .custom-font-upload-card {
+    .upload-font-button {
+      width: 100%;
+      padding: 1.25rem;
+      background: linear-gradient(135deg, rgba($primary-50, 0.5) 0%, rgba($secondary-light, 0.3) 100%);
+      border: 2px dashed rgba($primary-color, 0.4);
+      border-radius: $radius-lg;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all $transition-normal;
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba($primary-50, 0.8) 0%, rgba($secondary-light, 0.6) 100%);
+        border-color: $primary-color;
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+        
+        .upload-icon {
+          transform: translateY(-4px);
+          color: $primary-color;
+        }
+      }
+      
+      .upload-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: $primary-color;
+        transition: all $transition-normal;
+      }
+      
+      .upload-text {
+        flex: 1;
+        text-align: left;
+        
+        .upload-title {
+          display: block;
+          font-size: 0.938rem;
+          font-weight: 700;
+          color: $text-primary;
+          margin-bottom: 0.25rem;
+        }
+        
+        .upload-subtitle {
+          display: block;
+          font-size: 0.75rem;
+          color: $text-muted;
+        }
+      }
+    }
+  }
+}
+
+// Color Palette Section - Card Design
+.color-palette-section {
+  .sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    .title-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: $accent-color;
+    }
+  }
+  
+  .color-palette-container {
+    .palette-header-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      background: rgba($bg-secondary, 0.5);
+      padding: 0.375rem;
+      border-radius: 12px;
+      
+      .palette-header-tab {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.625rem 0.75rem;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.813rem;
+        font-weight: 600;
+        color: $text-secondary;
+        cursor: pointer;
+        transition: all $transition-normal;
+        
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+        }
+        
+        &:hover {
+          background: rgba(white, 0.5);
+          color: $primary-color;
+        }
+        
+        &.active {
+          background: $panel-bg;
+          color: $primary-color;
+          box-shadow: $shadow-sm;
+          
+          mat-icon {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+    
+    .palette-content-area {
+      .color-swatches-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        
+        .color-swatch-card {
+          aspect-ratio: 1;
+          border-radius: $radius-md;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition: all $transition-normal;
+          border: 2px solid rgba(white, 0.2);
+          
+          &:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: $shadow-lg;
+            z-index: 10;
+            
+            .swatch-overlay {
+              opacity: 1;
+            }
+            
+            .swatch-label {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          .swatch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity $transition-normal;
+            
+            .swatch-icon {
+              font-size: 24px;
+              width: 24px;
+              height: 24px;
+              color: white;
+            }
+          }
+          
+          .swatch-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.375rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 0.75rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all $transition-normal;
+          }
+        }
+        
+        .add-color-swatch-card {
+          aspect-ratio: 1;
+          background: linear-gradient(135deg, rgba($primary-50, 0.5) 0%, rgba($secondary-light, 0.3) 100%);
+          border: 2px dashed rgba($primary-color, 0.4);
+          border-radius: $radius-md;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.25rem;
+          cursor: pointer;
+          transition: all $transition-normal;
+          
+          &:hover {
+            background: linear-gradient(135deg, rgba($primary-50, 0.8) 0%, rgba($secondary-light, 0.6) 100%);
+            border-color: $primary-color;
+            transform: translateY(-4px);
+            box-shadow: $shadow-md;
+            
+            .add-icon {
+              transform: scale(1.2);
+            }
+          }
+          
+          .add-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            color: $primary-color;
+            transition: transform $transition-normal;
+          }
+          
+          .add-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: $primary-color;
+          }
+        }
+      }
+      
+      .brand-palette-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        
+        .brand-action-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.75rem;
+          border: 2px solid rgba($border-color, 0.6);
+          background: $panel-bg;
+          border-radius: $radius-md;
+          font-size: 0.813rem;
+          font-weight: 600;
+          color: $text-primary;
+          cursor: pointer;
+          transition: all $transition-normal;
+          
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+          
+          &.save-brand-btn {
+            &:hover {
+              border-color: $success-color;
+              background: rgba($success-light, 0.3);
+              color: $success-dark;
+              transform: translateY(-2px);
+              box-shadow: $shadow-md;
+              
+              mat-icon {
+                color: $success-color;
+              }
+            }
+          }
+          
+          &.load-brand-btn {
+            &:hover {
+              border-color: $primary-color;
+              background: rgba($primary-50, 0.5);
+              color: $primary-color;
+              transform: translateY(-2px);
+              box-shadow: $shadow-md;
+              
+              mat-icon {
+                color: $primary-color;
+              }
+            }
+          }
+        }
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: $text-muted;
+        
+        .empty-icon {
+          font-size: 48px;
+          width: 48px;
+          height: 48px;
+          margin: 0 auto 0.75rem;
+          opacity: 0.5;
+        }
+        
+        .empty-text {
+          font-size: 0.875rem;
+        }
+      }
+    }
+    
+    .advanced-color-picker-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeInUp $transition-normal;
+      
+      .color-picker-card {
+        background: $panel-bg;
+        border-radius: $radius-lg;
+        box-shadow: $shadow-2xl;
+        max-width: 400px;
+        width: 90%;
+        animation: scaleIn $transition-bounce;
+        
+        .color-picker-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1.25rem 1.5rem;
+          border-bottom: 1px solid $border-color;
+          
+          .picker-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: $text-primary;
+            margin: 0;
+            
+            mat-icon {
+              font-size: 24px;
+              width: 24px;
+              height: 24px;
+              color: $accent-color;
+            }
+          }
+          
+          .close-picker-btn {
+            padding: 0.5rem;
+            background: rgba($error-color, 0.1);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all $transition-fast;
+            
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+              color: $error-color;
+            }
+            
+            &:hover {
+              background: rgba($error-color, 0.2);
+              transform: scale(1.1);
+            }
+          }
+        }
+        
+        .color-picker-body {
+          padding: 1.5rem;
+          
+          .color-preview-area {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            
+            .color-input-picker {
+              width: 80px;
+              height: 80px;
+              border: none;
+              border-radius: $radius-md;
+              cursor: pointer;
+            }
+            
+            .color-preview-display {
+              flex: 1;
+              border-radius: $radius-md;
+              border: 2px solid $border-color;
+              box-shadow: inset $shadow-sm;
+            }
+          }
+          
+          .color-input-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            
+            .color-field-group {
+              .field-label {
+                display: block;
+                font-size: 0.813rem;
+                font-weight: 600;
+                color: $text-secondary;
+                margin-bottom: 0.5rem;
+              }
+              
+              .field-input {
+                width: 100%;
+                padding: 0.75rem;
+                border: 2px solid rgba($border-color, 0.6);
+                border-radius: 8px;
+                font-size: 0.875rem;
+                color: $text-primary;
+                transition: all $transition-normal;
+                
+                &:focus {
+                  outline: none;
+                  border-color: $primary-color;
+                  box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+                }
+              }
+              
+              &.rgb-field {
+                .rgb-inputs-group {
+                  display: grid;
+                  grid-template-columns: repeat(3, 1fr);
+                  gap: 0.5rem;
+                  
+                  .rgb-input {
+                    width: 100%;
+                  }
+                }
+              }
+            }
+          }
+          
+          .opacity-control-area {
+            margin-bottom: 1.5rem;
+            
+            .opacity-label {
+              display: block;
+              font-size: 0.813rem;
+              font-weight: 600;
+              color: $text-secondary;
+              margin-bottom: 0.5rem;
+              
+              strong {
+                color: $primary-color;
+              }
+            }
+            
+            .opacity-slider {
+              width: 100%;
+              height: 8px;
+              border-radius: 4px;
+              background: linear-gradient(90deg, transparent 0%, $primary-color 100%);
+              outline: none;
+              cursor: pointer;
+              
+              &::-webkit-slider-thumb {
+                appearance: none;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: $primary-gradient;
+                cursor: pointer;
+                box-shadow: $shadow-md;
+                transition: all $transition-fast;
+                
+                &:hover {
+                  transform: scale(1.2);
+                  box-shadow: $shadow-lg;
+                }
+              }
+            }
+          }
+          
+          .add-to-palette-button {
+            width: 100%;
+            padding: 1rem;
+            background: $primary-gradient;
+            border: none;
+            border-radius: $radius-md;
+            color: white;
+            font-size: 0.938rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all $transition-normal;
+            box-shadow: $shadow-md;
+            
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+            
+            &:hover {
+              background: $primary-gradient-hover;
+              transform: translateY(-2px);
+              box-shadow: $shadow-lg;
+            }
+            
+            &:active {
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Canvas Background Section - Card Design
+.canvas-background-section {
+  .sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    .title-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: $secondary-color;
+    }
+  }
+  
+  .background-controls-container {
+    .bg-type-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      
+      .bg-type-card {
+        background: $panel-bg;
+        border: 2px solid rgba($border-color, 0.5);
+        border-radius: $radius-lg;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all $transition-normal;
+        position: relative;
+        text-align: center;
+        
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          opacity: 0;
+          border-radius: inherit;
+          transition: opacity $transition-normal;
+        }
+        
+        &.color-card::before {
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+        
+        &.gradient-card::before {
+          background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+        }
+        
+        &.image-card::before {
+          background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%);
+        }
+        
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: $shadow-md;
+          
+          &::before {
+            opacity: 1;
+          }
+          
+          .bg-type-icon-wrapper {
+            transform: scale(1.1);
+          }
+        }
+        
+        &.active {
+          border-color: $primary-color;
+          box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+          
+          &::before {
+            opacity: 1;
+          }
+          
+          .active-indicator {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        .bg-type-icon-wrapper {
+          width: 40px;
+          height: 40px;
+          margin: 0 auto 0.5rem;
+          background: rgba($primary-color, 0.1);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all $transition-normal;
+          position: relative;
+          z-index: 1;
+          
+          .bg-type-icon {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: $primary-color;
+          }
+        }
+        
+        .bg-type-label {
+          display: block;
+          font-size: 0.813rem;
+          font-weight: 600;
+          color: $text-primary;
+          position: relative;
+          z-index: 1;
+        }
+        
+        .active-indicator {
+          position: absolute;
+          top: 0.5rem;
+          right: 0.5rem;
+          opacity: 0;
+          transform: scale(0.5);
+          transition: all $transition-normal;
+          z-index: 1;
+          
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: $success-color;
+          }
+        }
+      }
+    }
+    
+    .bg-options-panel {
+      .bg-option-card {
+        background: rgba($bg-secondary, 0.3);
+        border: 1px solid rgba($border-color, 0.5);
+        border-radius: $radius-md;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        transition: all $transition-normal;
+        
+        &:hover {
+          background: rgba($bg-secondary, 0.5);
+          border-color: $border-color;
+        }
+        
+        .option-label {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: $text-primary;
+          margin-bottom: 0.75rem;
+          
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: $primary-color;
+          }
+          
+          strong {
+            color: $primary-color;
+          }
+        }
+        
+        .color-picker-inline {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          
+          .color-input {
+            width: 60px;
+            height: 40px;
+            border: 2px solid $border-color;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all $transition-fast;
+            
+            &:hover {
+              border-color: $primary-color;
+              transform: scale(1.05);
+            }
+          }
+          
+          .color-value {
+            flex: 1;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: $text-secondary;
+            font-family: 'Courier New', monospace;
+          }
+        }
+        
+        .gradient-type-select {
+          width: 100%;
+          padding: 0.75rem;
+          border: 2px solid rgba($border-color, 0.6);
+          border-radius: 8px;
+          font-size: 0.875rem;
+          background: $panel-bg;
+          color: $text-primary;
+          cursor: pointer;
+          transition: all $transition-normal;
+          
+          &:focus {
+            outline: none;
+            border-color: $primary-color;
+            box-shadow: 0 0 0 4px rgba($primary-color, 0.1);
+          }
+        }
+        
+        .control-slider,
+        .gradient-angle-slider {
+          width: 100%;
+          height: 8px;
+          border-radius: 4px;
+          background: rgba($border-color, 0.3);
+          outline: none;
+          cursor: pointer;
+          
+          &::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: $primary-gradient;
+            cursor: pointer;
+            box-shadow: $shadow-md;
+            transition: all $transition-fast;
+            
+            &:hover {
+              transform: scale(1.2);
+              box-shadow: $shadow-lg;
+            }
+          }
+        }
+      }
+      
+      .gradient-colors-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      
+      .bg-image-upload-card {
+        margin-bottom: 0.75rem;
+        
+        .upload-bg-button {
+          width: 100%;
+          padding: 1.25rem;
+          background: linear-gradient(135deg, rgba($secondary-light, 0.3) 0%, rgba($primary-50, 0.5) 100%);
+          border: 2px dashed rgba($secondary-color, 0.4);
+          border-radius: $radius-lg;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          font-size: 0.938rem;
+          font-weight: 700;
+          color: $text-primary;
+          cursor: pointer;
+          transition: all $transition-normal;
+          
+          .upload-icon {
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+            color: $secondary-color;
+            transition: all $transition-normal;
+          }
+          
+          &:hover {
+            background: linear-gradient(135deg, rgba($secondary-light, 0.6) 0%, rgba($primary-50, 0.8) 100%);
+            border-color: $secondary-color;
+            transform: translateY(-2px);
+            box-shadow: $shadow-md;
+            
+            .upload-icon {
+              transform: translateY(-4px);
+            }
+          }
+        }
+      }
+      
+      .bg-image-preview-card {
+        margin-bottom: 0.75rem;
+        
+        .preview-image-wrapper {
+          position: relative;
+          border-radius: $radius-md;
+          overflow: hidden;
+          border: 2px solid $border-color;
+          
+          .preview-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+          }
+          
+          .remove-bg-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.5rem;
+            background: rgba($error-color, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all $transition-fast;
+            box-shadow: $shadow-md;
+            
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+            }
+            
+            &:hover {
+              background: $error-color;
+              transform: scale(1.1);
+              box-shadow: $shadow-lg;
+            }
+          }
+        }
+      }
+      
+      .bg-image-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+  }
+}
+
+// Media Section - Card Design
+.media-section {
+  .sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    
+    .title-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: $accent-color;
+    }
+  }
+  
+  .media-upload-area {
+    margin-bottom: 1.5rem;
+    
+    .media-upload-card {
+      width: 100%;
+      padding: 2rem 1.5rem;
+      background: linear-gradient(135deg, rgba($accent-light, 0.3) 0%, rgba($primary-50, 0.5) 100%);
+      border: 3px dashed rgba($accent-color, 0.4);
+      border-radius: $radius-lg;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      transition: all $transition-normal;
+      
+      &:hover {
+        background: linear-gradient(135deg, rgba($accent-light, 0.6) 0%, rgba($primary-50, 0.8) 100%);
+        border-color: $accent-color;
+        transform: translateY(-4px);
+        box-shadow: $shadow-lg;
+        
+        .upload-icon-wrapper {
+          transform: translateY(-8px) scale(1.1);
+        }
+      }
+      
+      .upload-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, rgba($accent-color, 0.2) 0%, rgba($primary-color, 0.2) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all $transition-normal;
+        
+        .upload-icon {
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
+          color: $accent-color;
+        }
+      }
+      
+      .upload-content {
+        text-align: center;
+        
+        .upload-title {
+          display: block;
+          font-size: 1.125rem;
+          font-weight: 700;
+          color: $text-primary;
+          margin-bottom: 0.25rem;
+        }
+        
+        .upload-subtitle {
+          display: block;
+          font-size: 0.813rem;
+          color: $text-muted;
+        }
+      }
+    }
+  }
+  
+  .media-gallery {
+    .gallery-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.938rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0 0 1rem 0;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: $primary-color;
+      }
+    }
+    
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      
+      .media-item-card {
+        background: $panel-bg;
+        border: 2px solid rgba($border-color, 0.5);
+        border-radius: $radius-md;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all $transition-normal;
+        
+        &:hover {
+          border-color: $primary-color;
+          transform: translateY(-4px);
+          box-shadow: $shadow-lg;
+          
+          .media-overlay {
+            opacity: 1;
+          }
+        }
+        
+        .media-thumbnail {
+          position: relative;
+          width: 100%;
+          height: 120px;
+          overflow: hidden;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform $transition-normal;
+          }
+          
+          .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba($primary-color, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity $transition-normal;
+            
+            .add-media-icon {
+              font-size: 40px;
+              width: 40px;
+              height: 40px;
+              color: white;
+            }
+          }
+          
+          &:hover img {
+            transform: scale(1.1);
+          }
+        }
+        
+        .media-info {
+          padding: 0.75rem;
+          background: rgba($bg-secondary, 0.3);
+          
+          .media-name {
+            display: block;
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: $text-primary;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+    }
+  }
+  
+  .media-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    
+    .empty-state-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      color: $text-muted;
+      opacity: 0.5;
+    }
+    
+    .empty-state-text {
+      display: block;
+      font-size: 0.938rem;
+      color: $text-muted;
+      margin-bottom: 1.5rem;
+    }
+    
+    .empty-state-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      background: $primary-gradient;
+      border: none;
+      border-radius: $radius-md;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all $transition-normal;
+      box-shadow: $shadow-md;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+      
+      &:hover {
+        background: $primary-gradient-hover;
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+      }
+    }
+  }
+}
+
+// Smart guides optimizations
+.smart-guide {
   contain: strict;
   transform: translateZ(0);
 }

@@ -64,677 +64,631 @@
   </div>
   
   <div class="template-editor-body">
-    <div class="sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}">
-      <!-- Text Elements Section -->
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">
-          <mat-icon>text_fields</mat-icon>
-          Text Elements
+    <div class="sidebar" [ngClass]="{'mobile-active': activeMobilePanel === 'sidebar'}"
+         style="background: #f8fafc; padding: 1rem; overflow-y: auto;">
+      
+      <!-- ============================================ -->
+      <!-- SECTION 1: TEXT - Add Different Text Styles -->
+      <!-- ============================================ -->
+      <div class="sidebar-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_fields</mat-icon>
+          </div>
+          <span>Text</span>
         </h3>
         
-        <!-- Text Types Grid -->
-        <div class="text-elements-grid">
-          <div class="text-element-item" (click)="addTextElement('heading')" 
-               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'heading'})" (dragend)="onDragEnd()">
-            <div class="text-icon">
-              <mat-icon>title</mat-icon>
+        <!-- Compact 2-Column Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <!-- Heading -->
+          <div (click)="addTextElement('heading')" draggable="true" 
+               (dragstart)="onDragStart($event, 'text', {textType: 'heading'})" (dragend)="onDragEnd()"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">title</mat-icon>
             </div>
-            <div class="element-preview">
-              <span class="preview-text heading-preview">Add a heading</span>
-              <span class="element-label">Heading</span>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Heading</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Large text</div>
+          </div>
+          
+          <!-- Subheading -->
+          <div (click)="addTextElement('subheading')" draggable="true" 
+               (dragstart)="onDragStart($event, 'text', {textType: 'subheading'})" (dragend)="onDragEnd()"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">format_h2</mat-icon>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Subheading</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Medium text</div>
+          </div>
+          
+          <!-- Body Text -->
+          <div (click)="addTextElement('body')" draggable="true" 
+               (dragstart)="onDragStart($event, 'text', {textType: 'body'})" (dragend)="onDragEnd()"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">article</mat-icon>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Body</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Paragraph</div>
+          </div>
+          
+          <!-- Caption -->
+          <div (click)="addTextElement('caption')" draggable="true" 
+               (dragstart)="onDragStart($event, 'text', {textType: 'caption'})" (dragend)="onDragEnd()"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_fields_alt</mat-icon>
+            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Caption</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Small text</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- SECTION 2: TYPOGRAPHY & EFFECTS -->
+      <!-- ================================================ -->
+      
+      <div class="sidebar-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">font_download</mat-icon>
+          </div>
+          <span>Typography Combos</span>
+        </h3>
+        
+        <!-- Compact Category Filters -->
+        <div style="display: flex; gap: 0.375rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+          <button (click)="setTypographyCategory('all')" [class.active]="activeTypographyCategory === 'all'"
+                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+            All
+          </button>
+          <button (click)="setTypographyCategory('modern')" [class.active]="activeTypographyCategory === 'modern'"
+                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+            Modern
+          </button>
+          <button (click)="setTypographyCategory('elegant')" [class.active]="activeTypographyCategory === 'elegant'"
+                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+            Elegant
+          </button>
+          <button (click)="setTypographyCategory('bold')" [class.active]="activeTypographyCategory === 'bold'"
+                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+            Bold
+          </button>
+        </div>
+        
+        <!-- Compact Typography Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+          <div *ngFor="let combo of filteredTypographyCombos; trackBy: trackByCombo" 
+               (click)="applyTypographyCombo(combo)"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s;">
+            <div style="font-size: 0.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+              {{ combo.name }}
+            </div>
+            <div style="font-size: 0.625rem; color: #64748b; margin-bottom: 0.375rem;">
+              {{ combo.headingFont }}
+            </div>
+            <div style="background: white; padding: 0.375rem; border-radius: 4px; border: 1px solid #e2e8f0;">
+              <div [ngStyle]="getComboHeadingStyle(combo)" style="font-size: 0.7rem; margin-bottom: 0.125rem;">Heading</div>
+              <div [ngStyle]="getComboBodyStyle(combo)" style="font-size: 0.625rem;">Body Text</div>
             </div>
           </div>
           
-          <div class="text-element-item" (click)="addTextElement('subheading')" 
-               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'subheading'})" (dragend)="onDragEnd()">
-            <div class="text-icon">
-              <mat-icon>format_h2</mat-icon>
-            </div>
-            <div class="element-preview">
-              <span class="preview-text subheading-preview">Add a subheading</span>
-              <span class="element-label">Subheading</span>
-            </div>
-          </div>
-          
-          <div class="text-element-item" (click)="addTextElement('body')" 
-               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'body'})" (dragend)="onDragEnd()">
-            <div class="text-icon">
-              <mat-icon>article</mat-icon>
-            </div>
-            <div class="element-preview">
-              <span class="preview-text body-preview">Add a little bit of body text</span>
-              <span class="element-label">Body Text</span>
-            </div>
-          </div>
-          
-          <div class="text-element-item" (click)="addTextElement('caption')" 
-               draggable="true" (dragstart)="onDragStart($event, 'text', {textType: 'caption'})" (dragend)="onDragEnd()">
-            <div class="text-icon">
-              <mat-icon>text_fields_alt</mat-icon>
-            </div>
-            <div class="element-preview">
-              <span class="preview-text caption-preview">Add a caption</span>
-              <span class="element-label">Caption</span>
-            </div>
+          <!-- Empty State -->
+          <div *ngIf="filteredTypographyCombos.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 1.5rem; color: #94a3b8;">
+            <mat-icon style="font-size: 32px; width: 32px; height: 32px; opacity: 0.5;">font_download</mat-icon>
+            <div style="font-size: 0.75rem; margin-top: 0.5rem;">No combos found</div>
           </div>
         </div>
 
-        <!-- Typography Combos -->
-        <div class="typography-section">
-          <h4 class="subsection-title">
-            <mat-icon>font_download</mat-icon>
-            Typography Combos
-          </h4>
-          <div class="typography-combos">
-            <div class="combo-item" 
-                 *ngFor="let combo of typographyCombos; trackBy: trackByCombo" 
-                 (click)="applyTypographyCombo(combo)"
-                 [title]="'Click to add ' + combo.name + ' typography combo to canvas'">
-              <div class="combo-preview">
-                <div class="combo-heading" [ngStyle]="getComboHeadingStyle(combo)">{{ combo.headingText }}</div>
-                <div class="combo-body" [ngStyle]="getComboBodyStyle(combo)">{{ combo.bodyText }}</div>
-              </div>
-              <div class="combo-info">
-                <span class="combo-name">{{ combo.name }}</span>
-                <span class="combo-fonts">{{ combo.headingFont }} & {{ combo.bodyFont }}</span>
-              </div>
-            </div>
-            
-            <!-- Loading state -->
-            <div *ngIf="typographyCombos.length === 0" class="combo-loading">
-              <mat-icon>hourglass_empty</mat-icon>
-              <span>Loading typography combos...</span>
-            </div>
+        <!-- Text Effects -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">auto_fix_high</mat-icon>
           </div>
-        </div>
-
-        <!-- Text Effects Quick Access -->
-        <div class="text-effects-section">
-          <h4 class="subsection-title">Text Effects</h4>
-          <div class="effects-quick-grid">
-            <button class="effect-btn" (click)="applyTextEffect('shadow')" 
-                    [class.active]="hasEffect('shadow')" title="Shadow">
-              <mat-icon>layers</mat-icon>
-              <span>Shadow</span>
-            </button>
-            <button class="effect-btn" (click)="applyTextEffect('outline')" 
-                    [class.active]="hasEffect('outline')" title="Outline">
-              <mat-icon>border_outer</mat-icon>
-              <span>Outline</span>
-            </button>
-            <button class="effect-btn" (click)="applyTextEffect('gradient')" 
-                    [class.active]="hasEffect('gradient')" title="Gradient">
-              <mat-icon>gradient</mat-icon>
-              <span>Gradient</span>
-            </button>
-            <button class="effect-btn" (click)="applyTextEffect('neon')" 
-                    [class.active]="hasEffect('neon')" title="Neon Glow">
-              <mat-icon>flare</mat-icon>
-              <span>Neon</span>
-            </button>
+          <span>Text Effects</span>
+        </h3>
+        
+        <!-- Compact Effects Grid -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;">
+          <div (click)="applyTextEffect('shadow')" [class.active]="hasEffect('shadow')"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">layers</mat-icon>
+            </div>
+            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Shadow</div>
+          </div>
+          
+          <div (click)="applyTextEffect('outline')" [class.active]="hasEffect('outline')"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">border_outer</mat-icon>
+            </div>
+            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Outline</div>
+          </div>
+          
+          <div (click)="applyTextEffect('gradient')" [class.active]="hasEffect('gradient')"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">gradient</mat-icon>
+            </div>
+            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Gradient</div>
+          </div>
+          
+          <div (click)="applyTextEffect('neon')" [class.active]="hasEffect('neon')"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">flare</mat-icon>
+            </div>
+            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Neon</div>
           </div>
         </div>
       </div>
 
       <!-- Font Library Section -->
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">
-          <mat-icon>font_download</mat-icon>
-          Font Library
+      <div class="sidebar-section font-library-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">font_download</mat-icon>
+          </div>
+          <span>Fonts</span>
         </h3>
         
-        <!-- Font Search -->
-        <div class="font-search">
-          <mat-icon>search</mat-icon>
-          <input type="text" 
-                 [(ngModel)]="fontSearchQuery" 
-                 placeholder="Search fonts..." 
-                 (input)="filterFonts()">
-        </div>
-
-        <!-- Font Categories -->
-        <div class="font-categories">
-          <button class="category-btn" 
-                  [class.active]="activeFontCategory === 'all'"
-                  (click)="setFontCategory('all')">All</button>
-          <button class="category-btn" 
-                  [class.active]="activeFontCategory === 'sans-serif'"
-                  (click)="setFontCategory('sans-serif')">Sans-serif</button>
-          <button class="category-btn" 
-                  [class.active]="activeFontCategory === 'serif'"
-                  (click)="setFontCategory('serif')">Serif</button>
-          <button class="category-btn" 
-                  [class.active]="activeFontCategory === 'display'"
-                  (click)="setFontCategory('display')">Display</button>
-          <button class="category-btn" 
-                  [class.active]="activeFontCategory === 'handwriting'"
-                  (click)="setFontCategory('handwriting')">Script</button>
-        </div>
-
-        <!-- Font List -->
-        <div class="font-list">
-          <div class="font-item" *ngFor="let font of filteredFonts; trackBy: trackByFont" 
-               (click)="applyFont(font)"
-               [class.selected]="isSelectedFont(font)">
-            <div class="font-preview" [ngStyle]="getFontPreviewStyle(font)">
-              {{ font.previewText || 'The quick brown fox' }}
-            </div>
-            <div class="font-info">
-              <span class="font-name">{{ font.name }}</span>
-              <span class="font-category">{{ font.category }}</span>
-              <mat-icon class="premium-icon" *ngIf="font.premium">star</mat-icon>
-            </div>
-          </div>
-        </div>
-
-        <!-- Font Pairing Suggestions -->
-        <div class="font-pairing-section" *ngIf="selectedElement !== null && canvasElements[selectedElement]?.type === 'text'">
-          <h4 class="subsection-title">Suggested Pairings</h4>
-          <div class="pairing-suggestions">
-            <div class="pairing-item" *ngFor="let pairing of fontPairingSuggestions" 
-                 (click)="applyFontPairing(pairing)">
-              <div class="pairing-preview">
-                <div class="pairing-primary" [ngStyle]="getPairingPrimaryStyle(pairing)">{{ pairing.primarySample }}</div>
-                <div class="pairing-secondary" [ngStyle]="getPairingSecondaryStyle(pairing)">{{ pairing.secondarySample }}</div>
-              </div>
-              <div class="pairing-info">
-                <span class="pairing-name">{{ pairing.name }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Custom Font Upload -->
-        <div class="custom-font-upload">
-          <button class="upload-font-btn" (click)="triggerFontUpload()">
-            <mat-icon>upload</mat-icon>
-            <span>Upload Custom Font</span>
+        <!-- Compact Search -->
+        <div style="position: relative; margin-bottom: 0.625rem;">
+          <mat-icon style="position: absolute; left: 0.625rem; top: 50%; transform: translateY(-50%); font-size: 16px; color: #94a3b8;">search</mat-icon>
+          <input type="text" [(ngModel)]="fontSearchQuery" (input)="filterFonts()" placeholder="Search fonts..."
+                 style="width: 100%; padding: 0.5rem 0.5rem 0.5rem 2.25rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; outline: none; transition: all 0.15s;">
+          <button *ngIf="fontSearchQuery" (click)="fontSearchQuery = ''; filterFonts()" 
+                  style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0.25rem; color: #94a3b8;">
+            <mat-icon style="font-size: 16px;">close</mat-icon>
           </button>
-          <input type="file" 
-                 #fontUploadRef 
-                 style="display: none" 
-                 accept=".ttf,.otf,.woff,.woff2"
-                 (change)="onFontFileSelected($event)">
         </div>
+
+        <!-- Compact Category Tabs -->
+        <div style="display: flex; gap: 0.375rem; margin-bottom: 0.75rem; overflow-x: auto;">
+          <button (click)="setFontCategory('all')" [class.active]="activeFontCategory === 'all'"
+                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">apps</mat-icon>
+            <span>All</span>
+          </button>
+          <button (click)="setFontCategory('sans-serif')" [class.active]="activeFontCategory === 'sans-serif'"
+                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">font_download</mat-icon>
+            <span>Sans</span>
+          </button>
+          <button (click)="setFontCategory('serif')" [class.active]="activeFontCategory === 'serif'"
+                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">format_quote</mat-icon>
+            <span>Serif</span>
+          </button>
+          <button (click)="setFontCategory('display')" [class.active]="activeFontCategory === 'display'"
+                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">star</mat-icon>
+            <span>Display</span>
+          </button>
+          <button (click)="setFontCategory('handwriting')" [class.active]="activeFontCategory === 'handwriting'"
+                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">draw</mat-icon>
+            <span>Script</span>
+          </button>
+        </div>
+
+        <!-- Compact Font List -->
+        <div style="max-height: 280px; overflow-y: auto; margin-bottom: 0.75rem;">
+          <div *ngFor="let font of filteredFonts; trackBy: trackByFont" 
+               (click)="applyFont(font)"
+               [class.selected]="isSelectedFont(font)"
+               style="padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 0.375rem; cursor: pointer; transition: all 0.15s;">
+            <div [ngStyle]="getFontPreviewStyle(font)" style="font-size: 0.875rem; margin-bottom: 0.25rem; color: #0f172a;">
+              {{ font.previewText || 'Aa Bb Cc 123' }}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 0.375rem;">
+                <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">{{ font.name }}</span>
+                <span style="font-size: 0.625rem; padding: 0.125rem 0.375rem; background: #e0e7ff; color: #4338ca; border-radius: 4px;">{{ font.category }}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.25rem;">
+                <mat-icon *ngIf="font.premium" style="font-size: 14px; width: 14px; height: 14px; color: #f59e0b;">workspace_premium</mat-icon>
+                <mat-icon *ngIf="isSelectedFont(font)" style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">check_circle</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compact Upload Button -->
+        <button (click)="triggerFontUpload()" 
+                style="width: 100%; padding: 0.625rem; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; transition: all 0.15s;">
+          <mat-icon style="font-size: 16px; width: 16px; height: 16px;">cloud_upload</mat-icon>
+          <span>Upload Custom Font</span>
+        </button>
+        <input type="file" #fontUploadRef style="display: none" accept=".ttf,.otf,.woff,.woff2" (change)="onFontFileSelected($event)">
       </div>
       
-      <div class="sidebar-section media-shapes-section">
-        <h3 class="sidebar-title">
-          <mat-icon class="title-icon">design_services</mat-icon>
-          Media & Shapes
+      <!-- Media & Shapes Section -->
+      <div class="sidebar-section media-shapes-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">design_services</mat-icon>
+          </div>
+          <span>Media & Shapes</span>
         </h3>
         
-        <!-- Modern Element Grid -->
-        <div class="modern-elements-grid">
-          <div class="element-card image-card" 
-               draggable="true" 
-               (dragstart)="onDragStart($event, 'image')" 
-               (dragend)="onDragEnd()"
-               (click)="triggerImageUpload()">
-            <div class="element-icon-container">
-              <mat-icon class="element-icon">add_photo_alternate</mat-icon>
-              <div class="icon-background"></div>
+        <!-- Compact 2x2 Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <!-- Image -->
+          <div draggable="true" (dragstart)="onDragStart($event, 'image')" (dragend)="onDragEnd()" (click)="triggerImageUpload()"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">add_photo_alternate</mat-icon>
             </div>
-            <div class="element-info">
-              <span class="element-name">Image</span>
-              <span class="element-desc">Upload or drag photos</span>
-            </div>
-            <div class="element-action">
-              <mat-icon>add</mat-icon>
-            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Image</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Upload photo</div>
           </div>
-
-          <div class="element-card shape-card" 
-               draggable="true" 
-               (dragstart)="onDragStart($event, 'shape')" 
-               (dragend)="onDragEnd()" 
-               (click)="openShapeSelector()">
-            <div class="element-icon-container">
-              <mat-icon class="element-icon">category</mat-icon>
-              <div class="icon-background shape-bg"></div>
+          
+          <!-- Shape -->
+          <div draggable="true" (dragstart)="onDragStart($event, 'shape')" (dragend)="onDragEnd()" (click)="openShapeSelector()"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">category</mat-icon>
             </div>
-            <div class="element-info">
-              <span class="element-name">Shape</span>
-              <span class="element-desc">Rectangles, circles & more</span>
-            </div>
-            <div class="element-action">
-              <mat-icon>expand_more</mat-icon>
-            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Shape</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Add shapes</div>
           </div>
-
-          <div class="element-card line-card" 
-               draggable="true" 
-               (dragstart)="onDragStart($event, 'line')" 
-               (dragend)="onDragEnd()"
-               (click)="addElementToCanvas('line')">
-            <div class="element-icon-container">
-              <mat-icon class="element-icon">timeline</mat-icon>
-              <div class="icon-background line-bg"></div>
+          
+          <!-- Line -->
+          <div draggable="true" (dragstart)="onDragStart($event, 'line')" (dragend)="onDragEnd()" (click)="addElementToCanvas('line')"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">timeline</mat-icon>
             </div>
-            <div class="element-info">
-              <span class="element-name">Line</span>
-              <span class="element-desc">Draw connecting lines</span>
-            </div>
-            <div class="element-action">
-              <mat-icon>add</mat-icon>
-            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Line</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Draw lines</div>
           </div>
-
-          <div class="element-card icon-card" 
-               draggable="true" 
-               (dragstart)="onDragStart($event, 'icon')" 
-               (dragend)="onDragEnd()"
-               (click)="addElementToCanvas('icon')">
-            <div class="element-icon-container">
-              <mat-icon class="element-icon">emoji_symbols</mat-icon>
-              <div class="icon-background icon-bg"></div>
+          
+          <!-- Icon -->
+          <div draggable="true" (dragstart)="onDragStart($event, 'icon')" (dragend)="onDragEnd()" (click)="addElementToCanvas('icon')"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">emoji_symbols</mat-icon>
             </div>
-            <div class="element-info">
-              <span class="element-name">Icon</span>
-              <span class="element-desc">Add symbols & icons</span>
-            </div>
-            <div class="element-action">
-              <mat-icon>add</mat-icon>
-            </div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Icon</div>
+            <div style="font-size: 0.65rem; color: #64748b;">Add symbols</div>
           </div>
         </div>
         
-        <!-- Enhanced Shape Selector Panel -->
-        <div class="modern-shapes-panel" *ngIf="showShapeSelector">
-          <div class="shapes-panel-header">
-            <div class="panel-title-section">
-              <mat-icon class="panel-icon">category</mat-icon>
-              <h3 class="shapes-title">Select Shape</h3>
+        <!-- Compact Shape Selector Panel -->
+        <div *ngIf="showShapeSelector" 
+             style="margin-top: 0.75rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); overflow: hidden;">
+          <!-- Header -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <mat-icon style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 4px; font-size: 16px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">category</mat-icon>
+              <h3 style="font-size: 0.875rem; font-weight: 600; color: #0f172a; margin: 0;">Shapes</h3>
             </div>
-            <button class="close-panel-btn" (click)="closeShapeSelector()">
-              <mat-icon>close</mat-icon>
+            <button (click)="closeShapeSelector()" 
+                    style="background: #f8fafc; border: none; border-radius: 6px; padding: 4px; cursor: pointer; transition: all 0.15s;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">close</mat-icon>
             </button>
           </div>
           
-          <!-- Enhanced Search -->
-          <div class="modern-shapes-search">
-            <div class="search-input-container">
-              <mat-icon class="search-icon">search</mat-icon>
-              <input type="text" 
-                     class="search-input"
-                     [(ngModel)]="shapeSearchQuery" 
-                     placeholder="Find the perfect shape..." 
-                     (input)="filterShapes()">
-              <button class="clear-search" *ngIf="shapeSearchQuery" (click)="clearShapeSearch()">
-                <mat-icon>clear</mat-icon>
+          <!-- Search -->
+          <div style="padding: 0.75rem;">
+            <div style="position: relative;">
+              <mat-icon style="position: absolute; left: 0.625rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; width: 16px; height: 16px;">search</mat-icon>
+              <input type="text" [(ngModel)]="shapeSearchQuery" (input)="filterShapes()" placeholder="Search shapes..."
+                     style="width: 100%; padding: 0.5rem 0.5rem 0.5rem 2.25rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #f8fafc; outline: none;">
+              <button *ngIf="shapeSearchQuery" (click)="clearShapeSearch()" 
+                      style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0.25rem;">
+                <mat-icon style="font-size: 14px; color: #94a3b8;">clear</mat-icon>
               </button>
             </div>
           </div>
           
-          <!-- Modern Shape Categories -->
-          <div class="modern-shape-categories">
-            <button class="modern-category-btn" 
-                    [class.active]="activeShapeCategory === 'all'"
-                    (click)="setActiveCategory('all')">
-              <mat-icon class="category-icon">apps</mat-icon>
-              <span class="category-label">All</span>
-              <div class="category-indicator"></div>
+          <!-- Categories -->
+          <div style="display: flex; gap: 0.375rem; padding: 0 0.75rem 0.75rem; overflow-x: auto;">
+            <button (click)="setActiveCategory('all')" [class.active]="activeShapeCategory === 'all'"
+                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+              All
             </button>
-            
-            <button class="modern-category-btn" 
-                    [class.active]="activeShapeCategory === 'basic'"
-                    (click)="setActiveCategory('basic')">
-              <mat-icon class="category-icon">crop_square</mat-icon>
-              <span class="category-label">Basic</span>
-              <div class="category-indicator"></div>
+            <button (click)="setActiveCategory('basic')" [class.active]="activeShapeCategory === 'basic'"
+                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+              Basic
             </button>
-            
-            <button class="modern-category-btn" 
-                    [class.active]="activeShapeCategory === 'geometric'"
-                    (click)="setActiveCategory('geometric')">
-              <mat-icon class="category-icon">hexagon</mat-icon>
-              <span class="category-label">Geometric</span>
-              <div class="category-indicator"></div>
+            <button (click)="setActiveCategory('geometric')" [class.active]="activeShapeCategory === 'geometric'"
+                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+              Geometric
             </button>
-            
-            <button class="modern-category-btn" 
-                    [class.active]="activeShapeCategory === 'lines'"
-                    (click)="setActiveCategory('lines')">
-              <mat-icon class="category-icon">timeline</mat-icon>
-              <span class="category-label">Lines</span>
-              <div class="category-indicator"></div>
+            <button (click)="setActiveCategory('lines')" [class.active]="activeShapeCategory === 'lines'"
+                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+              Lines
             </button>
-            
-            <button class="modern-category-btn" 
-                    [class.active]="activeShapeCategory === 'special'"
-                    (click)="setActiveCategory('special')">
-              <mat-icon class="category-icon">auto_awesome</mat-icon>
-              <span class="category-label">Special</span>
-              <div class="category-indicator"></div>
+            <button (click)="setActiveCategory('special')" [class.active]="activeShapeCategory === 'special'"
+                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+              Special
             </button>
-          </div>
-          <!-- Modern Shapes Grid -->
-          <div class="modern-shapes-container">
-            <div class="modern-shapes-grid" *ngIf="filteredShapes.length > 0">
-              <div class="modern-shape-card" 
-                   *ngFor="let shape of filteredShapes; trackBy: trackByShape"
-                   [attr.data-shape]="shape.type"
-                   (click)="addShapeToCanvas(shape.type)"
-                   (mouseenter)="onShapeHover(shape, $event)"
-                   (mouseleave)="onShapeLeave()">
-                
-                <div class="shape-preview-container">
-                  <div class="shape-background-glow"></div>
-                  <div class="shape-icon-wrapper">
-                    <mat-icon class="shape-main-icon">{{ getShapeIcon(shape.type) }}</mat-icon>
-                  </div>
-                  <div class="shape-visual-preview" [ngClass]="getShapeVisualClass(shape.type)"></div>
-                </div>
-                
-                <div class="shape-info">
-                  <span class="shape-name">{{ shape.name }}</span>
-                  <span class="shape-category-badge">{{ shape.category }}</span>
-                </div>
-                
-                <div class="shape-hover-overlay">
-                  <mat-icon class="add-shape-icon">add_circle</mat-icon>
-                  <span class="add-text">Add to Canvas</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Enhanced No Results -->
-            <div class="modern-no-results" *ngIf="filteredShapes.length === 0 && shapeSearchQuery">
-              <div class="no-results-icon">
-                <mat-icon>search_off</mat-icon>
-              </div>
-              <h4 class="no-results-title">No shapes found</h4>
-              <p class="no-results-message">Try a different search term or browse all shapes</p>
-              <div class="no-results-actions">
-                <button class="clear-search-btn" (click)="clearShapeSearch()">
-                  <mat-icon>refresh</mat-icon>
-                  Clear search
-                </button>
-                <button class="browse-all-btn" (click)="setActiveCategory('all'); clearShapeSearch()">
-                  <mat-icon>apps</mat-icon>
-                  Browse all
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Color Palette Section -->
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">Color Palette</h3>
-        <div class="color-palette-container">
-          <div class="palette-tabs">
-            <button class="palette-tab" [ngClass]="{'active': activePaletteTab === 'saved'}" (click)="activePaletteTab = 'saved'">Saved</button>
-            <button class="palette-tab" [ngClass]="{'active': activePaletteTab === 'recent'}" (click)="activePaletteTab = 'recent'">Recent</button>
-            <button class="palette-tab" [ngClass]="{'active': activePaletteTab === 'brand'}" (click)="activePaletteTab = 'brand'">Brand</button>
           </div>
           
-          <!-- Saved Colors -->
-          <div class="palette-content" *ngIf="activePaletteTab === 'saved'">
-            <div class="color-swatches">
-              <div class="color-swatch" 
-                   *ngFor="let color of savedColors" 
-                   [style.background-color]="color"
-                   (click)="selectColor(color)"
-                   (contextmenu)="removeColor(color, $event)"
-                   [title]="color">
-              </div>
-              <div class="add-color-swatch" (click)="openColorPicker()">
-                <mat-icon>add</mat-icon>
-              </div>
+          <!-- Shape Grid -->
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; padding: 0 0.75rem 0.75rem; max-height: 240px; overflow-y: auto;">
+            <div *ngFor="let shape of filteredShapes; trackBy: trackByShape" 
+                 (click)="addShapeToCanvas(shape.type)"
+                 style="padding: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.15s;">
+              <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #06b6d4; margin-bottom: 0.25rem;">{{ shape.icon }}</mat-icon>
+              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">{{ shape.name }}</div>
             </div>
-          </div>
-          
-          <!-- Recent Colors -->
-          <div class="palette-content" *ngIf="activePaletteTab === 'recent'">
-            <div class="color-swatches">
-              <div class="color-swatch" 
-                   *ngFor="let color of recentColors" 
-                   [style.background-color]="color"
-                   (click)="selectColor(color)"
-                   [title]="color">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Brand Colors -->
-          <div class="palette-content" *ngIf="activePaletteTab === 'brand'">
-            <div class="brand-palette-controls">
-              <button class="brand-btn" (click)="saveBrandPalette()">Save Current as Brand</button>
-              <button class="brand-btn" (click)="loadBrandPalette()">Load Brand Palette</button>
-            </div>
-            <div class="color-swatches">
-              <div class="color-swatch" 
-                   *ngFor="let color of brandColors" 
-                   [style.background-color]="color"
-                   (click)="selectColor(color)"
-                   [title]="color">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Color Picker -->
-          <div class="advanced-color-picker" *ngIf="showColorPicker">
-            <div class="color-picker-header">
-              <h4>Color Picker</h4>
-              <button class="close-picker" (click)="closeColorPicker()">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-            <div class="color-picker-content">
-              <input type="color" [(ngModel)]="pickerColor" (change)="updatePickerColor()">
-              <div class="color-inputs">
-                <div class="color-input-group">
-                  <label>HEX</label>
-                  <input type="text" [(ngModel)]="hexColor" (change)="updateFromHex()">
-                </div>
-                <div class="color-input-group">
-                  <label>RGB</label>
-                  <div class="rgb-inputs">
-                    <input type="number" [(ngModel)]="rgbColor.r" (change)="updateFromRGB()" min="0" max="255">
-                    <input type="number" [(ngModel)]="rgbColor.g" (change)="updateFromRGB()" min="0" max="255">
-                    <input type="number" [(ngModel)]="rgbColor.b" (change)="updateFromRGB()" min="0" max="255">
-                  </div>
-                </div>
-              </div>
-              <div class="opacity-control">
-                <label>Opacity: {{colorOpacity || 1}}</label>
-                <input type="range" [(ngModel)]="colorOpacity" min="0" max="1" step="0.1">
-              </div>
-              <button class="add-to-palette-btn" (click)="addToPalette()">Add to Palette</button>
+            
+            <!-- Empty State -->
+            <div *ngIf="filteredShapes.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #94a3b8;">
+              <mat-icon style="font-size: 32px; width: 32px; height: 32px; opacity: 0.5;">category</mat-icon>
+              <div style="font-size: 0.75rem; margin-top: 0.5rem;">No shapes found</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Canvas Background Section -->
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">Canvas Background</h3>
-        <div class="background-controls">
-          <div class="background-type-selector">
-            <button class="bg-type-btn" 
-                    [ngClass]="{'active': canvasBackground.type === 'color'}"
-                    (click)="setBackgroundType('color')">
-              <mat-icon>palette</mat-icon>
-              <span>Color</span>
-            </button>
-            <button class="bg-type-btn" 
-                    [ngClass]="{'active': canvasBackground.type === 'gradient'}"
-                    (click)="setBackgroundType('gradient')">
-              <mat-icon>gradient</mat-icon>
-              <span>Gradient</span>
-            </button>
-            <button class="bg-type-btn" 
-                    [ngClass]="{'active': canvasBackground.type === 'image'}"
-                    (click)="setBackgroundType('image')">
-              <mat-icon>image</mat-icon>
-              <span>Image</span>
-            </button>
+      <div class="sidebar-section canvas-background-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">wallpaper</mat-icon>
+          </div>
+          <span>Canvas Background</span>
+        </h3>
+        
+        <!-- Compact Type Selector (3 buttons) -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.875rem;">
+          <div (click)="setBackgroundType('color')" [class.active]="canvasBackground.type === 'color'"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7; margin-bottom: 0.25rem;">palette</mat-icon>
+            <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Color</div>
           </div>
           
-          <!-- Solid Color Background -->
-          <div class="bg-options" *ngIf="canvasBackground.type === 'color'">
-            <div class="color-picker-group">
-              <label>Background Color</label>
-              <input type="color" [(ngModel)]="canvasBackground.color" (change)="updateCanvasBackground()">
+          <div (click)="setBackgroundType('gradient')" [class.active]="canvasBackground.type === 'gradient'"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7; margin-bottom: 0.25rem;">gradient</mat-icon>
+            <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Gradient</div>
+          </div>
+          
+          <div (click)="setBackgroundType('image')" [class.active]="canvasBackground.type === 'image'"
+               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7; margin-bottom: 0.25rem;">image</mat-icon>
+            <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Image</div>
+          </div>
+        </div>
+        
+        <!-- Solid Color Panel -->
+        <div *ngIf="canvasBackground.type === 'color'" style="padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.75rem; font-weight: 600; color: #0f172a;">Background Color</span>
+            <span style="font-size: 0.7rem; color: #64748b;">{{ canvasBackground.color }}</span>
+          </div>
+          <input type="color" [(ngModel)]="canvasBackground.color" (change)="updateCanvasBackground()"
+                 style="width: 100%; height: 40px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+        </div>
+        
+        <!-- Gradient Panel -->
+        <div *ngIf="canvasBackground.type === 'gradient'" style="padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
+          <select [(ngModel)]="canvasBackground.gradientType" (change)="updateCanvasBackground()"
+                  style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; margin-bottom: 0.625rem; outline: none;">
+            <option value="linear">Linear Gradient</option>
+            <option value="radial">Radial Gradient</option>
+          </select>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.625rem;">
+            <div>
+              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">Color 1</div>
+              <input type="color" [(ngModel)]="canvasBackground.gradientColor1" (change)="updateCanvasBackground()"
+                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+            </div>
+            <div>
+              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">Color 2</div>
+              <input type="color" [(ngModel)]="canvasBackground.gradientColor2" (change)="updateCanvasBackground()"
+                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
             </div>
           </div>
           
-          <!-- Gradient Background -->
-          <div class="bg-options" *ngIf="canvasBackground.type === 'gradient'">
-            <div class="gradient-controls">
-              <div class="gradient-type">
-                <label>Gradient Type</label>
-                <select [(ngModel)]="canvasBackground.gradientType" (change)="updateCanvasBackground()">
-                  <option value="linear">Linear</option>
-                  <option value="radial">Radial</option>
-                </select>
-              </div>
-              <div class="gradient-colors">
-                <div class="color-stop">
-                  <label>Color 1</label>
-                  <input type="color" [(ngModel)]="canvasBackground.gradientColor1" (change)="updateCanvasBackground()">
-                </div>
-                <div class="color-stop">
-                  <label>Color 2</label>
-                  <input type="color" [(ngModel)]="canvasBackground.gradientColor2" (change)="updateCanvasBackground()">
-                </div>
-              </div>
-              <div class="gradient-angle" *ngIf="canvasBackground.gradientType === 'linear'">
-                <label>Angle: {{canvasBackground.gradientAngle || 45}}°</label>
-                <input type="range" [(ngModel)]="canvasBackground.gradientAngle" 
-                       (change)="updateCanvasBackground()" min="0" max="360" step="15">
-              </div>
+          <div *ngIf="canvasBackground.gradientType === 'linear'">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Angle</span>
+              <span style="font-size: 0.7rem; color: #64748b;">{{canvasBackground.gradientAngle || 45}}°</span>
             </div>
+            <input type="range" [(ngModel)]="canvasBackground.gradientAngle" (change)="updateCanvasBackground()" 
+                   min="0" max="360" step="15"
+                   style="width: 100%; height: 6px; border-radius: 3px; outline: none; appearance: none; -webkit-appearance: none; background: linear-gradient(90deg, #a855f7, #9333ea);">
           </div>
+        </div>
+        
+        <!-- Image Panel -->
+        <div *ngIf="canvasBackground.type === 'image'" style="padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
+          <button (click)="triggerBackgroundUpload()" *ngIf="!canvasBackground.imageUrl"
+                  style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">cloud_upload</mat-icon>
+            <span>Upload Image</span>
+          </button>
+          <input type="file" #backgroundUpload style="display: none" (change)="onBackgroundSelected($event)" accept="image/*">
           
-          <!-- Image Background -->
-          <div class="bg-options" *ngIf="canvasBackground.type === 'image'">
-            <div class="image-bg-controls">
-              <button class="upload-bg-btn" (click)="triggerBackgroundUpload()">
-                <mat-icon>cloud_upload</mat-icon>
-                <span>Upload Background</span>
+          <div *ngIf="canvasBackground.imageUrl" style="margin-bottom: 0.625rem;">
+            <div style="position: relative; border-radius: 6px; overflow: hidden; margin-bottom: 0.625rem;">
+              <img [src]="canvasBackground.imageUrl" alt="Background" style="width: 100%; height: 100px; object-fit: cover;">
+              <button (click)="removeBackgroundImage()"
+                      style="position: absolute; top: 0.375rem; right: 0.375rem; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 6px; padding: 0.25rem; cursor: pointer;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px;">delete</mat-icon>
               </button>
-              <input type="file" #backgroundUpload style="display: none" 
-                     (change)="onBackgroundSelected($event)" accept="image/*">
-              
-              <div class="bg-image-preview" *ngIf="canvasBackground.imageUrl">
-                <img [src]="canvasBackground.imageUrl" alt="Background">
-                <button class="remove-bg-btn" (click)="removeBackgroundImage()">
-                  <mat-icon>close</mat-icon>
-                </button>
+            </div>
+            
+            <div style="margin-bottom: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Opacity</span>
+                <span style="font-size: 0.7rem; color: #64748b;">{{canvasBackground.opacity || 1}}</span>
               </div>
-              
-              <div class="bg-image-options" *ngIf="canvasBackground.imageUrl">
-                <div class="bg-option">
-                  <label>Opacity: {{canvasBackground.opacity || 1}}</label>
-                  <input type="range" [(ngModel)]="canvasBackground.opacity" 
-                         (change)="updateCanvasBackground()" min="0.1" max="1" step="0.1">
-                </div>
-                <div class="bg-option">
-                  <label>Blur: {{canvasBackground.blur || 0}}px</label>
-                  <input type="range" [(ngModel)]="canvasBackground.blur" 
-                         (change)="updateCanvasBackground()" min="0" max="10" step="1">
-                </div>
-                <div class="bg-option">
-                  <label>Overlay Color</label>
-                  <input type="color" [(ngModel)]="canvasBackground.overlayColor" 
-                         (change)="updateCanvasBackground()">
-                </div>
-                <div class="bg-option">
-                  <label>Overlay Opacity: {{canvasBackground.overlayOpacity || 0}}</label>
-                  <input type="range" [(ngModel)]="canvasBackground.overlayOpacity" 
-                         (change)="updateCanvasBackground()" min="0" max="1" step="0.1">
-                </div>
+              <input type="range" [(ngModel)]="canvasBackground.opacity" (change)="updateCanvasBackground()" 
+                     min="0.1" max="1" step="0.1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+            </div>
+            
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Blur</span>
+                <span style="font-size: 0.7rem; color: #64748b;">{{canvasBackground.blur || 0}}px</span>
               </div>
+              <input type="range" [(ngModel)]="canvasBackground.blur" (change)="updateCanvasBackground()" 
+                     min="0" max="10" step="1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
             </div>
           </div>
         </div>
       </div>
       
-      <div class="sidebar-section">
-        <h3 class="sidebar-title">Media</h3>
-        <div class="upload-options">
-          <div class="upload-method">
-            <button class="upload-btn" (click)="triggerUpload()">
-              <mat-icon>cloud_upload</mat-icon>
-              <span>Upload Image</span>
-            </button>
-            <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" accept="image/*">
+      <!-- Media Library Section -->
+      <div class="sidebar-section media-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">perm_media</mat-icon>
+          </div>
+          <span>Media Library</span>
+          <span *ngIf="uploads.length > 0" style="margin-left: auto; font-size: 0.7rem; color: #64748b; font-weight: 500;">({{ uploads.length }})</span>
+        </h3>
+        
+        <!-- Compact Upload Button -->
+        <button (click)="triggerUpload()" 
+                style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.875rem; transition: all 0.2s;">
+          <mat-icon style="font-size: 18px; width: 18px; height: 18px;">cloud_upload</mat-icon>
+          <div style="text-align: left;">
+            <div>Upload Images</div>
+            <div style="font-size: 0.65rem; font-weight: 400; opacity: 0.9;">PNG, JPG, SVG, GIF</div>
+          </div>
+        </button>
+        <input type="file" #fileUpload style="display: none" (change)="onFileSelected($event)" accept="image/*">
+        
+        <!-- Media Grid (with uploads) -->
+        <div *ngIf="uploads.length > 0" style="max-height: 320px; overflow-y: auto; margin-top: 0.625rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div *ngFor="let upload of uploads" (click)="addElementToCanvas('image', upload)"
+                 style="position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; border: 1.5px solid #e2e8f0; transition: all 0.2s; background: #f8fafc;">
+              <div style="position: relative; width: 100%; padding-bottom: 100%; overflow: hidden;">
+                <img [src]="upload.url" [alt]="upload.name" 
+                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                <div style="position: absolute; inset: 0; background: rgba(6, 182, 212, 0.85); opacity: 0; transition: opacity 0.2s; display: flex; align-items: center; justify-content: center;">
+                  <mat-icon style="color: white; font-size: 28px; width: 28px; height: 28px;">add_circle</mat-icon>
+                </div>
+              </div>
+              <div style="padding: 0.5rem; background: white;">
+                <span [title]="upload.name" 
+                      style="font-size: 0.7rem; color: #0f172a; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  {{ upload.name }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
         
-        <div class="uploads-list" *ngIf="uploads.length > 0">
-          <div class="upload-item" *ngFor="let upload of uploads" (click)="addElementToCanvas('image', upload)">
-            <img [src]="upload.url" [alt]="upload.name">
-            <button class="delete-upload-btn" (click)="deleteUpload(upload.id, $event)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
+        <!-- Empty State (compact) -->
+        <div *ngIf="uploads.length === 0" 
+             style="text-align: center; padding: 2rem 1rem; background: #f8fafc; border-radius: 8px; border: 1.5px dashed #cbd5e1;">
+          <mat-icon style="font-size: 40px; width: 40px; height: 40px; color: #94a3b8; margin-bottom: 0.5rem;">photo_library</mat-icon>
+          <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.875rem;">No media uploaded yet</div>
+          <button (click)="triggerUpload()" 
+                  style="padding: 0.625rem 1rem; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">add</mat-icon>
+            <span>Upload Your First Image</span>
+          </button>
         </div>
       </div>
     </div>
     
     <div class="canvas-container" [ngClass]="{'mobile-active': activeMobilePanel === 'canvas'}">
-      <div class="canvas-toolbar">
-        <div class="toolbar-section">
-          <div class="canvas-info">
-            <span class="canvas-dimensions">{{canvasWidth}} x {{canvasHeight}} px</span>
-            <button class="tool-btn" (click)="openCustomSizeDialog()" title="Change Canvas Size">
-              <mat-icon>photo_size_select_large</mat-icon>
-            </button>
+      <!-- Compact Modern Toolbar -->
+      <div style="background: white; border-bottom: 1px solid #e2e8f0; padding: 0.625rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+        
+        <!-- Canvas Size Info -->
+        <div style="display: flex; align-items: center; gap: 0.625rem;">
+          <div style="background: #f1f5f9; padding: 0.375rem 0.75rem; border-radius: 6px; display: flex; align-items: center; gap: 0.5rem;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">photo_size_select_large</mat-icon>
+            <span style="font-size: 0.75rem; font-weight: 600; color: #0f172a;">{{canvasWidth}} × {{canvasHeight}}</span>
           </div>
+          <button (click)="openCustomSizeDialog()" title="Change Canvas Size"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">settings</mat-icon>
+          </button>
         </div>
         
-        <div class="toolbar-section">
-          <div class="canvas-tools">
-            <button class="tool-btn" [ngClass]="{'active': showGrid}" (click)="toggleGrid()" title="Toggle Grid">
-              <mat-icon>grid_4x4</mat-icon>
-            </button>
-            <button class="tool-btn" [ngClass]="{'active': snapToGrid}" (click)="toggleSnapToGrid()" title="Snap to Grid">
-              <mat-icon>grid_goldenratio</mat-icon>
-            </button>
-            <button class="tool-btn" [ngClass]="{'active': showAlignmentGuides}" (click)="toggleAlignmentGuides()" title="Alignment Guides">
-              <mat-icon>align_horizontal_center</mat-icon>
-            </button>
-            <button class="tool-btn" [ngClass]="{'active': showSmartGuides}" (click)="toggleSmartGuides()" title="Smart Guides">
-              <mat-icon>grid_goldenratio</mat-icon>
-            </button>
-            <button class="tool-btn" [ngClass]="{'active': snapToGuides}" (click)="toggleSnapToGuides()" title="Snap to Guides">
-              <mat-icon>magnet</mat-icon>
-            </button>
-          </div>
+        <!-- Canvas Tools Group -->
+        <div style="display: flex; align-items: center; gap: 0.375rem; background: #f8fafc; padding: 0.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <button [ngClass]="{'active': showGrid}" (click)="toggleGrid()" title="Toggle Grid"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">grid_4x4</mat-icon>
+          </button>
+          <button [ngClass]="{'active': snapToGrid}" (click)="toggleSnapToGrid()" title="Snap to Grid"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">grid_goldenratio</mat-icon>
+          </button>
+          <button [ngClass]="{'active': showAlignmentGuides}" (click)="toggleAlignmentGuides()" title="Alignment Guides"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">align_horizontal_center</mat-icon>
+          </button>
+          <button [ngClass]="{'active': showSmartGuides}" (click)="toggleSmartGuides()" title="Smart Guides"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">straighten</mat-icon>
+          </button>
+          <button [ngClass]="{'active': snapToGuides}" (click)="toggleSnapToGuides()" title="Snap to Guides"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">settings_ethernet</mat-icon>
+          </button>
         </div>
         
-        <div class="toolbar-section">
-          <div class="view-controls">
-            <button class="view-btn" (click)="fitToScreen()" title="Fit to Screen">
-              <mat-icon>fit_screen</mat-icon>
-            </button>
-            <button class="view-btn" (click)="actualSize()" title="Actual Size (100%)">
-              <mat-icon>aspect_ratio</mat-icon>
-            </button>
-            <button class="view-btn" (click)="centerCanvas()" title="Center Canvas">
-              <mat-icon>center_focus_strong</mat-icon>
-            </button>
-          </div>
+        <!-- View Controls Group -->
+        <div style="display: flex; align-items: center; gap: 0.375rem; background: #f8fafc; padding: 0.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <button (click)="fitToScreen()" title="Fit to Screen"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">fit_screen</mat-icon>
+          </button>
+          <button (click)="actualSize()" title="Actual Size (100%)"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">aspect_ratio</mat-icon>
+          </button>
+          <button (click)="centerCanvas()" title="Center Canvas"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">center_focus_strong</mat-icon>
+          </button>
         </div>
         
-        <div class="toolbar-section">
-          <div class="zoom-controls">
-            <button class="zoom-btn" (click)="setZoom(25)" title="25%">25%</button>
-            <button class="zoom-btn" (click)="setZoom(50)" title="50%">50%</button>
-            <button class="zoom-btn" (click)="zoom(-10)" title="Zoom Out">
-              <mat-icon>zoom_out</mat-icon>
-            </button>
-            <span class="zoom-level">{{ zoomLevel }}%</span>
-            <button class="zoom-btn" (click)="zoom(10)" title="Zoom In">
-              <mat-icon>zoom_in</mat-icon>
-            </button>
-            <button class="zoom-btn" (click)="setZoom(100)" title="100%">100%</button>
-            <button class="zoom-btn" (click)="setZoom(200)" title="200%">200%</button>
+        <!-- Zoom Controls Group -->
+        <div style="display: flex; align-items: center; gap: 0.375rem; background: #f8fafc; padding: 0.25rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+          <button (click)="setZoom(25)" title="25%"
+                  style="background: transparent; border: none; padding: 0.375rem 0.625rem; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 600; color: #64748b; transition: all 0.15s;">25%</button>
+          <button (click)="setZoom(50)" title="50%"
+                  style="background: transparent; border: none; padding: 0.375rem 0.625rem; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 600; color: #64748b; transition: all 0.15s;">50%</button>
+          
+          <div style="width: 1px; height: 20px; background: #e2e8f0; margin: 0 0.125rem;"></div>
+          
+          <button (click)="zoom(-10)" title="Zoom Out"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">zoom_out</mat-icon>
+          </button>
+          
+          <div style="background: #6366f1; color: white; padding: 0.375rem 0.75rem; border-radius: 6px; min-width: 55px; text-align: center;">
+            <span style="font-size: 0.75rem; font-weight: 600;">{{ zoomLevel }}%</span>
           </div>
+          
+          <button (click)="zoom(10)" title="Zoom In"
+                  style="background: transparent; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">zoom_in</mat-icon>
+          </button>
+          
+          <div style="width: 1px; height: 20px; background: #e2e8f0; margin: 0 0.125rem;"></div>
+          
+          <button (click)="setZoom(100)" title="100%"
+                  style="background: transparent; border: none; padding: 0.375rem 0.625rem; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 600; color: #64748b; transition: all 0.15s;">100%</button>
+          <button (click)="setZoom(200)" title="200%"
+                  style="background: transparent; border: none; padding: 0.375rem 0.625rem; border-radius: 6px; cursor: pointer; font-size: 0.7rem; font-weight: 600; color: #64748b; transition: all 0.15s;">200%</button>
         </div>
       </div>
       
@@ -904,236 +858,284 @@
       </div>
     </div>
     
-    <div class="properties-panel" [ngClass]="{'mobile-active': activeMobilePanel === 'properties'}">
+    <div class="properties-panel" [ngClass]="{'mobile-active': activeMobilePanel === 'properties'}" 
+         style="background: #f8fafc; border-left: 1px solid #e2e8f0; overflow-y: auto;">
       
       <!-- Layer Management Panel -->
-      <div class="layer-management" *ngIf="canvasElements.length > 0">
-        <div class="layer-header">
-          <h3 class="panel-title">Layers</h3>
-          <div class="layer-actions">
-            <button class="layer-action-btn" title="Isolate Selected Layer" (click)="isolateLayer()" 
-                    [disabled]="selectedElement === null && selectedElements.length === 0">
-              <mat-icon>{{ isLayerIsolated ? 'visibility' : 'visibility_off' }}</mat-icon>
+      <div *ngIf="canvasElements.length > 0" style="background: white; border-radius: 10px; margin: 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Compact Header -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.875rem;">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+            <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">layers</mat-icon>
+            </div>
+            <span>Layers</span>
+            <span style="font-size: 0.7rem; color: #64748b; font-weight: 500;">({{ canvasElements.length }})</span>
+          </h3>
+          
+          <!-- Layer Actions (Compact) -->
+          <div style="display: flex; gap: 0.25rem;">
+            <button title="Isolate" (click)="isolateLayer()" [disabled]="selectedElement === null && selectedElements.length === 0"
+                    style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">{{ isLayerIsolated ? 'visibility' : 'visibility_off' }}</mat-icon>
             </button>
-            <button class="layer-action-btn" title="Select All" (click)="selectAllElements()">
-              <mat-icon>checklist</mat-icon>
+            <button title="Select All" (click)="selectAllElements()"
+                    style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">checklist</mat-icon>
             </button>
-            <button class="layer-action-btn" title="Group Selected" (click)="groupSelectedElements()" 
-                    [disabled]="selectedElements.length < 2">
-              <mat-icon>group</mat-icon>
-            </button>
-            <button class="layer-action-btn" title="Ungroup Selected" (click)="ungroupSelectedElements()"
-                    [disabled]="!hasGroupedElements()">
-              <mat-icon>ungroup</mat-icon>
+            <button title="Group" (click)="groupSelectedElements()" [disabled]="selectedElements.length < 2"
+                    style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">group_work</mat-icon>
             </button>
           </div>
         </div>
         
-        <div class="layer-search">
-          <input type="text" 
-                 placeholder="Search layers..." 
-                 [(ngModel)]="layerSearchQuery" 
-                 (input)="filterLayers()"
-                 class="layer-search-input">
-          <mat-icon class="search-icon">search</mat-icon>
+        <!-- Compact Search -->
+        <div style="position: relative; margin-bottom: 0.75rem;">
+          <mat-icon style="position: absolute; left: 0.625rem; top: 50%; transform: translateY(-50%); font-size: 16px; width: 16px; height: 16px; color: #94a3b8;">search</mat-icon>
+          <input type="text" placeholder="Search layers..." [(ngModel)]="layerSearchQuery" (input)="filterLayers()"
+                 style="width: 100%; padding: 0.5rem 0.5rem 0.5rem 2rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; outline: none;">
         </div>
         
-        <div class="layers-list">
-          <div class="layer-item" 
-               *ngFor="let element of filteredCanvasElements; let i = index; trackBy: trackByElementId"
-               [ngClass]="{'selected': selectedElement === i || selectedElements.includes(i), 
-                          'locked': element.locked, 
-                          'hidden': element.hidden,
-                          'dragging': draggedLayerIndex === i}"
+        <!-- Compact Layers List -->
+        <div style="max-height: 300px; overflow-y: auto;">
+          <div *ngFor="let element of filteredCanvasElements; let i = index; trackBy: trackByElementId"
+               [ngClass]="{'selected': selectedElement === i || selectedElements.includes(i), 'locked': element.locked, 'hidden': element.hidden, 'dragging': draggedLayerIndex === i}"
                [attr.draggable]="!element.locked"
                (dragstart)="onLayerDragStart($event, i)"
                (dragover)="onLayerDragOver($event, i)"
                (drop)="onLayerDrop($event, i)"
                (dragend)="onLayerDragEnd($event)"
                (click)="selectLayer(i, $event)"
-               (dblclick)="startLayerRename(i)">
+               (dblclick)="startLayerRename(i)"
+               style="display: flex; align-items: center; gap: 0.625rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.15s;">
             
-            <div class="layer-content">
-              <div class="layer-icon">
-                <mat-icon *ngIf="element.type === 'text'">text_fields</mat-icon>
-                <mat-icon *ngIf="element.type === 'image'">photo</mat-icon>
-                <mat-icon *ngIf="element.type === 'shape'">shapes</mat-icon>
-                <mat-icon *ngIf="element.type === 'line'">show_chart</mat-icon>
-              </div>
-              
-              <div class="layer-info">
-                <span class="layer-name" *ngIf="!element.editing">
-                  {{ element.layerName || getDefaultLayerName(element, i) }}
-                </span>
-                <input class="layer-name-input" 
-                       *ngIf="element.editing"
-                       [(ngModel)]="element.layerName" 
-                       (blur)="finishLayerRename(i)"
-                       (keydown.enter)="finishLayerRename(i)"
-                       (keydown.escape)="cancelLayerRename(i)">
-                <div class="layer-details">
-                  <span class="layer-type">{{ element.type | titlecase }}</span>
-                  <span class="layer-size">{{ element.width }}x{{ element.height }}</span>
-                </div>
+            <!-- Layer Icon -->
+            <div style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 6px; padding: 0.375rem; display: flex; flex-shrink: 0;">
+              <mat-icon *ngIf="element.type === 'text'" style="font-size: 16px; width: 16px; height: 16px;">text_fields</mat-icon>
+              <mat-icon *ngIf="element.type === 'image'" style="font-size: 16px; width: 16px; height: 16px;">photo</mat-icon>
+              <mat-icon *ngIf="element.type === 'shape'" style="font-size: 16px; width: 16px; height: 16px;">category</mat-icon>
+              <mat-icon *ngIf="element.type === 'line'" style="font-size: 16px; width: 16px; height: 16px;">show_chart</mat-icon>
+            </div>
+            
+            <!-- Layer Info -->
+            <div style="flex: 1; min-width: 0;">
+              <span *ngIf="!element.editing" style="font-size: 0.75rem; font-weight: 600; color: #0f172a; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ element.layerName || getDefaultLayerName(element, i) }}
+              </span>
+              <input *ngIf="element.editing"
+                     [(ngModel)]="element.layerName" 
+                     (blur)="finishLayerRename(i)"
+                     (keydown.enter)="finishLayerRename(i)"
+                     (keydown.escape)="cancelLayerRename(i)"
+                     style="width: 100%; padding: 0.25rem; border: 1px solid #6366f1; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.125rem;">
+                <span style="font-size: 0.65rem; color: #64748b;">{{ element.type | titlecase }}</span>
+                <span style="font-size: 0.65rem; color: #94a3b8;">{{ element.width }}×{{ element.height }}</span>
               </div>
             </div>
             
-            <div class="layer-controls">
-              <button class="layer-control-btn" 
-                      [ngClass]="{'active': !element.hidden}"
-                      (click)="toggleLayerVisibility(i, $event)" 
-                      title="Toggle Visibility">
-                <mat-icon>{{ element.hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
+            <!-- Layer Controls -->
+            <div style="display: flex; gap: 0.25rem; flex-shrink: 0;">
+              <button [ngClass]="{'active': !element.hidden}" (click)="toggleLayerVisibility(i, $event)" title="Visibility"
+                      style="background: transparent; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">{{ element.hidden ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
-              <button class="layer-control-btn" 
-                      [ngClass]="{'active': element.locked}"
-                      (click)="toggleLayerLock(i, $event)" 
-                      title="Toggle Lock">
-                <mat-icon>{{ element.locked ? 'lock' : 'lock_open' }}</mat-icon>
+              <button [ngClass]="{'active': element.locked}" (click)="toggleLayerLock(i, $event)" title="Lock"
+                      style="background: transparent; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">{{ element.locked ? 'lock' : 'lock_open' }}</mat-icon>
               </button>
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Element Properties (only show if element is selected) -->
-      <div class="element-properties" *ngIf="selectedElement !== null">
-        <h3 class="panel-title">Properties</h3>
+      <!-- Element Properties (Compact Modern Design) -->
+      <div *ngIf="selectedElement !== null" style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">tune</mat-icon>
+          </div>
+          <span>Properties</span>
+        </h3>
         
-        <div class="quick-actions">
-          <button class="action-btn" title="Bring to Front" (click)="bringToFront()">
-            <mat-icon>flip_to_front</mat-icon>
+        <!-- Quick Actions (Compact Grid) -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
+          <button title="Bring Front" (click)="bringToFront()"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">flip_to_front</mat-icon>
+            <span style="font-size: 0.6rem; color: #94a3b8;">Front</span>
           </button>
-          <button class="action-btn" title="Bring Forward" (click)="bringForward()">
-            <mat-icon>keyboard_arrow_up</mat-icon>
+          <button title="Forward" (click)="bringForward()"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">arrow_upward</mat-icon>
+            <span style="font-size: 0.6rem; color: #94a3b8;">Up</span>
           </button>
-          <button class="action-btn" title="Send Backward" (click)="sendBackward()">
-            <mat-icon>keyboard_arrow_down</mat-icon>
+          <button title="Backward" (click)="sendBackward()"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">arrow_downward</mat-icon>
+            <span style="font-size: 0.6rem; color: #94a3b8;">Down</span>
           </button>
-          <button class="action-btn" title="Send to Back" (click)="sendToBack()">
-            <mat-icon>flip_to_back</mat-icon>
+          <button title="Send Back" (click)="sendToBack()"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">flip_to_back</mat-icon>
+            <span style="font-size: 0.6rem; color: #94a3b8;">Back</span>
           </button>
-          <button class="action-btn" title="Duplicate" (click)="duplicateElement(selectedElement)">
-            <mat-icon>content_copy</mat-icon>
+          <button title="Duplicate" (click)="duplicateElement(selectedElement)"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #10b981;">content_copy</mat-icon>
+            <span style="font-size: 0.6rem; color: #94a3b8;">Copy</span>
           </button>
-          <button class="action-btn" title="Reset Transform" (click)="resetElementTransform()">
-            <mat-icon>refresh</mat-icon>
+          <button title="Reset" (click)="resetElementTransform()"
+                  style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">refresh</mat-icon>
+            <span style="font-size: 0.6rem; color: #94a3b8;">Reset</span>
           </button>
-          <button class="action-btn delete" title="Delete" (click)="deleteElement(selectedElement)">
-            <mat-icon>delete_forever</mat-icon>
+          <button title="Delete" (click)="deleteElement(selectedElement)"
+                  style="background: #fef2f2; border: 1px solid #fecaca; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s; grid-column: span 2;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #ef4444;">delete</mat-icon>
+            <span style="font-size: 0.6rem; color: #ef4444;">Delete</span>
           </button>
         </div>
         
-        <!-- Alignment Tools -->
-        <div class="alignment-tools">
-          <h4 class="tools-title">Alignment</h4>
-          <div class="alignment-grid">
-            <button class="align-btn" (click)="alignElement('left')" title="Align Left">
-              <mat-icon>align_horizontal_left</mat-icon>
+        <!-- Alignment Tools (Compact) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">align_horizontal_center</mat-icon>
+            <span>Alignment</span>
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.375rem;">
+            <button (click)="alignElement('left')" title="Left"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">align_horizontal_left</mat-icon>
             </button>
-            <button class="align-btn" (click)="alignElement('center-horizontal')" title="Center Horizontal">
-              <mat-icon>align_horizontal_center</mat-icon>
+            <button (click)="alignElement('center-horizontal')" title="Center H"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">align_horizontal_center</mat-icon>
             </button>
-            <button class="align-btn" (click)="alignElement('right')" title="Align Right">
-              <mat-icon>align_horizontal_right</mat-icon>
+            <button (click)="alignElement('right')" title="Right"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">align_horizontal_right</mat-icon>
             </button>
-            <button class="align-btn" (click)="alignElement('top')" title="Align Top">
-              <mat-icon>align_vertical_top</mat-icon>
+            <button (click)="alignElement('top')" title="Top"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">align_vertical_top</mat-icon>
             </button>
-            <button class="align-btn" (click)="alignElement('center-vertical')" title="Center Vertical">
-              <mat-icon>align_vertical_center</mat-icon>
+            <button (click)="alignElement('center-vertical')" title="Center V"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">align_vertical_center</mat-icon>
             </button>
-            <button class="align-btn" (click)="alignElement('bottom')" title="Align Bottom">
-              <mat-icon>align_vertical_bottom</mat-icon>
+            <button (click)="alignElement('bottom')" title="Bottom"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">align_vertical_bottom</mat-icon>
             </button>
           </div>
           
-          <div class="distribution-tools" *ngIf="selectedElements.length > 2">
-            <button class="distribute-btn" (click)="distributeElements('horizontal')" title="Distribute Horizontally">
-              <mat-icon>align_horizontal_left</mat-icon>
-              <span>Horizontal</span>
+          <div *ngIf="selectedElements.length > 2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-top: 0.5rem;">
+            <button (click)="distributeElements('horizontal')" 
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">align_horizontal_left</mat-icon>
+              Horizontal
             </button>
-            <button class="distribute-btn" (click)="distributeElements('vertical')" title="Distribute Vertically">
-              <mat-icon>align_vertical_top</mat-icon>
-              <span>Vertical</span>
+            <button (click)="distributeElements('vertical')" 
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">align_vertical_top</mat-icon>
+              Vertical
             </button>
           </div>
         </div>
       
-      <!-- Common properties -->
-      <div class="property-group">
-        <label>Position & Size</label>
-        <div class="property-grid">
-          <div class="property-control">
-            <span>X</span>
-            <input type="number" [(ngModel)]="canvasElements[selectedElement].x" (change)="updateElement()">
+      <!-- Position & Size (Compact) -->
+      <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+        <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+          <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">photo_size_select_small</mat-icon>
+          <span>Position & Size</span>
+        </h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <label style="font-size: 0.65rem; color: #64748b; display: block; margin-bottom: 0.25rem;">X</label>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].x" (change)="updateElement()"
+                   style="width: 100%; border: none; font-size: 0.75rem; font-weight: 600; color: #0f172a; outline: none;">
           </div>
-          <div class="property-control">
-            <span>Y</span>
-            <input type="number" [(ngModel)]="canvasElements[selectedElement].y" (change)="updateElement()">
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <label style="font-size: 0.65rem; color: #64748b; display: block; margin-bottom: 0.25rem;">Y</label>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].y" (change)="updateElement()"
+                   style="width: 100%; border: none; font-size: 0.75rem; font-weight: 600; color: #0f172a; outline: none;">
           </div>
-          <div class="property-control">
-            <span>W</span>
-            <input type="number" [(ngModel)]="canvasElements[selectedElement].width" (change)="updateElement()">
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <label style="font-size: 0.65rem; color: #64748b; display: block; margin-bottom: 0.25rem;">Width</label>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].width" (change)="updateElement()"
+                   style="width: 100%; border: none; font-size: 0.75rem; font-weight: 600; color: #0f172a; outline: none;">
           </div>
-          <div class="property-control">
-            <span>H</span>
-            <input type="number" [(ngModel)]="canvasElements[selectedElement].height" (change)="updateElement()">
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <label style="font-size: 0.65rem; color: #64748b; display: block; margin-bottom: 0.25rem;">Height</label>
+            <input type="number" [(ngModel)]="canvasElements[selectedElement].height" (change)="updateElement()"
+                   style="width: 100%; border: none; font-size: 0.75rem; font-weight: 600; color: #0f172a; outline: none;">
           </div>
         </div>
       </div>
       
-      <!-- Advanced Text Properties -->
-      <div *ngIf="canvasElements[selectedElement].type === 'text'" class="advanced-text-properties">
-        <!-- Text Content & AI Tools -->
-        <div class="property-group">
-          <div class="content-header">
-            <label>Text Content</label>
-            <div class="ai-tools">
-              <button class="ai-btn" (click)="openAIRewrite()" title="AI Rewrite">
-                <mat-icon>auto_fix_high</mat-icon>
+      <!-- Text Properties (Compact Modern Design) -->
+      <div *ngIf="canvasElements[selectedElement].type === 'text'" style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <!-- Text Content with AI Tools -->
+        <div style="margin-bottom: 0.875rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
+            <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">text_fields</mat-icon>
+              <span>Text Content</span>
+            </h4>
+            <div style="display: flex; gap: 0.25rem;">
+              <button (click)="openAIRewrite()" title="AI Rewrite"
+                      style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #8b5cf6;">auto_fix_high</mat-icon>
               </button>
-              <button class="ai-btn" (click)="openTranslateText()" title="Translate">
-                <mat-icon>translate</mat-icon>
+              <button (click)="openTranslateText()" title="Translate"
+                      style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">translate</mat-icon>
               </button>
-              <button class="ai-btn" (click)="startVoiceToText()" title="Voice to Text">
-                <mat-icon>mic</mat-icon>
+              <button (click)="startVoiceToText()" title="Voice"
+                      style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #f43f5e;">mic</mat-icon>
               </button>
             </div>
           </div>
-          <div class="text-editor-container">
-            <textarea [(ngModel)]="canvasElements[selectedElement].content" 
-                      (change)="updateElement()" 
-                      class="advanced-text-editor"
-                      placeholder="Enter your text here..."></textarea>
-            <div class="text-tools">
-              <button class="tool-btn" (click)="checkAccessibility()" title="Accessibility Check">
-                <mat-icon>accessibility</mat-icon>
-              </button>
-              <button class="tool-btn" (click)="addHyperlink()" title="Add Link">
-                <mat-icon>link</mat-icon>
-              </button>
-              <span class="char-count">{{ (canvasElements[selectedElement].content || '').length }} chars</span>
+          <div style="position: relative;">
+            <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()" 
+                      placeholder="Enter your text here..."
+                      style="width: 100%; min-height: 100px; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.75rem; resize: vertical; outline: none; font-family: inherit;"></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+              <div style="display: flex; gap: 0.375rem;">
+                <button (click)="checkAccessibility()" title="Accessibility"
+                        style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+                  <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #64748b;">accessibility</mat-icon>
+                </button>
+                <button (click)="addHyperlink()" title="Add Link"
+                        style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
+                  <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #64748b;">link</mat-icon>
+                </button>
+              </div>
+              <span style="font-size: 0.65rem; color: #94a3b8;">{{ (canvasElements[selectedElement].content || '').length }} chars</span>
             </div>
           </div>
         </div>
 
-        <!-- Font Selection & Pairing -->
-        <div class="property-group">
-          <label>
-            <mat-icon>font_download</mat-icon>
-            Font & Typography
-          </label>
-          <div class="font-selection">
-            <div class="current-font-display">
-              <div class="font-preview" [ngStyle]="getCurrentFontStyle()">
-                {{ canvasElements[selectedElement].fontFamily || 'Select Font' }}
-              </div>
-              <button class="browse-fonts-btn" (click)="openFontBrowser()">
-                <mat-icon>library_books</mat-icon>
-                Browse Fonts
-              </button>
+        <!-- Font & Typography (Compact) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">font_download</mat-icon>
+            <span>Font & Typography</span>
+          </h4>
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.625rem; margin-bottom: 0.625rem;">
+            <div [ngStyle]="getCurrentFontStyle()" style="font-size: 0.875rem; margin-bottom: 0.5rem; color: #0f172a;">
+              {{ canvasElements[selectedElement].fontFamily || 'Select Font' }}
             </div>
+            <button (click)="openFontBrowser()"
+                    style="width: 100%; padding: 0.5rem; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">library_books</mat-icon>
+              Browse Fonts
+            </button>
+          </div>
             
             <!-- Quick Font Size & Weight -->
             <div class="font-quick-controls">
@@ -1170,334 +1172,338 @@
             </div>
           </div>
         </div>
-        <!-- Color & Gradient Controls -->
-        <div class="property-group">
-          <label>
-            <mat-icon>palette</mat-icon>
-            Color & Style
-          </label>
-          <div class="color-controls">
-            <div class="color-tabs">
-              <button class="color-tab" 
-                      [class.active]="activeColorTab === 'solid'"
-                      (click)="activeColorTab = 'solid'">Solid</button>
-              <button class="color-tab" 
-                      [class.active]="activeColorTab === 'gradient'"
-                      (click)="activeColorTab = 'gradient'">Gradient</button>
+        
+        <!-- Color & Style (Compact Design) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">palette</mat-icon>
+            <span>Color & Style</span>
+          </h4>
+          
+          <!-- Compact Tabs -->
+          <div style="display: flex; gap: 0.375rem; margin-bottom: 0.625rem; background: white; padding: 0.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <button [class.active]="activeColorTab === 'solid'" (click)="activeColorTab = 'solid'"
+                    style="flex: 1; padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
+              Solid
+            </button>
+            <button [class.active]="activeColorTab === 'gradient'" (click)="activeColorTab = 'gradient'"
+                    style="flex: 1; padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
+              Gradient
+            </button>
+          </div>
+          
+          <!-- Solid Color -->
+          <div *ngIf="activeColorTab === 'solid'">
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.625rem; margin-bottom: 0.625rem;">
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()"
+                     style="width: 100%; height: 40px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
             </div>
+            <!-- Color Presets (Compact Grid) -->
+            <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.375rem;">
+              <div *ngFor="let color of colorPresets" 
+                   [style.background-color]="color"
+                   [class.selected]="canvasElements[selectedElement].color === color"
+                   (click)="applyColor(color)"
+                   style="aspect-ratio: 1; border-radius: 6px; cursor: pointer; border: 2px solid #e2e8f0; transition: all 0.15s;">
+              </div>
+            </div>
+          </div>
+          
+          <!-- Gradient -->
+          <div *ngIf="activeColorTab === 'gradient'">
+            <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; margin-bottom: 0.625rem; outline: none;">
+              <option value="">No Gradient</option>
+              <option value="linear">Linear Gradient</option>
+              <option value="radial">Radial Gradient</option>
+            </select>
             
-            <div class="color-content" *ngIf="activeColorTab === 'solid'">
-              <div class="color-picker-container">
-                <input type="color" 
-                       [(ngModel)]="canvasElements[selectedElement].color" 
-                       (change)="updateElement()" 
-                       class="color-input">
-                <div class="color-presets">
-                  <div class="color-preset" 
-                       *ngFor="let color of colorPresets" 
-                       [style.background-color]="color"
-                       (click)="applyColor(color)"
-                       [class.selected]="canvasElements[selectedElement].color === color"></div>
-                </div>
+            <div *ngIf="canvasElements[selectedElement].textGradientType" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.625rem;">
+              <div>
+                <label style="font-size: 0.65rem; color: #64748b; display: block; margin-bottom: 0.25rem;">Color 1</label>
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()"
+                       style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+              </div>
+              <div>
+                <label style="font-size: 0.65rem; color: #64748b; display: block; margin-bottom: 0.25rem;">Color 2</label>
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()"
+                       style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
               </div>
             </div>
             
-            <div class="color-content" *ngIf="activeColorTab === 'gradient'">
-              <div class="gradient-controls">
-                <div class="gradient-type">
-                  <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()">
-                    <option value="">No Gradient</option>
-                    <option value="linear">Linear</option>
-                    <option value="radial">Radial</option>
-                  </select>
-                </div>
-                <div class="gradient-colors" *ngIf="canvasElements[selectedElement].textGradientType">
-                  <input type="color" 
-                         [(ngModel)]="canvasElements[selectedElement].textGradientColor1" 
-                         (change)="updateTextGradient()" 
-                         placeholder="Color 1">
-                  <input type="color" 
-                         [(ngModel)]="canvasElements[selectedElement].textGradientColor2" 
-                         (change)="updateTextGradient()" 
-                         placeholder="Color 2">
-                </div>
-                <div class="gradient-angle" *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
-                  <label>Angle: {{ canvasElements[selectedElement].textGradientAngle || 0 }}°</label>
-                  <input type="range" 
-                         [(ngModel)]="canvasElements[selectedElement].textGradientAngle" 
-                         (change)="updateTextGradient()" 
-                         min="0" max="360" step="15">
-                </div>
+            <div *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Angle</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].textGradientAngle || 0 }}°</span>
               </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" (change)="updateTextGradient()" 
+                     min="0" max="360" step="15"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
             </div>
           </div>
         </div>
 
-        <!-- Alignment & Positioning -->
-        <div class="property-group">
-          <label>
-            <mat-icon>format_align_center</mat-icon>
-            Alignment & Position
-          </label>
-          <div class="alignment-grid">
-            <button class="align-btn" 
-                    [class.active]="canvasElements[selectedElement].textAlign === 'left'"
-                    (click)="setTextStyle('textAlign', 'left')" 
-                    title="Align Left">
-              <mat-icon>format_align_left</mat-icon>
+        <!-- Alignment & Position (Compact Design) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">format_align_center</mat-icon>
+            <span>Alignment & Position</span>
+          </h4>
+          
+          <!-- Text Alignment (Compact 4-button) -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.625rem;">
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'left'" (click)="setTextStyle('textAlign', 'left')" title="Left"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">format_align_left</mat-icon>
             </button>
-            <button class="align-btn" 
-                    [class.active]="canvasElements[selectedElement].textAlign === 'center'"
-                    (click)="setTextStyle('textAlign', 'center')" 
-                    title="Align Center">
-              <mat-icon>format_align_center</mat-icon>
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'center'" (click)="setTextStyle('textAlign', 'center')" title="Center"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">format_align_center</mat-icon>
             </button>
-            <button class="align-btn" 
-                    [class.active]="canvasElements[selectedElement].textAlign === 'right'"
-                    (click)="setTextStyle('textAlign', 'right')" 
-                    title="Align Right">
-              <mat-icon>format_align_right</mat-icon>
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'right'" (click)="setTextStyle('textAlign', 'right')" title="Right"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">format_align_right</mat-icon>
             </button>
-            <button class="align-btn" 
-                    [class.active]="canvasElements[selectedElement].textAlign === 'justify'"
-                    (click)="setTextStyle('textAlign', 'justify')" 
-                    title="Justify">
-              <mat-icon>format_align_justify</mat-icon>
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'justify'" (click)="setTextStyle('textAlign', 'justify')" title="Justify"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">format_align_justify</mat-icon>
             </button>
           </div>
           
-          <div class="position-controls">
-            <div class="transform-controls">
-              <button class="transform-btn" (click)="rotateText(-90)" title="Rotate Left">
-                <mat-icon>rotate_left</mat-icon>
+          <!-- Transform Controls (Compact) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+              <button (click)="rotateText(-90)" title="Rotate Left"
+                      style="background: transparent; border: none; padding: 0.25rem; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">rotate_left</mat-icon>
               </button>
-              <span class="rotation-display">{{ canvasElements[selectedElement].rotate || 0 }}°</span>
-              <button class="transform-btn" (click)="rotateText(90)" title="Rotate Right">
-                <mat-icon>rotate_right</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">{{ canvasElements[selectedElement].rotate || 0 }}°</span>
+              <button (click)="rotateText(90)" title="Rotate Right"
+                      style="background: transparent; border: none; padding: 0.25rem; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">rotate_right</mat-icon>
               </button>
             </div>
-            <div class="flip-controls">
-              <button class="transform-btn" (click)="flipText('horizontal')" title="Flip Horizontal">
-                <mat-icon>flip</mat-icon>
+            
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <button (click)="flipText('horizontal')" title="Flip H"
+                      style="background: transparent; border: none; padding: 0.25rem; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">flip</mat-icon>
               </button>
-              <button class="transform-btn" (click)="flipText('vertical')" title="Flip Vertical">
-                <mat-icon style="transform: rotate(90deg)">flip</mat-icon>
+              <button (click)="flipText('vertical')" title="Flip V"
+                      style="background: transparent; border: none; padding: 0.25rem; cursor: pointer; display: flex;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b; transform: rotate(90deg);">flip</mat-icon>
               </button>
             </div>
           </div>
         </div>
-        <!-- Spacing & Typography Controls -->
-        <div class="property-group">
-          <label>
-            <mat-icon>format_line_spacing</mat-icon>
-            Spacing & Typography
-          </label>
-          <div class="spacing-controls">
-            <div class="spacing-row">
-              <div class="control-item">
-                <label>Letter Spacing</label>
-                <div class="control-input">
-                  <input type="range" 
-                         [(ngModel)]="canvasElements[selectedElement].letterSpacing" 
-                         (change)="updateElement()" 
-                         min="-5" max="20" step="0.1"
-                         class="slider">
-                  <span class="value">{{ canvasElements[selectedElement].letterSpacing || 0 }}px</span>
-                </div>
+        
+        <!-- Spacing & Typography (Compact Design) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">format_line_spacing</mat-icon>
+            <span>Spacing & Typography</span>
+          </h4>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.625rem;">
+            <!-- Letter Spacing -->
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Letter Spacing</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].letterSpacing || 0 }}px</span>
               </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].letterSpacing" (change)="updateElement()" 
+                     min="-5" max="20" step="0.1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
             </div>
             
-            <div class="spacing-row">
-              <div class="control-item">
-                <label>Line Height</label>
-                <div class="control-input">
-                  <input type="range" 
-                         [(ngModel)]="canvasElements[selectedElement].lineHeight" 
-                         (change)="updateElement()" 
-                         min="0.5" max="3" step="0.1"
-                         class="slider">
-                  <span class="value">{{ canvasElements[selectedElement].lineHeight || 1.2 }}</span>
-                </div>
+            <!-- Line Height -->
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Line Height</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].lineHeight || 1.2 }}</span>
               </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].lineHeight" (change)="updateElement()" 
+                     min="0.5" max="3" step="0.1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
             </div>
             
-            <div class="spacing-row">
-              <div class="control-item">
-                <label>Character Spacing</label>
-                <div class="control-input">
-                  <input type="range" 
-                         [(ngModel)]="canvasElements[selectedElement].wordSpacing" 
-                         (change)="updateElement()" 
-                         min="-10" max="50" step="1"
-                         class="slider">
-                  <span class="value">{{ canvasElements[selectedElement].wordSpacing || 0 }}px</span>
-                </div>
+            <!-- Word Spacing -->
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Word Spacing</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].wordSpacing || 0 }}px</span>
               </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].wordSpacing" (change)="updateElement()" 
+                     min="-10" max="50" step="1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
             </div>
           </div>
 
-          <!-- Auto-fit and Smart Sizing -->
-          <div class="smart-controls">
-            <button class="smart-btn" 
-                    [class.active]="canvasElements[selectedElement].autoFit"
-                    (click)="toggleAutoFit()" 
-                    title="Auto-fit text size">
-              <mat-icon>fit_screen</mat-icon>
-              <span>Auto-fit</span>
+          <!-- Smart Controls (Compact) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-top: 0.625rem;">
+            <button [class.active]="canvasElements[selectedElement].autoFit" (click)="toggleAutoFit()" title="Auto-fit"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">fit_screen</mat-icon>
+              Auto-fit
             </button>
-            <button class="smart-btn" 
-                    [class.active]="canvasElements[selectedElement].textWrap"
-                    (click)="toggleTextWrap()" 
-                    title="Text wrapping">
-              <mat-icon>wrap_text</mat-icon>
-              <span>Wrap</span>
+            <button [class.active]="canvasElements[selectedElement].textWrap" (click)="toggleTextWrap()" title="Wrap"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">wrap_text</mat-icon>
+              Wrap
             </button>
           </div>
         </div>
-        <!-- Advanced Text Effects -->
-        <div class="property-group">
-          <label>
-            <mat-icon>auto_fix_high</mat-icon>
-            Text Effects
-          </label>
-          <div class="effects-grid">
-            <!-- Effect Presets -->
-            <div class="effect-presets">
-              <button class="preset-btn" 
-                      *ngFor="let preset of textEffectPresets" 
-                      (click)="applyTextEffectPreset(preset)"
-                      [title]="preset.name">
-                <div class="preset-preview" [ngStyle]="getEffectPreviewStyle(preset)">Aa</div>
-                <span>{{ preset.name }}</span>
-              </button>
-            </div>
+        
+        <!-- Text Effects (Compact Design) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">auto_fix_high</mat-icon>
+            <span>Text Effects</span>
+          </h4>
+          
+          <!-- Effect Presets (Compact Scrollable) -->
+          <div style="display: flex; gap: 0.5rem; overflow-x: auto; margin-bottom: 0.625rem; padding-bottom: 0.5rem;">
+            <button *ngFor="let preset of textEffectPresets" (click)="applyTextEffectPreset(preset)" [title]="preset.name"
+                    style="flex-shrink: 0; background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 60px;">
+              <div [ngStyle]="getEffectPreviewStyle(preset)" style="font-size: 1.25rem; font-weight: 700;">Aa</div>
+              <span style="font-size: 0.65rem; color: #64748b;">{{ preset.name }}</span>
+            </button>
           </div>
           
-          <!-- Effect Tabs -->
-          <div class="effect-tabs">
-            <button class="effect-tab" 
-                    [class.active]="activeEffectTab === 'shadow'"
-                    (click)="activeEffectTab = 'shadow'">Shadow</button>
-            <button class="effect-tab" 
-                    [class.active]="activeEffectTab === 'outline'"
-                    (click)="activeEffectTab = 'outline'">Outline</button>
-            <button class="effect-tab" 
-                    [class.active]="activeEffectTab === 'highlight'"
-                    (click)="activeEffectTab = 'highlight'">Highlight</button>
-            <button class="effect-tab" 
-                    [class.active]="activeEffectTab === 'curve'"
-                    (click)="activeEffectTab = 'curve'">Curve</button>
+          <!-- Effect Tabs (Compact 4-button) -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.625rem; background: white; padding: 0.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <button [class.active]="activeEffectTab === 'shadow'" (click)="activeEffectTab = 'shadow'"
+                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
+              Shadow
+            </button>
+            <button [class.active]="activeEffectTab === 'outline'" (click)="activeEffectTab = 'outline'"
+                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
+              Outline
+            </button>
+            <button [class.active]="activeEffectTab === 'highlight'" (click)="activeEffectTab = 'highlight'"
+                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
+              Highlight
+            </button>
+            <button [class.active]="activeEffectTab === 'curve'" (click)="activeEffectTab = 'curve'"
+                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
+              Curve
+            </button>
           </div>
           
-          <!-- Shadow Controls -->
-          <div class="effect-panel" *ngIf="activeEffectTab === 'shadow'">
-            <div class="effect-controls">
-              <div class="control-row">
-                <label>Shadow Type</label>
-                <select [(ngModel)]="canvasElements[selectedElement].shadowType" (change)="updateTextShadow()">
-                  <option value="none">None</option>
-                  <option value="drop">Drop Shadow</option>
-                  <option value="inner">Inner Shadow</option>
-                  <option value="neon">Neon Glow</option>
-                  <option value="multiple">Multiple Shadows</option>
-                </select>
+          <!-- Shadow Panel -->
+          <div *ngIf="activeEffectTab === 'shadow'" style="background: white; border-radius: 6px; padding: 0.625rem;">
+            <select [(ngModel)]="canvasElements[selectedElement].shadowType" (change)="updateTextShadow()"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; margin-bottom: 0.625rem; outline: none;">
+              <option value="none">None</option>
+              <option value="drop">Drop Shadow</option>
+              <option value="inner">Inner Shadow</option>
+              <option value="neon">Neon Glow</option>
+              <option value="multiple">Multiple Shadows</option>
+            </select>
+            
+            <div *ngIf="canvasElements[selectedElement].shadowType !== 'none'" style="display: flex; flex-direction: column; gap: 0.625rem;">
+              <div>
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a; display: block; margin-bottom: 0.375rem;">Shadow Color</label>
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].shadowColor" (change)="updateTextShadow()"
+                       style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
               </div>
-              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
-                <label>Shadow Color</label>
-                <input type="color" 
-                       [(ngModel)]="canvasElements[selectedElement].shadowColor" 
-                       (change)="updateTextShadow()">
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                  <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Blur</label>
+                  <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].shadowBlur || 0 }}px</span>
+                </div>
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowBlur" (change)="updateTextShadow()" 
+                       min="0" max="50" step="1"
+                       style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
               </div>
-              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
-                <label>Blur: {{ canvasElements[selectedElement].shadowBlur || 0 }}px</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].shadowBlur" 
-                       (change)="updateTextShadow()" 
-                       min="0" max="50" step="1">
-              </div>
-              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
-                <label>Offset X: {{ canvasElements[selectedElement].shadowOffsetX || 0 }}px</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].shadowOffsetX" 
-                       (change)="updateTextShadow()" 
-                       min="-50" max="50" step="1">
-              </div>
-              <div class="control-row" *ngIf="canvasElements[selectedElement].shadowType !== 'none'">
-                <label>Offset Y: {{ canvasElements[selectedElement].shadowOffsetY || 0 }}px</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].shadowOffsetY" 
-                       (change)="updateTextShadow()" 
-                       min="-50" max="50" step="1">
-              </div>
-            </div>
-          </div>
-          
-          <!-- Outline Controls -->
-          <div class="effect-panel" *ngIf="activeEffectTab === 'outline'">
-            <div class="effect-controls">
-              <div class="control-row">
-                <label>Outline Width: {{ canvasElements[selectedElement].outlineWidth || 0 }}px</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].outlineWidth" 
-                       (change)="updateTextOutline()" 
-                       min="0" max="10" step="0.5">
-              </div>
-              <div class="control-row">
-                <label>Outline Color</label>
-                <input type="color" 
-                       [(ngModel)]="canvasElements[selectedElement].outlineColor" 
-                       (change)="updateTextOutline()">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                <div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                    <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Offset X</label>
+                    <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].shadowOffsetX || 0 }}</span>
+                  </div>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetX" (change)="updateTextShadow()" 
+                         min="-50" max="50" step="1"
+                         style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                    <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Offset Y</label>
+                    <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].shadowOffsetY || 0 }}</span>
+                  </div>
+                  <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetY" (change)="updateTextShadow()" 
+                         min="-50" max="50" step="1"
+                         style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+                </div>
               </div>
             </div>
           </div>
           
-          <!-- Highlight Controls -->
-          <div class="effect-panel" *ngIf="activeEffectTab === 'highlight'">
-            <div class="effect-controls">
-              <div class="control-row">
-                <label>Background Color</label>
-                <input type="color" 
-                       [(ngModel)]="canvasElements[selectedElement].backgroundColor" 
-                       (change)="updateElement()">
+          <!-- Outline Panel -->
+          <div *ngIf="activeEffectTab === 'outline'" style="background: white; border-radius: 6px; padding: 0.625rem; display: flex; flex-direction: column; gap: 0.625rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Outline Width</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].outlineWidth || 0 }}px</span>
               </div>
-              <div class="control-row">
-                <label>Padding: {{ canvasElements[selectedElement].padding || 0 }}px</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].padding" 
-                       (change)="updateElement()" 
-                       min="0" max="50" step="1">
-              </div>
-              <div class="control-row">
-                <label>Border Radius: {{ canvasElements[selectedElement].borderRadius || 0 }}px</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].borderRadius" 
-                       (change)="updateElement()" 
-                       min="0" max="50" step="1">
-              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].outlineWidth" (change)="updateTextOutline()" 
+                     min="0" max="10" step="0.5"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+            </div>
+            <div>
+              <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a; display: block; margin-bottom: 0.375rem;">Outline Color</label>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].outlineColor" (change)="updateTextOutline()"
+                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
             </div>
           </div>
           
-          <!-- Curved Text Controls -->
-          <div class="effect-panel" *ngIf="activeEffectTab === 'curve'">
-            <div class="effect-controls">
-              <div class="control-row">
-                <label>Curve Type</label>
-                <select [(ngModel)]="canvasElements[selectedElement].curveType" (change)="updateTextCurve()">
-                  <option value="none">None</option>
-                  <option value="arc">Arc</option>
-                  <option value="bridge">Bridge</option>
-                  <option value="bulge">Bulge</option>
-                  <option value="wave">Wave</option>
-                  <option value="circle">Circle</option>
-                </select>
+          <!-- Highlight Panel -->
+          <div *ngIf="activeEffectTab === 'highlight'" style="background: white; border-radius: 6px; padding: 0.625rem; display: flex; flex-direction: column; gap: 0.625rem;">
+            <div>
+              <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a; display: block; margin-bottom: 0.375rem;">Background Color</label>
+              <input type="color" [(ngModel)]="canvasElements[selectedElement].backgroundColor" (change)="updateElement()"
+                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Padding</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].padding || 0 }}px</span>
               </div>
-              <div class="control-row" *ngIf="canvasElements[selectedElement].curveType !== 'none'">
-                <label>Curve Amount: {{ canvasElements[selectedElement].curveAmount || 0 }}%</label>
-                <input type="range" 
-                       [(ngModel)]="canvasElements[selectedElement].curveAmount" 
-                       (change)="updateTextCurve()" 
-                       min="-100" max="100" step="5">
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].padding" (change)="updateElement()" 
+                     min="0" max="50" step="1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Border Radius</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].borderRadius || 0 }}px</span>
               </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" 
+                     min="0" max="50" step="1"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+            </div>
+          </div>
+          
+          <!-- Curve Panel -->
+          <div *ngIf="activeEffectTab === 'curve'" style="background: white; border-radius: 6px; padding: 0.625rem; display: flex; flex-direction: column; gap: 0.625rem;">
+            <select [(ngModel)]="canvasElements[selectedElement].curveType" (change)="updateTextCurve()"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; outline: none;">
+              <option value="none">None</option>
+              <option value="arc">Arc</option>
+              <option value="bridge">Bridge</option>
+              <option value="bulge">Bulge</option>
+              <option value="wave">Wave</option>
+              <option value="circle">Circle</option>
+            </select>
+            
+            <div *ngIf="canvasElements[selectedElement].curveType !== 'none'">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Curve Amount</label>
+                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].curveAmount || 0 }}%</span>
+              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].curveAmount" (change)="updateTextCurve()" 
+                     min="-100" max="100" step="5"
+                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
             </div>
           </div>
         </div>
@@ -1790,7 +1796,7 @@
       </div>
       
       <!-- Image specific properties -->
-      <div *ngIf="canvasElements[selectedElement].type === 'image'">
+      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'image'">
         <div class="property-group">
           <label>Image</label>
           <div class="image-preview">
@@ -2054,7 +2060,7 @@
       </div>
       
       <!-- Shape specific properties -->
-      <div *ngIf="canvasElements[selectedElement].type === 'shape'">
+      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'shape'">
         <div class="property-group">
           <label>Shape Type</label>
           <div class="shape-controls">

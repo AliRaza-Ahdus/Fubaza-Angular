@@ -67,11 +67,6 @@ interface CanvasElement {
   textType?: 'heading' | 'subheading' | 'body' | 'caption';
   wordSpacing?: number;
   
-  // Additional text effect properties
-  textStroke?: string;
-  textFill?: string;
-  backgroundClip?: string;
-  
   // Advanced text effects
   shadowType?: 'none' | 'drop' | 'inner' | 'neon' | 'multiple';
   outlineWidth?: number;
@@ -273,14 +268,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   filteredFonts: FontItem[] = [];
   fontLibrary: FontItem[] = [];
   typographyCombos: TypographyCombo[] = [];
+  filteredTypographyCombos: TypographyCombo[] = [];
+  activeTypographyCategory: string = 'all';
+  previewedCombo: TypographyCombo | null = null;
   fontPairingSuggestions: FontPairing[] = [];
   textEffectPresets: TextEffectPreset[] = [];
   textAnimations: TextAnimation[] = [];
-  
-  // Typography combo properties
-  activeTypographyCategory: string = 'all';
-  filteredTypographyCombos: TypographyCombo[] = [];
-  previewedCombo: TypographyCombo | null = null;
   
   // Text UI State
   activeColorTab: string = 'solid';
@@ -756,6 +749,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   // Add element to canvas - core functionality
   addElementToCanvas(elementType: 'text' | 'image' | 'shape' | 'line' | 'icon', data?: any, x: number = 100, y: number = 100): void {
+    console.log('addElementToCanvas called with type:', elementType, 'data:', data);
+    
     const newElement: CanvasElement = {
       id: `element_${Date.now()}`,
       type: elementType,
@@ -2031,17 +2026,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     // Store the JSON in a variable (could be saved to DB in the future)
     this.templateJsonString = JSON.stringify(this.templateJsonData, null, 2);
     
-    // For debugging purposes - log the JSON
-    console.log('Template JSON:', this.templateJsonString);
-    
-    // In a real app, you would save to a service/backend here
-    console.log('Saving template:', this.template);
-    
-    // Show success message with JSON preview
-    alert(`Template saved successfully!\n\nPreview of JSON data:\n${this.templateJsonString.substring(0, 150)}...`);
-    
-    // Set a breakpoint here for debugging
-    debugger; // This will pause execution in the browser's developer tools
+    // Show success message
+    alert(`Template saved successfully!`);
   }
   
   // Save template with promise-based image conversion
@@ -2052,9 +2038,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     try {
-      // Show loading indicator
-      console.log('Converting images to base64...');
-      
       // Pre-process all images to base64
       await this.preProcessImages();
 
@@ -2078,17 +2061,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       // Store the JSON in a variable (could be saved to DB in the future)
       this.templateJsonString = JSON.stringify(this.templateJsonData, null, 2);
       
-      // For debugging purposes - log the JSON
-      console.log('Template JSON:', this.templateJsonString);
-      
-      // In a real app, you would save to a service/backend here
-      console.log('Saving template:', this.template);
-      
-      // Show success message with JSON preview
-      alert(`Template saved successfully!\n\nPreview of JSON data:\n${this.templateJsonString.substring(0, 150)}...`);
-      
-      // Set a breakpoint here for debugging
-      debugger; // This will pause execution in the browser's developer tools
+      // Show success message
+      alert(`Template saved successfully!`);
     } catch (error) {
       console.error('Error during image conversion:', error);
       alert('Error saving template: ' + (error instanceof Error ? error.message : 'Unknown error'));
@@ -3424,7 +3398,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.cropLeft = (this.currentImageToCrop.width - this.cropWidth) / 2;
     this.cropAspectRatio = 'free';
     
-    console.log('Opening crop dialog for image:', this.currentImageToCrop.layerName);
     this.showCropDialog = true;
   }
   
@@ -3438,8 +3411,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.cropTop = 0;
     this.cropLeft = 0;
     this.cropAspectRatio = 'free';
-    
-    console.log('Crop dialog closed');
   }
   
   startCropResize(handle: string, event: MouseEvent): void {
@@ -3604,8 +3575,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Validate final boundaries
     this.validateCropBoundaries();
-    
-    console.log('Applied aspect ratio:', this.cropAspectRatio, 'New dimensions:', { width: this.cropWidth, height: this.cropHeight });
   }
 
   private validateCropBoundaries(): void {
@@ -3661,11 +3630,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.closeCropDialog();
       return;
     }
-
-    console.log('Starting crop operation...', {
-      cropArea: { x: this.cropLeft, y: this.cropTop, width: this.cropWidth, height: this.cropHeight },
-      originalSize: { width: this.currentImageToCrop.width, height: this.currentImageToCrop.height }
-    });
     
     // Load the image
     const img = new Image();
@@ -3710,8 +3674,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         
         // Save to history
         this.updateElement();
-        
-        console.log('Image cropped successfully:', element.layerName);
       }
       
       this.closeCropDialog();
@@ -4080,7 +4042,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   exportTemplate(format: 'png' | 'jpg' | 'pdf', quality: 'standard' | 'high'): void {
     // In a real implementation, this would convert the canvas to the requested format
-    console.log(`Exporting as ${format} in ${quality} quality`);
     this.showExportOptions = false;
   }
   
@@ -4100,29 +4061,30 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   copyShareLink(input: HTMLInputElement): void {
     input.select();
     document.execCommand('copy');
-    // Show a toast notification or some feedback
-    console.log('Link copied to clipboard');
   }
   
   generateNewShareLink(): void {
     // In a real app, this would invalidate the old link and create a new one
     this.shareLink = `https://fubaza.com/templates/share/${Date.now()}`;
-    console.log('New share link generated');
   }
 
   // Shape selector methods
   openShapeSelector(): void {
+    console.log('openShapeSelector called, isDraggingElement:', this.isDraggingElement);
     // Only open shape selector if not currently dragging
     if (!this.isDraggingElement) {
       this.showShapeSelector = !this.showShapeSelector;
+      console.log('showShapeSelector toggled to:', this.showShapeSelector);
     }
   }
 
   closeShapeSelector(): void {
+    console.log('closeShapeSelector called');
     this.showShapeSelector = false;
   }
 
   triggerImageUpload(): void {
+    console.log('triggerImageUpload called');
     // Create file input element
     const input = document.createElement('input');
     input.type = 'file';
@@ -4132,6 +4094,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     input.onchange = (event: any) => {
       const file = event.target.files[0];
       if (file) {
+        console.log('File selected:', file.name);
         this.handleFileUpload(file);
       }
     };
@@ -4348,7 +4311,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
           bodyFont: 'Lora',
           headingText: 'Elegant Title',
           bodyText: 'Sophisticated and readable content with classic styling',
-          category: 'classic'
+          category: 'elegant'
         },
         {
           id: 'combo-3',
@@ -4357,7 +4320,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
           bodyFont: 'Source Sans Pro',
           headingText: 'Tech Header',
           bodyText: 'Clean minimal text for technical and digital content',
-          category: 'tech'
+          category: 'modern'
         },
         {
           id: 'combo-4',
@@ -4366,7 +4329,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
           bodyFont: 'Lato',
           headingText: 'CREATIVE IMPACT',
           bodyText: 'Bold and expressive text for creative projects',
-          category: 'creative'
+          category: 'bold'
         },
         {
           id: 'combo-5',
@@ -4388,10 +4351,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         }
       ];
       
-      console.log('Typography combos initialized:', this.typographyCombos.length);
+      // Initialize filtered combos
+      this.filteredTypographyCombos = [...this.typographyCombos];
     } catch (error) {
       console.error('Error initializing typography combos:', error);
       this.typographyCombos = [];
+      this.filteredTypographyCombos = [];
     }
   }
 
@@ -4579,7 +4544,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.filteredFonts = filtered;
-    console.log(`Font filter applied: ${filtered.length} fonts found (category: ${this.activeFontCategory}, query: "${this.fontSearchQuery}")`);
   }
 
   setFontCategory(category: string): void {
@@ -4601,8 +4565,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     element.fontFamily = font.family;
     this.updateElement();
     this.generateFontPairingSuggestions(font);
-    
-    console.log('Applied font:', font.name, 'to element:', element.layerName);
   }
 
   private loadGoogleFont(fontName: string): void {
@@ -4619,8 +4581,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}:wght@300;400;500;600;700;800;900&display=swap`;
     
     document.head.appendChild(link);
-    
-    console.log('Loading Google Font:', fontName);
   }
 
   isSelectedFont(font: FontItem): boolean {
@@ -4695,8 +4655,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Update layers display
     this.filterLayers();
-
-    console.log('Applied typography combo:', combo.name);
   }
 
   getComboHeadingStyle(combo: TypographyCombo): any {
@@ -4756,11 +4714,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   previewTypographyCombo(combo: TypographyCombo): void {
-    // Create a temporary preview without adding to canvas
     this.previewedCombo = combo;
-    
-    // You could show a modal or overlay here
-    console.log('Previewing typography combo:', combo.name);
     
     // Optional: Show toast message
     // this.showToast(`Previewing ${combo.name} typography combo`);
@@ -4773,16 +4727,16 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       // Clear all text effects
       if (element.type === 'text') {
         element.textShadow = undefined;
-        element.textStroke = undefined;
-        element.textFill = undefined;
+        element.textStrokeWidth = undefined;
+        element.textStrokeColor = undefined;
         element.filter = undefined;
-        element.backgroundClip = undefined;
+        element.textGradientType = 'none';
+        element.highlightStyle = 'none';
         
         // Reset to default text color
         element.color = '#000000';
         
         this.saveToHistory();
-        console.log('All text effects cleared');
       }
     }
   }
@@ -4798,8 +4752,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       
       const randomEffect = effects[Math.floor(Math.random() * effects.length)];
       this.applyTextEffect(randomEffect);
-      
-      console.log('Applied random effect:', randomEffect);
     }
   }
 
@@ -4842,7 +4794,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   applyFontPairing(pairing: FontPairing): void {
     // Apply pairing to selected elements
-    console.log('Applying font pairing:', pairing);
   }
 
   getPairingPrimaryStyle(pairing: FontPairing): any {
@@ -5104,28 +5055,23 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   addTextToFrame(): void {
     // Implementation for text as frame functionality
-    console.log('Adding text to frame');
   }
 
   // AI and Smart Features
   openAIRewrite(): void {
     // Open AI rewrite dialog
-    console.log('Opening AI rewrite tool');
   }
 
   openTranslateText(): void {
     // Open translation dialog
-    console.log('Opening translation tool');
   }
 
   startVoiceToText(): void {
     // Start voice to text functionality
-    console.log('Starting voice to text');
   }
 
   addHyperlink(): void {
     // Add hyperlink to text
-    console.log('Adding hyperlink');
   }
 
   // Accessibility Methods
@@ -5174,12 +5120,10 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Brand Kit Methods
   applyBrandFont(): void {
     // Apply brand font from brand kit
-    console.log('Applying brand font');
   }
 
   saveToBrandKit(): void {
     // Save current text style to brand kit
-    console.log('Saving to brand kit');
   }
 
   // Custom Font Upload
@@ -5196,14 +5140,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (!file) return;
     
     // Handle font file upload
-    console.log('Font file selected:', file.name);
     // In a real implementation, you would upload the font and add it to the font library
   }
 
   // Font Browser
   openFontBrowser(): void {
     // Open font browser dialog or expand font library
-    console.log('Opening font browser');
   }
 
   // Helper method for template
