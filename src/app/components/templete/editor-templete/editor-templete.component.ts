@@ -67,6 +67,11 @@ interface CanvasElement {
   textType?: 'heading' | 'subheading' | 'body' | 'caption';
   wordSpacing?: number;
   
+  // Additional text effect properties
+  textStroke?: string;
+  textFill?: string;
+  backgroundClip?: string;
+  
   // Advanced text effects
   shadowType?: 'none' | 'drop' | 'inner' | 'neon' | 'multiple';
   outlineWidth?: number;
@@ -271,6 +276,11 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   fontPairingSuggestions: FontPairing[] = [];
   textEffectPresets: TextEffectPreset[] = [];
   textAnimations: TextAnimation[] = [];
+  
+  // Typography combo properties
+  activeTypographyCategory: string = 'all';
+  filteredTypographyCombos: TypographyCombo[] = [];
+  previewedCombo: TypographyCombo | null = null;
   
   // Text UI State
   activeColorTab: string = 'solid';
@@ -1008,6 +1018,65 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   getShapeVisualClass(shapeType: string): string {
     // Return CSS class for shape visual preview
     return `shape-visual-${shapeType}`;
+  }
+
+  getShapeEmoji(shapeType: string): string {
+    const emojiMap: { [key: string]: string } = {
+      'rectangle': '🔲',
+      'square': '⬜',
+      'circle': '⭕',
+      'ellipse': '🔵',
+      'triangle': '🔺',
+      'star': '⭐',
+      'heart': '❤️',
+      'diamond': '💎',
+      'hexagon': '⬢',
+      'pentagon': '🛡️',
+      'octagon': '🛑',
+      'arrow': '➡️',
+      'line': '📏',
+      'curved-line': '〰️',
+      'dashed-line': '- - -',
+      'bracket': '【】',
+      'parenthesis': '（）',
+      'cloud': '☁️',
+      'burst': '💥',
+      'spiral': '🌀',
+      'cross': '✚',
+      'plus': '➕',
+      'minus': '➖',
+      'checkmark': '✅',
+      'x-mark': '❌'
+    };
+    return emojiMap[shapeType] || '🔷';
+  }
+
+  getPopularityStars(shapeType: string): number[] {
+    const popularityMap: { [key: string]: number } = {
+      'rectangle': 5,
+      'circle': 5,
+      'triangle': 4,
+      'star': 5,
+      'heart': 4,
+      'diamond': 3,
+      'hexagon': 3,
+      'arrow': 4,
+      'line': 5,
+      'square': 4,
+      'ellipse': 3,
+      'pentagon': 2,
+      'octagon': 2,
+      'curved-line': 3,
+      'dashed-line': 3,
+      'cross': 3,
+      'plus': 4,
+      'checkmark': 4,
+      'cloud': 3,
+      'burst': 2,
+      'spiral': 2
+    };
+    const starCount = popularityMap[shapeType] || 3;
+    return Array(starCount).fill(0).map((_, i) => i);
   }
 
   trackByShape(index: number, shape: any): string {
@@ -4669,6 +4738,69 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   trackByCombo(index: number, combo: TypographyCombo): string {
     return combo?.id || index.toString();
+  }
+
+  setTypographyCategory(category: string): void {
+    this.activeTypographyCategory = category;
+    this.filterTypographyCombos();
+  }
+
+  private filterTypographyCombos(): void {
+    if (this.activeTypographyCategory === 'all') {
+      this.filteredTypographyCombos = this.typographyCombos;
+    } else {
+      this.filteredTypographyCombos = this.typographyCombos.filter(
+        combo => combo.category === this.activeTypographyCategory
+      );
+    }
+  }
+
+  previewTypographyCombo(combo: TypographyCombo): void {
+    // Create a temporary preview without adding to canvas
+    this.previewedCombo = combo;
+    
+    // You could show a modal or overlay here
+    console.log('Previewing typography combo:', combo.name);
+    
+    // Optional: Show toast message
+    // this.showToast(`Previewing ${combo.name} typography combo`);
+  }
+
+  clearAllEffects(): void {
+    if (this.selectedElement !== null && this.canvasElements[this.selectedElement]) {
+      const element = this.canvasElements[this.selectedElement];
+      
+      // Clear all text effects
+      if (element.type === 'text') {
+        element.textShadow = undefined;
+        element.textStroke = undefined;
+        element.textFill = undefined;
+        element.filter = undefined;
+        element.backgroundClip = undefined;
+        
+        // Reset to default text color
+        element.color = '#000000';
+        
+        this.saveToHistory();
+        console.log('All text effects cleared');
+      }
+    }
+  }
+
+  randomizeEffects(): void {
+    if (this.selectedElement !== null && this.canvasElements[this.selectedElement]) {
+      const effects = [
+        'soft-shadow', 'hard-shadow', 'long-shadow',
+        'thin-outline', 'thick-outline', 'double-outline',
+        'sunset-gradient', 'ocean-gradient', 'rainbow-gradient',
+        'neon-glow', 'soft-glow', 'fire-glow'
+      ];
+      
+      const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+      this.applyTextEffect(randomEffect);
+      
+      console.log('Applied random effect:', randomEffect);
+    }
   }
 
   trackByFont(index: number, font: FontItem): string {
