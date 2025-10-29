@@ -869,6 +869,14 @@
                   <div class="resize-handle bottom-left" (mousedown)="startResize(i, 'bottom-left', $event)"></div>
                   <div class="resize-handle bottom-right" (mousedown)="startResize(i, 'bottom-right', $event)"></div>
                 </div>
+                
+                <!-- Resize Size Indicator (only show for selected element during resize) -->
+                <div *ngIf="selectedElement === i && showResizeIndicators" 
+                     class="resize-indicator"
+                     [style.left.px]="resizeIndicatorPosition?.x"
+                     [style.top.px]="resizeIndicatorPosition?.y">
+                  <span class="resize-indicator-text">{{ currentResizeWidth }} × {{ currentResizeHeight }}</span>
+                </div>
               </div>
             </div>
             

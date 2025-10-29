@@ -231,6 +231,7 @@ interface TextAnimation {
 export class EditorTempleteComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') canvasRef!: ElementRef;
   @ViewChild('fileUpload') fileUploadRef!: ElementRef;
+  @ViewChild('backgroundUpload') backgroundUploadRef!: ElementRef;
 
   template: Template = {
     name: 'Untitled Template',
@@ -447,14 +448,36 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   private imageLoadQueue: Map<string, Promise<HTMLImageElement>> = new Map();
   private imageCache: Map<string, HTMLImageElement> = new Map();
   
+  // Advanced collision detection and magnetic snapping properties
+  collisionDetectionEnabled: boolean = true;
+  magneticSnappingEnabled: boolean = true;
+  snapTolerance: number = 8;
+  collisionWarningDistance: number = 15;
+  
+  // Element culling for performance optimization
+  elementCullingEnabled: boolean = true;
+  visibleElementsCache: Map<number, boolean> = new Map();
+  
+  // Object pooling for vectors and transforms
+  vectorPool: { x: number; y: number }[] = [];
+  transformPool: { x: number; y: number; element: HTMLElement }[] = [];
+  
+  // Advanced cursor feedback properties
+  cursorVelocityThreshold: number = 0.5;
+  cursorDistanceThreshold: number = 20;
+  cursorTimeThreshold: number = 150;
+  
   // Text effects
   activeTextEffectTab: 'stroke' | 'shadow' | 'gradient' | 'highlight' = 'stroke';
   
   // Image filters
   activeImageFilterTab: 'basic' | 'advanced' | 'blend' = 'basic';
   
-  // View helpers
-  @ViewChild('backgroundUpload') backgroundUploadRef!: ElementRef;
+  // Resize size indicators
+  showResizeIndicators: boolean = true;
+  currentResizeWidth: number = 0;
+  currentResizeHeight: number = 0;
+  resizeIndicatorPosition: { x: number; y: number } = { x: 0, y: 0 };
   
   // Drag state tracking
   isDraggingElement: boolean = false;
@@ -494,6 +517,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Initialize performance optimizations
     this.initializePerformanceOptimizations();
+    
+    // Initialize element culling
+    this.updateVisibleElements();
     
     // Add window resize listener
     this.handleWindowResize();
@@ -1232,6 +1258,10 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   startResize(index: number, handle: string, event: MouseEvent): void {
     event.stopPropagation();
+    event.preventDefault();
+    console.log('startResize called:', { index, handle, event });
+    console.log('Element to resize:', this.canvasElements[index]);
+    console.log('Mouse position at start:', event.clientX, event.clientY);
     this.isResizing = true;
     this.resizeHandle = handle;
     this.selectedElement = index;
@@ -1241,6 +1271,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.elementStartY = this.canvasElements[index].y;
     this.elementStartWidth = this.canvasElements[index].width;
     this.elementStartHeight = this.canvasElements[index].height;
+    console.log('Resize started with handle:', handle, 'Element dimensions:', this.elementStartWidth, 'x', this.elementStartHeight);
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -1249,6 +1280,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (this.isPanning) {
       this.panX = event.clientX - this.panStartX;
       this.panY = event.clientY - this.panStartY;
+      // Update visible elements during pan
+      this.updateVisibleElements();
       return;
     }
 
@@ -1302,26 +1335,37 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         this.performOptimizedDragUpdate();
       });
     } else if (this.isResizing && this.selectedElement !== null) {
+      console.log('Resizing element:', this.selectedElement, 'with handle:', this.resizeHandle);
+      console.log('Mouse position:', event.clientX, event.clientY);
       // Get the canvas workspace element to calculate proper coordinates
       const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
-      if (!canvasWorkspace) return;
+      if (!canvasWorkspace) {
+        console.error('Canvas workspace not found!');
+        return;
+      }
+      console.log('Canvas workspace found, calculating coordinates...');
 
       const workspaceRect = canvasWorkspace.getBoundingClientRect();
+      console.log('Workspace rect:', workspaceRect);
 
       // Convert screen coordinates to canvas workspace coordinates
       const mouseX = event.clientX - workspaceRect.left;
       const mouseY = event.clientY - workspaceRect.top;
+      console.log('Mouse relative to workspace:', mouseX, mouseY);
 
       // Account for zoom and pan transforms
       const scale = this.zoomLevel / 100;
       const canvasX = (mouseX / scale) - (this.panX / scale);
       const canvasY = (mouseY / scale) - (this.panY / scale);
+      console.log('Canvas coordinates (scaled):', canvasX, canvasY);
 
       // Calculate the delta from the initial resize position
       const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
       const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
+      console.log('Delta from start:', dx, dy);
 
       const element = this.canvasElements[this.selectedElement];
+      console.log('Element before:', element.width, element.height);
 
       // Enhanced resize logic with aspect ratio constraints
       switch (this.resizeHandle) {
@@ -1361,8 +1405,12 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       element.width = Math.max(20, element.width);
       element.height = Math.max(20, element.height);
 
+      // Update resize indicators
+      this.updateResizeIndicators(element);
+
       // Update cursor based on resize handle
       this.updateResizeCursor();
+      console.log('Element after resize:', element.width, element.height, 'Position:', element.x, element.y);
     }
   }
 
@@ -1412,6 +1460,20 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       newY = Math.round(newY / this.gridSize) * this.gridSize;
     }
 
+    // Apply magnetic snapping if enabled
+    if (this.selectedElement !== null) {
+      const snappedPosition = this.applyMagneticSnapping(this.selectedElement, newX, newY);
+      newX = snappedPosition.x;
+      newY = snappedPosition.y;
+    }
+
+    // Check for collisions and get warnings
+    let collisionWarnings: string[] = [];
+    if (this.selectedElement !== null) {
+      const collisionResult = this.checkElementCollisions(this.selectedElement, newX, newY);
+      collisionWarnings = collisionResult.warnings;
+    }
+
     // Use transform-based movement for better performance during drag
     if (this.selectedElements.length > 1) {
       this.updateMultipleElementsWithTransforms(newX, newY);
@@ -1419,8 +1481,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.updateSingleElementWithTransform(this.selectedElement, newX, newY);
     }
 
-    // Update cursor with enhanced feedback
-    this.updateDragCursor(mouseX, mouseY);
+    // Update cursor with enhanced feedback including collision warnings
+    this.updateAdvancedCursorFeedback(mouseX, mouseY, collisionWarnings);
   }
 
   private updateSingleElementWithTransform(elementIndex: number, newX: number, newY: number): void {
@@ -1490,10 +1552,16 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       cached.element.classList.remove('dragging');
       cached.element.classList.remove('momentum-animating');
       cached.element.classList.remove('momentum-complete');
+      
+      // Return transform object to pool
+      this.returnTransformToPool(cached);
     });
     this.elementTransforms.clear();
     document.body.style.cursor = '';
-    document.body.classList.remove('cursor-grabbing-enhanced');
+    document.body.classList.remove('cursor-grabbing-enhanced', 'cursor-collision-warning');
+    
+    // Update visible elements after drag operation
+    this.updateVisibleElements();
   }
 
   // Check if current velocity is significant enough for momentum
@@ -1653,6 +1721,203 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Advanced collision detection methods
+  private checkElementCollisions(draggedElementIndex: number, newX: number, newY: number): { hasCollision: boolean; warnings: string[] } {
+    if (!this.collisionDetectionEnabled) {
+      return { hasCollision: false, warnings: [] };
+    }
+
+    const draggedElement = this.canvasElements[draggedElementIndex];
+    const warnings: string[] = [];
+    let hasCollision = false;
+
+    // Check collision with other elements
+    this.canvasElements.forEach((element, index) => {
+      if (index === draggedElementIndex) return; // Skip self
+
+      const distance = this.getElementDistance(
+        { x: newX, y: newY, width: draggedElement.width || 0, height: draggedElement.height || 0 },
+        { x: element.x, y: element.y, width: element.width || 0, height: element.height || 0 }
+      );
+
+      if (distance <= this.collisionWarningDistance) {
+        hasCollision = true;
+        warnings.push(`Close to ${element.layerName || `Element ${index + 1}`}`);
+      }
+    });
+
+    return { hasCollision, warnings };
+  }
+
+  private getElementDistance(rect1: { x: number; y: number; width: number; height: number },
+                           rect2: { x: number; y: number; width: number; height: number }): number {
+    const center1 = {
+      x: rect1.x + rect1.width / 2,
+      y: rect1.y + rect1.height / 2
+    };
+
+    const center2 = {
+      x: rect2.x + rect2.width / 2,
+      y: rect2.y + rect2.height / 2
+    };
+
+    return Math.sqrt(
+      Math.pow(center2.x - center1.x, 2) +
+      Math.pow(center2.y - center1.y, 2)
+    );
+  }
+
+  private applyMagneticSnapping(draggedElementIndex: number, newX: number, newY: number): { x: number; y: number } {
+    if (!this.magneticSnappingEnabled) {
+      return { x: newX, y: newY };
+    }
+
+    const draggedElement = this.canvasElements[draggedElementIndex];
+    let snappedX = newX;
+    let snappedY = newY;
+
+    // Check snapping to other elements
+    this.canvasElements.forEach((element, index) => {
+      if (index === draggedElementIndex) return;
+
+      // Horizontal snapping (left/right edges and centers)
+      const draggedCenterX = newX + (draggedElement.width || 0) / 2;
+      const elementCenterX = element.x + (element.width || 0) / 2;
+
+      if (Math.abs(newX - element.x) <= this.snapTolerance) {
+        snappedX = element.x;
+      } else if (Math.abs(newX + (draggedElement.width || 0) - element.x) <= this.snapTolerance) {
+        snappedX = element.x - (draggedElement.width || 0);
+      } else if (Math.abs(draggedCenterX - elementCenterX) <= this.snapTolerance) {
+        snappedX = elementCenterX - (draggedElement.width || 0) / 2;
+      }
+
+      // Vertical snapping (top/bottom edges and centers)
+      const draggedCenterY = newY + (draggedElement.height || 0) / 2;
+      const elementCenterY = element.y + (element.height || 0) / 2;
+
+      if (Math.abs(newY - element.y) <= this.snapTolerance) {
+        snappedY = element.y;
+      } else if (Math.abs(newY + (draggedElement.height || 0) - element.y) <= this.snapTolerance) {
+        snappedY = element.y - (draggedElement.height || 0);
+      } else if (Math.abs(draggedCenterY - elementCenterY) <= this.snapTolerance) {
+        snappedY = elementCenterY - (draggedElement.height || 0) / 2;
+      }
+    });
+
+    // Canvas edge snapping
+    if (Math.abs(newX) <= this.snapTolerance) {
+      snappedX = 0;
+    } else if (Math.abs(newX + (draggedElement.width || 0) - this.canvasWidth) <= this.snapTolerance) {
+      snappedX = this.canvasWidth - (draggedElement.width || 0);
+    }
+
+    if (Math.abs(newY) <= this.snapTolerance) {
+      snappedY = 0;
+    } else if (Math.abs(newY + (draggedElement.height || 0) - this.canvasHeight) <= this.snapTolerance) {
+      snappedY = this.canvasHeight - (draggedElement.height || 0);
+    }
+
+    return { x: snappedX, y: snappedY };
+  }
+
+  // Object pooling methods for performance optimization
+  private getVectorFromPool(x: number = 0, y: number = 0): { x: number; y: number } {
+    if (this.vectorPool.length > 0) {
+      const vector = this.vectorPool.pop()!;
+      vector.x = x;
+      vector.y = y;
+      return vector;
+    }
+    return { x, y };
+  }
+
+  private returnVectorToPool(vector: { x: number; y: number }): void {
+    if (this.vectorPool.length < 50) { // Limit pool size
+      this.vectorPool.push(vector);
+    }
+  }
+
+  private getTransformFromPool(x: number = 0, y: number = 0, element: HTMLElement): { x: number; y: number; element: HTMLElement } {
+    if (this.transformPool.length > 0) {
+      const transform = this.transformPool.pop()!;
+      transform.x = x;
+      transform.y = y;
+      transform.element = element;
+      return transform;
+    }
+    return { x, y, element };
+  }
+
+  private returnTransformToPool(transform: { x: number; y: number; element: HTMLElement }): void {
+    if (this.transformPool.length < 20) { // Limit pool size
+      this.transformPool.push(transform);
+    }
+  }
+
+  // Element culling for performance optimization
+  private updateVisibleElements(): void {
+    if (!this.elementCullingEnabled) return;
+
+    const viewportRect = {
+      left: -this.panX,
+      top: -this.panY,
+      right: -this.panX + (window.innerWidth / (this.zoomLevel / 100)),
+      bottom: -this.panY + (window.innerHeight / (this.zoomLevel / 100))
+    };
+
+    this.canvasElements.forEach((element, index) => {
+      const elementRect = {
+        left: element.x,
+        top: element.y,
+        right: element.x + (element.width || 0),
+        bottom: element.y + (element.height || 0)
+      };
+
+      const isVisible = !(
+        elementRect.right < viewportRect.left ||
+        elementRect.left > viewportRect.right ||
+        elementRect.bottom < viewportRect.top ||
+        elementRect.top > viewportRect.bottom
+      );
+
+      this.visibleElementsCache.set(index, isVisible);
+
+      // Update element visibility in DOM
+      const elementDiv = document.querySelector(`[data-element-index="${index}"]`) as HTMLElement;
+      if (elementDiv) {
+        elementDiv.style.display = isVisible ? 'block' : 'none';
+      }
+    });
+  }
+
+  // Enhanced cursor feedback based on velocity and collision warnings
+  private updateAdvancedCursorFeedback(mouseX: number, mouseY: number, collisionWarnings: string[]): void {
+    if (!this.isDragging) return;
+
+    const currentTime = performance.now();
+    const dragDuration = currentTime - this.dragStartTime;
+    const distance = Math.sqrt(
+      Math.pow(mouseX - this.dragStartX, 2) +
+      Math.pow(mouseY - this.dragStartY, 2)
+    );
+
+    const speed = distance / Math.max(dragDuration, 1);
+
+    // Enhanced cursor feedback based on velocity and collision state
+    if (collisionWarnings.length > 0) {
+      document.body.style.cursor = 'not-allowed';
+      document.body.classList.add('cursor-collision-warning');
+    } else if (speed > this.cursorVelocityThreshold || distance > this.cursorDistanceThreshold || dragDuration > this.cursorTimeThreshold) {
+      document.body.style.cursor = 'grabbing';
+      document.body.classList.add('cursor-grabbing-enhanced');
+      document.body.classList.remove('cursor-collision-warning');
+    } else {
+      document.body.style.cursor = 'grab';
+      document.body.classList.remove('cursor-grabbing-enhanced', 'cursor-collision-warning');
+    }
+  }
+
   private debouncedSave(): void {
     // Clear any existing timeout
     if (this.debouncedSaveTimeout) {
@@ -1696,6 +1961,20 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     } else {
       document.body.style.cursor = 'default';
     }
+  }
+
+  // Update resize indicators during resize operations
+  private updateResizeIndicators(element: CanvasElement): void {
+    if (!this.showResizeIndicators || !this.isResizing) return;
+
+    this.currentResizeWidth = Math.round(element.width);
+    this.currentResizeHeight = Math.round(element.height);
+
+    // Position the indicator near the element being resized
+    this.resizeIndicatorPosition = {
+      x: element.x + element.width / 2,
+      y: element.y - 30 // Position above the element
+    };
   }
 
   @HostListener('document:mouseup')
@@ -1958,6 +2237,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   // Select an element on the canvas
   selectElement(index: number, event: MouseEvent): void {
+    console.log('selectElement called:', { index, event });
+    console.log('Element being selected:', this.canvasElements[index]);
     event.stopPropagation();
     
     // If shift is held, add to multi-selection
@@ -1976,6 +2257,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
     
     this.lastSelectedElement = index;
+    console.log('Selection updated - selectedElement:', this.selectedElement, 'selectedElements:', this.selectedElements);
     
     // Start dragging for the selected element
     this.startElementDrag(index, event);
@@ -2031,11 +2313,15 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Simple zoom function
   zoom(delta: number): void {
     this.zoomLevel = Math.max(10, Math.min(500, this.zoomLevel + delta));
+    // Update visible elements after zoom change
+    this.updateVisibleElements();
   }
 
   // Enhanced zoom and view controls
   setZoom(level: number): void {
     this.zoomLevel = Math.max(10, Math.min(500, level));
+    // Update visible elements after zoom change
+    this.updateVisibleElements();
   }
 
   fitToScreen(): void {
@@ -2059,6 +2345,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   centerCanvas(): void {
     this.panX = 0;
     this.panY = 0;
+    // Update visible elements after centering
+    this.updateVisibleElements();
   }
 
   // Pan controls
