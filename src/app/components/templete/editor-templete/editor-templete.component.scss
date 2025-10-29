@@ -3937,9 +3937,13 @@ $space-4: 1rem; // 16px
             }
 
             &.top-left { top: -8px; left: -8px; cursor: nw-resize; }
+            &.top { top: -8px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
             &.top-right { top: -8px; right: -8px; cursor: ne-resize; }
-            &.bottom-left { bottom: -8px; left: -8px; cursor: sw-resize; }
+            &.right { top: 50%; right: -8px; transform: translateY(-50%); cursor: e-resize; }
             &.bottom-right { bottom: -8px; right: -8px; cursor: se-resize; }
+            &.bottom { bottom: -8px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
+            &.bottom-left { bottom: -8px; left: -8px; cursor: sw-resize; }
+            &.left { top: 50%; left: -8px; transform: translateY(-50%); cursor: w-resize; }
           }
         }
 
@@ -4410,17 +4414,18 @@ $space-4: 1rem; // 16px
         position: absolute;
         width: 12px;
         height: 12px;
-        background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 10%) 100%);
-        border: 2px solid white;
+        background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+        border: 2px solid #ffff00;
         border-radius: 50%;
         pointer-events: auto;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba($primary-color, 0.4);
+        box-shadow: 0 2px 8px rgba(255, 0, 0, 0.4);
         transition: all 0.2s ease;
+        z-index: 1000;
 
         &:hover {
           transform: scale(1.2);
-          box-shadow: 0 4px 12px rgba($primary-color, 0.6);
+          box-shadow: 0 4px 12px rgba(255, 0, 0, 0.6);
         }
 
         &.top-left { top: -6px; left: -6px; cursor: nw-resize; }

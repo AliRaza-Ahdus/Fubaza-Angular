@@ -1257,11 +1257,13 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   startResize(index: number, handle: string, event: MouseEvent): void {
+    console.log('🔴🔴🔴 RESIZE HANDLE CLICKED! 🔴🔴🔴');
+    console.log('🔴 Element index:', index);
+    console.log('🔴 Handle type:', handle);
+    console.log('🔴 Mouse event:', event);
+    console.log('🔴 Element data:', this.canvasElements[index]);
     event.stopPropagation();
     event.preventDefault();
-    console.log('startResize called:', { index, handle, event });
-    console.log('Element to resize:', this.canvasElements[index]);
-    console.log('Mouse position at start:', event.clientX, event.clientY);
     this.isResizing = true;
     this.resizeHandle = handle;
     this.selectedElement = index;
@@ -2237,8 +2239,11 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   
   // Select an element on the canvas
   selectElement(index: number, event: MouseEvent): void {
-    console.log('selectElement called:', { index, event });
-    console.log('Element being selected:', this.canvasElements[index]);
+    console.log('🟢🟢🟢 ELEMENT SELECTED! 🟢🟢🟢');
+    console.log('🟢 Element index:', index);
+    console.log('🟢 Element data:', this.canvasElements[index]);
+    console.log('🟢 Current selectedElement:', this.selectedElement);
+    console.log('🟢 Current selectedElements:', this.selectedElements);
     event.stopPropagation();
     
     // If shift is held, add to multi-selection

@@ -865,9 +865,13 @@
                 <!-- Resize handles (only show for selected element) -->
                 <div *ngIf="selectedElement === i" class="resize-handles">
                   <div class="resize-handle top-left" (mousedown)="startResize(i, 'top-left', $event)"></div>
+                  <div class="resize-handle top" (mousedown)="startResize(i, 'top', $event)"></div>
                   <div class="resize-handle top-right" (mousedown)="startResize(i, 'top-right', $event)"></div>
-                  <div class="resize-handle bottom-left" (mousedown)="startResize(i, 'bottom-left', $event)"></div>
+                  <div class="resize-handle right" (mousedown)="startResize(i, 'right', $event)"></div>
                   <div class="resize-handle bottom-right" (mousedown)="startResize(i, 'bottom-right', $event)"></div>
+                  <div class="resize-handle bottom" (mousedown)="startResize(i, 'bottom', $event)"></div>
+                  <div class="resize-handle bottom-left" (mousedown)="startResize(i, 'bottom-left', $event)"></div>
+                  <div class="resize-handle left" (mousedown)="startResize(i, 'left', $event)"></div>
                 </div>
                 
                 <!-- Resize Size Indicator (only show for selected element during resize) -->
