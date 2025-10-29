@@ -459,6 +459,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Drag state tracking
   isDraggingElement: boolean = false;
 
+  // Professional canvas drag state
+  isDragOverCanvas: boolean = false;
+
   constructor(private router: Router) {}
 
   ngOnInit(): void {
@@ -716,6 +719,24 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   onDragEnd(): void {
     this.isDraggingElement = false;
+  }
+
+  // Professional canvas drag handlers
+  onCanvasDragEnter(event: DragEvent): void {
+    event.preventDefault();
+    this.isDragOverCanvas = true;
+  }
+
+  onCanvasDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    // Only set to false if we're actually leaving the canvas area
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = event.clientX;
+    const y = event.clientY;
+
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      this.isDragOverCanvas = false;
+    }
   }
 
   onDragOver(event: DragEvent): void {
