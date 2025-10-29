@@ -873,8 +873,8 @@
                 <!-- Resize Size Indicator (only show for selected element during resize) -->
                 <div *ngIf="selectedElement === i && showResizeIndicators" 
                      class="resize-indicator"
-                     [style.left.px]="resizeIndicatorPosition?.x"
-                     [style.top.px]="resizeIndicatorPosition?.y">
+                     [style.left.px]="resizeIndicatorPosition.x"
+                     [style.top.px]="resizeIndicatorPosition.y">
                   <span class="resize-indicator-text">{{ currentResizeWidth }} × {{ currentResizeHeight }}</span>
                 </div>
               </div>
