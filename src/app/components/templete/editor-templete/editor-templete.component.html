@@ -128,59 +128,51 @@
       </div>
 
       <!-- ================================================ -->
-      <!-- SECTION 2: TYPOGRAPHY & EFFECTS -->
+      <!-- SECTION 2: TYPOGRAPHY & FONTS (COMPACT DESIGN) -->
       <!-- ================================================ -->
-      
-      <div class="sidebar-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+      <div class="sidebar-section" style="background: white; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
         <!-- Compact Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">font_download</mat-icon>
+        <h3 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.8rem; font-weight: 600; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 4px; padding: 4px; display: flex;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px;">font_download</mat-icon>
           </div>
-          <span>Typography Combos</span>
+          <span>Typography</span>
         </h3>
-        
-        <!-- Compact Category Filters -->
-        <div style="display: flex; gap: 0.375rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-          <button (click)="setTypographyCategory('all')" [class.active]="activeTypographyCategory === 'all'"
-                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-            All
-          </button>
-          <button (click)="setTypographyCategory('modern')" [class.active]="activeTypographyCategory === 'modern'"
-                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-            Modern
-          </button>
-          <button (click)="setTypographyCategory('elegant')" [class.active]="activeTypographyCategory === 'elegant'"
-                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-            Elegant
-          </button>
-          <button (click)="setTypographyCategory('bold')" [class.active]="activeTypographyCategory === 'bold'"
-                  style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-            Bold
-          </button>
-        </div>
-        
-        <!-- Compact Typography Grid -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
-          <div *ngFor="let combo of filteredTypographyCombos; trackBy: trackByCombo" 
-               (click)="applyTypographyCombo(combo)"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s;">
-            <div style="font-size: 0.75rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              {{ combo.name }}
-            </div>
-            <div style="font-size: 0.625rem; color: #64748b; margin-bottom: 0.375rem;">
-              {{ combo.headingFont }}
-            </div>
-            <div style="background: white; padding: 0.375rem; border-radius: 4px; border: 1px solid #e2e8f0;">
-              <div [ngStyle]="getComboHeadingStyle(combo)" style="font-size: 0.7rem; margin-bottom: 0.125rem;">Heading</div>
-              <div [ngStyle]="getComboBodyStyle(combo)" style="font-size: 0.625rem;">Body Text</div>
-            </div>
+
+        <!-- Ultra-Compact Typography Combos -->
+        <div style="margin-bottom: 0.5rem;">
+          <div style="display: flex; gap: 0.25rem; margin-bottom: 0.375rem; flex-wrap: wrap;">
+            <button (click)="setTypographyCategory('all')" [class.active]="activeTypographyCategory === 'all'"
+                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+              All
+            </button>
+            <button (click)="setTypographyCategory('modern')" [class.active]="activeTypographyCategory === 'modern'"
+                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+              Modern
+            </button>
+            <button (click)="setTypographyCategory('elegant')" [class.active]="activeTypographyCategory === 'elegant'"
+                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+              Elegant
+            </button>
+            <button (click)="setTypographyCategory('bold')" [class.active]="activeTypographyCategory === 'bold'"
+                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
+              Bold
+            </button>
           </div>
-          
-          <!-- Empty State -->
-          <div *ngIf="filteredTypographyCombos.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 1.5rem; color: #94a3b8;">
-            <mat-icon style="font-size: 32px; width: 32px; height: 32px; opacity: 0.5;">font_download</mat-icon>
-            <div style="font-size: 0.75rem; margin-top: 0.5rem;">No combos found</div>
+
+          <!-- Compact Combo Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem;">
+            <div *ngFor="let combo of filteredTypographyCombos; trackBy: trackByCombo"
+                 (click)="applyTypographyCombo(combo)"
+                 style="padding: 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: all 0.15s;">
+              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ combo.name }}
+              </div>
+              <div style="background: white; padding: 0.25rem; border-radius: 3px; border: 1px solid #e2e8f0;">
+                <div [ngStyle]="getComboHeadingStyle(combo)" style="font-size: 0.6rem; margin-bottom: 0.125rem;">H</div>
+                <div [ngStyle]="getComboBodyStyle(combo)" style="font-size: 0.55rem;">Body</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1078,107 +1070,105 @@
       
       <!-- Text Properties (Compact Modern Design) -->
       <div *ngIf="canvasElements[selectedElement].type === 'text'" style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <!-- Text Content with AI Tools -->
-        <div style="margin-bottom: 0.875rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.625rem;">
-            <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">text_fields</mat-icon>
-              <span>Text Content</span>
-            </h4>
-            <div style="display: flex; gap: 0.25rem;">
-              <button (click)="openAIRewrite()" title="AI Rewrite"
-                      style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
-                <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #8b5cf6;">auto_fix_high</mat-icon>
+      <!-- Text Content (Ultra Compact) -->
+      <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">text_fields</mat-icon>
+            <span>Text Content</span>
+          </h4>
+          <div style="display: flex; gap: 0.25rem;">
+            <button (click)="openAIRewrite()" title="AI Rewrite"
+                    style="background: #f1f5f9; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #8b5cf6;">auto_fix_high</mat-icon>
+            </button>
+            <button (click)="openTranslateText()" title="Translate"
+                    style="background: #f1f5f9; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6366f1;">translate</mat-icon>
+            </button>
+            <button (click)="startVoiceToText()" title="Voice"
+                    style="background: #f1f5f9; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #f43f5e;">mic</mat-icon>
+            </button>
+          </div>
+        </div>
+        <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()"
+                  placeholder="Enter your text here..."
+                  style="width: 100%; min-height: 80px; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; resize: vertical; outline: none; font-family: inherit; margin-bottom: 0.375rem;"></textarea>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; gap: 0.25rem;">
+            <button (click)="checkAccessibility()" title="Accessibility"
+                    style="background: #f1f5f9; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #64748b;">accessibility</mat-icon>
+            </button>
+            <button (click)="addHyperlink()" title="Add Link"
+                    style="background: #f1f5f9; border: none; padding: 0.25rem; border-radius: 4px; cursor: pointer;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #64748b;">link</mat-icon>
+            </button>
+          </div>
+          <span style="font-size: 0.65rem; color: #94a3b8;">{{ (canvasElements[selectedElement].content || '').length }} chars</span>
+        </div>
+      </div>      <!-- Font & Typography (Ultra Compact) -->
+      <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
+        <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+          <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #14b8a6;">font_download</mat-icon>
+          <span>Font & Typography</span>
+        </h4>
+
+        <!-- Font Browser (Compact) -->
+        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem; margin-bottom: 0.5rem;">
+          <div [ngStyle]="getCurrentFontStyle()" style="font-size: 0.8rem; margin-bottom: 0.375rem; color: #0f172a; font-weight: 600;">
+            {{ canvasElements[selectedElement].fontFamily || 'Select Font' }}
+          </div>
+          <button (click)="openFontBrowser()"
+                  style="width: 100%; padding: 0.375rem; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem; font-size: 0.65rem; font-weight: 600;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px;">library_books</mat-icon>
+            Browse Fonts
+          </button>
+        </div>
+
+        <!-- Font Size & Style (Compact Grid) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem;">
+          <!-- Font Size -->
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Size</div>
+            <div style="display: flex; align-items: center; gap: 0.25rem;">
+              <button (click)="adjustFontSize(-2)"
+                      style="padding: 0.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; cursor: pointer;">
+                <mat-icon style="font-size: 12px; color: #64748b;">remove</mat-icon>
               </button>
-              <button (click)="openTranslateText()" title="Translate"
-                      style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
-                <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">translate</mat-icon>
-              </button>
-              <button (click)="startVoiceToText()" title="Voice"
-                      style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
-                <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #f43f5e;">mic</mat-icon>
+              <input type="number"
+                     [(ngModel)]="canvasElements[selectedElement].fontSize"
+                     (change)="updateElement()"
+                     style="flex: 1; border: none; font-size: 0.7rem; font-weight: 600; color: #0f172a; text-align: center; outline: none;"
+                     min="8" max="200">
+              <button (click)="adjustFontSize(2)"
+                      style="padding: 0.25rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; cursor: pointer;">
+                <mat-icon style="font-size: 12px; color: #64748b;">add</mat-icon>
               </button>
             </div>
           </div>
-          <div style="position: relative;">
-            <textarea [(ngModel)]="canvasElements[selectedElement].content" (change)="updateElement()" 
-                      placeholder="Enter your text here..."
-                      style="width: 100%; min-height: 100px; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.75rem; resize: vertical; outline: none; font-family: inherit;"></textarea>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-              <div style="display: flex; gap: 0.375rem;">
-                <button (click)="checkAccessibility()" title="Accessibility"
-                        style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
-                  <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #64748b;">accessibility</mat-icon>
-                </button>
-                <button (click)="addHyperlink()" title="Add Link"
-                        style="background: #f1f5f9; border: none; padding: 0.375rem; border-radius: 6px; cursor: pointer; display: flex;">
-                  <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #64748b;">link</mat-icon>
-                </button>
-              </div>
-              <span style="font-size: 0.65rem; color: #94a3b8;">{{ (canvasElements[selectedElement].content || '').length }} chars</span>
+
+          <!-- Style Buttons -->
+          <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Style</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem;">
+              <button [class.active]="canvasElements[selectedElement].fontWeight === 'bold'" (click)="toggleTextStyle('fontWeight', 'bold')"
+                      style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; cursor: pointer;">
+                <mat-icon style="font-size: 12px; color: #64748b;">format_bold</mat-icon>
+              </button>
+              <button [class.active]="canvasElements[selectedElement].fontStyle === 'italic'" (click)="toggleTextStyle('fontStyle', 'italic')"
+                      style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; cursor: pointer;">
+                <mat-icon style="font-size: 12px; color: #64748b;">format_italic</mat-icon>
+              </button>
+              <button [class.active]="canvasElements[selectedElement].textDecoration === 'underline'" (click)="toggleTextStyle('textDecoration', 'underline')"
+                      style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; cursor: pointer;">
+                <mat-icon style="font-size: 12px; color: #64748b;">format_underlined</mat-icon>
+              </button>
             </div>
           </div>
         </div>
-
-        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
-            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-              <mat-icon style="font-size: 16px; color: white;">font_download</mat-icon>
-            </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Font & Typography</span>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr; gap: 0.625rem; margin-bottom: 0.875rem;">
-            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;">
-              <div [ngStyle]="getCurrentFontStyle()" style="font-size: 0.875rem; margin-bottom: 0.5rem; color: #0f172a;">
-                {{ canvasElements[selectedElement].fontFamily || 'Select Font' }}
-              </div>
-              <button (click)="openFontBrowser()"
-                      style="width: 100%; padding: 0.5rem; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
-                <mat-icon style="font-size: 14px; width: 14px; height: 14px;">library_books</mat-icon>
-                Browse Fonts
-              </button>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.875rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Font Size</span>
-              <div style="display: flex; align-items: center; gap: 0.375rem;">
-                <button (click)="adjustFontSize(-2)"
-                        style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                  <mat-icon style="font-size: 14px; color: #64748b;">remove</mat-icon>
-                </button>
-                <input type="number"
-                       [(ngModel)]="canvasElements[selectedElement].fontSize"
-                       (change)="updateElement()"
-                       style="flex: 1; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; text-align: center; background: white; outline: none;"
-                       min="8" max="200">
-                <button (click)="adjustFontSize(2)"
-                        style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                  <mat-icon style="font-size: 14px; color: #64748b;">add</mat-icon>
-                </button>
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Style</span>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem;">
-                <button [class.active]="canvasElements[selectedElement].fontWeight === 'bold'" (click)="toggleTextStyle('fontWeight', 'bold')"
-                        style="padding: 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                  <mat-icon style="font-size: 14px; color: #64748b;">format_bold</mat-icon>
-                </button>
-                <button [class.active]="canvasElements[selectedElement].fontStyle === 'italic'" (click)="toggleTextStyle('fontStyle', 'italic')"
-                        style="padding: 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                  <mat-icon style="font-size: 14px; color: #64748b;">format_italic</mat-icon>
-                </button>
-                <button [class.active]="canvasElements[selectedElement].textDecoration === 'underline'" (click)="toggleTextStyle('textDecoration', 'underline')"
-                        style="padding: 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                  <mat-icon style="font-size: 14px; color: #64748b;">format_underlined</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+      </div>
         </div>
         
         <!-- Color & Style (Compact Design) -->
@@ -1515,134 +1505,130 @@
             </div>
           </div>
         </div>
-        <!-- Text Animations -->
-        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
-            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-              <mat-icon style="font-size: 16px; color: white;">animation</mat-icon>
-            </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Text Animations</span>
-          </div>
+        <!-- Text Animations (Ultra Compact) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">animation</mat-icon>
+            <span>Text Animations</span>
+          </h4>
 
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" *ngFor="let animation of textAnimations"
+          <!-- Animation Buttons (Compact Grid) -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-bottom: 0.5rem;">
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
                     [style.background]="canvasElements[selectedElement].animation === animation.type ? '#10b981' : '#f8fafc'"
-                    [style.color]="canvasElements[selectedElement].animation === animation.type ? 'white' : '#374151'"
+                    [style.color]="canvasElements[selectedElement].animation === animation.type ? 'white' : '#64748b'"
                     [style.border-color]="canvasElements[selectedElement].animation === animation.type ? '#059669' : '#e2e8f0'"
-                    (click)="applyTextAnimation(animation)" [title]="animation.name">
-              <mat-icon style="font-size: 14px;">{{ animation.icon }}</mat-icon>
+                    (click)="applyTextAnimation(animation)" [title]="animation.name" *ngFor="let animation of textAnimations">
+              <mat-icon style="font-size: 12px;">{{ animation.icon }}</mat-icon>
             </button>
           </div>
 
-          <div *ngIf="canvasElements[selectedElement].animation" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.875rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Duration</span>
+          <!-- Animation Controls (Compact) -->
+          <div *ngIf="canvasElements[selectedElement].animation" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-bottom: 0.5rem;">
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Duration</div>
               <input type="range" [(ngModel)]="canvasElements[selectedElement].animationDuration"
                      (change)="updateAnimation()" min="0.1" max="5" step="0.1"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{ canvasElements[selectedElement].animationDuration || 1 }}s</span>
+                     style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
+              <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].animationDuration || 1 }}s</div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Delay</span>
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Delay</div>
               <input type="range" [(ngModel)]="canvasElements[selectedElement].animationDelay"
                      (change)="updateAnimation()" min="0" max="3" step="0.1"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{ canvasElements[selectedElement].animationDelay || 0 }}s</span>
+                     style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
+              <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].animationDelay || 0 }}s</div>
             </div>
           </div>
 
-          <div *ngIf="canvasElements[selectedElement].animation" style="display: grid; grid-template-columns: 1fr; gap: 0.625rem; margin-bottom: 0.875rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].animationLoop"
-                     (change)="updateAnimation()" id="animation-loop"
-                     style="width: 16px; height: 16px; accent-color: #10b981;">
-              <label for="animation-loop" style="font-size: 0.8rem; font-weight: 500; color: #6b7280; cursor: pointer;">Loop Animation</label>
-            </div>
+          <!-- Loop Checkbox (Compact) -->
+          <div *ngIf="canvasElements[selectedElement].animation" style="display: flex; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem;">
+            <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].animationLoop"
+                   (change)="updateAnimation()" id="animation-loop"
+                   style="width: 14px; height: 14px; accent-color: #10b981;">
+            <label for="animation-loop" style="font-size: 0.7rem; font-weight: 600; color: #0f172a; cursor: pointer;">Loop Animation</label>
           </div>
 
+          <!-- Preview Button (Compact) -->
           <div *ngIf="canvasElements[selectedElement].animation" style="display: flex; justify-content: center;">
             <button (click)="previewAnimation()"
-                    style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
-              <mat-icon style="font-size: 14px;">play_arrow</mat-icon>
-              Preview Animation
+                    style="padding: 0.375rem 0.75rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem; font-size: 0.65rem; font-weight: 600;">
+              <mat-icon style="font-size: 12px;">play_arrow</mat-icon>
+              Preview
             </button>
           </div>
         </div>
 
-        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
-            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-              <mat-icon style="font-size: 16px; color: white;">opacity</mat-icon>
+        <!-- Transparency & Masking (Ultra Compact) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">opacity</mat-icon>
+            <span>Transparency & Masking</span>
+          </h4>
+
+          <!-- Opacity Slider (Compact) -->
+          <div style="margin-bottom: 0.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+              <span style="font-size: 0.65rem; font-weight: 600; color: #64748b;">Opacity</span>
+              <span style="font-size: 0.65rem; color: #64748b;">{{ getOpacityPercentage() }}%</span>
             </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Transparency & Masking</span>
+            <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity"
+                   (change)="updateElement()" min="0" max="1" step="0.01"
+                   style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
           </div>
-          
-          <div style="display: grid; grid-template-columns: 1fr; gap: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Opacity</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" 
-                     (change)="updateElement()" min="0" max="1" step="0.01"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{ getOpacityPercentage() }}%</span>
-            </div>
-          </div>
-          
-          <div style="margin-top: 0.875rem;">
-            <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280; display: block; margin-bottom: 0.5rem;">Masking Options</span>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem;">
-              <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
-                      [style.background]="canvasElements[selectedElement].maskEnabled ? '#10b981' : '#f8fafc'"
-                      [style.color]="canvasElements[selectedElement].maskEnabled ? 'white' : '#374151'"
-                      [style.border-color]="canvasElements[selectedElement].maskEnabled ? '#059669' : '#e2e8f0'"
-                      (click)="enableTextMasking()" title="Use text as mask for images">
-                <mat-icon style="font-size: 14px;">layers</mat-icon>
-                <span>Text as Mask</span>
-              </button>
-              <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
-                      (click)="addTextToFrame()" title="Add text to image frame">
-                <mat-icon style="font-size: 14px;">crop_free</mat-icon>
-                <span>Text in Frame</span>
-              </button>
-            </div>
+
+          <!-- Masking Options (Compact Grid) -->
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem;">
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
+                    [style.background]="canvasElements[selectedElement].maskEnabled ? '#10b981' : '#f8fafc'"
+                    [style.color]="canvasElements[selectedElement].maskEnabled ? 'white' : '#64748b'"
+                    [style.border-color]="canvasElements[selectedElement].maskEnabled ? '#059669' : '#e2e8f0'"
+                    (click)="enableTextMasking()" title="Use text as mask for images">
+              <mat-icon style="font-size: 12px;">layers</mat-icon>
+              Text as Mask
+            </button>
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
+                    (click)="addTextToFrame()" title="Add text to image frame">
+              <mat-icon style="font-size: 12px;">crop_free</mat-icon>
+              Text in Frame
+            </button>
           </div>
         </div>
 
-        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
-            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-              <mat-icon style="font-size: 16px; color: white;">branding_watermark</mat-icon>
-            </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Brand Kit & Accessibility</span>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-bottom: 0.875rem;">
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+        <!-- Brand Kit & Accessibility (Ultra Compact) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">branding_watermark</mat-icon>
+            <span>Brand Kit & Accessibility</span>
+          </h4>
+
+          <!-- Brand Kit Buttons (Compact Grid) -->
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem; margin-bottom: 0.5rem;">
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
                     (click)="applyBrandFont()" title="Apply brand font">
-              <mat-icon style="font-size: 14px;">business</mat-icon>
-              <span>Brand Font</span>
+              <mat-icon style="font-size: 12px;">business</mat-icon>
+              Brand Font
             </button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
                     (click)="saveToBrandKit()" title="Save to brand kit">
-              <mat-icon style="font-size: 14px;">bookmark_add</mat-icon>
-              <span>Save Style</span>
+              <mat-icon style="font-size: 12px;">bookmark_add</mat-icon>
+              Save Style
             </button>
           </div>
-          
-          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Accessibility Check</span>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" 
+
+          <!-- Accessibility Check (Compact) -->
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <button style="padding: 0.375rem 0.5rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 0.25rem;"
                     [style.background]="contrastRatio < 4.5 ? '#fef2f2' : '#f0fdf4'"
                     [style.border-color]="contrastRatio < 4.5 ? '#fca5a5' : '#86efac'"
                     (click)="checkContrastRatio()" title="Check contrast ratio">
-              <mat-icon style="font-size: 14px;">accessibility</mat-icon>
-              <span>Contrast: {{ contrastRatio ? contrastRatio.toFixed(1) : 'Check' }}</span>
+              <mat-icon style="font-size: 12px;">accessibility</mat-icon>
+              Contrast: {{ contrastRatio ? contrastRatio.toFixed(1) : 'Check' }}
             </button>
-            <div *ngIf="contrastRatio" style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
-              <span style="font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: #f0fdf4; color: #166534;" 
-                    [style.background]="contrastRatio >= 4.5 ? '#f0fdf4' : '#fef2f2'"
-                    [style.color]="contrastRatio >= 4.5 ? '#166534' : '#dc2626'">
-                {{ contrastRatio >= 4.5 ? 'WCAG AA ✓' : 'WCAG AA ✗' }}
-              </span>
+            <div *ngIf="contrastRatio" style="font-size: 0.65rem; padding: 0.25rem 0.5rem; border-radius: 4px; background: #f0fdf4; color: #166534;"
+                 [style.background]="contrastRatio >= 4.5 ? '#f0fdf4' : '#fef2f2'"
+                 [style.color]="contrastRatio >= 4.5 ? '#166534' : '#dc2626'">
+              {{ contrastRatio >= 4.5 ? 'WCAG AA ✓' : 'WCAG AA ✗' }}
             </div>
           </div>
         </div>
@@ -1800,45 +1786,46 @@
           </div>
         </div>
         
-        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
-            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-              <mat-icon style="font-size: 16px; color: white;">transform</mat-icon>
-            </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Text Transform</span>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+        <!-- Text Transform (Ultra Compact) -->
+        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">transform</mat-icon>
+            <span>Text Transform</span>
+          </h4>
+
+          <!-- Transform Buttons (Compact Grid) -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-bottom: 0.5rem;">
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
                     (click)="rotateText(-90)" title="Rotate Left">
-              <mat-icon style="font-size: 14px;">rotate_left</mat-icon>
+              <mat-icon style="font-size: 12px;">rotate_left</mat-icon>
             </button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
                     (click)="rotateText(90)" title="Rotate Right">
-              <mat-icon style="font-size: 14px;">rotate_right</mat-icon>
+              <mat-icon style="font-size: 12px;">rotate_right</mat-icon>
             </button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
                     (click)="flipText('horizontal')" title="Flip Horizontal">
-              <mat-icon style="font-size: 14px;">flip</mat-icon>
+              <mat-icon style="font-size: 12px;">flip</mat-icon>
             </button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
+            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
                     (click)="flipText('vertical')" title="Flip Vertical">
-              <mat-icon style="font-size: 14px; transform: rotate(90deg);">flip</mat-icon>
+              <mat-icon style="font-size: 12px; transform: rotate(90deg);">flip</mat-icon>
             </button>
           </div>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-bottom: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Rotation</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].textRotation" 
+
+          <!-- Rotation & Path Controls (Compact) -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-bottom: 0.5rem;">
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Rotation</div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textRotation"
                      (change)="updateElement()" min="-180" max="180" step="5"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textRotation || 0}}°</span>
+                     style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
+              <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].textRotation || 0 }}°</div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Text Path</span>
+            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Text Path</div>
               <select [(ngModel)]="canvasElements[selectedElement].textPath" (change)="updateElement()"
-                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
+                      style="width: 100%; padding: 0.375rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem; background: white;">
                 <option value="none">None</option>
                 <option value="arc">Arc</option>
                 <option value="circle">Circle</option>
@@ -1846,15 +1833,14 @@
               </select>
             </div>
           </div>
-          
-          <div *ngIf="canvasElements[selectedElement].textPath !== 'none'" style="display: grid; grid-template-columns: 1fr; gap: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Path Strength</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].textPathStrength" 
-                     (change)="updateElement()" min="0" max="100" step="5"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textPathStrength || 50}}</span>
-            </div>
+
+          <!-- Path Strength (Compact) -->
+          <div *ngIf="canvasElements[selectedElement].textPath !== 'none'" style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
+            <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Path Strength</div>
+            <input type="range" [(ngModel)]="canvasElements[selectedElement].textPathStrength"
+                   (change)="updateElement()" min="0" max="100" step="5"
+                   style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
+            <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].textPathStrength || 50 }}</div>
           </div>
         </div>
       </div>

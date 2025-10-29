@@ -418,6 +418,27 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Clipboard functionality
   clipboardElements: CanvasElement[] = [];
   
+  // Performance optimization properties
+  private dragAnimationFrame: number | null = null;
+  private dragUpdateQueue: { x: number; y: number; timestamp: number } | null = null;
+  private elementTransforms: Map<number, { x: number; y: number; element: HTMLElement }> = new Map();
+  private debouncedSaveTimeout: number | null = null;
+  private saveDebounceMs: number = 300;
+  private lastSaveTime: number = 0;
+  
+  // Text performance optimizations
+  private textStyleCache: Map<string, any> = new Map();
+  private fontLoadCache: Map<string, boolean> = new Map();
+  private gradientCache: Map<string, string> = new Map();
+  private shadowCache: Map<string, string> = new Map();
+  
+  // Canvas background optimization
+  private backgroundCache: Map<string, string> = new Map();
+  
+  // Media library optimization
+  private imageLoadQueue: Map<string, Promise<HTMLImageElement>> = new Map();
+  private imageCache: Map<string, HTMLImageElement> = new Map();
+  
   // Text effects
   activeTextEffectTab: 'stroke' | 'shadow' | 'gradient' | 'highlight' = 'stroke';
   
@@ -427,21 +448,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // View helpers
   @ViewChild('backgroundUpload') backgroundUploadRef!: ElementRef;
   
-  // Enhanced drag behavior with requestAnimationFrame for smoother performance
-  private dragAnimationFrame: number | null = null;
-  private lastDragTime: number = 0;
-  private readonly dragThrottleMs: number = 8; // ~120fps for smoother movement
-  private dragUpdateQueue: { x: number; y: number; timestamp: number } | null = null;
-  
-  // Transform-based movement cache
-  private elementTransforms = new Map<number, { x: number; y: number; element: HTMLElement }>();
-  private isUsingTransforms: boolean = false;
-  
-  // Debounced operations for better performance
-  private debouncedSaveTimeout: any = null;
-  private lastSaveTime: number = 0;
-  private readonly saveDebounceMs: number = 300; // Wait 300ms after last change
-
   // Drag state tracking
   isDraggingElement: boolean = false;
 
@@ -1871,31 +1877,47 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   }
 
   getCanvasBackgroundStyle(): string {
+    // Create cache key from background properties
+    const cacheKey = `${this.canvasBackground.type}-${this.canvasBackground.color}-${this.canvasBackground.gradientType}-${this.canvasBackground.gradientAngle}-${this.canvasBackground.gradientColor1}-${this.canvasBackground.gradientColor2}-${this.canvasBackground.imageUrl}-${this.canvasBackground.overlayColor}-${this.canvasBackground.overlayOpacity}`;
+    
+    // Check cache first
+    if (this.backgroundCache.has(cacheKey)) {
+      return this.backgroundCache.get(cacheKey)!;
+    }
+
+    let style: string;
     switch (this.canvasBackground.type) {
       case 'color':
-        return this.canvasBackground.color || '#ffffff';
+        style = this.canvasBackground.color || '#ffffff';
+        break;
         
       case 'gradient':
         if (this.canvasBackground.gradientType === 'linear') {
-          return `linear-gradient(${this.canvasBackground.gradientAngle || 45}deg, ${this.canvasBackground.gradientColor1 || '#ffffff'}, ${this.canvasBackground.gradientColor2 || '#000000'})`;
+          style = `linear-gradient(${this.canvasBackground.gradientAngle || 45}deg, ${this.canvasBackground.gradientColor1 || '#ffffff'}, ${this.canvasBackground.gradientColor2 || '#000000'})`;
         } else {
-          return `radial-gradient(circle, ${this.canvasBackground.gradientColor1 || '#ffffff'}, ${this.canvasBackground.gradientColor2 || '#000000'})`;
+          style = `radial-gradient(circle, ${this.canvasBackground.gradientColor1 || '#ffffff'}, ${this.canvasBackground.gradientColor2 || '#000000'})`;
         }
+        break;
         
       case 'image':
         if (this.canvasBackground.imageUrl) {
-          let style = `url('${this.canvasBackground.imageUrl}') center/cover no-repeat`;
+          style = `url('${this.canvasBackground.imageUrl}') center/cover no-repeat`;
           if (this.canvasBackground.overlayColor && this.canvasBackground.overlayOpacity) {
             const overlay = `linear-gradient(rgba(${this.hexToRgb(this.canvasBackground.overlayColor)}, ${this.canvasBackground.overlayOpacity}), rgba(${this.hexToRgb(this.canvasBackground.overlayColor)}, ${this.canvasBackground.overlayOpacity}))`;
             style = `${overlay}, ${style}`;
           }
-          return style;
+        } else {
+          style = '#ffffff';
         }
-        return '#ffffff';
+        break;
         
       default:
-        return '#ffffff';
+        style = '#ffffff';
     }
+
+    // Cache the result
+    this.backgroundCache.set(cacheKey, style);
+    return style;
   }
 
   triggerBackgroundUpload(): void {
@@ -2645,18 +2667,31 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (element.type !== 'text' || !element.textGradientType || element.textGradientType === 'none') {
       return 'none';
     }
+
+    // Create cache key from gradient properties
+    const cacheKey = `${element.id}-${element.textGradientType}-${element.textGradientColor1}-${element.textGradientColor2}-${element.textGradientAngle}`;
     
+    // Check cache first
+    if (this.gradientCache.has(cacheKey)) {
+      return this.gradientCache.get(cacheKey)!;
+    }
+
     const color1 = element.textGradientColor1 || '#000000';
     const color2 = element.textGradientColor2 || '#ffffff';
     const angle = element.textGradientAngle || 0;
     
+    let gradient: string;
     if (element.textGradientType === 'linear') {
-      return `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+      gradient = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
     } else if (element.textGradientType === 'radial') {
-      return `radial-gradient(circle, ${color1}, ${color2})`;
+      gradient = `radial-gradient(circle, ${color1}, ${color2})`;
+    } else {
+      gradient = 'none';
     }
-    
-    return 'none';
+
+    // Cache the result
+    this.gradientCache.set(cacheKey, gradient);
+    return gradient;
   }
   
   getTextBackgroundColor(element: CanvasElement): string {
@@ -2685,7 +2720,15 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (element.type !== 'image' || !element.filter || element.filter === 'none') {
       return 'none';
     }
+
+    // Create cache key from all filter properties
+    const cacheKey = `${element.id}-${element.brightness}-${element.contrast}-${element.saturation}-${element.hueRotate}-${element.blur}-${element.sepia}-${element.grayscale}-${element.invert}`;
     
+    // Check cache first
+    if (this.gradientCache.has(cacheKey)) {
+      return this.gradientCache.get(cacheKey)!;
+    }
+
     let filterString = '';
     
     if (element.brightness && element.brightness !== 100) {
@@ -2720,7 +2763,11 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       filterString += `invert(${element.invert}%) `;
     }
     
-    return filterString.trim() || 'none';
+    const result = filterString.trim() || 'none';
+    
+    // Cache the result
+    this.gradientCache.set(cacheKey, result);
+    return result;
   }
   
   getImageMask(element: CanvasElement): string {
@@ -2863,16 +2910,16 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
   }
   
-  toggleAlignmentGuides(): void {
-    this.showAlignmentGuides = !this.showAlignmentGuides;
-  }
-  
   toggleSmartGuides(): void {
     this.showSmartGuides = !this.showSmartGuides;
   }
   
   toggleSnapToGuides(): void {
     this.snapToGuides = !this.snapToGuides;
+  }
+  
+  toggleAlignmentGuides(): void {
+    this.showAlignmentGuides = !this.showAlignmentGuides;
   }
   
   // Layer ordering
