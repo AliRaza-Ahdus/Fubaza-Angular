@@ -1160,7 +1160,7 @@ $space-4: 1rem; // 16px
 }
 
 .template-sidebar {
-  width: 320px;
+  width: 280px;
   height: 100%;
   background: linear-gradient(145deg, $panel-bg 0%, rgba($bg-secondary, 0.8) 100%);
   border-right: 1px solid rgba($border-color, 0.8);
@@ -1210,7 +1210,7 @@ $space-4: 1rem; // 16px
   }
 
   @media (min-width: $breakpoint-tablet) {
-    width: 340px;
+    width: 250px;
   }
 
   .sidebar-section {
@@ -4402,7 +4402,7 @@ $space-4: 1rem; // 16px
 
 // Properties Panel
 .properties-panel {
-  width: 320px;
+  width: 280px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-left: 1px solid rgba(0, 0, 0, 0.05);
