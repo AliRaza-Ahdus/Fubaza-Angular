@@ -425,14 +425,22 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   private debouncedSaveTimeout: number | null = null;
   private saveDebounceMs: number = 300;
   private lastSaveTime: number = 0;
-  
+
+  // Momentum and easing properties for Canva-like movement
+  private dragVelocity = { x: 0, y: 0 };
+  private lastDragPosition = { x: 0, y: 0 };
+  private lastDragTime = 0;
+  private momentumAnimationFrame: number | null = null;
+  private momentumDeceleration = 0.95; // How quickly momentum slows down
+  private minMomentumVelocity = 0.1; // Minimum velocity before stopping
+  private dragStartTime = 0;
+  private easingDuration = 150; // Duration for easing in milliseconds
+
   // Text performance optimizations
   private textStyleCache: Map<string, any> = new Map();
   private fontLoadCache: Map<string, boolean> = new Map();
   private gradientCache: Map<string, string> = new Map();
-  private shadowCache: Map<string, string> = new Map();
-  
-  // Canvas background optimization
+  private shadowCache: Map<string, string> = new Map();  // Canvas background optimization
   private backgroundCache: Map<string, string> = new Map();
   
   // Media library optimization
@@ -1344,6 +1352,19 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     const { x: mouseX, y: mouseY, timestamp } = this.dragUpdateQueue;
     this.dragUpdateQueue = null; // Clear the queue
     
+    // Calculate velocity for momentum
+    const currentTime = performance.now();
+    const deltaTime = currentTime - this.lastDragTime;
+    
+    if (deltaTime > 0) {
+      this.dragVelocity.x = (mouseX - this.lastDragPosition.x) / deltaTime;
+      this.dragVelocity.y = (mouseY - this.lastDragPosition.y) / deltaTime;
+      
+      // Update last position and time
+      this.lastDragPosition = { x: mouseX, y: mouseY };
+      this.lastDragTime = currentTime;
+    }
+    
     // Get cached workspace rect to avoid repeated calculations
     const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
     if (!canvasWorkspace) return;
@@ -1377,8 +1398,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.updateSingleElementWithTransform(this.selectedElement, newX, newY);
     }
 
-    // Update cursor once
-    document.body.style.cursor = 'grabbing';
+    // Update cursor with enhanced feedback
+    this.updateDragCursor(mouseX, mouseY);
   }
 
   private updateSingleElementWithTransform(elementIndex: number, newX: number, newY: number): void {
@@ -1446,9 +1467,169 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.elementTransforms.forEach((cached, index) => {
       cached.element.style.transform = '';
       cached.element.classList.remove('dragging');
+      cached.element.classList.remove('momentum-animating');
+      cached.element.classList.remove('momentum-complete');
     });
     this.elementTransforms.clear();
     document.body.style.cursor = '';
+    document.body.classList.remove('cursor-grabbing-enhanced');
+  }
+
+  // Check if current velocity is significant enough for momentum
+  private hasSignificantMomentum(): boolean {
+    const speed = Math.sqrt(this.dragVelocity.x * this.dragVelocity.x + this.dragVelocity.y * this.dragVelocity.y);
+    return speed > this.minMomentumVelocity;
+  }
+
+  // Start momentum animation for Canva-like smooth movement
+  private startMomentumAnimation(): void {
+    if (this.momentumAnimationFrame) {
+      cancelAnimationFrame(this.momentumAnimationFrame);
+    }
+
+    const animate = () => {
+      // Apply deceleration to velocity
+      this.dragVelocity.x *= this.momentumDeceleration;
+      this.dragVelocity.y *= this.momentumDeceleration;
+
+      // Check if velocity is still significant
+      const speed = Math.sqrt(this.dragVelocity.x * this.dragVelocity.x + this.dragVelocity.y * this.dragVelocity.y);
+      if (speed < this.minMomentumVelocity) {
+        // Stop animation and save
+        this.momentumAnimationFrame = null;
+
+        // Add momentum completion animation class
+        if (this.selectedElements.length > 1) {
+          this.selectedElements.forEach(index => {
+            const elementDiv = document.querySelector(`[data-element-index="${index}"]`) as HTMLElement;
+            if (elementDiv) {
+              elementDiv.classList.add('momentum-complete');
+              setTimeout(() => elementDiv.classList.remove('momentum-complete'), 300);
+            }
+          });
+        } else if (this.selectedElement !== null) {
+          const elementDiv = document.querySelector(`[data-element-index="${this.selectedElement}"]`) as HTMLElement;
+          if (elementDiv) {
+            elementDiv.classList.add('momentum-complete');
+            setTimeout(() => elementDiv.classList.remove('momentum-complete'), 300);
+          }
+        }
+
+        this.debouncedSave();
+        return;
+      }
+
+      // Apply momentum to element positions
+      if (this.selectedElements.length > 1) {
+        this.applyMomentumToMultipleElements();
+      } else if (this.selectedElement !== null) {
+        this.applyMomentumToSingleElement();
+      }
+
+      // Continue animation
+      this.momentumAnimationFrame = requestAnimationFrame(animate);
+    };
+
+    // Start the animation
+    this.momentumAnimationFrame = requestAnimationFrame(animate);
+  }
+
+  // Apply momentum to a single element
+  private applyMomentumToSingleElement(): void {
+    if (this.selectedElement === null) return;
+
+    const element = this.canvasElements[this.selectedElement];
+    const elementDiv = document.querySelector(`[data-element-index="${this.selectedElement}"]`) as HTMLElement;
+    
+    if (!elementDiv) return;
+
+    // Calculate new position based on momentum
+    let newX = element.x + this.dragVelocity.x;
+    let newY = element.y + this.dragVelocity.y;
+
+    // Apply constraints
+    if (this.constrainToCanvas) {
+      newX = Math.max(0, Math.min(newX, this.canvasWidth - (element.width || 0)));
+      newY = Math.max(0, Math.min(newY, this.canvasHeight - (element.height || 0)));
+    }
+
+    if (this.snapToGrid) {
+      newX = Math.round(newX / this.gridSize) * this.gridSize;
+      newY = Math.round(newY / this.gridSize) * this.gridSize;
+    }
+
+    // Update element position
+    element.x = newX;
+    element.y = newY;
+    elementDiv.style.left = `${newX}px`;
+    elementDiv.style.top = `${newY}px`;
+  }
+
+  // Apply momentum to multiple elements
+  private applyMomentumToMultipleElements(): void {
+    this.selectedElements.forEach(index => {
+      const element = this.canvasElements[index];
+      const elementDiv = document.querySelector(`[data-element-index="${index}"]`) as HTMLElement;
+      
+      if (!elementDiv) return;
+
+      // Calculate new position based on momentum
+      let newX = element.x + this.dragVelocity.x;
+      let newY = element.y + this.dragVelocity.y;
+
+      // Apply constraints
+      if (this.constrainToCanvas) {
+        newX = Math.max(0, Math.min(newX, this.canvasWidth - (element.width || 0)));
+        newY = Math.max(0, Math.min(newY, this.canvasHeight - (element.height || 0)));
+      }
+
+      if (this.snapToGrid) {
+        newX = Math.round(newX / this.gridSize) * this.gridSize;
+        newY = Math.round(newY / this.gridSize) * this.gridSize;
+      }
+
+      // Update element position
+      element.x = newX;
+      element.y = newY;
+      elementDiv.style.left = `${newX}px`;
+      elementDiv.style.top = `${newY}px`;
+    });
+  }
+
+  // Easing function for smooth acceleration/deceleration
+  private easeOutCubic(t: number): number {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  // Enhanced cursor management for better visual feedback
+  private updateDragCursor(mouseX: number, mouseY: number): void {
+    if (!this.isDragging) return;
+
+    // Calculate distance from drag start for dynamic cursor feedback
+    const distance = Math.sqrt(
+      Math.pow(mouseX - this.dragStartX, 2) +
+      Math.pow(mouseY - this.dragStartY, 2)
+    );
+
+    // Calculate drag speed for enhanced feedback
+    const currentTime = performance.now();
+    const dragDuration = currentTime - this.dragStartTime;
+    const speed = distance / Math.max(dragDuration, 1); // pixels per ms
+
+    // Change cursor based on drag distance, time, and speed
+    if (distance > 20 || dragDuration > 150) {
+      // Enhanced grabbing cursor for active dragging
+      document.body.style.cursor = 'grabbing';
+      document.body.classList.add('cursor-grabbing-enhanced');
+    } else if (distance > 5) {
+      // Standard grabbing for initial movement
+      document.body.style.cursor = 'grabbing';
+      document.body.classList.remove('cursor-grabbing-enhanced');
+    } else {
+      // Grab cursor for hover state
+      document.body.style.cursor = 'grab';
+      document.body.classList.remove('cursor-grabbing-enhanced');
+    }
   }
 
   private debouncedSave(): void {
@@ -1516,8 +1697,14 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (this.isDragging || this.isResizing) {
       // Clean up any transform-based movements
       this.cleanupTransforms();
-      // Use debounced save for better performance
-      this.debouncedSave();
+      
+      // Start momentum animation if dragging ended with sufficient velocity
+      if (this.isDragging && this.hasSignificantMomentum()) {
+        this.startMomentumAnimation();
+      } else {
+        // Use debounced save for better performance
+        this.debouncedSave();
+      }
     }
     
     this.isDragging = false;
@@ -1784,6 +1971,18 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.elementStartY = this.canvasElements[index].y;
     this.elementStartWidth = this.canvasElements[index].width;
     this.elementStartHeight = this.canvasElements[index].height;
+    
+    // Initialize momentum tracking
+    this.dragVelocity = { x: 0, y: 0 };
+    this.lastDragPosition = { x: event.clientX, y: event.clientY };
+    this.lastDragTime = performance.now();
+    this.dragStartTime = performance.now();
+    
+    // Cancel any existing momentum animation
+    if (this.momentumAnimationFrame) {
+      cancelAnimationFrame(this.momentumAnimationFrame);
+      this.momentumAnimationFrame = null;
+    }
   }
   
   // Duplicate an element

@@ -8873,52 +8873,65 @@ $space-4: 1rem; // 16px
   transform-origin: center;
   backface-visibility: hidden;
   perspective: 1000px;
-  
+
   // Smooth transitions during drag
   transition: none !important; // Disable transitions during drag for better performance
-  
+
   // Optimize rendering
   contain: layout style paint;
-  
-  // Slight transparency for visual feedback
-  opacity: 0.9;
-  
-  // Add subtle shadow for depth
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  
+
+  // Enhanced visual feedback for Canva-like movement
+  opacity: 0.95;
+
+  // Add subtle shadow for depth and lift effect
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(99, 102, 241, 0.3);
+
+  // Slight scale effect for better visual feedback
+  transform: scale(1.02);
+
   // Prevent text selection during drag
   user-select: none;
   pointer-events: none;
-  
+
   // Z-index to ensure dragged element stays on top
   z-index: 9999;
+
+  // Add subtle glow effect
+  filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.2));
 }
 
 // Canvas element optimizations
 .canvas-element {
   // Optimize for frequent position updates
   will-change: transform, left, top;
-  
+
   // Hardware acceleration
   transform: translateZ(0);
-  
+
   // Smooth sub-pixel rendering
   backface-visibility: hidden;
-  
+
   // Optimize paint operations
   contain: layout style;
-  
+
   // Smooth transitions for non-drag movements
   transition: left 0.1s ease-out, top 0.1s ease-out, transform 0.1s ease-out;
-  
+
   &.selected {
     // Faster rendering for selected elements
     contain: layout style paint;
   }
-  
+
   &:hover:not(.dragging) {
     // Only apply hover effects when not dragging
     cursor: grab;
+  }
+
+  // Momentum animation class for smooth continuation
+  &.momentum-animating {
+    transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                top 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: left, top;
   }
 }
 
@@ -10709,4 +10722,37 @@ $space-4: 1rem; // 16px
 // Reduce paint operations on inactive elements
 .canvas-element:not(.selected):not(.dragging):not(:hover) {
   contain: strict;
+}
+
+// Enhanced cursor styles for Canva-like feedback
+.cursor-grab {
+  cursor: grab !important;
+}
+
+.cursor-grabbing {
+  cursor: grabbing !important;
+}
+
+.cursor-grabbing-enhanced {
+  cursor: grabbing !important;
+  cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="rgba(99,102,241,0.2)"/><circle cx="12" cy="12" r="4" fill="rgb(99,102,241)"/></svg>') 12 12, grabbing !important;
+}
+
+// Momentum animation keyframes
+@keyframes momentum-fade {
+  0% {
+    opacity: 0.95;
+    transform: scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(99, 102, 241, 0.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Momentum animation class
+.momentum-complete {
+  animation: momentum-fade 0.3s ease-out;
 }
