@@ -457,9 +457,8 @@ $space-4: 1rem; // 16px
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba($border-color, 0.8);
   height: 72px; // Increased height for better proportions
-  box-shadow: $shadow-glass;
-  z-index: 10;
   position: relative;
+  z-index: 10;
   
   // Glass morphism effect enhancement
   &::before {
@@ -1160,7 +1159,7 @@ $space-4: 1rem; // 16px
 }
 
 .template-sidebar {
-  width: 280px;
+  width: 320px;
   height: 100%;
   background: linear-gradient(145deg, $panel-bg 0%, rgba($bg-secondary, 0.8) 100%);
   border-right: 1px solid rgba($border-color, 0.8);
@@ -1210,7 +1209,7 @@ $space-4: 1rem; // 16px
   }
 
   @media (min-width: $breakpoint-tablet) {
-    width: 250px;
+    width: 340px;
   }
 
   .sidebar-section {
@@ -4402,7 +4401,7 @@ $space-4: 1rem; // 16px
 
 // Properties Panel
 .properties-panel {
-  width: 280px;
+  width: 320px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-left: 1px solid rgba(0, 0, 0, 0.05);
