@@ -51,7 +51,6 @@ export const routes: Routes = [
   
   { path: 'list-templete', component: ListTempleteComponent },
   { path: 'templete-editor', component: EditorTempleteComponent },
-  { path: 'templete-editor/:id', component: EditorTempleteComponent },
   { path: 'add-templete', component: AddupdateTempleteComponent },
   { path: 'edit-templete/:id', component: AddupdateTempleteComponent },
   { path: 'financial', component: DashboardComponent },
