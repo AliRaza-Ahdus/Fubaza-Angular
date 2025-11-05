@@ -3,12 +3,13 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent, CommonModule],
   standalone: true
 })
 export class AppComponent implements OnInit {
@@ -19,20 +20,26 @@ export class AppComponent implements OnInit {
   isDesktop = true;
   pageTitle?: string;
   showBackButton = false;
+  showLayout = true;
 
   constructor(private router: Router, private location: Location) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        if (event.urlAfterRedirects.startsWith('/club-overview')) {
+        const url = event.urlAfterRedirects;
+        
+        // Hide layout for template editor
+        this.showLayout = !url.includes('/templete-editor');
+        
+        if (url.startsWith('/club-overview')) {
           this.pageTitle = 'Clubs Overview';
           this.showBackButton = false;
-        } else if (event.urlAfterRedirects.startsWith('/player-overview')) {
+        } else if (url.startsWith('/player-overview')) {
           this.pageTitle = 'Players Overview';
           this.showBackButton = false;
-        } else if (event.urlAfterRedirects.startsWith('/player-detail')) {
+        } else if (url.startsWith('/player-detail')) {
           this.pageTitle = 'Player Profile';
           this.showBackButton = true;
-        } else if (event.urlAfterRedirects.startsWith('/club-detail')) {
+        } else if (url.startsWith('/club-detail')) {
           this.pageTitle = 'Club Profile';
           this.showBackButton = true;
         } else {
