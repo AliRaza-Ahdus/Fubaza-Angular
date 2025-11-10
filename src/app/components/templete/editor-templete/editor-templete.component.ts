@@ -1491,23 +1491,34 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     const elementDiv = document.querySelector(`[data-element-index="${elementIndex}"]`) as HTMLElement;
     if (!elementDiv) return;
 
-    // Cache the element and its transform
-    if (!this.elementTransforms.has(elementIndex)) {
-      this.elementTransforms.set(elementIndex, { 
-        x: this.canvasElements[elementIndex].x, 
-        y: this.canvasElements[elementIndex].y, 
-        element: elementDiv 
-      });
+    const element = this.canvasElements[elementIndex];
+
+    // For image elements, use direct position updates instead of transforms
+    // to avoid rendering conflicts that can cause screen freezing
+    if (element.type === 'image') {
+      elementDiv.style.left = `${newX}px`;
+      elementDiv.style.top = `${newY}px`;
+      elementDiv.style.transform = ''; // Ensure no transform is applied
+    } else {
+      // For other elements, use transform-based movement for better performance
+      if (!this.elementTransforms.has(elementIndex)) {
+        this.elementTransforms.set(elementIndex, {
+          x: this.canvasElements[elementIndex].x,
+          y: this.canvasElements[elementIndex].y,
+          element: elementDiv
+        });
+      }
+
+      const cached = this.elementTransforms.get(elementIndex)!;
+      const translateX = newX - cached.x;
+      const translateY = newY - cached.y;
+
+      // Use transform for smooth movement (GPU accelerated)
+      elementDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
     }
 
-    const cached = this.elementTransforms.get(elementIndex)!;
-    const translateX = newX - cached.x;
-    const translateY = newY - cached.y;
-
-    // Use transform for smooth movement (GPU accelerated)
-    elementDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
     elementDiv.classList.add('dragging');
-    
+
     // Update the data model without triggering change detection
     this.canvasElements[elementIndex].x = newX;
     this.canvasElements[elementIndex].y = newY;
@@ -1525,22 +1536,30 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       const finalX = newX + originalDx;
       const finalY = newY + originalDy;
 
-      // Cache and apply transform
-      if (!this.elementTransforms.has(index)) {
-        this.elementTransforms.set(index, { 
-          x: element.x, 
-          y: element.y, 
-          element: elementDiv 
-        });
+      // Handle image elements differently
+      if (element.type === 'image') {
+        elementDiv.style.left = `${finalX}px`;
+        elementDiv.style.top = `${finalY}px`;
+        elementDiv.style.transform = ''; // Ensure no transform is applied
+      } else {
+        // Cache and apply transform for other elements
+        if (!this.elementTransforms.has(index)) {
+          this.elementTransforms.set(index, {
+            x: element.x,
+            y: element.y,
+            element: elementDiv
+          });
+        }
+
+        const cached = this.elementTransforms.get(index)!;
+        const translateX = finalX - cached.x;
+        const translateY = finalY - cached.y;
+
+        elementDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
       }
 
-      const cached = this.elementTransforms.get(index)!;
-      const translateX = finalX - cached.x;
-      const translateY = finalY - cached.y;
-
-      elementDiv.style.transform = `translate(${translateX}px, ${translateY}px)`;
       elementDiv.classList.add('dragging');
-      
+
       // Update data model
       element.x = finalX;
       element.y = finalY;
@@ -1550,18 +1569,28 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   private cleanupTransforms(): void {
     // Apply final positions and clean up transforms
     this.elementTransforms.forEach((cached, index) => {
-      cached.element.style.transform = '';
-      cached.element.classList.remove('dragging');
-      cached.element.classList.remove('momentum-animating');
-      cached.element.classList.remove('momentum-complete');
-      
+      const element = this.canvasElements[index];
+
+      // For image elements, position is already updated directly, just remove dragging class
+      if (element.type === 'image') {
+        cached.element.classList.remove('dragging');
+        cached.element.classList.remove('momentum-animating');
+        cached.element.classList.remove('momentum-complete');
+      } else {
+        // For other elements, reset transform and apply final position
+        cached.element.style.transform = '';
+        cached.element.classList.remove('dragging');
+        cached.element.classList.remove('momentum-animating');
+        cached.element.classList.remove('momentum-complete');
+      }
+
       // Return transform object to pool
       this.returnTransformToPool(cached);
     });
     this.elementTransforms.clear();
     document.body.style.cursor = '';
     document.body.classList.remove('cursor-grabbing-enhanced', 'cursor-collision-warning');
-    
+
     // Update visible elements after drag operation
     this.updateVisibleElements();
   }
@@ -3444,6 +3473,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements[this.selectedElement + 1] = temp;
     this.selectedElement++;
     this.saveToHistory();
+    this.updateElement();
   }
   
   sendBackward(): void {
@@ -3454,6 +3484,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements[this.selectedElement - 1] = temp;
     this.selectedElement--;
     this.saveToHistory();
+    this.updateElement();
   }
   
   // Layer management methods
@@ -3707,6 +3738,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.selectedElement = this.canvasElements.length - 1;
     this.saveToHistory();
     this.filterLayers();
+    this.updateElement();
   }
   
   sendToBack(): void {
@@ -3717,6 +3749,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.selectedElement = 0;
     this.saveToHistory();
     this.filterLayers();
+    this.updateElement();
   }
   
   resetElementTransform(): void {
