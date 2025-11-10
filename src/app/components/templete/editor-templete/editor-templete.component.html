@@ -70,471 +70,488 @@
       <!-- ============================================ -->
       <!-- SECTION 1: TEXT - Add Different Text Styles -->
       <!-- ============================================ -->
-      <div class="sidebar-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <!-- Compact Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_fields</mat-icon>
+      <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(99, 102, 241, 0.1);">
+        <!-- Modern Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 8px; padding: 8px; display: flex; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">text_fields</mat-icon>
           </div>
-          <span>Text</span>
+          <span>Text Elements</span>
         </h3>
         
-        <!-- Compact 2-Column Grid -->
-        <div class="text-elements-grid">
+        <!-- Improved 2-Column Grid -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
           <!-- Heading -->
           <div (click)="addTextElement('heading')" draggable="true" 
                (dragstart)="onDragStart($event, 'text', {textType: 'heading'})" (dragend)="onDragEnd()"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">title</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center; position: relative; overflow: hidden;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(99, 102, 241, 0.15)'; this.style.borderColor='#6366f1';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">title</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Heading</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Large text</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Heading</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Large title text</div>
           </div>
           
           <!-- Subheading -->
           <div (click)="addTextElement('subheading')" draggable="true" 
                (dragstart)="onDragStart($event, 'text', {textType: 'subheading'})" (dragend)="onDragEnd()"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">format_h2</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(6, 182, 212, 0.15)'; this.style.borderColor='#06b6d4';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">subject</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Subheading</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Medium text</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Subheading</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Medium subtitle</div>
           </div>
           
           <!-- Body Text -->
           <div (click)="addTextElement('body')" draggable="true" 
                (dragstart)="onDragStart($event, 'text', {textType: 'body'})" (dragend)="onDragEnd()"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">article</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(245, 158, 11, 0.15)'; this.style.borderColor='#f59e0b';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">article</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Body</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Paragraph</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Body</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Paragraph text</div>
           </div>
           
           <!-- Caption -->
           <div (click)="addTextElement('caption')" draggable="true" 
                (dragstart)="onDragStart($event, 'text', {textType: 'caption'})" (dragend)="onDragEnd()"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_fields_alt</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(16, 185, 129, 0.15)'; this.style.borderColor='#10b981';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">short_text</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Caption</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Small text</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================================================ -->
-      <!-- SECTION 2: TYPOGRAPHY & FONTS (COMPACT DESIGN) -->
-      <!-- ================================================ -->
-      <div class="sidebar-section" style="background: white; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <!-- Compact Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.8rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 4px; padding: 4px; display: flex;">
-            <mat-icon style="font-size: 12px; width: 12px; height: 12px;">font_download</mat-icon>
-          </div>
-          <span>Typography</span>
-        </h3>
-
-        <!-- Ultra-Compact Typography Combos -->
-        <div style="margin-bottom: 0.5rem;">
-          <div style="display: flex; gap: 0.25rem; margin-bottom: 0.375rem; flex-wrap: wrap;">
-            <button (click)="setTypographyCategory('all')" [class.active]="activeTypographyCategory === 'all'"
-                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-              All
-            </button>
-            <button (click)="setTypographyCategory('modern')" [class.active]="activeTypographyCategory === 'modern'"
-                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-              Modern
-            </button>
-            <button (click)="setTypographyCategory('elegant')" [class.active]="activeTypographyCategory === 'elegant'"
-                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-              Elegant
-            </button>
-            <button (click)="setTypographyCategory('bold')" [class.active]="activeTypographyCategory === 'bold'"
-                    style="padding: 0.25rem 0.5rem; font-size: 0.65rem; border-radius: 4px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s;">
-              Bold
-            </button>
-          </div>
-
-          <!-- Compact Combo Grid -->
-          <div class="typography-combos-grid">
-            <div *ngFor="let combo of filteredTypographyCombos; trackBy: trackByCombo"
-                 (click)="applyTypographyCombo(combo)"
-                 class="combo-card"
-                 style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; transition: all 0.15s;">
-              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                {{ combo.name }}
-              </div>
-              <div style="background: white; padding: 0.25rem; border-radius: 3px; border: 1px solid #e2e8f0;">
-                <div [ngStyle]="getComboHeadingStyle(combo)" style="font-size: 0.6rem; margin-bottom: 0.125rem;">H</div>
-                <div [ngStyle]="getComboBodyStyle(combo)" style="font-size: 0.55rem;">Body</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Text Effects -->
-        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">auto_fix_high</mat-icon>
-          </div>
-          <span>Text Effects</span>
-        </h3>
-        
-        <!-- Compact Effects Grid -->
-        <div class="effects-quick-grid">
-          <div (click)="applyTextEffect('shadow')" [class.active]="hasEffect('shadow')"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">layers</mat-icon>
-            </div>
-            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Shadow</div>
-          </div>
-          
-          <div (click)="applyTextEffect('outline')" [class.active]="hasEffect('outline')"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">border_outer</mat-icon>
-            </div>
-            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Outline</div>
-          </div>
-          
-          <div (click)="applyTextEffect('gradient')" [class.active]="hasEffect('gradient')"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">gradient</mat-icon>
-            </div>
-            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Gradient</div>
-          </div>
-          
-          <div (click)="applyTextEffect('neon')" [class.active]="hasEffect('neon')"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">flare</mat-icon>
-            </div>
-            <div style="font-size: 0.65rem; font-weight: 600; color: #0f172a;">Neon</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Caption</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Small caption</div>
           </div>
         </div>
       </div>
 
       <!-- Font Library Section -->
-      <div class="sidebar-section font-library-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <!-- Compact Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">font_download</mat-icon>
+      <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(20, 184, 166, 0.1);">
+        <!-- Modern Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border-radius: 8px; padding: 8px; display: flex; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">text_format</mat-icon>
           </div>
-          <span>Fonts</span>
+          <span>Font Library</span>
         </h3>
         
-        <!-- Compact Search -->
-        <div style="position: relative; margin-bottom: 0.625rem;">
-          <mat-icon style="position: absolute; left: 0.625rem; top: 50%; transform: translateY(-50%); font-size: 16px; color: #94a3b8;">search</mat-icon>
+        <!-- Modern Search -->
+        <div style="position: relative; margin-bottom: 0.875rem;">
+          <mat-icon style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); font-size: 18px; color: #94a3b8;">search</mat-icon>
           <input type="text" [(ngModel)]="fontSearchQuery" (input)="filterFonts()" placeholder="Search fonts..."
-                 style="width: 100%; padding: 0.5rem 0.5rem 0.5rem 2.25rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; outline: none; transition: all 0.15s;">
+                 style="width: 100%; padding: 0.75rem 2.75rem 0.75rem 2.75rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; outline: none; transition: all 0.3s; background: #f8fafc;"
+                 onfocus="this.style.borderColor='#14b8a6'; this.style.background='white';" 
+                 onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
           <button *ngIf="fontSearchQuery" (click)="fontSearchQuery = ''; filterFonts()" 
-                  style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0.25rem; color: #94a3b8;">
-            <mat-icon style="font-size: 16px;">close</mat-icon>
+                  style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: #f1f5f9; border: none; cursor: pointer; padding: 0.375rem; color: #64748b; border-radius: 6px; display: flex; align-items: center; transition: all 0.3s;"
+                  onmouseover="this.style.background='#e2e8f0'; this.style.color='#0f172a';" 
+                  onmouseout="this.style.background='#f1f5f9'; this.style.color='#64748b';">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">close</mat-icon>
           </button>
         </div>
 
-        <!-- Compact Category Tabs -->
-        <div style="display: flex; gap: 0.375rem; margin-bottom: 0.75rem; overflow-x: auto;">
+        <!-- Modern Category Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.875rem; overflow-x: auto; padding-bottom: 0.25rem;">
           <button (click)="setFontCategory('all')" [class.active]="activeFontCategory === 'all'"
-                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">apps</mat-icon>
+                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
+                  [style.background]="activeFontCategory === 'all' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
+                  [style.color]="activeFontCategory === 'all' ? 'white' : '#64748b'"
+                  [style.border-color]="activeFontCategory === 'all' ? '#14b8a6' : '#e2e8f0'"
+                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
+                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">apps</mat-icon>
             <span>All</span>
           </button>
           <button (click)="setFontCategory('sans-serif')" [class.active]="activeFontCategory === 'sans-serif'"
-                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">font_download</mat-icon>
+                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
+                  [style.background]="activeFontCategory === 'sans-serif' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
+                  [style.color]="activeFontCategory === 'sans-serif' ? 'white' : '#64748b'"
+                  [style.border-color]="activeFontCategory === 'sans-serif' ? '#14b8a6' : '#e2e8f0'"
+                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
+                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_fields</mat-icon>
             <span>Sans</span>
           </button>
           <button (click)="setFontCategory('serif')" [class.active]="activeFontCategory === 'serif'"
-                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">format_quote</mat-icon>
+                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
+                  [style.background]="activeFontCategory === 'serif' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
+                  [style.color]="activeFontCategory === 'serif' ? 'white' : '#64748b'"
+                  [style.border-color]="activeFontCategory === 'serif' ? '#14b8a6' : '#e2e8f0'"
+                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
+                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">format_quote</mat-icon>
             <span>Serif</span>
           </button>
           <button (click)="setFontCategory('display')" [class.active]="activeFontCategory === 'display'"
-                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">star</mat-icon>
+                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
+                  [style.background]="activeFontCategory === 'display' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
+                  [style.color]="activeFontCategory === 'display' ? 'white' : '#64748b'"
+                  [style.border-color]="activeFontCategory === 'display' ? '#14b8a6' : '#e2e8f0'"
+                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
+                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">star</mat-icon>
             <span>Display</span>
           </button>
           <button (click)="setFontCategory('handwriting')" [class.active]="activeFontCategory === 'handwriting'"
-                  style="padding: 0.375rem 0.5rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.25rem; transition: all 0.15s;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px;">draw</mat-icon>
+                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
+                  [style.background]="activeFontCategory === 'handwriting' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
+                  [style.color]="activeFontCategory === 'handwriting' ? 'white' : '#64748b'"
+                  [style.border-color]="activeFontCategory === 'handwriting' ? '#14b8a6' : '#e2e8f0'"
+                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
+                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">draw</mat-icon>
             <span>Script</span>
           </button>
         </div>
 
-        <!-- Compact Font List -->
-        <div style="max-height: 280px; overflow-y: auto; margin-bottom: 0.75rem;">
+        <!-- Modern Font List -->
+        <div style="max-height: 320px; overflow-y: auto; margin-bottom: 1rem; padding-right: 0.25rem;">
           <div *ngFor="let font of filteredFonts; trackBy: trackByFont" 
                (click)="applyFont(font)"
                [class.selected]="isSelectedFont(font)"
-               class="font-card"
-               style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 0.375rem; cursor: pointer; transition: all 0.15s;">
-            <div [ngStyle]="getFontPreviewStyle(font)" style="font-size: 0.875rem; margin-bottom: 0.25rem; color: #0f172a;">
+               style="padding: 0.875rem; background: linear-gradient(135deg, #fefeff 0%, #f8fcfc 100%); border: 2px solid #e2e8f0; border-radius: 10px; margin-bottom: 0.625rem; cursor: pointer; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 12px rgba(20, 184, 166, 0.12)'; this.style.borderColor='#14b8a6';" 
+               onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div [ngStyle]="getFontPreviewStyle(font)" style="font-size: 1rem; margin-bottom: 0.5rem; color: #0f172a; font-weight: 600;">
               {{ font.previewText || 'Aa Bb Cc 123' }}
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 0.375rem;">
-                <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">{{ font.name }}</span>
-                <span style="font-size: 0.625rem; padding: 0.125rem 0.375rem; background: #e0e7ff; color: #4338ca; border-radius: 4px;">{{ font.category }}</span>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">{{ font.name }}</span>
+                <span style="font-size: 0.7rem; padding: 0.25rem 0.5rem; background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); color: #0369a1; border-radius: 6px; font-weight: 600;">{{ font.category }}</span>
               </div>
-              <div style="display: flex; align-items: center; gap: 0.25rem;">
-                <mat-icon *ngIf="font.premium" style="font-size: 14px; width: 14px; height: 14px; color: #f59e0b;">workspace_premium</mat-icon>
-                <mat-icon *ngIf="isSelectedFont(font)" style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">check_circle</mat-icon>
+              <div style="display: flex; align-items: center; gap: 0.375rem;">
+                <mat-icon *ngIf="font.premium" style="font-size: 18px; width: 18px; height: 18px; color: #f59e0b;">workspace_premium</mat-icon>
+                <mat-icon *ngIf="isSelectedFont(font)" style="font-size: 18px; width: 18px; height: 18px; color: #10b981;">check_circle</mat-icon>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Compact Upload Button -->
+        <!-- Modern Upload Button -->
         <button (click)="triggerFontUpload()" 
-                style="width: 100%; padding: 0.625rem; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600; transition: all 0.15s;">
-          <mat-icon style="font-size: 16px; width: 16px; height: 16px;">cloud_upload</mat-icon>
+                style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.625rem; font-size: 0.875rem; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.25);"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(20, 184, 166, 0.35)';" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(20, 184, 166, 0.25)';">
+          <mat-icon style="font-size: 20px; width: 20px; height: 20px;">cloud_upload</mat-icon>
           <span>Upload Custom Font</span>
         </button>
         <input type="file" #fontUploadRef style="display: none" accept=".ttf,.otf,.woff,.woff2" (change)="onFontFileSelected($event)">
       </div>
       
       <!-- Media & Shapes Section -->
-      <div class="sidebar-section media-shapes-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <!-- Compact Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">design_services</mat-icon>
+      <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(244, 63, 94, 0.1);">
+        <!-- Modern Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: white; border-radius: 8px; padding: 8px; display: flex; box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">palette</mat-icon>
           </div>
-          <span>Media & Shapes</span>
+          <span>Media & Elements</span>
         </h3>
         
-        <!-- Compact 2x2 Grid -->
-        <div class="media-elements-grid">
+        <!-- Improved 2x2 Grid -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
           <!-- Image -->
           <div draggable="true" (dragstart)="onDragStart($event, 'image')" (dragend)="onDragEnd()" (click)="triggerImageUpload()"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">add_photo_alternate</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(99, 102, 241, 0.15)'; this.style.borderColor='#6366f1';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">add_photo_alternate</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Image</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Upload photo</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Image</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Upload photo</div>
           </div>
           
           <!-- Shape -->
           <div draggable="true" (dragstart)="onDragStart($event, 'shape')" (dragend)="onDragEnd()" (click)="openShapeSelector()"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">category</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(6, 182, 212, 0.15)'; this.style.borderColor='#06b6d4';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">category</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Shape</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Add shapes</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Shape</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Add shapes</div>
           </div>
           
           <!-- Line -->
           <div draggable="true" (dragstart)="onDragStart($event, 'line')" (dragend)="onDragEnd()" (click)="addElementToCanvas('line')"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">timeline</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(245, 158, 11, 0.15)'; this.style.borderColor='#f59e0b';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">timeline</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Line</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Draw lines</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Line</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Draw lines</div>
           </div>
           
           <!-- Icon -->
           <div draggable="true" (dragstart)="onDragStart($event, 'icon')" (dragend)="onDragEnd()" (click)="addElementToCanvas('icon')"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 6px; padding: 6px; display: inline-flex; margin-bottom: 0.375rem;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">emoji_symbols</mat-icon>
+               style="padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(16, 185, 129, 0.15)'; this.style.borderColor='#10b981';" 
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 8px; padding: 8px; display: inline-flex; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">emoji_symbols</mat-icon>
             </div>
-            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; margin-bottom: 0.125rem;">Icon</div>
-            <div style="font-size: 0.65rem; color: #64748b;">Add symbols</div>
+            <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem;">Icon</div>
+            <div style="font-size: 0.7rem; color: #64748b; font-weight: 500;">Add symbols</div>
           </div>
         </div>
         
-        <!-- Compact Shape Selector Panel -->
+        <!-- Modern Shape Selector Panel -->
         <div *ngIf="showShapeSelector" 
-             style="margin-top: 0.75rem; background: white; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); overflow: hidden;">
+             style="margin-top: 0.875rem; background: white; border-radius: 10px; border: 2px solid #06b6d4; box-shadow: 0 4px 16px rgba(6, 182, 212, 0.15); overflow: hidden;">
           <!-- Header -->
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; border-bottom: 1px solid #e2e8f0;">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <mat-icon style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 4px; font-size: 16px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">category</mat-icon>
-              <h3 style="font-size: 0.875rem; font-weight: 600; color: #0f172a; margin: 0;">Shapes</h3>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 2px solid #e2e8f0; background: linear-gradient(135deg, #f8fafc 0%, #f0fdfa 100%);">
+            <div style="display: flex; align-items: center; gap: 0.625rem;">
+              <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.25);">
+                <mat-icon style="font-size: 18px; width: 18px; height: 18px;">category</mat-icon>
+              </div>
+              <h3 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0;">Shape Library</h3>
             </div>
             <button (click)="closeShapeSelector()" 
-                    style="background: #f8fafc; border: none; border-radius: 6px; padding: 4px; cursor: pointer; transition: all 0.15s;">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #64748b;">close</mat-icon>
+                    style="background: #f1f5f9; border: none; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.3s;"
+                    onmouseover="this.style.background='#e2e8f0'; this.style.transform='rotate(90deg)';" 
+                    onmouseout="this.style.background='#f1f5f9'; this.style.transform='rotate(0deg)';">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">close</mat-icon>
             </button>
           </div>
           
           <!-- Search -->
-          <div style="padding: 0.75rem;">
+          <div style="padding: 1rem;">
             <div style="position: relative;">
-              <mat-icon style="position: absolute; left: 0.625rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 16px; width: 16px; height: 16px;">search</mat-icon>
+              <mat-icon style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px; width: 18px; height: 18px;">search</mat-icon>
               <input type="text" [(ngModel)]="shapeSearchQuery" (input)="filterShapes()" placeholder="Search shapes..."
-                     style="width: 100%; padding: 0.5rem 0.5rem 0.5rem 2.25rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; background: #f8fafc; outline: none;">
+                     style="width: 100%; padding: 0.75rem 2.75rem 0.75rem 2.75rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; background: #f8fafc; outline: none; transition: all 0.3s;"
+                     onfocus="this.style.borderColor='#06b6d4'; this.style.background='white';" 
+                     onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
               <button *ngIf="shapeSearchQuery" (click)="clearShapeSearch()" 
-                      style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0.25rem;">
-                <mat-icon style="font-size: 14px; color: #94a3b8;">clear</mat-icon>
+                      style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: #f1f5f9; border: none; cursor: pointer; padding: 0.375rem; border-radius: 6px; display: flex; transition: all 0.3s;"
+                      onmouseover="this.style.background='#e2e8f0';" 
+                      onmouseout="this.style.background='#f1f5f9';">
+                <mat-icon style="font-size: 18px; color: #64748b;">clear</mat-icon>
               </button>
             </div>
           </div>
           
           <!-- Categories -->
-          <div style="display: flex; gap: 0.375rem; padding: 0 0.75rem 0.75rem; overflow-x: auto;">
+          <div style="display: flex; gap: 0.5rem; padding: 0 1rem 1rem; overflow-x: auto;">
             <button (click)="setActiveCategory('all')" [class.active]="activeShapeCategory === 'all'"
-                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+                    style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.3s; font-weight: 600;"
+                    [style.background]="activeShapeCategory === 'all' ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' : '#f8fafc'"
+                    [style.color]="activeShapeCategory === 'all' ? 'white' : '#64748b'"
+                    [style.border-color]="activeShapeCategory === 'all' ? '#06b6d4' : '#e2e8f0'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#06b6d4'; }" 
+                    onmouseout="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
               All
             </button>
             <button (click)="setActiveCategory('basic')" [class.active]="activeShapeCategory === 'basic'"
-                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+                    style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.3s; font-weight: 600;"
+                    [style.background]="activeShapeCategory === 'basic' ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' : '#f8fafc'"
+                    [style.color]="activeShapeCategory === 'basic' ? 'white' : '#64748b'"
+                    [style.border-color]="activeShapeCategory === 'basic' ? '#06b6d4' : '#e2e8f0'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#06b6d4'; }" 
+                    onmouseout="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
               Basic
             </button>
             <button (click)="setActiveCategory('geometric')" [class.active]="activeShapeCategory === 'geometric'"
-                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+                    style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.3s; font-weight: 600;"
+                    [style.background]="activeShapeCategory === 'geometric' ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' : '#f8fafc'"
+                    [style.color]="activeShapeCategory === 'geometric' ? 'white' : '#64748b'"
+                    [style.border-color]="activeShapeCategory === 'geometric' ? '#06b6d4' : '#e2e8f0'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#06b6d4'; }" 
+                    onmouseout="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
               Geometric
             </button>
             <button (click)="setActiveCategory('lines')" [class.active]="activeShapeCategory === 'lines'"
-                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+                    style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.3s; font-weight: 600;"
+                    [style.background]="activeShapeCategory === 'lines' ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' : '#f8fafc'"
+                    [style.color]="activeShapeCategory === 'lines' ? 'white' : '#64748b'"
+                    [style.border-color]="activeShapeCategory === 'lines' ? '#06b6d4' : '#e2e8f0'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#06b6d4'; }" 
+                    onmouseout="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
               Lines
             </button>
             <button (click)="setActiveCategory('special')" [class.active]="activeShapeCategory === 'special'"
-                    style="padding: 0.375rem 0.625rem; font-size: 0.7rem; border-radius: 6px; border: 1px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; transition: all 0.15s;">
+                    style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.3s; font-weight: 600;"
+                    [style.background]="activeShapeCategory === 'special' ? 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' : '#f8fafc'"
+                    [style.color]="activeShapeCategory === 'special' ? 'white' : '#64748b'"
+                    [style.border-color]="activeShapeCategory === 'special' ? '#06b6d4' : '#e2e8f0'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#06b6d4'; }" 
+                    onmouseout="if(this.style.background !== 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
               Special
             </button>
           </div>
           
           <!-- Shape Grid -->
-          <div class="shape-selector-grid">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; padding: 0 1rem 1rem; max-height: 320px; overflow-y: auto;">
             <div *ngFor="let shape of filteredShapes; trackBy: trackByShape" 
                  (click)="addShapeToCanvas(shape.type)"
-                 style="padding: 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.15s;">
-              <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #06b6d4; margin-bottom: 0.25rem;">{{ shape.icon }}</mat-icon>
-              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">{{ shape.name }}</div>
+                 style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #f8fcfc 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.3s;"
+                 onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(6, 182, 212, 0.15)'; this.style.borderColor='#06b6d4';" 
+                 onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 28px; width: 28px; height: 28px; color: #06b6d4; margin-bottom: 0.375rem;">{{ shape.icon }}</mat-icon>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #0f172a;">{{ shape.name }}</div>
             </div>
             
             <!-- Empty State -->
-            <div *ngIf="filteredShapes.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #94a3b8;">
-              <mat-icon style="font-size: 32px; width: 32px; height: 32px; opacity: 0.5;">category</mat-icon>
-              <div style="font-size: 0.75rem; margin-top: 0.5rem;">No shapes found</div>
+            <div *ngIf="filteredShapes.length === 0" style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; color: #94a3b8;">
+              <mat-icon style="font-size: 48px; width: 48px; height: 48px; opacity: 0.3; margin: 0 auto 0.5rem;">category</mat-icon>
+              <div style="font-size: 0.875rem; font-weight: 600; margin-top: 0.625rem;">No shapes found</div>
+              <div style="font-size: 0.75rem; margin-top: 0.25rem;">Try a different search or category</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Canvas Background Section -->
-      <div class="sidebar-section canvas-background-section" style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <!-- Compact Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">wallpaper</mat-icon>
+      <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(168, 85, 247, 0.1);">
+        <!-- Modern Header -->
+        <h3 style="display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border-radius: 8px; padding: 8px; display: flex; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">wallpaper</mat-icon>
           </div>
           <span>Canvas Background</span>
         </h3>
         
-        <!-- Compact Type Selector (3 buttons) -->
-        <div class="canvas-bg-type-grid">
+        <!-- Improved Type Selector -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.625rem; margin-bottom: 1rem;">
           <div (click)="setBackgroundType('color')" [class.active]="canvasBackground.type === 'color'"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7; margin-bottom: 0.25rem;">palette</mat-icon>
-            <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Color</div>
+               style="padding: 0.75rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               [style.border-color]="canvasBackground.type === 'color' ? '#a855f7' : '#e2e8f0'"
+               [style.box-shadow]="canvasBackground.type === 'color' ? '0 4px 12px rgba(168, 85, 247, 0.2)' : 'none'"
+               onmouseover="if(this.style.borderColor !== 'rgb(168, 85, 247)') { this.style.transform='translateY(-2px)'; this.style.borderColor='#a855f7'; }" 
+               onmouseout="if(this.style.borderColor !== 'rgb(168, 85, 247)') { this.style.transform='translateY(0)'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 24px; width: 24px; height: 24px; margin-bottom: 0.375rem;"
+                      [style.color]="canvasBackground.type === 'color' ? '#a855f7' : '#94a3b8'">palette</mat-icon>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #0f172a;">Color</div>
           </div>
           
           <div (click)="setBackgroundType('gradient')" [class.active]="canvasBackground.type === 'gradient'"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7; margin-bottom: 0.25rem;">gradient</mat-icon>
-            <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Gradient</div>
+               style="padding: 0.75rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               [style.border-color]="canvasBackground.type === 'gradient' ? '#a855f7' : '#e2e8f0'"
+               [style.box-shadow]="canvasBackground.type === 'gradient' ? '0 4px 12px rgba(168, 85, 247, 0.2)' : 'none'"
+               onmouseover="if(this.style.borderColor !== 'rgb(168, 85, 247)') { this.style.transform='translateY(-2px)'; this.style.borderColor='#a855f7'; }" 
+               onmouseout="if(this.style.borderColor !== 'rgb(168, 85, 247)') { this.style.transform='translateY(0)'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 24px; width: 24px; height: 24px; margin-bottom: 0.375rem;"
+                      [style.color]="canvasBackground.type === 'gradient' ? '#a855f7' : '#94a3b8'">gradient</mat-icon>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #0f172a;">Gradient</div>
           </div>
           
           <div (click)="setBackgroundType('image')" [class.active]="canvasBackground.type === 'image'"
-               style="padding: 0.625rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;">
-            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7; margin-bottom: 0.25rem;">image</mat-icon>
-            <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Image</div>
+               style="padding: 0.75rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s; text-align: center;"
+               [style.border-color]="canvasBackground.type === 'image' ? '#a855f7' : '#e2e8f0'"
+               [style.box-shadow]="canvasBackground.type === 'image' ? '0 4px 12px rgba(168, 85, 247, 0.2)' : 'none'"
+               onmouseover="if(this.style.borderColor !== 'rgb(168, 85, 247)') { this.style.transform='translateY(-2px)'; this.style.borderColor='#a855f7'; }" 
+               onmouseout="if(this.style.borderColor !== 'rgb(168, 85, 247)') { this.style.transform='translateY(0)'; this.style.borderColor='#e2e8f0'; }">
+            <mat-icon style="font-size: 24px; width: 24px; height: 24px; margin-bottom: 0.375rem;"
+                      [style.color]="canvasBackground.type === 'image' ? '#a855f7' : '#94a3b8'">image</mat-icon>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #0f172a;">Image</div>
           </div>
         </div>
         
         <!-- Solid Color Panel -->
-        <div *ngIf="canvasBackground.type === 'color'" style="padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-            <span style="font-size: 0.75rem; font-weight: 600; color: #0f172a;">Background Color</span>
-            <span style="font-size: 0.7rem; color: #64748b;">{{ canvasBackground.color }}</span>
+        <div *ngIf="canvasBackground.type === 'color'" style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #faf5ff 100%); border-radius: 10px; border: 2px solid #f3e8ff;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <span style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Background Color</span>
+            <span style="font-size: 0.8rem; padding: 0.25rem 0.5rem; background: white; color: #a855f7; border-radius: 6px; font-weight: 600; border: 1px solid #e9d5ff;">{{ canvasBackground.color }}</span>
           </div>
           <input type="color" [(ngModel)]="canvasBackground.color" (change)="updateCanvasBackground()"
-                 style="width: 100%; height: 40px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+                 style="width: 100%; height: 48px; border: 3px solid #e9d5ff; border-radius: 10px; cursor: pointer; transition: all 0.3s;"
+                 onmouseover="this.style.borderColor='#a855f7';" 
+                 onmouseout="this.style.borderColor='#e9d5ff';">
         </div>
         
         <!-- Gradient Panel -->
-        <div *ngIf="canvasBackground.type === 'gradient'" style="padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
+        <div *ngIf="canvasBackground.type === 'gradient'" style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #faf5ff 100%); border-radius: 10px; border: 2px solid #f3e8ff;">
           <select [(ngModel)]="canvasBackground.gradientType" (change)="updateCanvasBackground()"
-                  style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; margin-bottom: 0.625rem; outline: none;">
+                  style="width: 100%; padding: 0.75rem; border: 2px solid #e9d5ff; border-radius: 10px; font-size: 0.875rem; margin-bottom: 0.875rem; outline: none; background: white; font-weight: 600; color: #0f172a; cursor: pointer; transition: all 0.3s;"
+                  onfocus="this.style.borderColor='#a855f7';" 
+                  onblur="this.style.borderColor='#e9d5ff';">
             <option value="linear">Linear Gradient</option>
             <option value="radial">Radial Gradient</option>
           </select>
           
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.625rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.875rem;">
             <div>
-              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">Color 1</div>
+              <div style="font-size: 0.8rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Color 1</div>
               <input type="color" [(ngModel)]="canvasBackground.gradientColor1" (change)="updateCanvasBackground()"
-                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+                     style="width: 100%; height: 44px; border: 3px solid #e9d5ff; border-radius: 10px; cursor: pointer; transition: all 0.3s;"
+                     onmouseover="this.style.borderColor='#a855f7';" 
+                     onmouseout="this.style.borderColor='#e9d5ff';">
             </div>
             <div>
-              <div style="font-size: 0.7rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem;">Color 2</div>
+              <div style="font-size: 0.8rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Color 2</div>
               <input type="color" [(ngModel)]="canvasBackground.gradientColor2" (change)="updateCanvasBackground()"
-                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
+                     style="width: 100%; height: 44px; border: 3px solid #e9d5ff; border-radius: 10px; cursor: pointer; transition: all 0.3s;"
+                     onmouseover="this.style.borderColor='#a855f7';" 
+                     onmouseout="this.style.borderColor='#e9d5ff';">
             </div>
           </div>
           
           <div *ngIf="canvasBackground.gradientType === 'linear'">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Angle</span>
-              <span style="font-size: 0.7rem; color: #64748b;">{{canvasBackground.gradientAngle || 45}}°</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.625rem;">
+              <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Gradient Angle</span>
+              <span style="font-size: 0.8rem; padding: 0.25rem 0.5rem; background: white; color: #a855f7; border-radius: 6px; font-weight: 700; border: 1px solid #e9d5ff;">{{canvasBackground.gradientAngle || 45}}°</span>
             </div>
             <input type="range" [(ngModel)]="canvasBackground.gradientAngle" (change)="updateCanvasBackground()" 
                    min="0" max="360" step="15"
-                   style="width: 100%; height: 6px; border-radius: 3px; outline: none; appearance: none; -webkit-appearance: none; background: linear-gradient(90deg, #a855f7, #9333ea);">
+                   style="width: 100%; height: 8px; border-radius: 10px; outline: none; appearance: none; -webkit-appearance: none; background: linear-gradient(90deg, #a855f7, #9333ea); cursor: pointer;">
           </div>
         </div>
         
         <!-- Image Panel -->
-        <div *ngIf="canvasBackground.type === 'image'" style="padding: 0.75rem; background: #f8fafc; border-radius: 8px;">
+        <div *ngIf="canvasBackground.type === 'image'" style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #faf5ff 100%); border-radius: 10px; border: 2px solid #f3e8ff;">
           <button (click)="triggerBackgroundUpload()" *ngIf="!canvasBackground.imageUrl"
-                  style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 600;">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">cloud_upload</mat-icon>
-            <span>Upload Image</span>
+                  style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.625rem; font-size: 0.875rem; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);"
+                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(168, 85, 247, 0.35)';" 
+                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(168, 85, 247, 0.25)';">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px;">cloud_upload</mat-icon>
+            <span>Upload Background Image</span>
           </button>
           <input type="file" #backgroundUpload style="display: none" (change)="onBackgroundSelected($event)" accept="image/*">
           
-          <div *ngIf="canvasBackground.imageUrl" style="margin-bottom: 0.625rem;">
-            <div style="position: relative; border-radius: 6px; overflow: hidden; margin-bottom: 0.625rem;">
-              <img [src]="canvasBackground.imageUrl" alt="Background" style="width: 100%; height: 100px; object-fit: cover;">
+          <div *ngIf="canvasBackground.imageUrl">
+            <div style="position: relative; border-radius: 10px; overflow: hidden; margin-bottom: 0.875rem; border: 3px solid #e9d5ff;">
+              <img [src]="canvasBackground.imageUrl" alt="Background" style="width: 100%; height: 120px; object-fit: cover;">
               <button (click)="removeBackgroundImage()"
-                      style="position: absolute; top: 0.375rem; right: 0.375rem; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 6px; padding: 0.25rem; cursor: pointer;">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px;">delete</mat-icon>
+                      style="position: absolute; top: 0.625rem; right: 0.625rem; background: rgba(239, 68, 68, 0.9); color: white; border: none; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);"
+                      onmouseover="this.style.background='rgba(220, 38, 38, 1)'; this.style.transform='scale(1.1)';" 
+                      onmouseout="this.style.background='rgba(239, 68, 68, 0.9)'; this.style.transform='scale(1)';">
+                <mat-icon style="font-size: 18px; width: 18px; height: 18px;">delete</mat-icon>
               </button>
             </div>
             
-            <div style="margin-bottom: 0.5rem;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Opacity</span>
-                <span style="font-size: 0.7rem; color: #64748b;">{{canvasBackground.opacity || 1}}</span>
+            <div style="margin-bottom: 0.875rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.625rem;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Opacity</span>
+                <span style="font-size: 0.8rem; padding: 0.25rem 0.5rem; background: white; color: #a855f7; border-radius: 6px; font-weight: 700; border: 1px solid #e9d5ff;">{{(canvasBackground.opacity || 1) * 100}}%</span>
               </div>
               <input type="range" [(ngModel)]="canvasBackground.opacity" (change)="updateCanvasBackground()" 
                      min="0.1" max="1" step="0.1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+                     style="width: 100%; height: 8px; border-radius: 10px; outline: none; cursor: pointer;">
             </div>
             
             <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
-                <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Blur</span>
-                <span style="font-size: 0.7rem; color: #64748b;">{{canvasBackground.blur || 0}}px</span>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.625rem;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Blur Effect</span>
+                <span style="font-size: 0.8rem; padding: 0.25rem 0.5rem; background: white; color: #a855f7; border-radius: 6px; font-weight: 700; border: 1px solid #e9d5ff;">{{canvasBackground.blur || 0}}px</span>
               </div>
               <input type="range" [(ngModel)]="canvasBackground.blur" (change)="updateCanvasBackground()" 
                      min="0" max="10" step="1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
+                     style="width: 100%; height: 8px; border-radius: 10px; outline: none; cursor: pointer;">
             </div>
           </div>
         </div>
@@ -1349,306 +1366,6 @@
             </div>
           </div>
         </div>
-        
-        <!-- Spacing & Typography (Compact Design) -->
-        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
-          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">format_line_spacing</mat-icon>
-            <span>Spacing & Typography</span>
-          </h4>
-          
-          <div style="display: flex; flex-direction: column; gap: 0.625rem;">
-            <!-- Letter Spacing -->
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Letter Spacing</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].letterSpacing || 0 }}px</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].letterSpacing" (change)="updateElement()" 
-                     min="-5" max="20" step="0.1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-            
-            <!-- Line Height -->
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Line Height</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].lineHeight || 1.2 }}</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].lineHeight" (change)="updateElement()" 
-                     min="0.5" max="3" step="0.1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-            
-            <!-- Word Spacing -->
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Word Spacing</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].wordSpacing || 0 }}px</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].wordSpacing" (change)="updateElement()" 
-                     min="-10" max="50" step="1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-          </div>
-
-          <!-- Smart Controls (Compact) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-top: 0.625rem;">
-            <button [class.active]="canvasElements[selectedElement].autoFit" (click)="toggleAutoFit()" title="Auto-fit"
-                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">fit_screen</mat-icon>
-              Auto-fit
-            </button>
-            <button [class.active]="canvasElements[selectedElement].textWrap" (click)="toggleTextWrap()" title="Wrap"
-                    style="background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600;">
-              <mat-icon style="font-size: 14px; width: 14px; height: 14px;">wrap_text</mat-icon>
-              Wrap
-            </button>
-          </div>
-        </div>
-        
-        <!-- Text Effects (Compact Design) -->
-        <div style="background: #f8fafc; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.875rem;">
-          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.625rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6366f1;">auto_fix_high</mat-icon>
-            <span>Text Effects</span>
-          </h4>
-          
-          <!-- Effect Presets (Compact Scrollable) -->
-          <div style="display: flex; gap: 0.5rem; overflow-x: auto; margin-bottom: 0.625rem; padding-bottom: 0.5rem;">
-            <button *ngFor="let preset of textEffectPresets" (click)="applyTextEffectPreset(preset)" [title]="preset.name"
-                    style="flex-shrink: 0; background: white; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 60px;">
-              <div [ngStyle]="getEffectPreviewStyle(preset)" style="font-size: 1.25rem; font-weight: 700;">Aa</div>
-              <span style="font-size: 0.65rem; color: #64748b;">{{ preset.name }}</span>
-            </button>
-          </div>
-          
-          <!-- Effect Tabs (Compact 4-button) -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.625rem; background: white; padding: 0.25rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-            <button [class.active]="activeEffectTab === 'shadow'" (click)="activeEffectTab = 'shadow'"
-                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
-              Shadow
-            </button>
-            <button [class.active]="activeEffectTab === 'outline'" (click)="activeEffectTab = 'outline'"
-                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
-              Outline
-            </button>
-            <button [class.active]="activeEffectTab === 'highlight'" (click)="activeEffectTab = 'highlight'"
-                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
-              Highlight
-            </button>
-            <button [class.active]="activeEffectTab === 'curve'" (click)="activeEffectTab = 'curve'"
-                    style="padding: 0.375rem; background: transparent; border: none; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 600; color: #64748b; transition: all 0.15s;">
-              Curve
-            </button>
-          </div>
-          
-          <!-- Shadow Panel -->
-          <div *ngIf="activeEffectTab === 'shadow'" style="background: white; border-radius: 6px; padding: 0.625rem;">
-            <select [(ngModel)]="canvasElements[selectedElement].shadowType" (change)="updateTextShadow()"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; margin-bottom: 0.625rem; outline: none;">
-              <option value="none">None</option>
-              <option value="drop">Drop Shadow</option>
-              <option value="inner">Inner Shadow</option>
-              <option value="neon">Neon Glow</option>
-              <option value="multiple">Multiple Shadows</option>
-            </select>
-            
-            <div *ngIf="canvasElements[selectedElement].shadowType !== 'none'" style="display: flex; flex-direction: column; gap: 0.625rem;">
-              <div>
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a; display: block; margin-bottom: 0.375rem;">Shadow Color</label>
-                <input type="color" [(ngModel)]="canvasElements[selectedElement].shadowColor" (change)="updateTextShadow()"
-                       style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
-              </div>
-              <div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                  <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Blur</label>
-                  <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].shadowBlur || 0 }}px</span>
-                </div>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowBlur" (change)="updateTextShadow()" 
-                       min="0" max="50" step="1"
-                       style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                <div>
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                    <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Offset X</label>
-                    <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].shadowOffsetX || 0 }}</span>
-                  </div>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetX" (change)="updateTextShadow()" 
-                         min="-50" max="50" step="1"
-                         style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-                </div>
-                <div>
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                    <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Offset Y</label>
-                    <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].shadowOffsetY || 0 }}</span>
-                  </div>
-                  <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetY" (change)="updateTextShadow()" 
-                         min="-50" max="50" step="1"
-                         style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Outline Panel -->
-          <div *ngIf="activeEffectTab === 'outline'" style="background: white; border-radius: 6px; padding: 0.625rem; display: flex; flex-direction: column; gap: 0.625rem;">
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Outline Width</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].outlineWidth || 0 }}px</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].outlineWidth" (change)="updateTextOutline()" 
-                     min="0" max="10" step="0.5"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-            <div>
-              <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a; display: block; margin-bottom: 0.375rem;">Outline Color</label>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].outlineColor" (change)="updateTextOutline()"
-                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
-            </div>
-          </div>
-          
-          <!-- Highlight Panel -->
-          <div *ngIf="activeEffectTab === 'highlight'" style="background: white; border-radius: 6px; padding: 0.625rem; display: flex; flex-direction: column; gap: 0.625rem;">
-            <div>
-              <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a; display: block; margin-bottom: 0.375rem;">Background Color</label>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].backgroundColor" (change)="updateElement()"
-                     style="width: 100%; height: 36px; border: 2px solid #e2e8f0; border-radius: 6px; cursor: pointer;">
-            </div>
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Padding</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].padding || 0 }}px</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].padding" (change)="updateElement()" 
-                     min="0" max="50" step="1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Border Radius</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].borderRadius || 0 }}px</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" 
-                     min="0" max="50" step="1"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-          </div>
-          
-          <!-- Curve Panel -->
-          <div *ngIf="activeEffectTab === 'curve'" style="background: white; border-radius: 6px; padding: 0.625rem; display: flex; flex-direction: column; gap: 0.625rem;">
-            <select [(ngModel)]="canvasElements[selectedElement].curveType" (change)="updateTextCurve()"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.75rem; outline: none;">
-              <option value="none">None</option>
-              <option value="arc">Arc</option>
-              <option value="bridge">Bridge</option>
-              <option value="bulge">Bulge</option>
-              <option value="wave">Wave</option>
-              <option value="circle">Circle</option>
-            </select>
-            
-            <div *ngIf="canvasElements[selectedElement].curveType !== 'none'">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 0.375rem;">
-                <label style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Curve Amount</label>
-                <span style="font-size: 0.7rem; color: #64748b;">{{ canvasElements[selectedElement].curveAmount || 0 }}%</span>
-              </div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].curveAmount" (change)="updateTextCurve()" 
-                     min="-100" max="100" step="5"
-                     style="width: 100%; height: 6px; border-radius: 3px; outline: none;">
-            </div>
-          </div>
-        </div>
-        <!-- Text Animations (Ultra Compact) -->
-        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
-          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">animation</mat-icon>
-            <span>Text Animations</span>
-          </h4>
-
-          <!-- Animation Buttons (Compact Grid) -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-bottom: 0.5rem;">
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;" 
-                    [style.background]="canvasElements[selectedElement].animation === animation.type ? '#10b981' : '#f8fafc'"
-                    [style.color]="canvasElements[selectedElement].animation === animation.type ? 'white' : '#64748b'"
-                    [style.border-color]="canvasElements[selectedElement].animation === animation.type ? '#059669' : '#e2e8f0'"
-                    (click)="applyTextAnimation(animation)" [title]="animation.name" *ngFor="let animation of textAnimations">
-              <mat-icon style="font-size: 12px;">{{ animation.icon }}</mat-icon>
-            </button>
-          </div>
-
-          <!-- Animation Controls (Compact) -->
-          <div *ngIf="canvasElements[selectedElement].animation" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-bottom: 0.5rem;">
-            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
-              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Duration</div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].animationDuration"
-                     (change)="updateAnimation()" min="0.1" max="5" step="0.1"
-                     style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
-              <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].animationDuration || 1 }}s</div>
-            </div>
-            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
-              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Delay</div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].animationDelay"
-                     (change)="updateAnimation()" min="0" max="3" step="0.1"
-                     style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
-              <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].animationDelay || 0 }}s</div>
-            </div>
-          </div>
-
-          <!-- Loop Checkbox (Compact) -->
-          <div *ngIf="canvasElements[selectedElement].animation" style="display: flex; align-items: center; gap: 0.375rem; margin-bottom: 0.5rem;">
-            <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].animationLoop"
-                   (change)="updateAnimation()" id="animation-loop"
-                   style="width: 14px; height: 14px; accent-color: #10b981;">
-            <label for="animation-loop" style="font-size: 0.7rem; font-weight: 600; color: #0f172a; cursor: pointer;">Loop Animation</label>
-          </div>
-
-          <!-- Preview Button (Compact) -->
-          <div *ngIf="canvasElements[selectedElement].animation" style="display: flex; justify-content: center;">
-            <button (click)="previewAnimation()"
-                    style="padding: 0.375rem 0.75rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem; font-size: 0.65rem; font-weight: 600;">
-              <mat-icon style="font-size: 12px;">play_arrow</mat-icon>
-              Preview
-            </button>
-          </div>
-        </div>
-
-        <!-- Transparency & Masking (Ultra Compact) -->
-        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
-          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">opacity</mat-icon>
-            <span>Transparency & Masking</span>
-          </h4>
-
-          <!-- Opacity Slider (Compact) -->
-          <div style="margin-bottom: 0.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-              <span style="font-size: 0.65rem; font-weight: 600; color: #64748b;">Opacity</span>
-              <span style="font-size: 0.65rem; color: #64748b;">{{ getOpacityPercentage() }}%</span>
-            </div>
-            <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity"
-                   (change)="updateElement()" min="0" max="1" step="0.01"
-                   style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
-          </div>
-
-          <!-- Masking Options (Compact Grid) -->
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem;">
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
-                    [style.background]="canvasElements[selectedElement].maskEnabled ? '#10b981' : '#f8fafc'"
-                    [style.color]="canvasElements[selectedElement].maskEnabled ? 'white' : '#64748b'"
-                    [style.border-color]="canvasElements[selectedElement].maskEnabled ? '#059669' : '#e2e8f0'"
-                    (click)="enableTextMasking()" title="Use text as mask for images">
-              <mat-icon style="font-size: 12px;">layers</mat-icon>
-              Text as Mask
-            </button>
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
-                    (click)="addTextToFrame()" title="Add text to image frame">
-              <mat-icon style="font-size: 12px;">crop_free</mat-icon>
-              Text in Frame
-            </button>
-          </div>
-        </div>
 
         <!-- Brand Kit & Accessibility (Ultra Compact) -->
         <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
@@ -1687,479 +1404,358 @@
             </div>
           </div>
         </div>
-
-        <div style="background: white; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-          <div style="display: flex; align-items: center; margin-bottom: 0.875rem;">
-            <div style="border-radius: 6px; padding: 6px; display: inline-flex; background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-              <mat-icon style="font-size: 16px; color: white;">animation</mat-icon>
-            </div>
-            <span style="font-size: 0.9rem; font-weight: 600; color: #374151;">Text Animations</span>
-          </div>
-          
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
-                    [style.background]="activeTextEffectTab === 'stroke' ? '#10b981' : '#f8fafc'"
-                    [style.color]="activeTextEffectTab === 'stroke' ? 'white' : '#374151'"
-                    [style.border-color]="activeTextEffectTab === 'stroke' ? '#059669' : '#e2e8f0'"
-                    (click)="activeTextEffectTab = 'stroke'">Stroke</button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
-                    [style.background]="activeTextEffectTab === 'shadow' ? '#10b981' : '#f8fafc'"
-                    [style.color]="activeTextEffectTab === 'shadow' ? 'white' : '#374151'"
-                    [style.border-color]="activeTextEffectTab === 'shadow' ? '#059669' : '#e2e8f0'"
-                    (click)="activeTextEffectTab = 'shadow'">Shadow</button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
-                    [style.background]="activeTextEffectTab === 'gradient' ? '#10b981' : '#f8fafc'"
-                    [style.color]="activeTextEffectTab === 'gradient' ? 'white' : '#374151'"
-                    [style.border-color]="activeTextEffectTab === 'gradient' ? '#059669' : '#e2e8f0'"
-                    (click)="activeTextEffectTab = 'gradient'">Gradient</button>
-            <button style="padding: 0.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 0.7rem; font-weight: 500; color: #374151; cursor: pointer;" 
-                    [style.background]="activeTextEffectTab === 'highlight' ? '#10b981' : '#f8fafc'"
-                    [style.color]="activeTextEffectTab === 'highlight' ? 'white' : '#374151'"
-                    [style.border-color]="activeTextEffectTab === 'highlight' ? '#059669' : '#e2e8f0'"
-                    (click)="activeTextEffectTab = 'highlight'">Highlight</button>
-          </div>
-          
-          <div *ngIf="activeTextEffectTab === 'stroke'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Width</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].textStrokeWidth" 
-                     (change)="updateElement()" min="0" max="5" step="0.5"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textStrokeWidth || 0}}px</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color</span>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].textStrokeColor" (change)="updateElement()"
-                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
-            </div>
-          </div>
-          
-          <div *ngIf="activeTextEffectTab === 'shadow'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Preset</span>
-              <select [(ngModel)]="canvasElements[selectedElement].textShadow" (change)="updateElement()"
-                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
-                <option value="none">None</option>
-                <option value="1px 1px 2px rgba(0,0,0,0.3)">Light</option>
-                <option value="2px 2px 4px rgba(0,0,0,0.4)">Medium</option>
-                <option value="3px 3px 5px rgba(0,0,0,0.5)">Heavy</option>
-                <option value="custom">Custom</option>
-              </select>
-            </div>
-            <div *ngIf="canvasElements[selectedElement].textShadow === 'custom'" style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Shadow Color</span>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].customShadowColor" (change)="updateCustomTextShadow()"
-                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
-            </div>
-          </div>
-          
-          <div *ngIf="activeTextEffectTab === 'gradient'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Type</span>
-              <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()"
-                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
-                <option value="none">None</option>
-                <option value="linear">Linear</option>
-                <option value="radial">Radial</option>
-              </select>
-            </div>
-            <div *ngIf="canvasElements[selectedElement].textGradientType !== 'none'" style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Angle</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" 
-                     (change)="updateTextGradient()" min="0" max="360" step="15"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].textGradientAngle || 45}}°</span>
-            </div>
-          </div>
-          
-          <div *ngIf="activeTextEffectTab === 'gradient' && canvasElements[selectedElement].textGradientType !== 'none'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-top: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color 1</span>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()"
-                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color 2</span>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()"
-                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
-            </div>
-          </div>
-          
-          <div *ngIf="activeTextEffectTab === 'highlight'" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Style</span>
-              <select [(ngModel)]="canvasElements[selectedElement].highlightStyle" (change)="updateElement()"
-                      style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.8rem; background: white;">
-                <option value="none">None</option>
-                <option value="solid">Solid</option>
-                <option value="marker">Marker</option>
-                <option value="underline">Underline</option>
-                <option value="box">Box</option>
-              </select>
-            </div>
-            <div *ngIf="canvasElements[selectedElement].highlightStyle !== 'none'" style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Color</span>
-              <input type="color" [(ngModel)]="canvasElements[selectedElement].highlightColor" (change)="updateElement()"
-                     style="width: 100%; height: 32px; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer;">
-            </div>
-          </div>
-          
-          <div *ngIf="activeTextEffectTab === 'highlight' && canvasElements[selectedElement].highlightStyle !== 'none'" style="display: grid; grid-template-columns: 1fr; gap: 0.625rem; margin-top: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Opacity</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].highlightOpacity" 
-                     (change)="updateElement()" min="0.1" max="1" step="0.1"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].highlightOpacity || 0.3}}</span>
-            </div>
-          </div>
-          
-          <div *ngIf="canvasElements[selectedElement].textShadow === 'custom' && activeTextEffectTab === 'shadow'" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.625rem; margin-top: 0.625rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Blur</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowBlur" 
-                     (change)="updateCustomTextShadow()" min="0" max="20" step="1"
-                     style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-              <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].customShadowBlur || 0}}px</span>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.625rem;">
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">X Offset</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowX" 
-                       (change)="updateCustomTextShadow()" min="-20" max="20" step="1"
-                       style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-                <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].customShadowX || 0}}px</span>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <span style="font-size: 0.8rem; font-weight: 500; color: #6b7280;">Y Offset</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].customShadowY" 
-                       (change)="updateCustomTextShadow()" min="-20" max="20" step="1"
-                       style="width: 100%; height: 6px; border-radius: 3px; background: #e5e7eb; outline: none;">
-                <span style="font-size: 0.65rem; color: #9ca3af; text-align: center;">{{canvasElements[selectedElement].customShadowY || 0}}px</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Text Transform (Ultra Compact) -->
-        <div style="background: #f8fafc; border-radius: 8px; padding: 0.625rem; margin-bottom: 0.875rem;">
-          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.5rem 0; font-size: 0.75rem; font-weight: 600; color: #0f172a;">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #10b981;">transform</mat-icon>
-            <span>Text Transform</span>
-          </h4>
-
-          <!-- Transform Buttons (Compact Grid) -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-bottom: 0.5rem;">
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
-                    (click)="rotateText(-90)" title="Rotate Left">
-              <mat-icon style="font-size: 12px;">rotate_left</mat-icon>
-            </button>
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
-                    (click)="rotateText(90)" title="Rotate Right">
-              <mat-icon style="font-size: 12px;">rotate_right</mat-icon>
-            </button>
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
-                    (click)="flipText('horizontal')" title="Flip Horizontal">
-              <mat-icon style="font-size: 12px;">flip</mat-icon>
-            </button>
-            <button style="padding: 0.375rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center;"
-                    (click)="flipText('vertical')" title="Flip Vertical">
-              <mat-icon style="font-size: 12px; transform: rotate(90deg);">flip</mat-icon>
-            </button>
-          </div>
-
-          <!-- Rotation & Path Controls (Compact) -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-bottom: 0.5rem;">
-            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
-              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Rotation</div>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].textRotation"
-                     (change)="updateElement()" min="-180" max="180" step="5"
-                     style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
-              <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].textRotation || 0 }}°</div>
-            </div>
-            <div style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
-              <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Text Path</div>
-              <select [(ngModel)]="canvasElements[selectedElement].textPath" (change)="updateElement()"
-                      style="width: 100%; padding: 0.375rem; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.7rem; background: white;">
-                <option value="none">None</option>
-                <option value="arc">Arc</option>
-                <option value="circle">Circle</option>
-                <option value="wave">Wave</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Path Strength (Compact) -->
-          <div *ngIf="canvasElements[selectedElement].textPath !== 'none'" style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem;">
-            <div style="font-size: 0.65rem; color: #64748b; font-weight: 600; margin-bottom: 0.375rem;">Path Strength</div>
-            <input type="range" [(ngModel)]="canvasElements[selectedElement].textPathStrength"
-                   (change)="updateElement()" min="0" max="100" step="5"
-                   style="width: 100%; height: 4px; border-radius: 2px; outline: none;">
-            <div style="font-size: 0.65rem; color: #64748b; text-align: center; margin-top: 0.25rem;">{{ canvasElements[selectedElement].textPathStrength || 50 }}</div>
-          </div>
-        </div>
       </div>
       
       <!-- Image specific properties -->
       <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'image'">
-        <div class="property-group">
-          <label>Image</label>
-          <div class="image-preview">
-            <img [src]="canvasElements[selectedElement].src" [alt]="canvasElements[selectedElement].alt || 'Image'">
+        <!-- Image Preview & Replace -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.875rem 0; font-size: 0.9rem; font-weight: 600; color: #0f172a;">
+            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 6px; padding: 6px; display: flex;">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">image</mat-icon>
+            </div>
+            <span>Image</span>
+          </h3>
+          
+          <div style="position: relative; width: 100%; aspect-ratio: 16/9; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 0.75rem;">
+            <img [src]="canvasElements[selectedElement].src" [alt]="canvasElements[selectedElement].alt || 'Image'"
+                 style="width: 100%; height: 100%; object-fit: contain;">
           </div>
-          <button class="replace-image-btn" (click)="triggerUpload()">
-            <mat-icon>photo_library</mat-icon>
+          
+          <button (click)="triggerUpload()"
+                  style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">photo_library</mat-icon>
             <span>Replace Image</span>
           </button>
         </div>
         
-        <div class="property-group">
-          <label>Image Appearance</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Object Fit</span>
-              <select [(ngModel)]="canvasElements[selectedElement].objectFit" (change)="updateElement()">
+        <!-- Image Appearance -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #06b6d4;">tune</mat-icon>
+            <span>Appearance</span>
+          </h4>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div>
+              <label style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.375rem; font-weight: 600;">Object Fit</label>
+              <select [(ngModel)]="canvasElements[selectedElement].objectFit" (change)="updateElement()"
+                      style="width: 100%; padding: 0.625rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8125rem; outline: none; background: #f8fafc;">
                 <option value="contain">Contain</option>
                 <option value="cover">Cover</option>
                 <option value="fill">Fill</option>
                 <option value="scale-down">Scale Down</option>
               </select>
             </div>
-            <div class="property-control">
-              <span>Border Radius</span>
-              <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" min="0" max="100">
+            
+            <div>
+              <label style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.375rem; font-weight: 600;">Border Radius</label>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="range" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" 
+                       min="0" max="100" step="1"
+                       style="flex: 1; height: 6px; border-radius: 3px; outline: none;">
+                <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()" 
+                       min="0" max="100"
+                       style="width: 60px; padding: 0.375rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.8125rem; text-align: center; outline: none;">
+              </div>
             </div>
           </div>
         </div>
         
-        <div class="property-group">
-          <label>Image Transform</label>
-          <div class="image-transform-grid">
-            <button class="image-edit-btn" (click)="cropImage()">
-              <mat-icon>crop</mat-icon>
-              <span>Crop</span>
+        <!-- Image Transform -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #f59e0b;">transform</mat-icon>
+            <span>Transform</span>
+          </h4>
+          
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem;">
+            <button (click)="cropImage()" 
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f9ff'; this.style.borderColor='#06b6d4';" 
+                    onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #64748b;">crop</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Crop</span>
             </button>
-            <button class="image-edit-btn" (click)="scaleImage()">
-              <mat-icon>transform</mat-icon>
-              <span>Scale</span>
+            <button (click)="scaleImage()" 
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f9ff'; this.style.borderColor='#06b6d4';" 
+                    onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #64748b;">open_in_full</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Scale</span>
             </button>
-            <button class="image-edit-btn" (click)="rotateImage(-90)">
-              <mat-icon>rotate_left</mat-icon>
-              <span>Rotate Left</span>
+            <button (click)="rotateImage(-90)" 
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f9ff'; this.style.borderColor='#06b6d4';" 
+                    onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #64748b;">rotate_left</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Rotate L</span>
             </button>
-            <button class="image-edit-btn" (click)="rotateImage(90)">
-              <mat-icon>rotate_right</mat-icon>
-              <span>Rotate Right</span>
+            <button (click)="rotateImage(90)" 
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f9ff'; this.style.borderColor='#06b6d4';" 
+                    onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #64748b;">rotate_right</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Rotate R</span>
             </button>
-            <button class="image-edit-btn" (click)="flipImage('horizontal')">
-              <mat-icon>flip</mat-icon>
-              <span>Flip H</span>
+            <button (click)="flipImage('horizontal')" 
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f9ff'; this.style.borderColor='#06b6d4';" 
+                    onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #64748b;">flip</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Flip H</span>
             </button>
-            <button class="image-edit-btn" (click)="flipImage('vertical')">
-              <mat-icon>flip</mat-icon>
-              <span>Flip V</span>
+            <button (click)="flipImage('vertical')" 
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.625rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f9ff'; this.style.borderColor='#06b6d4';" 
+                    onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #64748b; transform: rotate(90deg);">flip</mat-icon>
+              <span style="font-size: 0.7rem; font-weight: 600; color: #0f172a;">Flip V</span>
             </button>
           </div>
           
-          <div class="aspect-ratio-controls">
-            <label>
-              <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].lockAspectRatio" (change)="updateElement()">
+          <div style="display: flex; align-items: center; gap: 0.625rem; padding: 0.875rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 8px;">
+            <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].lockAspectRatio" (change)="updateElement()" 
+                   id="aspectRatioLock"
+                   style="width: 18px; height: 18px; cursor: pointer; accent-color: #06b6d4;">
+            <label for="aspectRatioLock" style="font-size: 0.875rem; color: #0f172a; cursor: pointer; margin: 0; font-weight: 500;">
               Lock Aspect Ratio
             </label>
           </div>
         </div>
         
-        <div class="property-group">
-          <label>Image Filters</label>
-          <div class="filter-tabs">
-            <button class="filter-tab" [ngClass]="{'active': activeImageFilterTab === 'basic'}" (click)="activeImageFilterTab = 'basic'">Basic</button>
-            <button class="filter-tab" [ngClass]="{'active': activeImageFilterTab === 'advanced'}" (click)="activeImageFilterTab = 'advanced'">Advanced</button>
-            <button class="filter-tab" [ngClass]="{'active': activeImageFilterTab === 'blend'}" (click)="activeImageFilterTab = 'blend'">Blend</button>
+        <!-- Image Filters -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #8b5cf6;">photo_filter</mat-icon>
+            <span>Filters</span>
+          </h4>
+          
+          <div style="display: flex; gap: 0.375rem; margin-bottom: 1rem; background: #f8fafc; padding: 0.375rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <button (click)="activeImageFilterTab = 'basic'"
+                    style="flex: 1; padding: 0.625rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;"
+                    [style.background]="activeImageFilterTab === 'basic' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'transparent'"
+                    [style.color]="activeImageFilterTab === 'basic' ? 'white' : '#64748b'">
+              Basic
+            </button>
+            <button (click)="activeImageFilterTab = 'advanced'"
+                    style="flex: 1; padding: 0.625rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;"
+                    [style.background]="activeImageFilterTab === 'advanced' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'transparent'"
+                    [style.color]="activeImageFilterTab === 'advanced' ? 'white' : '#64748b'">
+              Advanced
+            </button>
+            <button (click)="activeImageFilterTab = 'blend'"
+                    style="flex: 1; padding: 0.625rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s;"
+                    [style.background]="activeImageFilterTab === 'blend' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'transparent'"
+                    [style.color]="activeImageFilterTab === 'blend' ? 'white' : '#64748b'">
+              Blend
+            </button>
           </div>
           
           <!-- Basic Filters -->
-          <div class="filter-content" *ngIf="activeImageFilterTab === 'basic'">
-            <div class="filter-sliders">
-              <div class="filter-control">
-                <span>Brightness: {{canvasElements[selectedElement].brightness || 100}}%</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].brightness" 
-                       (change)="updateImageFilters()" min="0" max="200" step="5" value="100">
+          <div *ngIf="activeImageFilterTab === 'basic'" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.8125rem; color: #64748b; font-weight: 500;">Brightness</span>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: #0f172a;">{{canvasElements[selectedElement].brightness || 100}}%</span>
               </div>
-              <div class="filter-control">
-                <span>Contrast: {{canvasElements[selectedElement].contrast || 100}}%</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].contrast" 
-                       (change)="updateImageFilters()" min="0" max="200" step="5" value="100">
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].brightness" 
+                     (change)="updateImageFilters()" min="0" max="200" step="5" value="100"
+                     style="width: 100%; height: 8px; border-radius: 4px; outline: none; accent-color: #8b5cf6;">
+            </div>
+            
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.8125rem; color: #64748b; font-weight: 500;">Contrast</span>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: #0f172a;">{{canvasElements[selectedElement].contrast || 100}}%</span>
               </div>
-              <div class="filter-control">
-                <span>Saturation: {{canvasElements[selectedElement].saturation || 100}}%</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].saturation" 
-                       (change)="updateImageFilters()" min="0" max="200" step="5" value="100">
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].contrast" 
+                     (change)="updateImageFilters()" min="0" max="200" step="5" value="100"
+                     style="width: 100%; height: 8px; border-radius: 4px; outline: none; accent-color: #8b5cf6;">
+            </div>
+            
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.8125rem; color: #64748b; font-weight: 500;">Saturation</span>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: #0f172a;">{{canvasElements[selectedElement].saturation || 100}}%</span>
               </div>
-              <div class="filter-control">
-                <span>Hue Rotate: {{canvasElements[selectedElement].hueRotate || 0}}°</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].hueRotate" 
-                       (change)="updateImageFilters()" min="0" max="360" step="15" value="0">
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].saturation" 
+                     (change)="updateImageFilters()" min="0" max="200" step="5" value="100"
+                     style="width: 100%; height: 8px; border-radius: 4px; outline: none; accent-color: #8b5cf6;">
+            </div>
+            
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.8125rem; color: #64748b; font-weight: 500;">Hue Rotate</span>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: #0f172a;">{{canvasElements[selectedElement].hueRotate || 0}}°</span>
+              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].hueRotate" 
+                     (change)="updateImageFilters()" min="0" max="360" step="15" value="0"
+                     style="width: 100%; height: 8px; border-radius: 4px; outline: none; accent-color: #8b5cf6;">
+            </div>
+            
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 0.75rem;">
+              <label style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.5rem; font-weight: 600;">Filter Presets</label>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                <button (click)="applyFilterPreset('none')" 
+                        style="padding: 0.625rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #dc2626; transition: all 0.2s;">
+                  Reset
+                </button>
+                <button (click)="applyFilterPreset('vintage')" 
+                        style="padding: 0.625rem; background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #d97706; transition: all 0.2s;">
+                  Vintage
+                </button>
+                <button (click)="applyFilterPreset('warm')" 
+                        style="padding: 0.625rem; background: #ffedd5; border: 1px solid #fed7aa; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #ea580c; transition: all 0.2s;">
+                  Warm
+                </button>
+                <button (click)="applyFilterPreset('cool')" 
+                        style="padding: 0.625rem; background: #dbeafe; border: 1px solid #bfdbfe; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #2563eb; transition: all 0.2s;">
+                  Cool
+                </button>
               </div>
             </div>
           </div>
           
           <!-- Advanced Filters -->
-          <div class="filter-content" *ngIf="activeImageFilterTab === 'advanced'">
-            <div class="filter-sliders">
-              <div class="filter-control">
-                <span>Blur: {{canvasElements[selectedElement].blur || 0}}px</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].blur" 
-                       (change)="updateImageFilters()" min="0" max="10" step="0.5" value="0">
-              </div>
-              <div class="filter-control">
-                <span>Sepia: {{canvasElements[selectedElement].sepia || 0}}%</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].sepia" 
-                       (change)="updateImageFilters()" min="0" max="100" step="5" value="0">
-              </div>
-              <div class="filter-control">
-                <span>Grayscale: {{canvasElements[selectedElement].grayscale || 0}}%</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].grayscale" 
-                       (change)="updateImageFilters()" min="0" max="100" step="5" value="0">
-              </div>
-              <div class="filter-control">
-                <span>Invert: {{canvasElements[selectedElement].invert || 0}}%</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].invert" 
-                       (change)="updateImageFilters()" min="0" max="100" step="5" value="0">
-              </div>
-            </div>
+          <div *ngIf="activeImageFilterTab === 'advanced'" style="text-align: center; padding: 2rem;">
+            <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: #cbd5e1; margin-bottom: 0.5rem;">auto_fix_high</mat-icon>
+            <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Advanced filters coming soon</p>
           </div>
           
           <!-- Blend Modes -->
-          <div class="filter-content" *ngIf="activeImageFilterTab === 'blend'">
-            <div class="blend-controls">
-              <div class="property-control">
-                <span>Blend Mode</span>
-                <select [(ngModel)]="canvasElements[selectedElement].blendMode" (change)="updateElement()">
-                  <option value="normal">Normal</option>
-                  <option value="multiply">Multiply</option>
-                  <option value="screen">Screen</option>
-                  <option value="overlay">Overlay</option>
-                  <option value="soft-light">Soft Light</option>
-                  <option value="hard-light">Hard Light</option>
-                  <option value="color-dodge">Color Dodge</option>
-                  <option value="color-burn">Color Burn</option>
-                  <option value="darken">Darken</option>
-                  <option value="lighten">Lighten</option>
-                  <option value="difference">Difference</option>
-                  <option value="exclusion">Exclusion</option>
-                  <option value="luminosity">Luminosity</option>
-                </select>
-              </div>
-            </div>
+          <div *ngIf="activeImageFilterTab === 'blend'">
+            <label style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.5rem; font-weight: 600;">Blend Mode</label>
+            <select [(ngModel)]="canvasElements[selectedElement].blendMode" (change)="updateElement()"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.8125rem; outline: none; background: #f8fafc; font-weight: 500;">
+              <option value="normal">Normal</option>
+              <option value="multiply">Multiply</option>
+              <option value="screen">Screen</option>
+              <option value="overlay">Overlay</option>
+              <option value="soft-light">Soft Light</option>
+              <option value="hard-light">Hard Light</option>
+              <option value="color-dodge">Color Dodge</option>
+              <option value="color-burn">Color Burn</option>
+              <option value="darken">Darken</option>
+              <option value="lighten">Lighten</option>
+              <option value="difference">Difference</option>
+              <option value="exclusion">Exclusion</option>
+              <option value="luminosity">Luminosity</option>
+            </select>
           </div>
+        </div>
+        
+        <!-- Image Masking -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #ec4899;">masks</mat-icon>
+            <span>Masking</span>
+          </h4>
           
-          <div class="filter-presets">
-            <button class="preset-filter-btn" (click)="applyFilterPreset('none')">Reset</button>
-            <button class="preset-filter-btn" (click)="applyFilterPreset('vintage')">Vintage</button>
-            <button class="preset-filter-btn" (click)="applyFilterPreset('blackwhite')">B&W</button>
-            <button class="preset-filter-btn" (click)="applyFilterPreset('warm')">Warm</button>
-            <button class="preset-filter-btn" (click)="applyFilterPreset('cool')">Cool</button>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.625rem;">
+            <button (click)="applyMask('rectangle')"
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem; padding: 0.875rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 2px solid;"
+                    [style.background]="canvasElements[selectedElement].maskType === 'rectangle' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : '#f8fafc'"
+                    [style.border-color]="canvasElements[selectedElement].maskType === 'rectangle' ? '#ec4899' : '#e2e8f0'">
+              <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #ec4899;">crop_square</mat-icon>
+              <span style="font-size: 0.75rem; font-weight: 600; color: #0f172a;">Rectangle</span>
+            </button>
+            <button (click)="applyMask('circle')"
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem; padding: 0.875rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 2px solid;"
+                    [style.background]="canvasElements[selectedElement].maskType === 'circle' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : '#f8fafc'"
+                    [style.border-color]="canvasElements[selectedElement].maskType === 'circle' ? '#ec4899' : '#e2e8f0'">
+              <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #ec4899;">radio_button_unchecked</mat-icon>
+              <span style="font-size: 0.75rem; font-weight: 600; color: #0f172a;">Circle</span>
+            </button>
+            <button (click)="applyMask('custom')"
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem; padding: 0.875rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; border: 2px solid;"
+                    [style.background]="canvasElements[selectedElement].maskType === 'custom' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : '#f8fafc'"
+                    [style.border-color]="canvasElements[selectedElement].maskType === 'custom' ? '#ec4899' : '#e2e8f0'">
+              <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #ec4899;">gesture</mat-icon>
+              <span style="font-size: 0.75rem; font-weight: 600; color: #0f172a;">Custom</span>
+            </button>
+            <button (click)="removeMask()"
+                    style="display: flex; flex-direction: column; align-items: center; gap: 0.375rem; padding: 0.875rem; background: #fef2f2; border: 2px solid #fecaca; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+              <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #dc2626;">clear</mat-icon>
+              <span style="font-size: 0.75rem; font-weight: 600; color: #dc2626;">Remove</span>
+            </button>
           </div>
         </div>
         
-        <div class="property-group">
-          <label>Image Masking</label>
-          <div class="masking-controls">
-            <div class="mask-options">
-              <button class="mask-btn" [ngClass]="{'active': canvasElements[selectedElement].maskType === 'rectangle'}"
-                      (click)="applyMask('rectangle')">
-                <mat-icon>crop_square</mat-icon>
-                <span>Rectangle</span>
-              </button>
-              <button class="mask-btn" [ngClass]="{'active': canvasElements[selectedElement].maskType === 'circle'}"
-                      (click)="applyMask('circle')">
-                <mat-icon>radio_button_unchecked</mat-icon>
-                <span>Circle</span>
-              </button>
-              <button class="mask-btn" [ngClass]="{'active': canvasElements[selectedElement].maskType === 'custom'}"
-                      (click)="applyMask('custom')">
-                <mat-icon>gesture</mat-icon>
-                <span>Custom</span>
-              </button>
-              <button class="mask-btn" (click)="removeMask()">
-                <mat-icon>clear</mat-icon>
-                <span>Remove</span>
-              </button>
-            </div>
-            
-            <div class="mask-properties" *ngIf="canvasElements[selectedElement].maskType">
-              <div class="property-control">
-                <span>Feather: {{canvasElements[selectedElement].maskFeather || 0}}px</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].maskFeather" 
-                       (change)="updateElement()" min="0" max="20" step="1">
+        <!-- Background Removal -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #10b981;">auto_fix_high</mat-icon>
+            <span>Background</span>
+          </h4>
+          
+          <button (click)="toggleBackgroundRemoval()"
+                  style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.625rem; padding: 0.875rem; margin-bottom: 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; border: 2px solid;"
+                  [style.background]="isBackgroundRemovalActive() ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : '#f8fafc'"
+                  [style.border-color]="isBackgroundRemovalActive() ? '#10b981' : '#e2e8f0'"
+                  [style.color]="isBackgroundRemovalActive() ? 'white' : '#0f172a'">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px;">content_cut</mat-icon>
+            <span>Remove Background</span>
+          </button>
+          
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 8px;">
+            <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].preserveTransparency" (change)="preserveTransparency()"
+                   id="preserveAlpha"
+                   style="width: 18px; height: 18px; cursor: pointer; accent-color: #10b981;">
+            <label for="preserveAlpha" style="font-size: 0.875rem; color: #0f172a; cursor: pointer; margin: 0; font-weight: 500;">
+              Preserve PNG Alpha Channel
+            </label>
+          </div>
+        </div>
+        
+        <!-- Effects & Styling -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #f59e0b;">auto_awesome</mat-icon>
+            <span>Effects</span>
+          </h4>
+          
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.8125rem; color: #64748b; font-weight: 500;">Opacity</span>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: #0f172a;">{{ ((canvasElements[selectedElement].opacity || 1) * 100).toFixed(0) }}%</span>
               </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="property-group">
-          <label>PNG Transparency & Background Removal</label>
-          <div class="transparency-controls">
-            <button class="image-edit-btn" (click)="toggleBackgroundRemoval()" 
-                    [ngClass]="{'active': isBackgroundRemovalActive()}">
-              <mat-icon>content_cut</mat-icon>
-              <span>Remove Background</span>
-            </button>
-            <button class="image-edit-btn" (click)="preserveTransparency()"
-                    [ngClass]="{'active': canvasElements[selectedElement].preserveTransparency}">
-              <mat-icon>transparency</mat-icon>
-              <span>Preserve PNG Alpha</span>
-            </button>
-          </div>
-        </div>
-        
-        <div class="property-group">
-          <label>Effects</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Opacity</span>
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1">
-              <span class="value-display">{{ canvasElements[selectedElement].opacity || 1 }}</span>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1"
+                     style="width: 100%; height: 8px; border-radius: 4px; outline: none; accent-color: #f59e0b;">
             </div>
             
-            <div class="property-control">
-              <span>Shadow</span>
-              <select [(ngModel)]="canvasElements[selectedElement].boxShadow" (change)="updateElement()">
+            <div>
+              <label style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.5rem; font-weight: 600;">Shadow</label>
+              <select [(ngModel)]="canvasElements[selectedElement].boxShadow" (change)="updateElement()"
+                      style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.8125rem; outline: none; background: #f8fafc; font-weight: 500;">
                 <option value="none">None</option>
                 <option value="0 2px 5px rgba(0,0,0,0.1)">Light</option>
                 <option value="0 4px 8px rgba(0,0,0,0.2)">Medium</option>
                 <option value="0 8px 16px rgba(0,0,0,0.3)">Strong</option>
               </select>
             </div>
-            
-            <div class="property-control">
-              <span>Filter</span>
-              <select [(ngModel)]="canvasElements[selectedElement].filter" (change)="updateElement()">
-                <option value="none">None</option>
-                <option value="grayscale(100%)">Grayscale</option>
-                <option value="sepia(100%)">Sepia</option>
-                <option value="blur(2px)">Blur</option>
-                <option value="brightness(150%)">Brighten</option>
-                <option value="contrast(150%)">Contrast</option>
-              </select>
-            </div>
           </div>
         </div>
         
-        <div class="property-group">
-          <label>Border</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Border Style</span>
-              <select [(ngModel)]="canvasElements[selectedElement].border" (change)="updateElement()">
-                <option value="none">None</option>
-                <option value="1px solid #000">Thin</option>
-                <option value="2px solid #000">Medium</option>
-                <option value="3px solid #000">Thick</option>
-                <option value="1px dashed #000">Dashed</option>
-                <option value="1px dotted #000">Dotted</option>
-              </select>
-            </div>
+        <!-- Border -->
+        <div style="background: white; border-radius: 10px; margin: 0 1rem 1rem 1rem; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <h4 style="display: flex; align-items: center; gap: 0.375rem; margin: 0 0 0.75rem 0; font-size: 0.85rem; font-weight: 600; color: #0f172a;">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #3b82f6;">border_style</mat-icon>
+            <span>Border</span>
+          </h4>
+          
+          <div>
+            <label style="font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.5rem; font-weight: 600;">Border Style</label>
+            <select [(ngModel)]="canvasElements[selectedElement].border" (change)="updateElement()"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.8125rem; outline: none; background: #f8fafc; font-weight: 500;">
+              <option value="none">None</option>
+              <option value="1px solid #000">Thin Solid</option>
+              <option value="2px solid #000">Medium Solid</option>
+              <option value="3px solid #000">Thick Solid</option>
+              <option value="1px dashed #000">Dashed</option>
+              <option value="1px dotted #000">Dotted</option>
+            </select>
           </div>
         </div>
       </div>
@@ -2295,124 +1891,325 @@
     </div>
   </div>
   
-  <!-- Custom Size Dialog -->
-  <div class="dialog-overlay" *ngIf="showCustomSizeDialog">
-    <div class="dialog-container">
-      <div class="dialog-header">
-        <h3>Custom Canvas Size</h3>
-        <button class="close-btn" (click)="closeCustomSizeDialog()">
-          <mat-icon>close</mat-icon>
+  <!-- Custom Size Dialog - Modern Design -->
+  <div *ngIf="showCustomSizeDialog" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 1.5rem;">
+    <div style="background: white; border-radius: 16px; width: 100%; max-width: 600px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+      <!-- Modern Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 2px solid #e2e8f0; background: linear-gradient(135deg, #f8fafc 0%, #faf5ff 100%);">
+        <div style="display: flex; align-items: center; gap: 0.875rem;">
+          <div style="background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; border-radius: 10px; padding: 10px; display: flex; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);">
+            <mat-icon style="font-size: 24px; width: 24px; height: 24px;">photo_size_select_large</mat-icon>
+          </div>
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">Custom Canvas Size</h3>
+            <p style="font-size: 0.875rem; color: #64748b; margin: 0.25rem 0 0 0;">Set dimensions or choose preset</p>
+          </div>
+        </div>
+        <button (click)="closeCustomSizeDialog()" 
+                style="background: #f1f5f9; border: none; border-radius: 10px; padding: 0.625rem; cursor: pointer; transition: all 0.3s;"
+                onmouseover="this.style.background='#e2e8f0'; this.style.transform='rotate(90deg)';" 
+                onmouseout="this.style.background='#f1f5f9'; this.style.transform='rotate(0deg)';">
+          <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #64748b;">close</mat-icon>
         </button>
       </div>
-      <div class="dialog-content">
-        <div class="size-input-group">
-          <div class="size-input">
-            <label for="customWidth">Width (px)</label>
-            <input type="number" id="customWidth" [(ngModel)]="customWidth" min="50" max="2000">
+      
+      <!-- Content -->
+      <div style="padding: 2rem;">
+        <!-- Custom Dimensions -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem;">
+          <div>
+            <label for="customWidth" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #a855f7;">width</mat-icon>
+              <span>Width (px)</span>
+            </label>
+            <input type="number" id="customWidth" [(ngModel)]="customWidth" min="50" max="2000"
+                   style="width: 100%; padding: 0.875rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; font-weight: 600; color: #0f172a; outline: none; transition: all 0.3s;"
+                   onfocus="this.style.borderColor='#a855f7'; this.style.boxShadow='0 0 0 4px rgba(168, 85, 247, 0.1)';" 
+                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
           </div>
-          <div class="size-input">
-            <label for="customHeight">Height (px)</label>
-            <input type="number" id="customHeight" [(ngModel)]="customHeight" min="50" max="2000">
+          <div>
+            <label for="customHeight" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #a855f7;">height</mat-icon>
+              <span>Height (px)</span>
+            </label>
+            <input type="number" id="customHeight" [(ngModel)]="customHeight" min="50" max="2000"
+                   style="width: 100%; padding: 0.875rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; font-weight: 600; color: #0f172a; outline: none; transition: all 0.3s;"
+                   onfocus="this.style.borderColor='#a855f7'; this.style.boxShadow='0 0 0 4px rgba(168, 85, 247, 0.1)';" 
+                   onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
           </div>
         </div>
-        <div class="preset-sizes">
-          <h4>Preset Sizes</h4>
-          <div class="preset-buttons">
-            <button (click)="selectPresetSize('instagram')">Instagram Post</button>
-            <button (click)="selectPresetSize('facebook')">Facebook Post</button>
-            <button (click)="selectPresetSize('twitter')">Twitter Post</button>
-            <button (click)="selectPresetSize('story')">Instagram Story</button>
-            <button (click)="selectPresetSize('youtube')">YouTube Thumbnail</button>
+        
+        <!-- Preset Sizes -->
+        <div>
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #a855f7;">apps</mat-icon>
+            <span>Preset Sizes</span>
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.875rem;">
+            <button (click)="selectPresetSize('instagram')" 
+                    style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #fdf4ff 100%); border: 2px solid #e9d5ff; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(168, 85, 247, 0.15)'; this.style.borderColor='#a855f7';" 
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e9d5ff';">
+              <mat-icon style="font-size: 28px; width: 28px; height: 28px; color: #c026d3;">photo_library</mat-icon>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Instagram Post</div>
+                <div style="font-size: 0.75rem; color: #64748b;">1080 × 1080</div>
+              </div>
+            </button>
+            
+            <button (click)="selectPresetSize('facebook')" 
+                    style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #eff6ff 100%); border: 2px solid #dbeafe; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(59, 130, 246, 0.15)'; this.style.borderColor='#3b82f6';" 
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#dbeafe';">
+              <mat-icon style="font-size: 28px; width: 28px; height: 28px; color: #3b82f6;">facebook</mat-icon>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Facebook Post</div>
+                <div style="font-size: 0.75rem; color: #64748b;">1200 × 630</div>
+              </div>
+            </button>
+            
+            <button (click)="selectPresetSize('twitter')" 
+                    style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #f0f9ff 100%); border: 2px solid #e0f2fe; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(14, 165, 233, 0.15)'; this.style.borderColor='#0ea5e9';" 
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#e0f2fe';">
+              <mat-icon style="font-size: 28px; width: 28px; height: 28px; color: #0ea5e9;">tag</mat-icon>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Twitter Post</div>
+                <div style="font-size: 0.75rem; color: #64748b;">1024 × 512</div>
+              </div>
+            </button>
+            
+            <button (click)="selectPresetSize('story')" 
+                    style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #fdf4ff 100%); border: 2px solid #fae8ff; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(217, 70, 239, 0.15)'; this.style.borderColor='#d946ef';" 
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#fae8ff';">
+              <mat-icon style="font-size: 28px; width: 28px; height: 28px; color: #d946ef;">auto_stories</mat-icon>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">Instagram Story</div>
+                <div style="font-size: 0.75rem; color: #64748b;">1080 × 1920</div>
+              </div>
+            </button>
+            
+            <button (click)="selectPresetSize('youtube')" 
+                    style="padding: 1rem; background: linear-gradient(135deg, #fefeff 0%, #fef2f2 100%); border: 2px solid #fee2e2; border-radius: 12px; cursor: pointer; transition: all 0.3s; text-align: left; display: flex; align-items: center; gap: 0.75rem; grid-column: span 2;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(239, 68, 68, 0.15)'; this.style.borderColor='#ef4444';" 
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='#fee2e2';">
+              <mat-icon style="font-size: 28px; width: 28px; height: 28px; color: #ef4444;">play_circle</mat-icon>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a;">YouTube Thumbnail</div>
+                <div style="font-size: 0.75rem; color: #64748b;">1280 × 720</div>
+              </div>
+            </button>
           </div>
         </div>
       </div>
-      <div class="dialog-footer">
-        <button class="cancel-btn" (click)="closeCustomSizeDialog()">Cancel</button>
-        <button class="apply-btn" (click)="applyCustomSize()">Apply</button>
+      
+      <!-- Footer -->
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding: 1.5rem 2rem; border-top: 2px solid #e2e8f0; background: #f8fafc;">
+        <button (click)="closeCustomSizeDialog()" 
+                style="padding: 0.875rem 1.5rem; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.3s;"
+                onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1';" 
+                onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0';">
+          Cancel
+        </button>
+        <button (click)="applyCustomSize()" 
+                style="padding: 0.875rem 1.75rem; background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; color: white; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3); display: flex; align-items: center; gap: 0.5rem;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(168, 85, 247, 0.4)';" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(168, 85, 247, 0.3)';">
+          <mat-icon style="font-size: 20px; width: 20px; height: 20px;">check_circle</mat-icon>
+          <span>Apply Size</span>
+        </button>
       </div>
     </div>
   </div>
   
-  <!-- Image Crop Dialog -->
-  <div class="dialog-overlay" *ngIf="showCropDialog">
-    <div class="dialog-container crop-dialog">
-      <div class="dialog-header">
-        <h3>Crop Image</h3>
-        <button class="close-btn" (click)="closeCropDialog()">
-          <mat-icon>close</mat-icon>
+  <!-- Image Crop Dialog - Modern Design -->
+  <div *ngIf="showCropDialog" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 1.5rem; animation: fadeIn 0.3s ease-in-out;">
+    <div style="background: white; border-radius: 16px; width: 100%; max-width: 900px; max-height: 90vh; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); animation: scaleIn 0.3s ease-in-out;">
+      <!-- Modern Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 2px solid #e2e8f0; background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);">
+        <div style="display: flex; align-items: center; gap: 0.875rem;">
+          <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 10px; padding: 10px; display: flex; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);">
+            <mat-icon style="font-size: 24px; width: 24px; height: 24px;">crop</mat-icon>
+          </div>
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">Crop Image</h3>
+            <p style="font-size: 0.875rem; color: #64748b; margin: 0.25rem 0 0 0;">Adjust crop area and aspect ratio</p>
+          </div>
+        </div>
+        <button (click)="closeCropDialog()" 
+                style="background: #f1f5f9; border: none; border-radius: 10px; padding: 0.625rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center;"
+                onmouseover="this.style.background='#e2e8f0'; this.style.transform='rotate(90deg)';" 
+                onmouseout="this.style.background='#f1f5f9'; this.style.transform='rotate(0deg)';">
+          <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #64748b;">close</mat-icon>
         </button>
       </div>
-      <div class="dialog-content">
-        <div class="crop-container">
-          <img #cropImage [src]="currentImageToCrop?.src" alt="Image to crop">
+      
+      <!-- Crop Content -->
+      <div style="padding: 2rem; max-height: calc(90vh - 200px); overflow-y: auto;">
+        <!-- Crop Container -->
+        <div class="crop-container" style="position: relative; width: 100%; max-height: 500px; background: #1e293b; border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: inset 0 0 0 2px #334155;">
+          <img #cropImage [src]="currentImageToCrop?.src" alt="Image to crop" style="max-width: 100%; max-height: 500px; display: block; margin: auto;">
           <div class="crop-area" #cropArea
                [style.width.px]="cropWidth"
                [style.height.px]="cropHeight"
                [style.top.px]="cropTop"
                [style.left.px]="cropLeft"
-               (mousedown)="startCropDrag($event)">
-            <div class="resize-handle top-left" (mousedown)="startCropResize('top-left', $event)"></div>
-            <div class="resize-handle top-right" (mousedown)="startCropResize('top-right', $event)"></div>
-            <div class="resize-handle bottom-left" (mousedown)="startCropResize('bottom-left', $event)"></div>
-            <div class="resize-handle bottom-right" (mousedown)="startCropResize('bottom-right', $event)"></div>
+               (mousedown)="startCropDrag($event)"
+               style="position: absolute; border: 3px solid #06b6d4; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5), 0 0 20px rgba(6, 182, 212, 0.5); cursor: move; transition: box-shadow 0.2s;">
+            <div class="resize-handle top-left" (mousedown)="startCropResize('top-left', $event)" style="position: absolute; width: 16px; height: 16px; background: white; border: 3px solid #06b6d4; border-radius: 50%; top: -8px; left: -8px; cursor: nwse-resize; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);"></div>
+            <div class="resize-handle top-right" (mousedown)="startCropResize('top-right', $event)" style="position: absolute; width: 16px; height: 16px; background: white; border: 3px solid #06b6d4; border-radius: 50%; top: -8px; right: -8px; cursor: nesw-resize; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);"></div>
+            <div class="resize-handle bottom-left" (mousedown)="startCropResize('bottom-left', $event)" style="position: absolute; width: 16px; height: 16px; background: white; border: 3px solid #06b6d4; border-radius: 50%; bottom: -8px; left: -8px; cursor: nesw-resize; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);"></div>
+            <div class="resize-handle bottom-right" (mousedown)="startCropResize('bottom-right', $event)" style="position: absolute; width: 16px; height: 16px; background: white; border: 3px solid #06b6d4; border-radius: 50%; bottom: -8px; right: -8px; cursor: nwse-resize; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);"></div>
           </div>
         </div>
-        <div class="crop-controls">
-          <div class="crop-aspect-ratio">
-            <span>Aspect Ratio:</span>
-            <select [(ngModel)]="cropAspectRatio" (change)="applyCropAspectRatio()">
+        
+        <!-- Crop Controls -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+          <!-- Aspect Ratio Selector -->
+          <div style="background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%); padding: 1.25rem; border-radius: 12px; border: 2px solid #e2e8f0;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #06b6d4;">aspect_ratio</mat-icon>
+              <span>Aspect Ratio</span>
+            </label>
+            <select [(ngModel)]="cropAspectRatio" (change)="applyCropAspectRatio()"
+                    style="width: 100%; padding: 0.875rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; font-weight: 600; color: #0f172a; background: white; cursor: pointer; outline: none; transition: all 0.3s;"
+                    onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 4px rgba(6, 182, 212, 0.1)';" 
+                    onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
               <option value="free">🆓 Free Form</option>
               <option value="1:1">⬜ 1:1 (Square)</option>
               <option value="4:3">📺 4:3 (Standard)</option>
-              <option value="16:9">📱 16:9 (Widescreen)</option>
+              <option value="16:9">�️ 16:9 (Widescreen)</option>
               <option value="3:4">📄 3:4 (Portrait)</option>
               <option value="9:16">📱 9:16 (Mobile)</option>
             </select>
           </div>
-          <div class="crop-dimensions">
-            <span>Crop Size: {{cropWidth}} × {{cropHeight}} px</span>
+          
+          <!-- Crop Dimensions Display -->
+          <div style="background: linear-gradient(135deg, #fefeff 0%, #f0fdf4 100%); padding: 1.25rem; border-radius: 12px; border: 2px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+            <mat-icon style="font-size: 32px; width: 32px; height: 32px; color: #10b981; margin-bottom: 0.5rem;">photo_size_select_large</mat-icon>
+            <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 0.25rem;">Crop Size</div>
+            <div style="font-size: 1.125rem; font-weight: 700; color: #0f172a;">{{cropWidth}} × {{cropHeight}}</div>
+            <div style="font-size: 0.7rem; color: #64748b; margin-top: 0.25rem;">pixels</div>
           </div>
         </div>
       </div>
-      <div class="dialog-footer">
-        <button class="cancel-btn" (click)="closeCropDialog()">Cancel</button>
-        <button class="apply-btn" (click)="applyCrop()">Apply</button>
+      
+      <!-- Modern Footer -->
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding: 1.5rem 2rem; border-top: 2px solid #e2e8f0; background: #f8fafc;">
+        <button (click)="closeCropDialog()" 
+                style="padding: 0.875rem 1.5rem; background: white; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.3s;"
+                onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1';" 
+                onmouseout="this.style.background='white'; this.style.borderColor='#e2e8f0';">
+          Cancel
+        </button>
+        <button (click)="applyCrop()" 
+                style="padding: 0.875rem 1.75rem; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; color: white; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3); display: flex; align-items: center; gap: 0.5rem;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(6, 182, 212, 0.4)';" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(6, 182, 212, 0.3)';">
+          <mat-icon style="font-size: 20px; width: 20px; height: 20px;">check_circle</mat-icon>
+          <span>Apply Crop</span>
+        </button>
       </div>
     </div>
   </div>
   
-  <!-- Share Link Dialog -->
-  <div class="dialog-overlay" *ngIf="showShareDialog">
-    <div class="dialog-container share-dialog">
-      <div class="dialog-header">
-        <h3>Share Template</h3>
-        <button class="close-btn" (click)="closeShareDialog()">
-          <mat-icon>close</mat-icon>
+  <!-- Share Link Dialog - Modern Design -->
+  <div *ngIf="showShareDialog" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 1.5rem;">
+    <div style="background: white; border-radius: 16px; width: 100%; max-width: 550px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+      <!-- Modern Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-bottom: 2px solid #e2e8f0; background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);">
+        <div style="display: flex; align-items: center; gap: 0.875rem;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 10px; padding: 10px; display: flex; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+            <mat-icon style="font-size: 24px; width: 24px; height: 24px;">share</mat-icon>
+          </div>
+          <div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">Share Template</h3>
+            <p style="font-size: 0.875rem; color: #64748b; margin: 0.25rem 0 0 0;">Share with others to collaborate</p>
+          </div>
+        </div>
+        <button (click)="closeShareDialog()" 
+                style="background: #f1f5f9; border: none; border-radius: 10px; padding: 0.625rem; cursor: pointer; transition: all 0.3s;"
+                onmouseover="this.style.background='#e2e8f0'; this.style.transform='rotate(90deg)';" 
+                onmouseout="this.style.background='#f1f5f9'; this.style.transform='rotate(0deg)';">
+          <mat-icon style="font-size: 24px; width: 24px; height: 24px; color: #64748b;">close</mat-icon>
         </button>
       </div>
-      <div class="dialog-content">
-        <p>Share this link with others to let them view or edit this template:</p>
-        <div class="share-link">
-          <input type="text" [value]="shareLink" readonly #shareLinkInput>
-          <button (click)="copyShareLink(shareLinkInput)">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </div>
-        <div class="share-permissions">
-          <h4>Permissions</h4>
-          <div class="permission-option">
-            <input type="radio" id="view-only" name="permission" value="view" [(ngModel)]="sharePermission">
-            <label for="view-only">View only</label>
+      
+      <!-- Content -->
+      <div style="padding: 2rem;">
+        <!-- Share Link -->
+        <div style="margin-bottom: 2rem;">
+          <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #10b981;">link</mat-icon>
+            <span>Share Link</span>
+          </label>
+          <div style="display: flex; gap: 0.75rem;">
+            <input type="text" [value]="shareLink" readonly #shareLinkInput
+                   style="flex: 1; padding: 0.875rem 1rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; font-weight: 600; color: #0f172a; background: #f8fafc; outline: none;">
+            <button (click)="copyShareLink(shareLinkInput)"
+                    style="padding: 0.875rem 1.25rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; border-radius: 10px; color: white; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 0.875rem;"
+                    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(16, 185, 129, 0.4)';" 
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.3)';">
+              <mat-icon style="font-size: 20px; width: 20px; height: 20px;">content_copy</mat-icon>
+              <span>Copy</span>
+            </button>
           </div>
-          <div class="permission-option">
-            <input type="radio" id="can-edit" name="permission" value="edit" [(ngModel)]="sharePermission">
-            <label for="can-edit">Can edit</label>
+        </div>
+        
+        <!-- Permissions -->
+        <div style="background: linear-gradient(135deg, #fefeff 0%, #f0fdf4 100%); padding: 1.5rem; border-radius: 12px; border: 2px solid #d1fae5;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #10b981;">lock_person</mat-icon>
+            <span>Access Permissions</span>
+          </h4>
+          <div style="display: flex; flex-direction: column; gap: 0.875rem;">
+            <label for="view-only" style="display: flex; align-items: center; gap: 0.875rem; padding: 1rem; background: white; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s;"
+                   onmouseover="this.style.borderColor='#10b981'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.1)';" 
+                   onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+              <input type="radio" id="view-only" name="permission" value="view" [(ngModel)]="sharePermission"
+                     style="width: 20px; height: 20px; accent-color: #10b981; cursor: pointer;">
+              <div style="flex: 1;">
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">visibility</mat-icon>
+                  <span>View Only</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #64748b;">Users can only view the template</div>
+              </div>
+            </label>
+            
+            <label for="can-edit" style="display: flex; align-items: center; gap: 0.875rem; padding: 1rem; background: white; border: 2px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: all 0.3s;"
+                   onmouseover="this.style.borderColor='#10b981'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.1)';" 
+                   onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';">
+              <input type="radio" id="can-edit" name="permission" value="edit" [(ngModel)]="sharePermission"
+                     style="width: 20px; height: 20px; accent-color: #10b981; cursor: pointer;">
+              <div style="flex: 1;">
+                <div style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #10b981;">edit</mat-icon>
+                  <span>Can Edit</span>
+                </div>
+                <div style="font-size: 0.75rem; color: #64748b;">Users can view and make changes</div>
+              </div>
+            </label>
           </div>
         </div>
       </div>
-      <div class="dialog-footer">
-        <button class="cancel-btn" (click)="closeShareDialog()">Close</button>
-        <button class="apply-btn" (click)="generateNewShareLink()">Generate New Link</button>
+      
+      <!-- Footer -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2rem; border-top: 2px solid #e2e8f0; background: #f8fafc;">
+        <button (click)="generateNewShareLink()" 
+                style="padding: 0.875rem 1.5rem; background: white; border: 2px solid #10b981; border-radius: 10px; font-size: 0.875rem; font-weight: 700; color: #10b981; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 0.5rem;"
+                onmouseover="this.style.background='#f0fdf4'; this.style.transform='scale(1.02)';" 
+                onmouseout="this.style.background='white'; this.style.transform='scale(1)';">
+          <mat-icon style="font-size: 20px; width: 20px; height: 20px;">refresh</mat-icon>
+          <span>Generate New Link</span>
+        </button>
+        <button (click)="closeShareDialog()" 
+                style="padding: 0.875rem 1.75rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: none; border-radius: 10px; font-size: 0.875rem; font-weight: 700; color: white; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(16, 185, 129, 0.4)';" 
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.3)';">
+          Done
+        </button>
       </div>
     </div>
   </div>
