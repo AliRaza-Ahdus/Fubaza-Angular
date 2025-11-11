@@ -56,6 +56,7 @@
           <button (click)="exportTemplate('jpg', 'standard')">JPG (Standard)</button>
           <button (click)="exportTemplate('jpg', 'high')">JPG (High-Res)</button>
           <button (click)="exportTemplate('pdf', 'standard')">PDF</button>
+          <button (click)="generateTemplateJson()">JSON</button>
           <button (click)="generateShareLink()">Share Link</button>
         </div>
       </div>
@@ -139,120 +140,6 @@
         </div>
       </div>
 
-      <!-- Font Library Section -->
-      <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(20, 184, 166, 0.1);">
-        <!-- Modern Header -->
-        <h3 style="display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
-          <div style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border-radius: 8px; padding: 8px; display: flex; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);">
-            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">text_format</mat-icon>
-          </div>
-          <span>Font Library</span>
-        </h3>
-        
-        <!-- Modern Search -->
-        <div style="position: relative; margin-bottom: 0.875rem;">
-          <mat-icon style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); font-size: 18px; color: #94a3b8;">search</mat-icon>
-          <input type="text" [(ngModel)]="fontSearchQuery" (input)="filterFonts()" placeholder="Search fonts..."
-                 style="width: 100%; padding: 0.75rem 2.75rem 0.75rem 2.75rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.875rem; outline: none; transition: all 0.3s; background: #f8fafc;"
-                 onfocus="this.style.borderColor='#14b8a6'; this.style.background='white';" 
-                 onblur="this.style.borderColor='#e2e8f0'; this.style.background='#f8fafc';">
-          <button *ngIf="fontSearchQuery" (click)="fontSearchQuery = ''; filterFonts()" 
-                  style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: #f1f5f9; border: none; cursor: pointer; padding: 0.375rem; color: #64748b; border-radius: 6px; display: flex; align-items: center; transition: all 0.3s;"
-                  onmouseover="this.style.background='#e2e8f0'; this.style.color='#0f172a';" 
-                  onmouseout="this.style.background='#f1f5f9'; this.style.color='#64748b';">
-            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">close</mat-icon>
-          </button>
-        </div>
-
-        <!-- Modern Category Tabs -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.875rem; overflow-x: auto; padding-bottom: 0.25rem;">
-          <button (click)="setFontCategory('all')" [class.active]="activeFontCategory === 'all'"
-                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
-                  [style.background]="activeFontCategory === 'all' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
-                  [style.color]="activeFontCategory === 'all' ? 'white' : '#64748b'"
-                  [style.border-color]="activeFontCategory === 'all' ? '#14b8a6' : '#e2e8f0'"
-                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
-                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">apps</mat-icon>
-            <span>All</span>
-          </button>
-          <button (click)="setFontCategory('sans-serif')" [class.active]="activeFontCategory === 'sans-serif'"
-                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
-                  [style.background]="activeFontCategory === 'sans-serif' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
-                  [style.color]="activeFontCategory === 'sans-serif' ? 'white' : '#64748b'"
-                  [style.border-color]="activeFontCategory === 'sans-serif' ? '#14b8a6' : '#e2e8f0'"
-                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
-                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_fields</mat-icon>
-            <span>Sans</span>
-          </button>
-          <button (click)="setFontCategory('serif')" [class.active]="activeFontCategory === 'serif'"
-                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
-                  [style.background]="activeFontCategory === 'serif' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
-                  [style.color]="activeFontCategory === 'serif' ? 'white' : '#64748b'"
-                  [style.border-color]="activeFontCategory === 'serif' ? '#14b8a6' : '#e2e8f0'"
-                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
-                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">format_quote</mat-icon>
-            <span>Serif</span>
-          </button>
-          <button (click)="setFontCategory('display')" [class.active]="activeFontCategory === 'display'"
-                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
-                  [style.background]="activeFontCategory === 'display' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
-                  [style.color]="activeFontCategory === 'display' ? 'white' : '#64748b'"
-                  [style.border-color]="activeFontCategory === 'display' ? '#14b8a6' : '#e2e8f0'"
-                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
-                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">star</mat-icon>
-            <span>Display</span>
-          </button>
-          <button (click)="setFontCategory('handwriting')" [class.active]="activeFontCategory === 'handwriting'"
-                  style="padding: 0.625rem 0.875rem; font-size: 0.75rem; border-radius: 8px; border: 2px solid transparent; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 0.375rem; transition: all 0.3s; font-weight: 600;"
-                  [style.background]="activeFontCategory === 'handwriting' ? 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)' : '#f8fafc'"
-                  [style.color]="activeFontCategory === 'handwriting' ? 'white' : '#64748b'"
-                  [style.border-color]="activeFontCategory === 'handwriting' ? '#14b8a6' : '#e2e8f0'"
-                  onmouseover="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f1f5f9'; this.style.borderColor='#14b8a6'; }" 
-                  onmouseout="if(this.style.background !== 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)') { this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; }">
-            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">draw</mat-icon>
-            <span>Script</span>
-          </button>
-        </div>
-
-        <!-- Modern Font List -->
-        <div style="max-height: 320px; overflow-y: auto; margin-bottom: 1rem; padding-right: 0.25rem;">
-          <div *ngFor="let font of filteredFonts; trackBy: trackByFont" 
-               (click)="applyFont(font)"
-               [class.selected]="isSelectedFont(font)"
-               style="padding: 0.875rem; background: linear-gradient(135deg, #fefeff 0%, #f8fcfc 100%); border: 2px solid #e2e8f0; border-radius: 10px; margin-bottom: 0.625rem; cursor: pointer; transition: all 0.3s;"
-               onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='0 4px 12px rgba(20, 184, 166, 0.12)'; this.style.borderColor='#14b8a6';" 
-               onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0';">
-            <div [ngStyle]="getFontPreviewStyle(font)" style="font-size: 1rem; margin-bottom: 0.5rem; color: #0f172a; font-weight: 600;">
-              {{ font.previewText || 'Aa Bb Cc 123' }}
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
-                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">{{ font.name }}</span>
-                <span style="font-size: 0.7rem; padding: 0.25rem 0.5rem; background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%); color: #0369a1; border-radius: 6px; font-weight: 600;">{{ font.category }}</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon *ngIf="font.premium" style="font-size: 18px; width: 18px; height: 18px; color: #f59e0b;">workspace_premium</mat-icon>
-                <mat-icon *ngIf="isSelectedFont(font)" style="font-size: 18px; width: 18px; height: 18px; color: #10b981;">check_circle</mat-icon>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modern Upload Button -->
-        <button (click)="triggerFontUpload()" 
-                style="width: 100%; padding: 0.875rem; background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.625rem; font-size: 0.875rem; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.25);"
-                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(20, 184, 166, 0.35)';" 
-                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(20, 184, 166, 0.25)';">
-          <mat-icon style="font-size: 20px; width: 20px; height: 20px;">cloud_upload</mat-icon>
-          <span>Upload Custom Font</span>
-        </button>
-        <input type="file" #fontUploadRef style="display: none" accept=".ttf,.otf,.woff,.woff2" (change)="onFontFileSelected($event)">
-      </div>
-      
       <!-- Media & Shapes Section -->
       <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(244, 63, 94, 0.1);">
         <!-- Modern Header -->
