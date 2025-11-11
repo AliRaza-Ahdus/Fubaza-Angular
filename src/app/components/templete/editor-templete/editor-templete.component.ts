@@ -354,6 +354,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   cropTop: number = 0;
   cropLeft: number = 0;
   cropAspectRatio: string = 'free';
+  isCropping: boolean = false;
   showShareDialog: boolean = false;
   shareLink: string = '';
   sharePermission: 'view' | 'edit' = 'view';
@@ -1462,11 +1463,37 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       newY = Math.round(newY / this.gridSize) * this.gridSize;
     }
 
-    // Apply magnetic snapping if enabled
-    if (this.selectedElement !== null) {
-      const snappedPosition = this.applyMagneticSnapping(this.selectedElement, newX, newY);
-      newX = snappedPosition.x;
-      newY = snappedPosition.y;
+    // Apply canvas constraints if enabled
+    if (this.constrainToCanvas) {
+      // For single element drag
+      if (this.selectedElement !== null) {
+        const element = this.canvasElements[this.selectedElement];
+        const elementWidth = element.width || 0;
+        const elementHeight = element.height || 0;
+        
+        newX = Math.max(0, Math.min(newX, this.canvasWidth - elementWidth));
+        newY = Math.max(0, Math.min(newY, this.canvasHeight - elementHeight));
+      }
+      // For multi-selection drag, use the bounds of all selected elements
+      else if (this.selectedElements.length > 0) {
+        // Calculate the bounding box of all selected elements
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        
+        this.selectedElements.forEach(index => {
+          const element = this.canvasElements[index];
+          minX = Math.min(minX, element.x);
+          minY = Math.min(minY, element.y);
+          maxX = Math.max(maxX, element.x + (element.width || 0));
+          maxY = Math.max(maxY, element.y + (element.height || 0));
+        });
+        
+        const selectionWidth = maxX - minX;
+        const selectionHeight = maxY - minY;
+        
+        // Constrain the entire selection
+        newX = Math.max(0, Math.min(newX, this.canvasWidth - selectionWidth));
+        newY = Math.max(0, Math.min(newY, this.canvasHeight - selectionHeight));
+      }
     }
 
     // Check for collisions and get warnings
@@ -5952,6 +5979,16 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     // Reset selection
     this.selectedElement = null;
     this.selectedElements = [];
+  }
+
+  // Getter for safe clip-path calculation
+  get cropImageClipPath(): string {
+    if (!this.isCropping || !this.currentImageToCrop) {
+      return 'none';
+    }
+    const width = this.currentImageToCrop.width || 0;
+    const height = this.currentImageToCrop.height || 0;
+    return `inset(${this.cropTop}px ${width - this.cropLeft - this.cropWidth}px ${height - this.cropTop - this.cropHeight}px ${this.cropLeft}px)`;
   }
 }
 
