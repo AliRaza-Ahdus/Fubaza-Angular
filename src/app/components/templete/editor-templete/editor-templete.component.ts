@@ -751,18 +751,24 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Professional canvas drag handlers
   onCanvasDragEnter(event: DragEvent): void {
     event.preventDefault();
-    this.isDragOverCanvas = true;
+    // Only show drop overlay when dragging external elements (from sidebar), not when moving existing elements
+    if (this.isDraggingElement) {
+      this.isDragOverCanvas = true;
+    }
   }
 
   onCanvasDragLeave(event: DragEvent): void {
     event.preventDefault();
-    // Only set to false if we're actually leaving the canvas area
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = event.clientX;
-    const y = event.clientY;
+    // Only hide drop overlay when dragging external elements
+    if (this.isDraggingElement) {
+      // Only set to false if we're actually leaving the canvas area
+      const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+      const x = event.clientX;
+      const y = event.clientY;
 
-    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
-      this.isDragOverCanvas = false;
+      if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+        this.isDragOverCanvas = false;
+      }
     }
   }
 
@@ -775,8 +781,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
-    if (!event.dataTransfer) return;
-    
+    // Only process drops when dragging external elements
+    if (!this.isDraggingElement || !event.dataTransfer) return;
+
     if (!this.canvasRef || !this.canvasRef.nativeElement) {
       console.warn('Canvas reference not available');
       return;
@@ -796,17 +803,21 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     }
 
     const canvasRect = this.canvasRef.nativeElement.getBoundingClientRect();
-    
+
     // Calculate position relative to canvas, accounting for zoom and pan transforms
     const rawX = event.clientX - canvasRect.left;
     const rawY = event.clientY - canvasRect.top;
-    
+
     // Account for zoom level and pan transforms
     const scale = this.zoomLevel / 100;
     const x = (rawX / scale) - (this.panX / scale);
     const y = (rawY / scale) - (this.panY / scale);
 
     this.addElementToCanvas(elementType, elementData, x, y);
+
+    // Reset the dragging state after successful drop
+    this.isDraggingElement = false;
+    this.isDragOverCanvas = false;
   }
 
   // Add element to canvas - core functionality

@@ -915,21 +915,25 @@
         <!-- Quick Actions (Compact Grid) -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; margin-bottom: 0.875rem;">
           <button title="Bring Front" (click)="bringToFront()"
+                  [disabled]="selectedElement === null || selectedElement >= canvasElements.length - 1"
                   style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
             <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">flip_to_front</mat-icon>
             <span style="font-size: 0.6rem; color: #94a3b8;">Front</span>
           </button>
           <button title="Forward" (click)="bringForward()"
+                  [disabled]="selectedElement === null || selectedElement >= canvasElements.length - 1"
                   style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
             <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">arrow_upward</mat-icon>
             <span style="font-size: 0.6rem; color: #94a3b8;">Up</span>
           </button>
           <button title="Backward" (click)="sendBackward()"
+                  [disabled]="selectedElement === null || selectedElement <= 0"
                   style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
             <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">arrow_downward</mat-icon>
             <span style="font-size: 0.6rem; color: #94a3b8;">Down</span>
           </button>
           <button title="Send Back" (click)="sendToBack()"
+                  [disabled]="selectedElement === null || selectedElement <= 0"
                   style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.15s;">
             <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #64748b;">flip_to_back</mat-icon>
             <span style="font-size: 0.6rem; color: #94a3b8;">Back</span>
@@ -1397,10 +1401,6 @@
                     [class.active]="activeImageFilterTab === 'basic'">
               Basic
             </button>
-            <button class="filter-tab" (click)="activeImageFilterTab = 'advanced'"
-                    [class.active]="activeImageFilterTab === 'advanced'">
-              Advanced
-            </button>
             <button class="filter-tab" (click)="activeImageFilterTab = 'blend'"
                     [class.active]="activeImageFilterTab === 'blend'">
               Blend
@@ -1468,14 +1468,6 @@
             </div>
           </div>
 
-          <!-- Advanced Filters -->
-          <div class="filter-content" *ngIf="activeImageFilterTab === 'advanced'">
-            <div class="advanced-placeholder">
-              <mat-icon>auto_fix_high</mat-icon>
-              <p>Advanced filters coming soon</p>
-            </div>
-          </div>
-
           <!-- Blend Modes -->
           <div class="filter-content" *ngIf="activeImageFilterTab === 'blend'">
             <label class="blend-mode-label">Blend Mode</label>
@@ -1505,13 +1497,13 @@
             <span>Background</span>
           </h4>
 
-          <button class="background-removal-btn" (click)="toggleBackgroundRemoval()"
+          <button class="remove-bg-btn" (click)="toggleBackgroundRemoval()"
                   [class.active]="isBackgroundRemovalActive()">
             <mat-icon>content_cut</mat-icon>
             <span>Remove Background</span>
           </button>
 
-          <div class="preserve-transparency-control">
+          <div class="preserve-alpha-control">
             <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].preserveTransparency" (change)="preserveTransparency()"
                    id="preserveAlpha">
             <label for="preserveAlpha">Preserve PNG Alpha Channel</label>
@@ -1519,25 +1511,25 @@
         </div>
         
         <!-- Effects & Styling -->
-        <div class="effects-section">
+        <div class="effects-styling-section">
           <h4 class="section-header">
             <mat-icon class="header-icon">auto_awesome</mat-icon>
             <span>Effects</span>
           </h4>
 
-          <div class="effects-content">
-            <div class="opacity-control">
-              <div class="control-label">
-                <span>Opacity</span>
-                <span class="value-display">{{ ((canvasElements[selectedElement].opacity || 1) * 100).toFixed(0) }}%</span>
+          <div class="effects-controls">
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Opacity</span>
+                <span class="control-value">{{ ((canvasElements[selectedElement].opacity || 1) * 100).toFixed(0) }}%</span>
               </div>
               <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1"
                      class="opacity-range">
             </div>
 
-            <div class="shadow-control">
+            <div class="control-group">
               <label class="control-label">Shadow</label>
-              <div class="shadow-buttons">
+              <div class="shadow-grid">
                 <button class="shadow-btn" (click)="canvasElements[selectedElement].boxShadow = 'none'; updateElement()"
                         [class.active]="canvasElements[selectedElement].boxShadow === 'none'">
                   None
@@ -1568,7 +1560,7 @@
 
           <div class="border-content">
             <label class="border-style-label">Border Style</label>
-            <div class="border-style-buttons">
+            <div class="border-style-grid">
               <button class="border-style-btn" (click)="canvasElements[selectedElement].border = 'none'; updateElement()"
                       [class.active]="canvasElements[selectedElement].border === 'none'">
                 None
