@@ -1950,12 +1950,18 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
         elementRect.top > viewportRect.bottom
       );
 
+      // Don't hide elements that are currently being dragged
+      const isBeingDragged = this.isDragging && (
+        (this.selectedElement === index) ||
+        (this.selectedElements.includes(index))
+      );
+
       this.visibleElementsCache.set(index, isVisible);
 
       // Update element visibility in DOM
       const elementDiv = document.querySelector(`[data-element-index="${index}"]`) as HTMLElement;
       if (elementDiv) {
-        elementDiv.style.display = isVisible ? 'block' : 'none';
+        elementDiv.style.display = (isVisible || isBeingDragged) ? 'block' : 'none';
       }
     });
   }
