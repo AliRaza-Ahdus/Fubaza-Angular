@@ -1279,8 +1279,21 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.isResizing = true;
     this.resizeHandle = handle;
     this.selectedElement = index;
-    this.dragStartX = event.clientX;
-    this.dragStartY = event.clientY;
+    
+    // Get the canvas workspace element to calculate proper coordinates
+    const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
+    if (!canvasWorkspace) {
+      console.error('Canvas workspace not found!');
+      return;
+    }
+    
+    const workspaceRect = canvasWorkspace.getBoundingClientRect();
+    
+    // Convert screen coordinates to canvas workspace coordinates and store as canvas coordinates
+    const scale = this.zoomLevel / 100;
+    this.dragStartX = (event.clientX - workspaceRect.left) / scale - (this.panX / scale);
+    this.dragStartY = (event.clientY - workspaceRect.top) / scale - (this.panY / scale);
+    
     this.elementStartX = this.canvasElements[index].x;
     this.elementStartY = this.canvasElements[index].y;
     this.elementStartWidth = this.canvasElements[index].width;
@@ -1374,8 +1387,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       console.log('Canvas coordinates (scaled):', canvasX, canvasY);
 
       // Calculate the delta from the initial resize position
-      const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
-      const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
+      const dx = canvasX - this.dragStartX;
+      const dy = canvasY - this.dragStartY;
       console.log('Delta from start:', dx, dy);
 
       const element = this.canvasElements[this.selectedElement];
@@ -6006,6 +6019,21 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     const width = this.currentImageToCrop.width || 0;
     const height = this.currentImageToCrop.height || 0;
     return `inset(${this.cropTop}px ${width - this.cropLeft - this.cropWidth}px ${height - this.cropTop - this.cropHeight}px ${this.cropLeft}px)`;
+  }
+
+  // Text editing methods
+  startTextEditing(index: number): void {
+    this.canvasElements[index].editing = true;
+    // Prevent event bubbling to avoid triggering selection
+    event?.stopPropagation();
+  }
+
+  finishTextEditing(index: number, event: any): void {
+    this.canvasElements[index].editing = false;
+    if (event.target && event.target.textContent !== undefined) {
+      this.canvasElements[index].content = event.target.textContent;
+      this.updateElement();
+    }
   }
 }
 
