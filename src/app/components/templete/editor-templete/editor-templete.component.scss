@@ -745,6 +745,54 @@ $space-4: 1rem; // 16px
       }
     }
 
+    .test-drag-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 2px solid $border-color;
+      background-color: $bg-secondary;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (min-width: $breakpoint-tablet) {
+        display: flex;
+      }
+
+      &:hover {
+        border-color: $warning-color;
+        background-color: rgba($warning-color, 0.1);
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+
+        mat-icon {
+          color: $warning-color;
+          transform: scale(1.1);
+        }
+
+        span {
+          color: $warning-color;
+        }
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: $text-secondary;
+      }
+
+      span {
+        margin-left: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-secondary;
+        transition: color 0.3s ease;
+      }
+    }
+
     .save-btn, .exit-btn {
       height: 48px;
       border-radius: 16px;

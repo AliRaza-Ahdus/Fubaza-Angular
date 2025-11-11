@@ -5877,5 +5877,81 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.navigateMobilePanels(direction);
     }
   }
+
+  // Test drag functionality programmatically
+  testDragFunctionality(): void {
+    console.log('🧪🧪🧪 TESTING DRAG FUNCTIONALITY 🧪🧪🧪');
+
+    // Test 1: Check if elements exist
+    console.log('Test 1: Elements check');
+    console.log('Canvas elements count:', this.canvasElements.length);
+    if (this.canvasElements.length === 0) {
+      console.warn('No elements to test drag on. Please add some elements first.');
+      return;
+    }
+
+    // Test 2: Simulate element selection
+    console.log('Test 2: Element selection simulation');
+    const testElementIndex = 0;
+    const testElement = this.canvasElements[testElementIndex];
+    console.log('Testing element:', testElement);
+
+    // Simulate mousedown event
+    const mockMouseEvent = {
+      clientX: 100,
+      clientY: 100,
+      button: 0,
+      stopPropagation: () => {}
+    } as MouseEvent;
+
+    // Test selectElement
+    this.selectElement(testElementIndex, mockMouseEvent);
+    console.log('After selection - selectedElement:', this.selectedElement);
+    console.log('After selection - isDragging:', this.isDragging);
+
+    // Test 3: Simulate drag start
+    console.log('Test 3: Drag start simulation');
+    this.startElementDrag(testElementIndex, mockMouseEvent);
+    console.log('After drag start - drag properties:', {
+      isDragging: this.isDragging,
+      dragStartX: this.dragStartX,
+      dragStartY: this.dragStartY,
+      elementStartX: this.elementStartX,
+      elementStartY: this.elementStartY
+    });
+
+    // Test 4: Simulate mouse move (drag)
+    console.log('Test 4: Mouse move simulation');
+    const mockMoveEvent = {
+      clientX: 150,
+      clientY: 150,
+      preventDefault: () => {}
+    } as MouseEvent;
+
+    // Simulate the mouse move that triggers performOptimizedDragUpdate
+    this.onMouseMove(mockMoveEvent);
+
+    // Test 5: Check element position update
+    console.log('Test 5: Position update check');
+    console.log('Element position after drag:', {
+      x: testElement.x,
+      y: testElement.y
+    });
+
+    // Test 6: Simulate mouse up (end drag)
+    console.log('Test 6: Mouse up simulation');
+    this.onMouseUp();
+    console.log('After mouse up - isDragging:', this.isDragging);
+    console.log('Final element position:', {
+      x: testElement.x,
+      y: testElement.y
+    });
+
+    console.log('🧪🧪🧪 DRAG TEST COMPLETED 🧪🧪🧪');
+
+    // Reset selection
+    this.selectedElement = null;
+    this.selectedElements = [];
+  }
 }
 
