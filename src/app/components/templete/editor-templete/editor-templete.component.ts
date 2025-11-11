@@ -415,7 +415,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   lastSelectedElement: number | null = null;
   
   // Canvas constraints
-  constrainToCanvas: boolean = false;
+  constrainToCanvas: boolean = true;
   
   // Clipboard functionality
   clipboardElements: CanvasElement[] = [];
