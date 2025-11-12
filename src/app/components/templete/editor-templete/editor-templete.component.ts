@@ -123,7 +123,7 @@ interface CanvasElement {
   invert?: number;
   
   // Image masking
-  maskType?: 'rectangle' | 'circle' | 'rounded' | 'custom';
+  maskType?: 'rectangle' | 'circle' | 'custom';
   maskFeather?: number;
   
   // Shape specific properties
@@ -3432,9 +3432,6 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     if (element.maskType === 'circle') {
       return `clip-path: circle(50% at center);`;
-    } else if (element.maskType === 'rounded') {
-      const radius = element.borderRadius || 20;
-      return `border-radius: ${radius}px;`;
     } else if (element.maskType === 'custom') {
       // Custom mask would require more complex implementation
       return 'none';
