@@ -1,5 +1,8 @@
 /* Template Editor Component - Modern Design */
 
+// Import Sass color functions
+@use "sass:color";
+
 // Variables for responsive breakpoints
 $breakpoint-mobile: 576px;
 $breakpoint-tablet: 768px;
@@ -1571,7 +1574,6 @@ $space-4: 1rem; // 16px
   }
   
   // Remove fancy effects for clean Canva look
-  position: relative;
 
   @media (min-width: $breakpoint-tablet) {
     padding: 0 2rem;
@@ -5525,7 +5527,7 @@ $space-4: 1rem; // 16px
         right: -10px;
         width: 20px;
         height: 20px;
-        background: linear-gradient(135deg, $secondary-color 0%, darken($secondary-color, 10%) 100%);
+        background: linear-gradient(135deg, $secondary-color 0%, color.adjust($secondary-color, $lightness: -10%) 100%);
         border: 3px solid white;
         border-radius: 50%;
         box-shadow: 0 4px 12px rgba($secondary-color, 0.4);
@@ -6824,7 +6826,8 @@ $space-4: 1rem; // 16px
 
         .text-controls {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: repeat(2, 1fr);
+          grid-template-rows: repeat(2, 1fr);
           gap: 1rem;
 
           .font-size-control {
@@ -6882,6 +6885,70 @@ $space-4: 1rem; // 16px
                 border-color: rgba($primary-color, 0.6);
                 transform: scale(1.02);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+              }
+            }
+          }
+
+          .line-height-control {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            span {
+              font-size: 0.875rem;
+              font-weight: 500;
+              color: $text-primary;
+            }
+
+            input[type="number"] {
+              padding: 0.75rem;
+              border: 2px solid rgba($border-color, 0.8);
+              border-radius: $radius-md;
+              background: $panel-bg;
+              color: $text-primary;
+              font-size: 0.875rem;
+              transition: all $transition-normal ease;
+
+              &:focus {
+                outline: none;
+                border-color: $secondary-color;
+                box-shadow: 0 0 0 3px rgba($secondary-color, 0.1);
+              }
+
+              &:hover {
+                border-color: rgba($secondary-color, 0.6);
+              }
+            }
+          }
+
+          .letter-spacing-control {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            span {
+              font-size: 0.875rem;
+              font-weight: 500;
+              color: $text-primary;
+            }
+
+            input[type="number"] {
+              padding: 0.75rem;
+              border: 2px solid rgba($border-color, 0.8);
+              border-radius: $radius-md;
+              background: $panel-bg;
+              color: $text-primary;
+              font-size: 0.875rem;
+              transition: all $transition-normal ease;
+
+              &:focus {
+                outline: none;
+                border-color: $accent-color;
+                box-shadow: 0 0 0 3px rgba($accent-color, 0.1);
+              }
+
+              &:hover {
+                border-color: rgba($accent-color, 0.6);
               }
             }
           }

@@ -3482,6 +3482,34 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.canvasElements = [...this.canvasElements];
     this.saveToHistory();
   }
+
+  // Adjust line height
+  adjustLineHeight(delta: number): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const currentLineHeight = element.lineHeight || 1.2;
+    const newLineHeight = Math.max(0.5, Math.min(3.0, currentLineHeight + delta));
+    element.lineHeight = newLineHeight;
+    
+    this.updateElement();
+  }
+
+  // Adjust letter spacing
+  adjustLetterSpacing(delta: number): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    const currentLetterSpacing = element.letterSpacing || 0;
+    const newLetterSpacing = Math.max(-5, Math.min(10, currentLetterSpacing + delta));
+    element.letterSpacing = newLetterSpacing;
+    
+    this.updateElement();
+  }
   
   // Update custom shadow
   updateCustomShadow(): void {
@@ -5485,6 +5513,73 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       fontSize: '18px',
       fontWeight: element.fontWeight || 'normal'
     };
+  }
+
+  // Font Dropdown Control
+  showFontDropdown: boolean = false;
+
+  toggleFontDropdown(): void {
+    this.showFontDropdown = !this.showFontDropdown;
+  }
+
+  getSelectedFontName(): string {
+    if (this.selectedElement === null) return 'Select Font';
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text' || !element.fontFamily) return 'Select Font';
+    
+    // Find the font in the library
+    const font = this.fontLibrary.find(f => f.family === element.fontFamily);
+    return font ? font.name : this.extractFontName(element.fontFamily);
+  }
+
+  getSelectedFontCategory(): string {
+    if (this.selectedElement === null) return '';
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text' || !element.fontFamily) return '';
+    
+    // Find the font in the library
+    const font = this.fontLibrary.find(f => f.family === element.fontFamily);
+    return font ? this.formatCategory(font.category) : '';
+  }
+
+  private extractFontName(fontFamily: string): string {
+    // Extract the first font name from the font-family string
+    return fontFamily.split(',')[0].replace(/['"]/g, '').trim();
+  }
+
+  private formatCategory(category: string): string {
+    return category.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  }
+
+  selectFont(font: FontItem): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    if (element.type !== 'text') return;
+    
+    // Load Google Font if needed
+    if (font.source === 'google') {
+      this.loadGoogleFont(font.name);
+    }
+    
+    element.fontFamily = font.family;
+    this.showFontDropdown = false;
+    this.updateElement();
+  }
+
+  // Close dropdown when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const fontDropdownContainer = target.closest('.font-dropdown-container');
+    
+    if (!fontDropdownContainer && this.showFontDropdown) {
+      this.showFontDropdown = false;
+    }
   }
 
   // Font Size Adjustment
