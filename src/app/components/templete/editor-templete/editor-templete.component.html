@@ -714,6 +714,7 @@
                      [style.webkitTextStrokeWidth.px]="element.textStrokeWidth"
                      [style.webkitTextStrokeColor]="element.textStrokeColor"
                      [style.textShadow]="element.textShadow"
+                     [style.boxShadow]="element.boxShadow"
                      [style.transform]="getTextTransform(element)"
                      [style.opacity]="element.opacity || 1"
                      [contentEditable]="element.editing"
@@ -1364,133 +1365,6 @@
         </div>
       </div>
         
-        <!-- Color & Style (Modern Design) -->
-        <div style="background: linear-gradient(135deg, #fefeff 0%, #fef3f2 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #fed7d7;">
-          <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
-            <div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">palette</mat-icon>
-            </div>
-            <span>Color & Style</span>
-          </h4>
-
-          <!-- Color Type Tabs -->
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; background: white; padding: 0.375rem; border-radius: 10px; border: 1px solid #e5e7eb;">
-            <button [class.active]="activeColorTab === 'solid'" (click)="activeColorTab = 'solid'"
-                    style="flex: 1; padding: 0.5rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-              <div style="width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6); border: 1px solid #d1d5db;"></div>
-              Solid
-            </button>
-            <button [class.active]="activeColorTab === 'gradient'" (click)="activeColorTab = 'gradient'"
-                    style="flex: 1; padding: 0.5rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
-              <div style="width: 12px; height: 12px; background: linear-gradient(45deg, #ef4444, #3b82f6); border-radius: 50%; border: 1px solid #d1d5db;"></div>
-              Gradient
-            </button>
-          </div>
-
-          <!-- Solid Color Section -->
-          <div *ngIf="activeColorTab === 'solid'">
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">color_lens</mat-icon>
-                Color Picker
-              </div>
-              <div style="background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
-                <div style="position: relative;">
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()"
-                         style="width: 60px; height: 60px; border: 3px solid #e5e7eb; border-radius: 12px; cursor: pointer; outline: none;">
-                  <div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
-                       [style.background-color]="canvasElements[selectedElement].color"></div>
-                </div>
-                <div style="flex: 1;">
-                  <div style="font-size: 0.875rem; font-weight: 600; color: #111827; margin-bottom: 0.25rem;">Selected Color</div>
-                  <div style="font-size: 0.7rem; color: #6b7280; font-family: monospace; background: #f9fafb; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #e5e7eb;">
-                    {{ canvasElements[selectedElement].color || '#000000' }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">palette</mat-icon>
-                Quick Colors
-              </div>
-              <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.5rem;">
-                <div *ngFor="let color of colorPresets; let i = index"
-                     [style.background-color]="color"
-                     [class.selected]="canvasElements[selectedElement].color === color"
-                     (click)="applyColor(color)"
-                     style="aspect-ratio: 1; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; position: relative;">
-                  <div *ngIf="canvasElements[selectedElement].color === color"
-                       style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px;">
-                    ✓
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Gradient Section -->
-          <div *ngIf="activeColorTab === 'gradient'">
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">gradient</mat-icon>
-                Gradient Type
-              </div>
-              <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()"
-                      style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: #111827; background: white; cursor: pointer; outline: none; transition: all 0.2s;">
-                <option value="">No Gradient</option>
-                <option value="linear">Linear Gradient</option>
-                <option value="radial">Radial Gradient</option>
-              </select>
-            </div>
-
-            <div *ngIf="canvasElements[selectedElement].textGradientType" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
-              <div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Start Color</div>
-                <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()"
-                         style="width: 40px; height: 40px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; outline: none;">
-                  <div style="flex: 1; font-size: 0.7rem; color: #6b7280; font-family: monospace;">
-                    {{ canvasElements[selectedElement].textGradientColor1 || '#000000' }}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">End Color</div>
-                <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
-                  <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()"
-                         style="width: 40px; height: 40px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; outline: none;">
-                  <div style="flex: 1; font-size: 0.7rem; color: #6b7280; font-family: monospace;">
-                    {{ canvasElements[selectedElement].textGradientColor2 || '#ffffff' }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">rotate_right</mat-icon>
-                Direction
-              </div>
-              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                  <span style="font-size: 0.875rem; font-weight: 600; color: #111827;">Angle</span>
-                  <span style="font-size: 0.875rem; font-weight: 700; color: #f97316;">{{ canvasElements[selectedElement].textGradientAngle || 0 }}°</span>
-                </div>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" (change)="updateTextGradient()"
-                       min="0" max="360" step="15"
-                       style="width: 100%; height: 8px; border-radius: 4px; outline: none; background: #e5e7eb;">
-                <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
-                  <span style="font-size: 0.7rem; color: #6b7280;">0°</span>
-                  <span style="font-size: 0.7rem; color: #6b7280;">180°</span>
-                  <span style="font-size: 0.7rem; color: #6b7280;">360°</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- Alignment & Position (Modern Card Design) -->
         <div style="background: linear-gradient(135deg, #fefeff 0%, #eff6ff 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #dbeafe;">
           <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
@@ -1499,48 +1373,6 @@
             </div>
             <span>Alignment & Position</span>
           </h4>
-
-          <!-- Text Alignment Section -->
-          <div style="margin-bottom: 1rem;">
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">text_format</mat-icon>
-              Text Alignment
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem;">
-              <button [class.active]="canvasElements[selectedElement].textAlign === 'left'" (click)="setTextStyle('textAlign', 'left')" title="Align Left"
-                      style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].textAlign === 'left' ? '#3b82f6' : '#e2e8f0'"
-                      [style.background]="canvasElements[selectedElement].textAlign === 'left' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_left</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Left</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].textAlign === 'center'" (click)="setTextStyle('textAlign', 'center')" title="Align Center"
-                      style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].textAlign === 'center' ? '#3b82f6' : '#e2e8f0'"
-                      [style.background]="canvasElements[selectedElement].textAlign === 'center' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_center</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Center</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].textAlign === 'right'" (click)="setTextStyle('textAlign', 'right')" title="Align Right"
-                      style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].textAlign === 'right' ? '#3b82f6' : '#e2e8f0'"
-                      [style.background]="canvasElements[selectedElement].textAlign === 'right' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_right</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Right</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].textAlign === 'justify'" (click)="setTextStyle('textAlign', 'justify')" title="Justify"
-                      style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].textAlign === 'justify' ? '#3b82f6' : '#e2e8f0'"
-                      [style.background]="canvasElements[selectedElement].textAlign === 'justify' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_justify</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Justify</span>
-              </button>
-            </div>
-          </div>
 
           <!-- Transform Controls -->
           <div>
@@ -1586,7 +1418,186 @@
           </div>
         </div>
       </div>
-      
+
+      <!-- Color & Style (Modern Design) -->
+      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && (canvasElements[selectedElement].type === 'text' || canvasElements[selectedElement].type === 'shape')" style="background: linear-gradient(135deg, #fefeff 0%, #fef3f2 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #fed7d7;">
+        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">palette</mat-icon>
+          </div>
+          <span>Color & Style</span>
+        </h4>
+
+        <!-- Color Type Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; background: white; padding: 0.375rem; border-radius: 10px; border: 1px solid #e5e7eb;">
+          <button [class.active]="activeColorTab === 'solid'" (click)="activeColorTab = 'solid'"
+                  style="flex: 1; padding: 0.5rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
+            <div style="width: 12px; height: 12px; border-radius: 50%; background: linear-gradient(135deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #8b5cf6); border: 1px solid #d1d5db;"></div>
+            Solid
+          </button>
+          <button [class.active]="activeColorTab === 'gradient'" (click)="activeColorTab = 'gradient'"
+                  style="flex: 1; padding: 0.5rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.375rem;">
+            <div style="width: 12px; height: 12px; background: linear-gradient(45deg, #ef4444, #3b82f6); border-radius: 50%; border: 1px solid #d1d5db;"></div>
+            Gradient
+          </button>
+        </div>
+
+        <!-- Solid Color Section -->
+        <div *ngIf="activeColorTab === 'solid'">
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">color_lens</mat-icon>
+              Color Picker
+            </div>
+            <div style="background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+              <div style="position: relative;">
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].color" (change)="updateElement()"
+                       style="width: 60px; height: 60px; border: 3px solid #e5e7eb; border-radius: 12px; cursor: pointer; outline: none;">
+                <div style="position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"
+                     [style.background-color]="canvasElements[selectedElement].color"></div>
+              </div>
+              <div style="flex: 1;">
+                <div style="font-size: 0.875rem; font-weight: 600; color: #111827; margin-bottom: 0.25rem;">Selected Color</div>
+                <div style="font-size: 0.7rem; color: #6b7280; font-family: monospace; background: #f9fafb; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #e5e7eb;">
+                  {{ canvasElements[selectedElement].color || '#000000' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">palette</mat-icon>
+              Quick Colors
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 0.5rem;">
+              <div *ngFor="let color of colorPresets; let i = index"
+                   [style.background-color]="color"
+                   [class.selected]="canvasElements[selectedElement].color === color"
+                   (click)="applyColor(color)"
+                   style="aspect-ratio: 1; border-radius: 8px; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; position: relative;">
+                <div *ngIf="canvasElements[selectedElement].color === color"
+                     style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 12px;">
+                  ✓
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gradient Section -->
+        <div *ngIf="activeColorTab === 'gradient'">
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">gradient</mat-icon>
+              Gradient Type
+            </div>
+            <select [(ngModel)]="canvasElements[selectedElement].textGradientType" (change)="updateTextGradient()"
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: #111827; background: white; cursor: pointer; outline: none; transition: all 0.2s;">
+              <option value="">No Gradient</option>
+              <option value="linear">Linear Gradient</option>
+              <option value="radial">Radial Gradient</option>
+            </select>
+          </div>
+
+          <div *ngIf="canvasElements[selectedElement].textGradientType" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">Start Color</div>
+              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor1" (change)="updateTextGradient()"
+                       style="width: 40px; height: 40px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; outline: none;">
+                <div style="flex: 1; font-size: 0.7rem; color: #6b7280; font-family: monospace;">
+                  {{ canvasElements[selectedElement].textGradientColor1 || '#000000' }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">End Color</div>
+              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.75rem;">
+                <input type="color" [(ngModel)]="canvasElements[selectedElement].textGradientColor2" (change)="updateTextGradient()"
+                       style="width: 40px; height: 40px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; outline: none;">
+                <div style="flex: 1; font-size: 0.7rem; color: #6b7280; font-family: monospace;">
+                  {{ canvasElements[selectedElement].textGradientColor2 || '#ffffff' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="canvasElements[selectedElement].textGradientType === 'linear'">
+            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">rotate_right</mat-icon>
+              Direction
+            </div>
+            <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <span style="font-size: 0.875rem; font-weight: 600; color: #111827;">Angle</span>
+                <span style="font-size: 0.875rem; font-weight: 700; color: #f97316;">{{ canvasElements[selectedElement].textGradientAngle || 0 }}°</span>
+              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].textGradientAngle" (change)="updateTextGradient()"
+                     min="0" max="360" step="15"
+                     style="width: 100%; height: 8px; border-radius: 4px; outline: none; background: #e5e7eb;">
+              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                <span style="font-size: 0.7rem; color: #6b7280;">0°</span>
+                <span style="font-size: 0.7rem; color: #6b7280;">180°</span>
+                <span style="font-size: 0.7rem; color: #6b7280;">360°</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Alignment (Modern Design) -->
+      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && (canvasElements[selectedElement].type === 'text' || canvasElements[selectedElement].type === 'shape')" style="background: linear-gradient(135deg, #fefeff 0%, #f0f9ff 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #e0f2fe;">
+        <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
+          <div style="background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">text_format</mat-icon>
+          </div>
+          <span>Text Alignment</span>
+        </h4>
+
+        <!-- Text Alignment Section -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">text_format</mat-icon>
+            Text Alignment
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem;">
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'left'" (click)="setTextStyle('textAlign', 'left')" title="Align Left"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].textAlign === 'left' ? '#3b82f6' : '#e2e8f0'"
+                    [style.background]="canvasElements[selectedElement].textAlign === 'left' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_left</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Left</span>
+            </button>
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'center'" (click)="setTextStyle('textAlign', 'center')" title="Align Center"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].textAlign === 'center' ? '#3b82f6' : '#e2e8f0'"
+                    [style.background]="canvasElements[selectedElement].textAlign === 'center' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_center</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Center</span>
+            </button>
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'right'" (click)="setTextStyle('textAlign', 'right')" title="Align Right"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].textAlign === 'right' ? '#3b82f6' : '#e2e8f0'"
+                    [style.background]="canvasElements[selectedElement].textAlign === 'right' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_right</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Right</span>
+            </button>
+            <button [class.active]="canvasElements[selectedElement].textAlign === 'justify'" (click)="setTextStyle('textAlign', 'justify')" title="Justify"
+                    style="background: white; border: 1px solid #e2e8f0; padding: 0.625rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].textAlign === 'justify' ? '#3b82f6' : '#e2e8f0'"
+                    [style.background]="canvasElements[selectedElement].textAlign === 'justify' ? 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_align_justify</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Justify</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Image specific properties -->
       <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'image'">
         <!-- Image Preview & Replace -->
@@ -1878,49 +1889,7 @@
           </div>
         </div>
         
-        <!-- Border -->
-        <div class="border-section">
-          <h4 class="section-header">
-            <mat-icon class="header-icon">border_style</mat-icon>
-            <span>Border</span>
-          </h4>
-
-          <div class="border-content">
-            <label class="border-style-label">Border Style</label>
-            <div class="border-style-grid">
-              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = 'none'; updateElement()"
-                      [class.active]="canvasElements[selectedElement].border === 'none'">
-                None
-              </button>
-              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '1px solid #000'; updateElement()"
-                      [class.active]="canvasElements[selectedElement].border === '1px solid #000'">
-                <div class="border-preview thin"></div>
-                Thin
-              </button>
-              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '2px solid #000'; updateElement()"
-                      [class.active]="canvasElements[selectedElement].border === '2px solid #000'">
-                <div class="border-preview medium"></div>
-                Medium
-              </button>
-              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '3px solid #000'; updateElement()"
-                      [class.active]="canvasElements[selectedElement].border === '3px solid #000'">
-                <div class="border-preview thick"></div>
-                Thick
-              </button>
-              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '1px dashed #000'; updateElement()"
-                      [class.active]="canvasElements[selectedElement].border === '1px dashed #000'">
-                <div class="border-preview dashed"></div>
-                Dashed
-              </button>
-              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '1px dotted #000'; updateElement()"
-                      [class.active]="canvasElements[selectedElement].border === '1px dotted #000'">
-                <div class="border-preview dotted"></div>
-                Dotted
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
       
       <!-- Shape specific properties -->
       <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'shape'">
@@ -2000,52 +1969,45 @@
           </div>
         </div>
         
-        <div class="property-group">
-          <label>Border & Effects</label>
-          <div class="property-controls">
-            <div class="property-control">
-              <span>Border</span>
-              <select [(ngModel)]="canvasElements[selectedElement].border" (change)="updateElement()">
-                <option value="none">None</option>
-                <option value="1px solid #000">Thin</option>
-                <option value="2px solid #000">Medium</option>
-                <option value="3px solid #000">Thick</option>
-                <option value="1px dashed #000">Dashed</option>
-                <option value="1px dotted #000">Dotted</option>
-              </select>
-            </div>
-            
-            <div class="property-control">
-              <span>Shadow</span>
-              <select [(ngModel)]="canvasElements[selectedElement].boxShadow" (change)="updateElement()">
-                <option value="none">None</option>
-                <option value="0 2px 5px rgba(0,0,0,0.1)">Light</option>
-                <option value="0 4px 8px rgba(0,0,0,0.2)">Medium</option>
-                <option value="0 8px 16px rgba(0,0,0,0.3)">Strong</option>
-                <option value="custom">Custom</option>
-              </select>
-            </div>
-            
-            <div class="shadow-custom-controls" *ngIf="canvasElements[selectedElement].boxShadow === 'custom'">
-              <div class="property-control">
-                <span>Shadow Color</span>
-                <input type="color" [(ngModel)]="canvasElements[selectedElement].shadowColor" (change)="updateCustomShadow()">
-              </div>
-              <div class="property-control">
-                <span>Blur</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowBlur" (change)="updateCustomShadow()" min="0" max="20" step="1">
-                <span class="value-display">{{ canvasElements[selectedElement].shadowBlur || 0 }}px</span>
-              </div>
-              <div class="property-control">
-                <span>Offset X</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetX" (change)="updateCustomShadow()" min="-20" max="20" step="1">
-                <span class="value-display">{{ canvasElements[selectedElement].shadowOffsetX || 0 }}px</span>
-              </div>
-              <div class="property-control">
-                <span>Offset Y</span>
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].shadowOffsetY" (change)="updateCustomShadow()" min="-20" max="20" step="1">
-                <span class="value-display">{{ canvasElements[selectedElement].shadowOffsetY || 0 }}px</span>
-              </div>
+        <!-- Border -->
+        <div class="border-section">
+          <h4 class="section-header">
+            <mat-icon class="header-icon">border_style</mat-icon>
+            <span>Border</span>
+          </h4>
+
+          <div class="border-content">
+            <label class="border-style-label">Border Style</label>
+            <div class="border-style-grid">
+              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = 'none'; updateElement()"
+                      [class.active]="canvasElements[selectedElement].border === 'none'">
+                None
+              </button>
+              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '1px solid #000'; updateElement()"
+                      [class.active]="canvasElements[selectedElement].border === '1px solid #000'">
+                <div class="border-preview thin"></div>
+                Thin
+              </button>
+              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '2px solid #000'; updateElement()"
+                      [class.active]="canvasElements[selectedElement].border === '2px solid #000'">
+                <div class="border-preview medium"></div>
+                Medium
+              </button>
+              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '3px solid #000'; updateElement()"
+                      [class.active]="canvasElements[selectedElement].border === '3px solid #000'">
+                <div class="border-preview thick"></div>
+                Thick
+              </button>
+              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '1px dashed #000'; updateElement()"
+                      [class.active]="canvasElements[selectedElement].border === '1px dashed #000'">
+                <div class="border-preview dashed"></div>
+                Dashed
+              </button>
+              <button class="border-style-btn" (click)="canvasElements[selectedElement].border = '1px dotted #000'; updateElement()"
+                      [class.active]="canvasElements[selectedElement].border === '1px dotted #000'">
+                <div class="border-preview dotted"></div>
+                Dotted
+              </button>
             </div>
           </div>
         </div>

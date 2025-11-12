@@ -1446,38 +1446,41 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
   // Separate drag update method for better performance
   private performOptimizedDragUpdate(): void {
     if (!this.dragUpdateQueue) return;
-    
+
     const { x: mouseX, y: mouseY, timestamp } = this.dragUpdateQueue;
     this.dragUpdateQueue = null; // Clear the queue
-    
+
     // Calculate velocity for momentum
     const currentTime = performance.now();
     const deltaTime = currentTime - this.lastDragTime;
-    
+
     if (deltaTime > 0) {
       this.dragVelocity.x = (mouseX - this.lastDragPosition.x) / deltaTime;
       this.dragVelocity.y = (mouseY - this.lastDragPosition.y) / deltaTime;
-      
+
       // Update last position and time
       this.lastDragPosition = { x: mouseX, y: mouseY };
       this.lastDragTime = currentTime;
     }
-    
+
     // Get cached workspace rect to avoid repeated calculations
     const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
     if (!canvasWorkspace) return;
 
-    // Use cached rect for better performance
     const workspaceRect = canvasWorkspace.getBoundingClientRect();
 
-    // Account for zoom and pan transforms with higher precision
-    const scale = this.zoomLevel / 100;
-    const canvasX = (mouseX / scale) - (this.panX / scale);
-    const canvasY = (mouseY / scale) - (this.panY / scale);
+    // Convert mouse coordinates to canvas workspace coordinates (consistent with startElementDrag)
+    const workspaceMouseX = mouseX;
+    const workspaceMouseY = mouseY;
 
-    // Calculate delta with sub-pixel precision
-    const dx = canvasX - ((this.dragStartX - workspaceRect.left) / scale - (this.panX / scale));
-    const dy = canvasY - ((this.dragStartY - workspaceRect.top) / scale - (this.panY / scale));
+    // Account for zoom and pan transforms with higher precision (consistent with startElementDrag)
+    const scale = this.zoomLevel / 100;
+    const canvasX = (workspaceMouseX / scale) - (this.panX / scale);
+    const canvasY = (workspaceMouseY / scale) - (this.panY / scale);
+
+    // Calculate delta from drag start position (which is already in canvas space)
+    const dx = canvasX - this.dragStartX;
+    const dy = canvasY - this.dragStartY;
 
     // Calculate new position
     let newX = this.elementStartX + dx;
@@ -1624,13 +1627,17 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.elementTransforms.forEach((cached, index) => {
       const element = this.canvasElements[index];
 
-      // For image elements, position is already updated directly, just remove dragging class
+      // For image elements, position is already updated directly in the element object
+      // Just ensure the DOM reflects the final position and remove dragging class
       if (element.type === 'image') {
+        cached.element.style.left = `${element.x}px`;
+        cached.element.style.top = `${element.y}px`;
+        cached.element.style.transform = '';
         cached.element.classList.remove('dragging');
         cached.element.classList.remove('momentum-animating');
         cached.element.classList.remove('momentum-complete');
       } else {
-        // For other elements, reset transform and apply final position
+        // For other elements, reset transform and let Angular update position
         cached.element.style.transform = '';
         cached.element.classList.remove('dragging');
         cached.element.classList.remove('momentum-animating');
@@ -1641,6 +1648,13 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       this.returnTransformToPool(cached);
     });
     this.elementTransforms.clear();
+    
+    // Also cleanup any elements not in the transform map (for safety)
+    const allDraggingElements = document.querySelectorAll('.dragging, .momentum-animating, .momentum-complete');
+    allDraggingElements.forEach(el => {
+      el.classList.remove('dragging', 'momentum-animating', 'momentum-complete');
+    });
+    
     document.body.style.cursor = '';
     document.body.classList.remove('cursor-grabbing-enhanced', 'cursor-collision-warning');
 
@@ -2361,8 +2375,30 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (index < 0 || index >= this.canvasElements.length) return;
     
     this.isDragging = true;
-    this.dragStartX = event.clientX;
-    this.dragStartY = event.clientY;
+    
+    // Get canvas workspace to calculate proper coordinates
+    const canvasWorkspace = document.querySelector('.canvas-workspace') as HTMLElement;
+    if (!canvasWorkspace) {
+      console.error('Canvas workspace not found!');
+      return;
+    }
+    
+    const workspaceRect = canvasWorkspace.getBoundingClientRect();
+    
+    // Store the mouse position relative to workspace
+    const mouseX = event.clientX - workspaceRect.left;
+    const mouseY = event.clientY - workspaceRect.top;
+    
+    // Account for zoom and pan transforms
+    const scale = this.zoomLevel / 100;
+    const canvasX = (mouseX / scale) - (this.panX / scale);
+    const canvasY = (mouseY / scale) - (this.panY / scale);
+    
+    // Store the starting coordinates in canvas space
+    this.dragStartX = canvasX;
+    this.dragStartY = canvasY;
+    
+    // Store element's initial position
     this.elementStartX = this.canvasElements[index].x;
     this.elementStartY = this.canvasElements[index].y;
     this.elementStartWidth = this.canvasElements[index].width;
@@ -2370,7 +2406,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     // Initialize momentum tracking
     this.dragVelocity = { x: 0, y: 0 };
-    this.lastDragPosition = { x: event.clientX, y: event.clientY };
+    this.lastDragPosition = { x: mouseX, y: mouseY };
     this.lastDragTime = performance.now();
     this.dragStartTime = performance.now();
     
@@ -2379,6 +2415,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       cancelAnimationFrame(this.momentumAnimationFrame);
       this.momentumAnimationFrame = null;
     }
+    
+    event.stopPropagation();
+    event.preventDefault();
   }
   
   // Duplicate an element
