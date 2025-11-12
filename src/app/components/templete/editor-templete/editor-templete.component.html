@@ -1674,173 +1674,120 @@
         </div>
         
         <!-- Image Transform -->
-        <div style="background: linear-gradient(135deg, #fefeff 0%, #ecfeff 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #cffafe;">
-          <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
-            <div style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">transform</mat-icon>
-            </div>
+        <div class="image-transform-section">
+          <h4 class="section-header">
+            <mat-icon class="header-icon">transform</mat-icon>
             <span>Transform</span>
           </h4>
 
-          <div class="transform-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-            <button class="transform-btn" (click)="cropImage()"
-                    style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#06b6d4';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e2e8f0';">
-              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280;">crop</mat-icon>
-              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Crop</span>
+          <div class="transform-grid">
+            <button class="transform-btn" (click)="cropImage()">
+              <mat-icon>crop</mat-icon>
+              <span>Crop</span>
             </button>
-            <button class="transform-btn" (click)="scaleImage()"
-                    style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#06b6d4';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e2e8f0';">
-              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280;">open_in_full</mat-icon>
-              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Scale</span>
+            <button class="transform-btn" (click)="scaleImage()">
+              <mat-icon>open_in_full</mat-icon>
+              <span>Scale</span>
             </button>
-            <button class="transform-btn" (click)="rotateImage(-90)"
-                    style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#06b6d4';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e2e8f0';">
-              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280;">rotate_left</mat-icon>
-              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Rotate L</span>
+            <button class="transform-btn" (click)="rotateImage(-90)">
+              <mat-icon>rotate_left</mat-icon>
+              <span>Rotate L</span>
             </button>
-            <button class="transform-btn" (click)="rotateImage(90)"
-                    style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#06b6d4';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e2e8f0';">
-              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280;">rotate_right</mat-icon>
-              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Rotate R</span>
+            <button class="transform-btn" (click)="rotateImage(90)">
+              <mat-icon>rotate_right</mat-icon>
+              <span>Rotate R</span>
             </button>
-            <button class="transform-btn" (click)="flipImage('horizontal')"
-                    style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#06b6d4';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e2e8f0';">
-              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280;">flip</mat-icon>
-              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Flip H</span>
+            <button class="transform-btn" (click)="flipImage('horizontal')">
+              <mat-icon>flip</mat-icon>
+              <span>Flip H</span>
             </button>
-            <button class="transform-btn" (click)="flipImage('vertical')"
-                    style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                    onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#06b6d4';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#e2e8f0';">
-              <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280; transform: rotate(90deg);">flip</mat-icon>
-              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Flip V</span>
+            <button class="transform-btn" (click)="flipImage('vertical')">
+              <mat-icon>transform</mat-icon>
+              <span>Flip V</span>
             </button>
           </div>
         </div>
 
         <!-- Image Filters -->
-        <div style="background: linear-gradient(135deg, #fefeff 0%, #f0fdf4 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #d1fae5;">
-          <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
-            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">photo_filter</mat-icon>
-            </div>
+        <div class="image-filters-section">
+          <h4 class="section-header">
+            <mat-icon class="header-icon">photo_filter</mat-icon>
             <span>Filters</span>
           </h4>
 
           <!-- Filter Tabs -->
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; background: white; padding: 0.375rem; border-radius: 10px; border: 1px solid #e5e7eb;">
-            <button [class.active]="activeImageFilterTab === 'basic'" (click)="activeImageFilterTab = 'basic'"
-                    style="flex: 1; padding: 0.5rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.375rem;"
-                    [style.background]="activeImageFilterTab === 'basic' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent'"
-                    [style.color]="activeImageFilterTab === 'basic' ? 'white' : '#6b7280'">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px;">tune</mat-icon>
+          <div class="filter-tabs">
+            <button [class.active]="activeImageFilterTab === 'basic'" (click)="activeImageFilterTab = 'basic'">
+              <mat-icon>tune</mat-icon>
               Basic
             </button>
-            <button [class.active]="activeImageFilterTab === 'blend'" (click)="activeImageFilterTab = 'blend'"
-                    style="flex: 1; padding: 0.5rem; background: transparent; border: none; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: 600; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.375rem;"
-                    [style.background]="activeImageFilterTab === 'blend' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'transparent'"
-                    [style.color]="activeImageFilterTab === 'blend' ? 'white' : '#6b7280'">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px;">layers</mat-icon>
+            <button [class.active]="activeImageFilterTab === 'blend'" (click)="activeImageFilterTab = 'blend'">
+              <mat-icon>layers</mat-icon>
               Blend
             </button>
           </div>
 
           <!-- Basic Filters -->
-          <div *ngIf="activeImageFilterTab === 'basic'">
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">brightness_6</mat-icon>
-                Brightness
+          <div *ngIf="activeImageFilterTab === 'basic'" class="filter-content">
+            <div class="filter-slider">
+              <div class="filter-label">
+                <span>Brightness</span>
+                <span class="filter-value">{{canvasElements[selectedElement].brightness || 100}}%</span>
               </div>
-              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].brightness" (change)="updateImageFilters()" min="0" max="200" step="5" value="100"
-                       style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: #e5e7eb;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #111827; min-width: 3rem; text-align: center;">{{canvasElements[selectedElement].brightness || 100}}%</span>
-              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].brightness" (change)="updateImageFilters()" min="0" max="200" step="5" value="100" class="filter-range">
             </div>
 
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">contrast</mat-icon>
-                Contrast
+            <div class="filter-slider">
+              <div class="filter-label">
+                <span>Contrast</span>
+                <span class="filter-value">{{canvasElements[selectedElement].contrast || 100}}%</span>
               </div>
-              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].contrast" (change)="updateImageFilters()" min="0" max="200" step="5" value="100"
-                       style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: #e5e7eb;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #111827; min-width: 3rem; text-align: center;">{{canvasElements[selectedElement].contrast || 100}}%</span>
-              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].contrast" (change)="updateImageFilters()" min="0" max="200" step="5" value="100" class="filter-range">
             </div>
 
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">palette</mat-icon>
-                Saturation
+            <div class="filter-slider">
+              <div class="filter-label">
+                <span>Saturation</span>
+                <span class="filter-value">{{canvasElements[selectedElement].saturation || 100}}%</span>
               </div>
-              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].saturation" (change)="updateImageFilters()" min="0" max="200" step="5" value="100"
-                       style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: #e5e7eb;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #111827; min-width: 3rem; text-align: center;">{{canvasElements[selectedElement].saturation || 100}}%</span>
-              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].saturation" (change)="updateImageFilters()" min="0" max="200" step="5" value="100" class="filter-range">
             </div>
 
-            <div style="margin-bottom: 1rem;">
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">360</mat-icon>
-                Hue Rotate
+            <div class="filter-slider">
+              <div class="filter-label">
+                <span>Hue Rotate</span>
+                <span class="filter-value">{{canvasElements[selectedElement].hueRotate || 0}}°</span>
               </div>
-              <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                <input type="range" [(ngModel)]="canvasElements[selectedElement].hueRotate" (change)="updateImageFilters()" min="0" max="360" step="15" value="0"
-                       style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: #e5e7eb;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: #111827; min-width: 3rem; text-align: center;">{{canvasElements[selectedElement].hueRotate || 0}}°</span>
-              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].hueRotate" (change)="updateImageFilters()" min="0" max="360" step="15" value="0" class="filter-range">
             </div>
 
-            <div>
-              <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-                <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">auto_fix_high</mat-icon>
-                Filter Presets
-              </div>
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-                <button class="filter-preset-btn" (click)="applyFilterPreset('none')"
-                        style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#10b981';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#d1d5db';">
-                  <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">refresh</mat-icon>
-                  <span style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">Reset</span>
+            <div class="filter-presets">
+              <div class="filter-preset-label">Filter Presets</div>
+              <div class="filter-preset-grid">
+                <button class="filter-preset-btn reset-btn" (click)="applyFilterPreset('none')">
+                  <mat-icon>refresh</mat-icon>
+                  <span>Reset</span>
                 </button>
-                <button class="filter-preset-btn" (click)="applyFilterPreset('vintage')"
-                        style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#10b981';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#d1d5db';">
-                  <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">filter_vintage</mat-icon>
-                  <span style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">Vintage</span>
+                <button class="filter-preset-btn vintage-btn" (click)="applyFilterPreset('vintage')">
+                  <mat-icon>filter_vintage</mat-icon>
+                  <span>Vintage</span>
                 </button>
-                <button class="filter-preset-btn" (click)="applyFilterPreset('warm')"
-                        style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#10b981';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#d1d5db';">
-                  <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">wb_sunny</mat-icon>
-                  <span style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">Warm</span>
+                <button class="filter-preset-btn warm-btn" (click)="applyFilterPreset('warm')">
+                  <mat-icon>wb_sunny</mat-icon>
+                  <span>Warm</span>
                 </button>
-                <button class="filter-preset-btn" (click)="applyFilterPreset('cool')"
-                        style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; this.style.borderColor='#10b981';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; this.style.borderColor='#d1d5db';">
-                  <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">ac_unit</mat-icon>
-                  <span style="font-size: 0.75rem; color: #6b7280; font-weight: 500;">Cool</span>
+                <button class="filter-preset-btn cool-btn" (click)="applyFilterPreset('cool')">
+                  <mat-icon>ac_unit</mat-icon>
+                  <span>Cool</span>
                 </button>
               </div>
             </div>
           </div>
 
           <!-- Blend Modes -->
-          <div *ngIf="activeImageFilterTab === 'blend'">
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">layers</mat-icon>
-              Blend Mode
-            </div>
-            <select [(ngModel)]="canvasElements[selectedElement].blendMode" (change)="updateElement()"
-                    style="width: 100%; padding: 0.875rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: #111827; background: white; cursor: pointer; outline: none; transition: all 0.2s;">
+          <div *ngIf="activeImageFilterTab === 'blend'" class="filter-content">
+            <div class="blend-mode-label">Blend Mode</div>
+            <select [(ngModel)]="canvasElements[selectedElement].blendMode" (change)="updateElement()" class="blend-mode-select">
               <option value="normal">Normal</option>
               <option value="multiply">Multiply</option>
               <option value="screen">Screen</option>
@@ -1859,84 +1806,56 @@
         </div>
 
         <!-- Background Removal -->
-        <div style="background: linear-gradient(135deg, #fefeff 0%, #faf5ff 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #e9e5ff;">
-          <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
-            <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">auto_fix_high</mat-icon>
-            </div>
+        <div class="background-removal-section">
+          <h4 class="section-header">
+            <mat-icon class="header-icon">auto_fix_high</mat-icon>
             <span>Background</span>
           </h4>
 
           <button (click)="toggleBackgroundRemoval()"
                   [class.active]="isBackgroundRemovalActive()"
-                  style="width: 100%; background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                  [style.border-color]="isBackgroundRemovalActive() ? '#8b5cf6' : '#d1d5db'"
-                  [style.background]="isBackgroundRemovalActive() ? 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)' : 'white'"
-                  onmouseover="if(!this.classList.contains('active')) { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(!this.classList.contains('active')) { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-            <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #6b7280;">content_cut</mat-icon>
-            <span style="font-size: 0.875rem; color: #6b7280; font-weight: 600;">Remove Background</span>
+                  class="remove-bg-btn">
+            <mat-icon>content_cut</mat-icon>
+            <span>Remove Background</span>
           </button>
         </div>
 
         <!-- Effects & Styling -->
-        <div style="background: linear-gradient(135deg, #fefeff 0%, #fdf2f8 100%); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.875rem; border: 1px solid #fce7f3;">
-          <h4 style="display: flex; align-items: center; gap: 0.5rem; margin: 0 0 1rem 0; font-size: 0.875rem; font-weight: 700; color: #0f172a;">
-            <div style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); color: white; border-radius: 8px; padding: 6px; display: flex; box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);">
-              <mat-icon style="font-size: 16px; width: 16px; height: 16px;">auto_awesome</mat-icon>
-            </div>
+        <div class="effects-styling-section">
+          <h4 class="section-header">
+            <mat-icon class="header-icon">auto_awesome</mat-icon>
             <span>Effects</span>
           </h4>
 
-          <div style="margin-bottom: 1rem;">
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">opacity</mat-icon>
-              Opacity
+          <div class="effects-controls">
+            <div class="control-group">
+              <div class="control-header">
+                <span class="control-label">Opacity</span>
+                <span class="control-value">{{ ((canvasElements[selectedElement].opacity || 1) * 100).toFixed(0) }}%</span>
+              </div>
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1" class="opacity-range">
             </div>
-            <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-              <input type="range" [(ngModel)]="canvasElements[selectedElement].opacity" (change)="updateElement()" min="0.1" max="1" step="0.1"
-                     style="flex: 1; height: 6px; border-radius: 3px; outline: none; background: #e5e7eb;">
-              <span style="font-size: 0.75rem; font-weight: 700; color: #111827; min-width: 3rem; text-align: center;">{{ ((canvasElements[selectedElement].opacity || 1) * 100).toFixed(0) }}%</span>
-            </div>
-          </div>
 
-          <div>
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">brightness_1</mat-icon>
-              Shadow
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-              <button [class.active]="canvasElements[selectedElement].boxShadow === 'none'" (click)="canvasElements[selectedElement].boxShadow = 'none'; updateElement()"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].boxShadow === 'none' ? '#ec4899' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].boxShadow === 'none' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">block</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">None</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].boxShadow === '0 2px 5px rgba(0,0,0,0.1)'" (click)="canvasElements[selectedElement].boxShadow = '0 2px 5px rgba(0,0,0,0.1)'; updateElement()"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].boxShadow === '0 2px 5px rgba(0,0,0,0.1)' ? '#ec4899' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].boxShadow === '0 2px 5px rgba(0,0,0,0.1)' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">brightness_2</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Light</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].boxShadow === '0 4px 8px rgba(0,0,0,0.2)'" (click)="canvasElements[selectedElement].boxShadow = '0 4px 8px rgba(0,0,0,0.2)'; updateElement()"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].boxShadow === '0 4px 8px rgba(0,0,0,0.2)' ? '#ec4899' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].boxShadow === '0 4px 8px rgba(0,0,0,0.2)' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">brightness_3</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Medium</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].boxShadow === '0 8px 16px rgba(0,0,0,0.3)'" (click)="canvasElements[selectedElement].boxShadow = '0 8px 16px rgba(0,0,0,0.3)'; updateElement()"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].boxShadow === '0 8px 16px rgba(0,0,0,0.3)' ? '#ec4899' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].boxShadow === '0 8px 16px rgba(0,0,0,0.3)' ? 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">brightness_4</mat-icon>
-                <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Strong</span>
-              </button>
+            <div class="control-group">
+              <div class="control-label">Shadow</div>
+              <div class="shadow-grid">
+                <button [class.active]="canvasElements[selectedElement].boxShadow === 'none'" (click)="canvasElements[selectedElement].boxShadow = 'none'; updateElement()">
+                  <mat-icon>block</mat-icon>
+                  <span>None</span>
+                </button>
+                <button [class.active]="canvasElements[selectedElement].boxShadow === '0 2px 5px rgba(0,0,0,0.1)'" (click)="canvasElements[selectedElement].boxShadow = '0 2px 5px rgba(0,0,0,0.1)'; updateElement()">
+                  <mat-icon>brightness_2</mat-icon>
+                  <span>Light</span>
+                </button>
+                <button [class.active]="canvasElements[selectedElement].boxShadow === '0 4px 8px rgba(0,0,0,0.2)'" (click)="canvasElements[selectedElement].boxShadow = '0 4px 8px rgba(0,0,0,0.2)'; updateElement()">
+                  <mat-icon>brightness_3</mat-icon>
+                  <span>Medium</span>
+                </button>
+                <button [class.active]="canvasElements[selectedElement].boxShadow === '0 8px 16px rgba(0,0,0,0.3)'" (click)="canvasElements[selectedElement].boxShadow = '0 8px 16px rgba(0,0,0,0.3)'; updateElement()">
+                  <mat-icon>brightness_4</mat-icon>
+                  <span>Strong</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
