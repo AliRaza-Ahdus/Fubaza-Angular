@@ -735,7 +735,10 @@
                      [style.boxShadow]="element.boxShadow"
                      [style.filter]="getImageFilter(element)"
                      [style.opacity]="element.opacity || 1"
-                     [style.clipPath]="getImageMask(element)">
+                     [style.clipPath]="getImageMask(element)"
+                     [style.pointerEvents]="'none'"
+                     [style.userSelect]="'none'"
+                     draggable="false">
                 
                 <!-- Shape element -->
                 <div *ngIf="element.type === 'shape'" 
@@ -1397,7 +1400,7 @@
               <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                 <div style="font-size: 0.7rem; color: #6b7280; font-weight: 600;">Rotation</div>
                 <div style="display: flex; align-items: center; gap: 0.25rem;">
-                  <button (click)="canvasElements[selectedElement].type === 'text' ? rotateText(-90) : canvasElements[selectedElement].type === 'image' ? rotateImage(-90) : rotateText(-90)" 
+                  <button (click)="rotateElement(-90)" 
                           title="Rotate Left"
                           style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex;"
                           onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#d1d5db';"
@@ -1405,7 +1408,7 @@
                     <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">rotate_left</mat-icon>
                   </button>
                   <span style="font-size: 0.75rem; font-weight: 700; color: #111827; min-width: 2.5rem; text-align: center;">{{ canvasElements[selectedElement].rotate || 0 }}°</span>
-                  <button (click)="canvasElements[selectedElement].type === 'text' ? rotateText(90) : canvasElements[selectedElement].type === 'image' ? rotateImage(90) : rotateText(90)" 
+                  <button (click)="rotateElement(90)" 
                           title="Rotate Right"
                           style="background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex;"
                           onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#d1d5db';"
@@ -1599,7 +1602,7 @@
       </div>
 
       <!-- Image specific properties -->
-      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && (canvasElements[selectedElement].type === 'image' || canvasElements[selectedElement].type === 'text' || canvasElements[selectedElement].type === 'shape')">
+      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'image'">
         <!-- Image Preview & Replace -->
         <div class="image-preview-section">
           <h3 class="section-header">
@@ -1818,6 +1821,64 @@
             <mat-icon>content_cut</mat-icon>
             <span>Remove Background</span>
           </button>
+        </div>
+
+        <!-- Image Masking -->
+        <div style="background: white; border-radius: 12px; margin: 0 1rem 1rem 1rem; padding: 1.25rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid rgba(139, 92, 246, 0.1);">
+          <h3 style="display: flex; align-items: center; gap: 0.625rem; margin: 0 0 1rem 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">
+            <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 8px; padding: 8px; display: flex; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">cut</mat-icon>
+            </div>
+            <span>Masking</span>
+          </h3>
+
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">category</mat-icon>
+              Mask Type
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+              <button (click)="canvasElements[selectedElement].maskType = 'rectangle'; updateElement()"
+                      [style.background]="canvasElements[selectedElement].maskType === 'rectangle' || !canvasElements[selectedElement].maskType ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'white'"
+                      [style.color]="canvasElements[selectedElement].maskType === 'rectangle' || !canvasElements[selectedElement].maskType ? 'white' : '#0f172a'"
+                      [style.border]="'1px solid ' + (canvasElements[selectedElement].maskType === 'rectangle' || !canvasElements[selectedElement].maskType ? '#8b5cf6' : '#e2e8f0')"
+                      style="padding: 0.75rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s;">
+                <mat-icon style="font-size: 20px; width: 20px; height: 20px;">crop_square</mat-icon>
+                <span style="font-size: 0.7rem; font-weight: 600;">Rectangle</span>
+              </button>
+              <button (click)="canvasElements[selectedElement].maskType = 'circle'; updateElement()"
+                      [style.background]="canvasElements[selectedElement].maskType === 'circle' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'white'"
+                      [style.color]="canvasElements[selectedElement].maskType === 'circle' ? 'white' : '#0f172a'"
+                      [style.border]="'1px solid ' + (canvasElements[selectedElement].maskType === 'circle' ? '#8b5cf6' : '#e2e8f0')"
+                      style="padding: 0.75rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s;">
+                <mat-icon style="font-size: 20px; width: 20px; height: 20px;">radio_button_unchecked</mat-icon>
+                <span style="font-size: 0.7rem; font-weight: 600;">Circle</span>
+              </button>
+              <button (click)="canvasElements[selectedElement].maskType = 'rounded'; updateElement()"
+                      [style.background]="canvasElements[selectedElement].maskType === 'rounded' ? 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)' : 'white'"
+                      [style.color]="canvasElements[selectedElement].maskType === 'rounded' ? 'white' : '#0f172a'"
+                      [style.border]="'1px solid ' + (canvasElements[selectedElement].maskType === 'rounded' ? '#8b5cf6' : '#e2e8f0')"
+                      style="padding: 0.75rem; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; transition: all 0.2s;">
+                <mat-icon style="font-size: 20px; width: 20px; height: 20px;">rounded_corner</mat-icon>
+                <span style="font-size: 0.7rem; font-weight: 600;">Rounded</span>
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="canvasElements[selectedElement].maskType === 'rounded'" style="margin-bottom: 1rem;">
+            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">rounded_corner</mat-icon>
+              Corner Radius
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <input type="range" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()"
+                     min="0" max="100" step="1"
+                     style="flex: 1; height: 6px; border-radius: 3px; background: linear-gradient(90deg, #e2e8f0 0%, #8b5cf6 100%); outline: none; appearance: none;">
+              <input type="number" [(ngModel)]="canvasElements[selectedElement].borderRadius" (change)="updateElement()"
+                     min="0" max="100"
+                     style="width: 60px; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 6px; text-align: center; font-weight: 600;">
+            </div>
+          </div>
         </div>
 
         <!-- Effects & Styling -->

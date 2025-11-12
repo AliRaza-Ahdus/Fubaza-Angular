@@ -123,7 +123,7 @@ interface CanvasElement {
   invert?: number;
   
   // Image masking
-  maskType?: 'rectangle' | 'circle' | 'custom';
+  maskType?: 'rectangle' | 'circle' | 'rounded' | 'custom';
   maskFeather?: number;
   
   // Shape specific properties
@@ -3432,6 +3432,9 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     
     if (element.maskType === 'circle') {
       return `clip-path: circle(50% at center);`;
+    } else if (element.maskType === 'rounded') {
+      const radius = element.borderRadius || 20;
+      return `border-radius: ${radius}px;`;
     } else if (element.maskType === 'custom') {
       // Custom mask would require more complex implementation
       return 'none';
@@ -3729,7 +3732,7 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     const element = this.canvasElements[index];
     if (!element) return;
     
-    element.visible = !element.visible;
+    element.hidden = !element.hidden;
     this.updateElement();
   }
   
@@ -4030,6 +4033,20 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     this.updateElement();
   }
   
+  // Generic rotate function for all element types
+  rotateElement(degrees: number): void {
+    if (this.selectedElement === null) return;
+    
+    const element = this.canvasElements[this.selectedElement];
+    element.rotate = (element.rotate || 0) + degrees;
+    
+    // Normalize angle to 0-360 range
+    element.rotate = element.rotate % 360;
+    if (element.rotate < 0) element.rotate += 360;
+    
+    this.updateElement();
+  }
+  
   flipText(direction: 'horizontal' | 'vertical'): void {
     if (this.selectedElement === null) return;
     
@@ -4100,10 +4117,53 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (this.customWidth > 2000) this.customWidth = 2000;
     if (this.customHeight > 2000) this.customHeight = 2000;
     
+    // Store old dimensions for proportional scaling
+    const oldWidth = this.canvasWidth;
+    const oldHeight = this.canvasHeight;
+    
+    // Update canvas dimensions
     this.canvasWidth = this.customWidth;
     this.canvasHeight = this.customHeight;
+    
+    // Scale element positions and sizes proportionally
+    this.scaleElementsToCanvasSize(oldWidth, oldHeight, this.canvasWidth, this.canvasHeight);
+    
     this.setupCanvas();
     this.closeCustomSizeDialog();
+  }
+  
+  // Scale elements proportionally when canvas size changes
+  scaleElementsToCanvasSize(oldWidth: number, oldHeight: number, newWidth: number, newHeight: number): void {
+    if (oldWidth === newWidth && oldHeight === newHeight) return;
+    
+    const widthRatio = newWidth / oldWidth;
+    const heightRatio = newHeight / oldHeight;
+    
+    // Update all elements
+    this.canvasElements.forEach(element => {
+      // Scale position
+      element.x = element.x * widthRatio;
+      element.y = element.y * heightRatio;
+      
+      // Scale size
+      element.width = element.width * widthRatio;
+      element.height = element.height * heightRatio;
+      
+      // Scale font size for text elements
+      if (element.type === 'text' && element.fontSize) {
+        element.fontSize = Math.round(element.fontSize * Math.min(widthRatio, heightRatio));
+      }
+      
+      // Scale line width for shapes
+      if (element.type === 'shape' && element.lineWidth) {
+        element.lineWidth = Math.round(element.lineWidth * Math.min(widthRatio, heightRatio));
+      }
+      
+      // Scale border radius
+      if (element.borderRadius) {
+        element.borderRadius = Math.round(element.borderRadius * Math.min(widthRatio, heightRatio));
+      }
+    });
   }
   
   // Image editing functions
