@@ -44,6 +44,8 @@ interface CanvasElement {
   boxShadow?: string;
   border?: string;
   rotate?: number;
+  flipX?: boolean;
+  flipY?: boolean;
   blendMode?: string;
   
   // Text specific properties
@@ -3245,6 +3247,21 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       transform += `rotate(${element.rotate}deg) `;
     }
     
+    // Apply flip transformations
+    let scaleX = 1;
+    let scaleY = 1;
+    
+    if (element.flipX) {
+      scaleX = -1;
+    }
+    if (element.flipY) {
+      scaleY = -1;
+    }
+    
+    if (scaleX !== 1 || scaleY !== 1) {
+      transform += `scale(${scaleX}, ${scaleY}) `;
+    }
+    
     if (element.x !== undefined && element.y !== undefined) {
       transform += `translate(${element.x}px, ${element.y}px)`;
     }
@@ -3978,14 +3995,15 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
     if (this.selectedElement === null) return;
     
     const element = this.canvasElements[this.selectedElement];
-    if (element.type !== 'text') return;
     
-    // For text flipping, we can use CSS transforms or scale
-    // This is a simplified implementation
+    // Initialize flip properties if they don't exist
+    if (element.flipX === undefined) element.flipX = false;
+    if (element.flipY === undefined) element.flipY = false;
+    
     if (direction === 'horizontal') {
-      element.textTransform = element.textTransform === 'scaleX(-1)' ? 'none' : 'scaleX(-1)';
+      element.flipX = !element.flipX;
     } else {
-      element.textTransform = element.textTransform === 'scaleY(-1)' ? 'none' : 'scaleY(-1)';
+      element.flipY = !element.flipY;
     }
     
     this.updateElement();
