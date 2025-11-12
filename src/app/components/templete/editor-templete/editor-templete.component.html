@@ -1119,13 +1119,13 @@
         </h4>
 
         <!-- Font Family Selection -->
-        <div style="margin-bottom: 1.25rem;">
-          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.375rem;">
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
             <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">text_fields</mat-icon>
             Font Family
           </div>
           <div style="position: relative;" class="font-dropdown-container">
-            <div (click)="toggleFontDropdown()" 
+            <div (click)="toggleFontDropdown()"
                  style="background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 1rem 1.25rem; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between;"
                  onmouseover="this.style.borderColor='#14b8a6'; this.style.boxShadow='0 2px 6px rgba(20, 184, 166, 0.2)';" onmouseout="this.style.borderColor='#d1d5db'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)';">
               <div style="flex: 1;">
@@ -1134,26 +1134,26 @@
                 </div>
                 <div style="font-size: 0.7rem; color: #6b7280; margin-top: 0.25rem;">{{ getSelectedFontCategory() }}</div>
               </div>
-              <mat-icon [style.transform]="showFontDropdown ? 'rotate(180deg)' : 'rotate(0deg)'" 
+              <mat-icon [style.transform]="showFontDropdown ? 'rotate(180deg)' : 'rotate(0deg)'"
                         style="font-size: 20px; width: 20px; height: 20px; color: #14b8a6; transition: transform 0.3s;">
                 expand_more
               </mat-icon>
             </div>
 
             <!-- Font Dropdown Menu -->
-            <div *ngIf="showFontDropdown" 
+            <div *ngIf="showFontDropdown"
                  style="position: absolute; top: calc(100% + 8px); left: 0; right: 0; background: white; border: 1px solid #d1d5db; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 1000; max-height: 400px; overflow: hidden; display: flex; flex-direction: column;">
-              
+
               <!-- Search Box -->
               <div style="padding: 1rem; border-bottom: 1px solid #e5e7eb;">
                 <div style="position: relative;">
                   <mat-icon style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; width: 18px; height: 18px; color: #6b7280;">search</mat-icon>
-                  <input type="text" 
-                         [(ngModel)]="fontSearchQuery" 
+                  <input type="text"
+                         [(ngModel)]="fontSearchQuery"
                          (ngModelChange)="filterFonts()"
                          placeholder="Search fonts..."
                          style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.875rem; outline: none; transition: all 0.2s;"
-                         onfocus="this.style.borderColor='#14b8a6'; this.style.boxShadow='0 0 0 3px rgba(20, 184, 166, 0.1)';" 
+                         onfocus="this.style.borderColor='#14b8a6'; this.style.boxShadow='0 0 0 3px rgba(20, 184, 166, 0.1)';"
                          onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
                 </div>
               </div>
@@ -1198,7 +1198,7 @@
                      (click)="selectFont(font)"
                      [style.background]="isSelectedFont(font) ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'transparent'"
                      style="padding: 1rem 1.25rem; cursor: pointer; border-bottom: 1px solid #f3f4f6; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between;"
-                     onmouseover="if(this.style.background === 'transparent') this.style.background='#f9fafb';" 
+                     onmouseover="if(this.style.background === 'transparent') this.style.background='#f9fafb';"
                      onmouseout="if(this.style.background === 'rgb(249, 250, 251)') this.style.background='transparent';">
                   <div style="flex: 1;">
                     <div [style.fontFamily]="font.family" style="font-size: 0.95rem; color: #111827; font-weight: 500; margin-bottom: 0.25rem;">
@@ -1211,7 +1211,7 @@
                   </div>
                   <mat-icon *ngIf="isSelectedFont(font)" style="font-size: 18px; width: 18px; height: 18px; color: #14b8a6;">check_circle</mat-icon>
                 </div>
-                
+
                 <!-- No Results -->
                 <div *ngIf="filteredFonts.length === 0" style="padding: 3rem 1.25rem; text-align: center; color: #9ca3af;">
                   <mat-icon style="font-size: 48px; width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.3;">search_off</mat-icon>
@@ -1223,152 +1223,146 @@
           </div>
         </div>
 
-        <!-- Font Size & Style Controls -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
-          <!-- Font Size -->
-          <div>
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">format_size</mat-icon>
-              Font Size
-            </div>
-            <div style="background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-              <button (click)="adjustFontSize(-2)"
-                      style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                      onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">remove</mat-icon>
-              </button>
-              <input type="number"
-                     [(ngModel)]="canvasElements[selectedElement].fontSize"
-                     (change)="updateElement()"
-                     style="flex: 1; border: none; font-size: 1rem; font-weight: 700; color: #111827; text-align: center; outline: none; background: transparent;"
-                     min="8" max="200">
-              <button (click)="adjustFontSize(2)"
-                      style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                      onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">add</mat-icon>
-              </button>
-            </div>
-            <div style="font-size: 0.7rem; color: #6b7280; text-align: center; margin-top: 0.5rem;">px</div>
+        <!-- Font Size -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">format_size</mat-icon>
+            Font Size
           </div>
+          <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <button (click)="adjustFontSize(-2)"
+                    style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">remove</mat-icon>
+            </button>
+            <input type="number"
+                   [(ngModel)]="canvasElements[selectedElement].fontSize"
+                   (change)="updateElement()"
+                   style="flex: 1; border: none; font-size: 0.875rem; font-weight: 700; color: #111827; text-align: center; outline: none; background: transparent;"
+                   min="8" max="200">
+            <button (click)="adjustFontSize(2)"
+                    style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">add</mat-icon>
+            </button>
+          </div>
+          <div style="font-size: 0.7rem; color: #6b7280; text-align: center; margin-top: 0.5rem;">px</div>
+        </div>
 
-          <!-- Text Style Buttons -->
-          <div>
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">format_bold</mat-icon>
-              Text Style
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
-              <button [class.active]="canvasElements[selectedElement].fontWeight === 'bold'" (click)="toggleTextStyle('fontWeight', 'bold')"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].fontWeight === 'bold' ? '#14b8a6' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].fontWeight === 'bold' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_bold</mat-icon>
-                <span style="font-size: 0.65rem; color: #6b7280; font-weight: 500;">Bold</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].fontStyle === 'italic'" (click)="toggleTextStyle('fontStyle', 'italic')"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].fontStyle === 'italic' ? '#14b8a6' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].fontStyle === 'italic' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_italic</mat-icon>
-                <span style="font-size: 0.65rem; color: #6b7280; font-weight: 500;">Italic</span>
-              </button>
-              <button [class.active]="canvasElements[selectedElement].textDecoration === 'underline'" (click)="toggleTextStyle('textDecoration', 'underline')"
-                      style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
-                      [style.border-color]="canvasElements[selectedElement].textDecoration === 'underline' ? '#14b8a6' : '#d1d5db'"
-                      [style.background]="canvasElements[selectedElement].textDecoration === 'underline' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
-                      onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-                <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">format_underlined</mat-icon>
-                <span style="font-size: 0.65rem; color: #6b7280; font-weight: 500;">Underline</span>
-              </button>
-            </div>
+        <!-- Text Style -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">format_bold</mat-icon>
+            Text Style
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem;">
+            <button [class.active]="canvasElements[selectedElement].fontWeight === 'bold'" (click)="toggleTextStyle('fontWeight', 'bold')"
+                    style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].fontWeight === 'bold' ? '#14b8a6' : '#d1d5db'"
+                    [style.background]="canvasElements[selectedElement].fontWeight === 'bold' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">format_bold</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Bold</span>
+            </button>
+            <button [class.active]="canvasElements[selectedElement].fontStyle === 'italic'" (click)="toggleTextStyle('fontStyle', 'italic')"
+                    style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].fontStyle === 'italic' ? '#14b8a6' : '#d1d5db'"
+                    [style.background]="canvasElements[selectedElement].fontStyle === 'italic' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">format_italic</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Italic</span>
+            </button>
+            <button [class.active]="canvasElements[selectedElement].textDecoration === 'underline'" (click)="toggleTextStyle('textDecoration', 'underline')"
+                    style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    [style.border-color]="canvasElements[selectedElement].textDecoration === 'underline' ? '#14b8a6' : '#d1d5db'"
+                    [style.background]="canvasElements[selectedElement].textDecoration === 'underline' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
+                    onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">format_underlined</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Underline</span>
+            </button>
           </div>
         </div>
 
-        <!-- Advanced Typography Controls -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
-          <!-- Line Height -->
-          <div>
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">height</mat-icon>
-              Line Height
-            </div>
-            <div style="background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-              <button (click)="adjustLineHeight(-0.1)"
-                      style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                      onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">remove</mat-icon>
-              </button>
-              <input type="number"
-                     [(ngModel)]="canvasElements[selectedElement].lineHeight"
-                     (change)="updateElement()"
-                     style="flex: 1; border: none; font-size: 1rem; font-weight: 700; color: #111827; text-align: center; outline: none; background: transparent;"
-                     min="0.5" max="3" step="0.1">
-              <button (click)="adjustLineHeight(0.1)"
-                      style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                      onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">add</mat-icon>
-              </button>
-            </div>
+        <!-- Line Height -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">height</mat-icon>
+            Line Height
           </div>
+          <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <button (click)="adjustLineHeight(-0.1)"
+                    style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">remove</mat-icon>
+            </button>
+            <input type="number"
+                   [(ngModel)]="canvasElements[selectedElement].lineHeight"
+                   (change)="updateElement()"
+                   style="flex: 1; border: none; font-size: 0.875rem; font-weight: 700; color: #111827; text-align: center; outline: none; background: transparent;"
+                   min="0.5" max="3" step="0.1">
+            <button (click)="adjustLineHeight(0.1)"
+                    style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">add</mat-icon>
+            </button>
+          </div>
+        </div>
 
-          <!-- Letter Spacing -->
-          <div>
-            <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.375rem;">
-              <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">format_letter_spacing</mat-icon>
-              Letter Spacing
-            </div>
-            <div style="background: white; border: 1px solid #d1d5db; border-radius: 10px; padding: 1rem; display: flex; align-items: center; gap: 0.75rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-              <button (click)="adjustLetterSpacing(-0.5)"
-                      style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                      onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">remove</mat-icon>
-              </button>
-              <input type="number"
-                     [(ngModel)]="canvasElements[selectedElement].letterSpacing"
-                     (change)="updateElement()"
-                     style="flex: 1; border: none; font-size: 1rem; font-weight: 700; color: #111827; text-align: center; outline: none; background: transparent;"
-                     min="-5" max="10" step="0.5">
-              <button (click)="adjustLetterSpacing(0.5)"
-                      style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.5rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                      onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
-                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">add</mat-icon>
-              </button>
-            </div>
+        <!-- Letter Spacing -->
+        <div style="margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+            <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">format_letter_spacing</mat-icon>
+            Letter Spacing
+          </div>
+          <div style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <button (click)="adjustLetterSpacing(-0.5)"
+                    style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">remove</mat-icon>
+            </button>
+            <input type="number"
+                   [(ngModel)]="canvasElements[selectedElement].letterSpacing"
+                   (change)="updateElement()"
+                   style="flex: 1; border: none; font-size: 0.875rem; font-weight: 700; color: #111827; text-align: center; outline: none; background: transparent;"
+                   min="-5" max="10" step="0.5">
+            <button (click)="adjustLetterSpacing(0.5)"
+                    style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.375rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='#f3f4f6'; this.style.borderColor='#d1d5db';" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='#e5e7eb';">
+              <mat-icon style="font-size: 14px; width: 14px; height: 14px; color: #6b7280;">add</mat-icon>
+            </button>
           </div>
         </div>
 
         <!-- Text Transform & Decoration -->
-        <div style="margin-top: 1.25rem;">
-          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.375rem;">
+        <div>
+          <div style="font-size: 0.75rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
             <mat-icon style="font-size: 12px; width: 12px; height: 12px; color: #6b7280;">text_format</mat-icon>
             Text Transform & Decoration
           </div>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem;">
             <button [class.active]="canvasElements[selectedElement].textTransform === 'uppercase'" (click)="toggleTextStyle('textTransform', 'uppercase')"
-                    style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
                     [style.border-color]="canvasElements[selectedElement].textTransform === 'uppercase' ? '#14b8a6' : '#d1d5db'"
                     [style.background]="canvasElements[selectedElement].textTransform === 'uppercase' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
                     onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">text_fields</mat-icon>
-              <span style="font-size: 0.65rem; color: #6b7280; font-weight: 500;">UPPER</span>
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">text_fields</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">UPPER</span>
             </button>
             <button [class.active]="canvasElements[selectedElement].textTransform === 'lowercase'" (click)="toggleTextStyle('textTransform', 'lowercase')"
-                    style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
                     [style.border-color]="canvasElements[selectedElement].textTransform === 'lowercase' ? '#14b8a6' : '#d1d5db'"
                     [style.background]="canvasElements[selectedElement].textTransform === 'lowercase' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
                     onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">text_fields</mat-icon>
-              <span style="font-size: 0.65rem; color: #6b7280; font-weight: 500;">lower</span>
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">text_fields</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">lower</span>
             </button>
             <button [class.active]="canvasElements[selectedElement].textDecoration === 'line-through'" (click)="toggleTextStyle('textDecoration', 'line-through')"
-                    style="background: white; border: 1px solid #d1d5db; border-radius: 8px; padding: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
+                    style="background: white; border: 1px solid #d1d5db; border-radius: 6px; padding: 0.5rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
                     [style.border-color]="canvasElements[selectedElement].textDecoration === 'line-through' ? '#14b8a6' : '#d1d5db'"
                     [style.background]="canvasElements[selectedElement].textDecoration === 'line-through' ? 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)' : 'white'"
                     onmouseover="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'; }" onmouseout="if(this.style.background !== 'linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 100%)') { this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'; }">
-              <mat-icon style="font-size: 18px; width: 18px; height: 18px; color: #6b7280;">strikethrough_s</mat-icon>
-              <span style="font-size: 0.65rem; color: #6b7280; font-weight: 500;">Strike</span>
+              <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #6b7280;">strikethrough_s</mat-icon>
+              <span style="font-size: 0.6rem; color: #6b7280; font-weight: 500;">Strike</span>
             </button>
           </div>
         </div>

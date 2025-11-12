@@ -3460,6 +3460,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       element.fontStyle = element.fontStyle === value ? 'normal' : value;
     } else if (property === 'textDecoration') {
       element.textDecoration = element.textDecoration === value ? 'none' : value;
+    } else if (property === 'textTransform') {
+      element.textTransform = element.textTransform === value ? 'none' : value;
     }
     
     // Force update
