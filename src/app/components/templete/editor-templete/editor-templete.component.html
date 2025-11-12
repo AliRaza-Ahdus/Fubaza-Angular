@@ -1599,7 +1599,7 @@
       </div>
 
       <!-- Image specific properties -->
-      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && canvasElements[selectedElement].type === 'image'">
+      <div *ngIf="selectedElement !== null && canvasElements[selectedElement] && (canvasElements[selectedElement].type === 'image' || canvasElements[selectedElement].type === 'text' || canvasElements[selectedElement].type === 'shape')">
         <!-- Image Preview & Replace -->
         <div class="image-preview-section">
           <h3 class="section-header">
@@ -1719,14 +1719,7 @@
             </button>
           </div>
 
-          <div class="aspect-ratio-control">
-            <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].lockAspectRatio" (change)="updateElement()"
-                   id="aspectRatioLock">
-            <label for="aspectRatioLock">Lock Aspect Ratio</label>
-          </div>
-        </div>
-        
-        <!-- Image Filters -->
+          <!-- Image Filters -->
         <div class="image-filters-section">
           <h4 class="section-header">
             <mat-icon class="header-icon">photo_filter</mat-icon>
@@ -1840,12 +1833,6 @@
             <mat-icon>content_cut</mat-icon>
             <span>Remove Background</span>
           </button>
-
-          <div class="preserve-alpha-control">
-            <input type="checkbox" [(ngModel)]="canvasElements[selectedElement].preserveTransparency" (change)="preserveTransparency()"
-                   id="preserveAlpha">
-            <label for="preserveAlpha">Preserve PNG Alpha Channel</label>
-          </div>
         </div>
         
         <!-- Effects & Styling -->
