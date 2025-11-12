@@ -351,13 +351,26 @@ $space-4: 1rem; // 16px
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #f9fafb; // Clean light gray background like Canva
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%); // Elegant gradient background
   font-family: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', sans-serif;
   overflow: hidden;
   color: $text-primary;
   position: relative;
   
-  // Remove the fancy backdrop effects for a cleaner Canva-like look
+  // Subtle pattern overlay for depth
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
   
   // All child elements should be above the backdrop
   > * {
@@ -369,10 +382,6 @@ $space-4: 1rem; // 16px
   @media (max-width: #{$breakpoint-tablet - 1px}) {
     height: calc(100vh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     padding-bottom: $mobile-nav-height;
-    
-    &::before {
-      opacity: 0.5; // Reduce backdrop intensity on mobile
-    }
   }
 }
 
@@ -2250,20 +2259,35 @@ $space-4: 1rem; // 16px
 
 // Enhanced Sidebar Styles - Modern Design 3.0
 .sidebar {
-  width: 360px;
+  width: 320px; // Optimized width
   height: 100%;
-  background: #ffffff; // Clean white background like Canva
-  border-right: 1px solid #e5e7eb; // Clean border
+  background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%); // Soft gradient
+  border-right: 1px solid #d1d5db; // Defined border
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04); // Subtle shadow
+  box-shadow: 
+    4px 0 20px rgba(0, 0, 0, 0.06),
+    2px 0 8px rgba(0, 0, 0, 0.04); // Enhanced depth
   position: relative;
   transition: all 0.3s ease;
   padding: 1.5rem 0;
 
-  // Remove fancy effects for clean Canva look
+  // Elegant pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.02) 0%, transparent 40%),
+      radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.02) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
   // Content should be above the background
   > * {
@@ -4890,12 +4914,28 @@ $space-4: 1rem; // 16px
     overflow: hidden;
     position: relative;
     z-index: 10;
-    padding: 2rem;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%); // Clean gray gradient background like Canva
+    padding: 3rem;
+    background: 
+      radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(6, 182, 212, 0.06) 0%, transparent 50%),
+      linear-gradient(135deg, #e8edf3 0%, #d6dce5 100%); // More elegant gradient
+    
+    // Subtle pattern for depth
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(99, 102, 241, 0.015) 35px, rgba(99, 102, 241, 0.015) 70px);
+      pointer-events: none;
+    }
     
     // Enhanced mobile responsiveness
     @media (max-width: #{$breakpoint-tablet - 1px}) {
-      padding: 1.5rem;
+      padding: 2rem;
     }
     
     @media (max-width: #{$breakpoint-mobile}) {
@@ -4933,16 +4973,42 @@ $space-4: 1rem; // 16px
 
     .canvas {
       position: relative;
-      box-shadow: none; // No shadow - completely flat like Canva
-      border-radius: 0; // No rounded corners like Canva
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(0, 0, 0, 0.05); // Professional layered shadow
+      border-radius: 8px; // Subtle rounding for modern look
       overflow: hidden;
       background: #ffffff; // Pure white canvas
-      border: 1px solid rgba(0, 0, 0, 0.1); // Very subtle border for definition
+      border: 1px solid rgba(99, 102, 241, 0.08); // Subtle colored border
+      transition: all 0.3s ease;
+      
+      // Elegant inner shadow for depth
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        border-radius: inherit;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      &:hover {
+        box-shadow: 
+          0 12px 48px rgba(0, 0, 0, 0.15),
+          0 6px 24px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(99, 102, 241, 0.1);
+      }
 
       &.show-grid {
         background-image:
-          linear-gradient(rgba(156, 163, 175, 0.15) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(156, 163, 175, 0.15) 1px, transparent 1px);
+          linear-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+        background-size: 20px 20px;
       }
 
       .grid-overlay {
@@ -5023,14 +5089,25 @@ $space-4: 1rem; // 16px
         position: absolute;
         cursor: move;
         border: 2px solid transparent;
-        border-radius: 2px;
-        transition: all 0.2s ease;
+        border-radius: 4px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 2;
+        
+        // Subtle hover state for better UX
+        &:hover:not(.selected) {
+          border-color: rgba(99, 102, 241, 0.3);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
 
         &.selected {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3), 0 0 0 6px rgba(59, 130, 246, 0.1);
-          background: rgba(59, 130, 246, 0.02);
-          transform: scale(1.01);
+          border-color: #6366f1; // Primary color
+          box-shadow: 
+            0 0 0 3px rgba(99, 102, 241, 0.2),
+            0 4px 12px rgba(99, 102, 241, 0.15),
+            0 8px 24px rgba(0, 0, 0, 0.1);
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, rgba(99, 102, 241, 0.01) 100%);
+          transform: scale(1.005);
+          z-index: 100;
         }
 
         &.multi-selected {
@@ -5665,11 +5742,13 @@ $space-4: 1rem; // 16px
 
 // Properties Panel - Modern Premium Design
 .properties-panel {
-  width: 340px;
-  background: #ffffff; // Clean white background like Canva
-  border-left: 1px solid #e5e7eb; // Clean border
-  border-radius: 0; // No rounded corners
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.04); // Subtle shadow
+  width: 360px; // Slightly wider for better readability
+  background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%); // Soft gradient
+  border-left: 1px solid #d1d5db; // Defined border
+  border-radius: 0;
+  box-shadow: 
+    -4px 0 20px rgba(0, 0, 0, 0.06),
+    -2px 0 8px rgba(0, 0, 0, 0.04); // Enhanced depth
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -5677,7 +5756,20 @@ $space-4: 1rem; // 16px
   transition: all 0.3s ease;
   position: relative;
 
-  // Remove fancy effects for clean Canva look
+  // Elegant pattern overlay
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.02) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.02) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
   // Content above effects
   > * {
@@ -9918,15 +10010,39 @@ $space-4: 1rem; // 16px
 
 .media-library-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 0.5rem;
-
-  @media (min-width: #{$breakpoint-mobile}) {
-    grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  
+  > div {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    
+    &:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
+      
+      img {
+        transform: scale(1.05);
+      }
+      
+      // Show overlay on hover
+      > div:last-child {
+        opacity: 1;
+      }
+    }
+    
+    img {
+      transition: transform 0.3s ease;
+    }
   }
 
   @media (min-width: #{$breakpoint-tablet}) {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
 }
 
