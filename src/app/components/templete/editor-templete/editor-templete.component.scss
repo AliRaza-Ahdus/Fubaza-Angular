@@ -1118,40 +1118,8 @@ $space-4: 1rem; // 16px
   }
 }
 
-// Position & Size Section
+// Position & Size Section - Now a standalone card
 .position-size-section {
-  background: linear-gradient(135deg, #fefeff 0%, #f0f9ff 100%);
-  border-radius: 12px;
-  margin: 0 1rem 1rem 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e0f2fe;
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 1rem 0;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: #0f172a;
-
-    .header-icon {
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-      color: white;
-      border-radius: 8px;
-      padding: 6px;
-      display: flex;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-
-      mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
-      }
-    }
-  }
-
   .position-controls,
   .size-controls {
     margin-bottom: 1rem;
@@ -1250,40 +1218,8 @@ $space-4: 1rem; // 16px
   }
 }
 
-// Alignment & Position Section
+// Alignment & Position Section - Now a standalone card
 .alignment-position-section {
-  background: linear-gradient(135deg, #fefeff 0%, #eff6ff 100%);
-  border-radius: 12px;
-  margin: 0 1rem 1rem 1rem;
-  padding: 1.25rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #dbeafe;
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 1rem 0;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: #0f172a;
-
-    .header-icon {
-      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-      color: white;
-      border-radius: 8px;
-      padding: 6px;
-      display: flex;
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-
-      mat-icon {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
-      }
-    }
-  }
-
   .transform-controls {
     .control-label {
       font-size: 0.75rem;
