@@ -748,7 +748,10 @@
                      [style.clipPath]="getShapeClipPath(element)"
                      [style.boxShadow]="element.boxShadow"
                      [style.opacity]="element.opacity || 1"
-                     [style.border]="element.border">
+                     [style.border]="element.border"
+                     [style.pointerEvents]="'none'"
+                     [style.userSelect]="'none'"
+                     draggable="false">
                 </div>
 
                 <!-- Line element -->
@@ -757,7 +760,9 @@
                      [style.backgroundColor]="element.color"
                      [style.width.px]="element.width"
                      [style.height.px]="element.lineWidth || 2"
-                     [style.opacity]="element.opacity || 1">
+                     [style.opacity]="element.opacity || 1"
+                     [style.userSelect]="'none'"
+                     draggable="false">
                 </div>
 
                 <!-- Icon element -->
@@ -768,7 +773,9 @@
                      [style.backgroundRepeat]="'no-repeat'"
                      [style.backgroundPosition]="'center'"
                      [style.filter]="getIconFilter(element)"
-                     [style.opacity]="element.opacity || 1">
+                     [style.opacity]="element.opacity || 1"
+                     [style.userSelect]="'none'"
+                     draggable="false">
                 </div>
                 
                 <!-- Resize handles (only show for selected element) -->
