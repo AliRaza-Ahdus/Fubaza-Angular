@@ -5836,13 +5836,41 @@ $space-4: 1rem; // 16px
 
         &.selected {
           border-color: #6366f1; // Primary color
+          border-width: 2.5px;
           box-shadow: 
-            0 0 0 3px rgba(99, 102, 241, 0.2),
-            0 4px 12px rgba(99, 102, 241, 0.15),
-            0 8px 24px rgba(0, 0, 0, 0.1);
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, rgba(99, 102, 241, 0.01) 100%);
-          transform: scale(1.005);
+            0 0 0 1px rgba(255, 255, 255, 0.9),
+            0 0 0 4px rgba(99, 102, 241, 0.3),
+            0 4px 16px rgba(99, 102, 241, 0.2),
+            0 8px 32px rgba(0, 0, 0, 0.12);
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.03) 0%, rgba(99, 102, 241, 0.01) 100%);
+          transform: scale(1.002);
           z-index: 100;
+          position: relative;
+
+          // Add a subtle animated border glow
+          &::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            border-radius: 6px;
+            pointer-events: none;
+            animation: selection-pulse 2s ease-in-out infinite;
+          }
+
+          @keyframes selection-pulse {
+            0%, 100% {
+              opacity: 0.6;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 1;
+              transform: scale(1.01);
+            }
+          }
         }
 
         &.multi-selected {
@@ -5950,38 +5978,158 @@ $space-4: 1rem; // 16px
 
         .resize-handles {
           position: absolute;
-          top: -4px;
-          left: -4px;
-          right: -4px;
-          bottom: -4px;
+          top: -6px;
+          left: -6px;
+          right: -6px;
+          bottom: -6px;
           pointer-events: none;
+          z-index: 1000;
 
           .resize-handle {
             position: absolute;
-            width: 16px;
-            height: 16px;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            border: 3px solid white;
-            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.98) 0%, 
+              rgba(248, 250, 252, 0.95) 100%
+            );
+            border: 2.5px solid #6366f1;
+            border-radius: 3px;
             pointer-events: auto;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.6);
-            transition: all 0.2s ease;
+            box-shadow: 
+              0 3px 12px rgba(99, 102, 241, 0.5),
+              0 1px 4px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1001;
 
-            &:hover {
-              transform: scale(1.3);
-              box-shadow: 0 4px 12px rgba(59, 130, 246, 0.8);
-              background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            // Add a subtle glow effect
+            &::before {
+              content: '';
+              position: absolute;
+              top: -4px;
+              left: -4px;
+              right: -4px;
+              bottom: -4px;
+              background: radial-gradient(circle, 
+                rgba(99, 102, 241, 0.3) 0%, 
+                transparent 70%
+              );
+              border-radius: inherit;
+              opacity: 0;
+              transition: opacity 0.25s ease;
+              z-index: -1;
             }
 
-            &.top-left { top: -8px; left: -8px; cursor: nw-resize; }
-            &.top { top: -8px; left: 50%; transform: translateX(-50%); cursor: n-resize; }
-            &.top-right { top: -8px; right: -8px; cursor: ne-resize; }
-            &.right { top: 50%; right: -8px; transform: translateY(-50%); cursor: e-resize; }
-            &.bottom-right { bottom: -8px; right: -8px; cursor: se-resize; }
-            &.bottom { bottom: -8px; left: 50%; transform: translateX(-50%); cursor: s-resize; }
-            &.bottom-left { bottom: -8px; left: -8px; cursor: sw-resize; }
-            &.left { top: 50%; left: -8px; transform: translateY(-50%); cursor: w-resize; }
+            &:hover {
+              transform: scale(1.4);
+              box-shadow: 
+                0 4px 16px rgba(99, 102, 241, 0.7),
+                0 2px 8px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+              background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 1) 0%, 
+                rgba(252, 253, 254, 0.98) 100%
+              );
+              border-color: #4f46e5;
+              border-width: 3px;
+
+              &::before {
+                opacity: 1;
+              }
+            }
+
+            &:active {
+              transform: scale(1.2);
+              transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            // Corner handles - square with rounded corners
+            &.top-left { 
+              top: -7px; 
+              left: -7px; 
+              cursor: nwse-resize;
+              border-radius: 3px 0 3px 0;
+            }
+            
+            &.top-right { 
+              top: -7px; 
+              right: -7px; 
+              cursor: nesw-resize;
+              border-radius: 0 3px 0 3px;
+            }
+            
+            &.bottom-right { 
+              bottom: -7px; 
+              right: -7px; 
+              cursor: nwse-resize;
+              border-radius: 0 3px 0 3px;
+            }
+            
+            &.bottom-left { 
+              bottom: -7px; 
+              left: -7px; 
+              cursor: nesw-resize;
+              border-radius: 3px 0 3px 0;
+            }
+
+            // Edge handles - smaller and rectangular
+            &.top { 
+              top: -7px; 
+              left: 50%; 
+              transform: translateX(-50%); 
+              cursor: ns-resize;
+              width: 20px;
+              height: 10px;
+              border-radius: 3px 3px 0 0;
+              
+              &:hover {
+                transform: translateX(-50%) scale(1.3);
+              }
+            }
+            
+            &.right { 
+              top: 50%; 
+              right: -7px; 
+              transform: translateY(-50%); 
+              cursor: ew-resize;
+              width: 10px;
+              height: 20px;
+              border-radius: 0 3px 3px 0;
+              
+              &:hover {
+                transform: translateY(-50%) scale(1.3);
+              }
+            }
+            
+            &.bottom { 
+              bottom: -7px; 
+              left: 50%; 
+              transform: translateX(-50%); 
+              cursor: ns-resize;
+              width: 20px;
+              height: 10px;
+              border-radius: 0 0 3px 3px;
+              
+              &:hover {
+                transform: translateX(-50%) scale(1.3);
+              }
+            }
+            
+            &.left { 
+              top: 50%; 
+              left: -7px; 
+              transform: translateY(-50%); 
+              cursor: ew-resize;
+              width: 10px;
+              height: 20px;
+              border-radius: 3px 0 0 3px;
+              
+              &:hover {
+                transform: translateY(-50%) scale(1.3);
+              }
+            }
           }
         }
 

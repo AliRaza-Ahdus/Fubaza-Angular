@@ -1396,43 +1396,106 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       const element = this.canvasElements[this.selectedElement];
       console.log('Element before:', element.width, element.height);
 
-      // Enhanced resize logic with aspect ratio constraints
+      // Store the original values to calculate new dimensions
+      let newWidth = this.elementStartWidth;
+      let newHeight = this.elementStartHeight;
+      let newX = this.elementStartX;
+      let newY = this.elementStartY;
+
+      // Enhanced resize logic - calculate new dimensions based on handle
       switch (this.resizeHandle) {
+        // Corner handles - resize both width and height
         case 'top-left':
-          element.x = this.elementStartX + dx;
-          element.y = this.elementStartY + dy;
-          element.width = this.elementStartWidth - dx;
-          element.height = this.elementStartHeight - dy;
+          newWidth = this.elementStartWidth - dx;
+          newHeight = this.elementStartHeight - dy;
+          newX = this.elementStartX + dx;
+          newY = this.elementStartY + dy;
           break;
         case 'top-right':
-          element.y = this.elementStartY + dy;
-          element.width = this.elementStartWidth + dx;
-          element.height = this.elementStartHeight - dy;
+          newWidth = this.elementStartWidth + dx;
+          newHeight = this.elementStartHeight - dy;
+          newY = this.elementStartY + dy;
           break;
         case 'bottom-left':
-          element.x = this.elementStartX + dx;
-          element.width = this.elementStartWidth - dx;
-          element.height = this.elementStartHeight + dy;
+          newWidth = this.elementStartWidth - dx;
+          newHeight = this.elementStartHeight + dy;
+          newX = this.elementStartX + dx;
           break;
         case 'bottom-right':
-          element.width = this.elementStartWidth + dx;
-          element.height = this.elementStartHeight + dy;
+          newWidth = this.elementStartWidth + dx;
+          newHeight = this.elementStartHeight + dy;
+          break;
+        
+        // Edge handles - resize only one dimension
+        case 'top':
+          newHeight = this.elementStartHeight - dy;
+          newY = this.elementStartY + dy;
+          break;
+        case 'right':
+          newWidth = this.elementStartWidth + dx;
+          break;
+        case 'bottom':
+          newHeight = this.elementStartHeight + dy;
+          break;
+        case 'left':
+          newWidth = this.elementStartWidth - dx;
+          newX = this.elementStartX + dx;
           break;
       }
 
-      // Maintain aspect ratio for images if locked
-      if (element.type === 'image' && element.lockAspectRatio) {
+      // Maintain aspect ratio for images, shapes, and icons on corner handles
+      if ((element.type === 'image' || element.type === 'shape' || element.type === 'icon') && this.resizeHandle.includes('-')) {
         const aspectRatio = this.elementStartWidth / this.elementStartHeight;
-        if (Math.abs(dx) > Math.abs(dy)) {
-          element.height = element.width / aspectRatio;
+        
+        // Determine which dimension changed more
+        const widthChange = Math.abs(newWidth - this.elementStartWidth);
+        const heightChange = Math.abs(newHeight - this.elementStartHeight);
+        
+        if (widthChange > heightChange) {
+          // Width changed more, adjust height to maintain aspect ratio
+          newHeight = newWidth / aspectRatio;
+          
+          // Adjust Y position for top handles to keep bottom edge fixed
+          if (this.resizeHandle.includes('top')) {
+            newY = this.elementStartY + (this.elementStartHeight - newHeight);
+          }
         } else {
-          element.width = element.height * aspectRatio;
+          // Height changed more, adjust width to maintain aspect ratio
+          newWidth = newHeight * aspectRatio;
+          
+          // Adjust X position for left handles to keep right edge fixed
+          if (this.resizeHandle.includes('left')) {
+            newX = this.elementStartX + (this.elementStartWidth - newWidth);
+          }
         }
       }
 
-      // Ensure minimum dimensions with better constraints
-      element.width = Math.max(20, element.width);
-      element.height = Math.max(20, element.height);
+      // Ensure minimum dimensions
+      const minSize = 20;
+      
+      // Apply minimum width constraint
+      if (newWidth < minSize) {
+        newWidth = minSize;
+        // Adjust position if resizing from left to keep right edge fixed
+        if (this.resizeHandle.includes('left')) {
+          newX = this.elementStartX + (this.elementStartWidth - minSize);
+        }
+      }
+      
+      // Apply minimum height constraint
+      if (newHeight < minSize) {
+        newHeight = minSize;
+        // Adjust position if resizing from top to keep bottom edge fixed
+        if (this.resizeHandle.includes('top')) {
+          newY = this.elementStartY + (this.elementStartHeight - minSize);
+        }
+      }
+
+      // Apply the calculated values to the element
+      element.width = newWidth;
+      element.height = newHeight;
+      element.x = newX;
+      element.y = newY;
 
       // Update resize indicators
       this.updateResizeIndicators(element);
