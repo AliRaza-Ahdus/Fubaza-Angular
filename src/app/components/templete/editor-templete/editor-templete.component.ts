@@ -1404,42 +1404,44 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
 
       // Enhanced resize logic - calculate new dimensions based on handle
       switch (this.resizeHandle) {
-        // Corner handles - resize both width and height
+        // Corner handles - resize both width and height, keep opposite corner fixed
         case 'top-left':
-          newWidth = this.elementStartWidth - dx;
-          newHeight = this.elementStartHeight - dy;
-          newX = this.elementStartX + dx;
-          newY = this.elementStartY + dy;
+          newWidth = Math.max(0, this.elementStartWidth - dx);
+          newHeight = Math.max(0, this.elementStartHeight - dy);
+          // Position stays at bottom-right corner (no change to newX, newY)
           break;
         case 'top-right':
-          newWidth = this.elementStartWidth + dx;
-          newHeight = this.elementStartHeight - dy;
-          newY = this.elementStartY + dy;
+          newWidth = Math.max(0, this.elementStartWidth + dx);
+          newHeight = Math.max(0, this.elementStartHeight - dy);
+          // Position stays at bottom-left corner (no change to newX, newY)
           break;
         case 'bottom-left':
-          newWidth = this.elementStartWidth - dx;
-          newHeight = this.elementStartHeight + dy;
-          newX = this.elementStartX + dx;
+          newWidth = Math.max(0, this.elementStartWidth - dx);
+          newHeight = Math.max(0, this.elementStartHeight + dy);
+          // Position stays at top-right corner (no change to newX, newY)
           break;
         case 'bottom-right':
-          newWidth = this.elementStartWidth + dx;
-          newHeight = this.elementStartHeight + dy;
+          newWidth = Math.max(0, this.elementStartWidth + dx);
+          newHeight = Math.max(0, this.elementStartHeight + dy);
+          // Position stays at top-left corner (no change to newX, newY)
           break;
         
-        // Edge handles - resize only one dimension
+        // Edge handles - resize only one dimension, keep the resized edge fixed
         case 'top':
-          newHeight = this.elementStartHeight - dy;
-          newY = this.elementStartY + dy;
+          newHeight = Math.max(0, this.elementStartHeight - dy);
+          // Keep top edge fixed (no position change)
           break;
         case 'right':
-          newWidth = this.elementStartWidth + dx;
+          newWidth = Math.max(0, this.elementStartWidth + dx);
+          // Keep right edge fixed (no position change)
           break;
         case 'bottom':
-          newHeight = this.elementStartHeight + dy;
+          newHeight = Math.max(0, this.elementStartHeight + dy);
+          // Keep bottom edge fixed (no position change)
           break;
         case 'left':
-          newWidth = this.elementStartWidth - dx;
-          newX = this.elementStartX + dx;
+          newWidth = Math.max(0, this.elementStartWidth - dx);
+          // Keep left edge fixed (no position change)
           break;
       }
 
@@ -1476,8 +1478,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       // Apply minimum width constraint
       if (newWidth < minSize) {
         newWidth = minSize;
-        // Adjust position if resizing from left to keep right edge fixed
-        if (this.resizeHandle.includes('left')) {
+        // For corner handles, adjust position to keep opposite corner fixed
+        if (this.resizeHandle.includes('-') && this.resizeHandle.includes('left')) {
           newX = this.elementStartX + (this.elementStartWidth - minSize);
         }
       }
@@ -1485,8 +1487,8 @@ export class EditorTempleteComponent implements OnInit, AfterViewInit {
       // Apply minimum height constraint
       if (newHeight < minSize) {
         newHeight = minSize;
-        // Adjust position if resizing from top to keep bottom edge fixed
-        if (this.resizeHandle.includes('top')) {
+        // For corner handles, adjust position to keep opposite corner fixed
+        if (this.resizeHandle.includes('-') && this.resizeHandle.includes('top')) {
           newY = this.elementStartY + (this.elementStartHeight - minSize);
         }
       }
