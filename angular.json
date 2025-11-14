@@ -43,7 +43,7 @@
             "browser": "src/main.ts",
             "outputPath": "dist/demo",
             "polyfills": ["zone.js"],
-            "scripts": [],
+            "scripts": ["node_modules/@cesdk/cesdk-js/cesdk.umd.js"],
             "styles": ["src/global_styles.scss"],
             "tsConfig": "tsconfig.app.json"
           }

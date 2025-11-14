@@ -29,6 +29,8 @@ export class AppComponent implements OnInit {
         
         // Hide layout for template editor
         this.showLayout = !url.includes('/templete-editor');
+
+        this.showLayout = !url.includes('/template-editor');
         
         if (url.startsWith('/club-overview')) {
           this.pageTitle = 'Clubs Overview';

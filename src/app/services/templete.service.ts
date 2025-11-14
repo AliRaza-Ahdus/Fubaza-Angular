@@ -41,4 +41,17 @@ export class TempleteService {
   addOrUpdateTemplete(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/Templete/AddOrUpdatedTemplete`, formData);
   }
+
+
+  saveTemplate(payload: any): Observable<any> {
+    return this.http.post(this.baseUrl, payload);
+  }
+
+  getTemplateById(id: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${id}`);
+  }
+
+  getTemplatesBySport(sport: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}?sport=${sport}`);
+  }
 }
