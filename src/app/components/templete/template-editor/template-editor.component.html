@@ -63,3 +63,11 @@
     </div>
   </div>
 </div>
+
+<!-- Toast Notification -->
+<div class="toast-overlay" *ngIf="showToast">
+  <div class="toast-message">
+    <span class="toast-icon">⚠️</span>
+    <span class="toast-text">{{ toastMessage }}</span>
+  </div>
+</div>

@@ -27,8 +27,19 @@ export class TemplateEditorComponent implements OnInit {
   editorLoaded = false;
   templateTitle: string = 'New Template';
   showConfirmDialog = false;
+  showToast = false;
+  toastMessage = '';
 
   constructor(private templeteService: TempleteService) {}
+
+  private showToastMessage(message: string): void {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+      this.toastMessage = '';
+    }, 3000);
+  }
 
   ngOnInit(): void {
     this.loading = true;
@@ -91,6 +102,22 @@ export class TemplateEditorComponent implements OnInit {
   }
 
   onSave(): void {
+    // Validate required fields
+    if (!this.templateTitle || this.templateTitle.trim() === '') {
+      this.showToastMessage('Please enter a template title.');
+      return;
+    }
+    
+    if (!this.selectedSport || this.selectedSport === '') {
+      this.showToastMessage('Please select a sport type.');
+      return;
+    }
+    
+    if (!this.selectedTemplate || this.selectedTemplate === '') {
+      this.showToastMessage('Please select a template type.');
+      return;
+    }
+    
     this.showConfirmDialog = true;
   }
 
@@ -136,9 +163,12 @@ export class TemplateEditorComponent implements OnInit {
       formData.append('sportId', this.selectedSport);
       formData.append('templeteType', this.selectedTemplate);
       
-      // Append files as array
-      formData.append('files', jsonBlob, 'template.txt');
-      formData.append('files', imageBlob, 'template.png');
+      // Create safe filename from template title
+      const safeTitle = this.templateTitle.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, ' ').trim();
+      
+      // Append files as array with title-based names
+      formData.append('files', jsonBlob, `${safeTitle}.txt`);
+      formData.append('files', imageBlob, `${safeTitle}.png`);
       
       // Append documentTypes as array
       formData.append('documentTypes', '1');
