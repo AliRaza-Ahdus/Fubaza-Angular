@@ -138,9 +138,8 @@ export class TemplateEditorComponent implements OnInit {
       const sceneString = await this.editorInstance.engine.scene.saveToString();
       debugger;
       // Encode to base64
-      const base64 = btoa(sceneString);
-
-      console.log('Template Base64:', base64);
+      
+      console.log('Template Base64:', sceneString);
       
       // Export the current page as PNG
       const engine = this.editorInstance.engine;
@@ -155,7 +154,7 @@ export class TemplateEditorComponent implements OnInit {
       const imageBlob = await engine.block.export(pageId, 'image/png');
       
       // Create JSON file from base64
-      const jsonBlob = new Blob([base64], { type: 'text/plain' });
+      const jsonBlob = new Blob([sceneString], { type: 'text/plain' });
       
       // Prepare FormData for API with files array
       const formData = new FormData();
