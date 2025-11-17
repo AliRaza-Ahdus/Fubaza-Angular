@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import CreativeEditorSDK, { Configuration } from '@cesdk/cesdk-js';
+import { TempleteService } from '../../../services/templete.service';
+import { Sport, TempleteType } from '../../../models/api-response.model';
 
 @Component({
   selector: 'app-template-editor',
@@ -17,12 +19,48 @@ export class TemplateEditorComponent implements OnInit {
   private editorInstance: any;
   private isInitialized = false;
 
-  sportTypes = ['Football', 'Basketball', 'Cricket', 'Tennis'];
-  templateTypes = ['Poster', 'Banner', 'Card', 'Flyer'];
-  selectedSport = 'Football';
-  selectedTemplate = 'Poster';
+  sportTypes: Sport[] = [];
+  templateTypes: TempleteType[] = [];
+  selectedSport: string = '';
+  selectedTemplate: string = '';
+  loading = false;
+  editorLoaded = false;
+  templateTitle: string = 'New Template';
+
+  constructor(private templeteService: TempleteService) {}
 
   ngOnInit(): void {
+    this.loading = true;
+    
+    // Fetch sports and template types
+    Promise.all([
+      this.templeteService.getSportsList().toPromise(),
+      this.templeteService.getTempleteTypes().toPromise()
+    ]).then(([sportsRes, templeteTypesRes]) => {
+      this.sportTypes = sportsRes?.data || [];
+      this.templateTypes = templeteTypesRes?.data || [];
+      
+      // Set default selections if available
+      if (this.sportTypes.length > 0) {
+        this.selectedSport = this.sportTypes[0].id?.toString() || '';
+      }
+      if (this.templateTypes.length > 0) {
+        this.selectedTemplate = this.templateTypes[0].id?.toString() || '';
+      }
+      
+      this.loading = false;
+      
+      // Now initialize the editor
+      this.initializeEditor();
+    }).catch((error) => {
+      console.error('Error fetching data:', error);
+      this.loading = false;
+      // Still initialize editor even if data fetch fails
+      this.initializeEditor();
+    });
+  }
+
+  private initializeEditor(): void {
     if (this.isInitialized) return;
     this.isInitialized = true;
 
@@ -42,6 +80,7 @@ export class TemplateEditorComponent implements OnInit {
           withUploadAssetSources: true
         });
         await instance.createDesignScene();
+        this.editorLoaded = true;
       }
     );
   }
@@ -61,14 +100,58 @@ export class TemplateEditorComponent implements OnInit {
       const sceneString = await this.editorInstance.engine.scene.saveToString();
       
       // Encode to base64
-      const base64 = btoa(sceneString);
+      const uint8 = new TextEncoder().encode(sceneString);
+      const base64String = this.uint8ToBase64(uint8);
       
-      console.log('Template Base64:', base64);
+      console.log('Template Base64:', base64String);
       
-      // Download as base64 text
-      this.downloadBase64(base64, 'template.txt');
+      // Export the current page as PNG
+      const engine = this.editorInstance.engine;
+      const scene = engine.scene.get();
+      const pages = engine.block.findByType('page');
       
-      alert('Template saved successfully! Check the console for Base64 output.');
+      if (!pages || pages.length === 0) {
+        throw new Error('No page found in the scene');
+      }
+      
+      const pageId = pages[0];
+      const imageBlob = await engine.block.export(pageId, 'image/png');
+      
+      // Also convert to base64 for imageBase64 field
+      const reader = new FileReader();
+      const imageBase64 = await new Promise<string>((resolve) => {
+        reader.onloadend = () => {
+          const dataUrl = reader.result as string;
+          const base64 = dataUrl.split(',')[1];
+          resolve(base64);
+        };
+        reader.readAsDataURL(imageBlob);
+      });
+      
+      // Prepare FormData for API
+      const formData = new FormData();
+      formData.append('title', this.templateTitle);
+      formData.append('sportId', this.selectedSport);
+      formData.append('templeteType', this.selectedTemplate);
+      formData.append('jsonTemeplete', base64String);
+      formData.append('file', imageBlob, 'template.png');
+      formData.append('imageBase64', imageBase64);
+
+      debugger; 
+      // Save to backend
+      this.templeteService.addOrUpdateTemplete(formData).subscribe({
+        next: (response) => {
+          if (response.success) {
+            alert('Template saved successfully!');
+          } else {
+            alert('Error saving template: ' + response.message);
+          }
+        },
+        error: (error) => {
+          console.error('Error saving template:', error);
+          alert('Error saving template. Check console for details.');
+        }
+      });
     } catch (error) {
       console.error('Error saving template:', error);
       alert('Error saving template. Check console for details.');
