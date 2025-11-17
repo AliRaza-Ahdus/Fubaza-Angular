@@ -26,6 +26,7 @@ export class TemplateEditorComponent implements OnInit {
   loading = false;
   editorLoaded = false;
   templateTitle: string = 'New Template';
+  showConfirmDialog = false;
 
   constructor(private templeteService: TempleteService) {}
 
@@ -89,7 +90,17 @@ export class TemplateEditorComponent implements OnInit {
     window.history.back();
   }
 
-  async onSave(): Promise<void> {
+  onSave(): void {
+    this.showConfirmDialog = true;
+  }
+
+  cancelSave(): void {
+    this.showConfirmDialog = false;
+  }
+
+  async confirmSave(): Promise<void> {
+    this.showConfirmDialog = false;
+    
     if (!this.editorInstance) {
       console.error('Editor instance not initialized');
       return;

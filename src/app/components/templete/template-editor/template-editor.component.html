@@ -45,3 +45,21 @@
     [class.hidden]="!editorLoaded"
   ></div>
 </div>
+
+<!-- Confirmation Dialog -->
+<div class="confirm-overlay" *ngIf="showConfirmDialog" (click)="cancelSave()">
+  <div class="confirm-dialog" (click)="$event.stopPropagation()">
+    <div class="confirm-icon">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" stroke="#3b82f6" stroke-width="3"/>
+        <path d="M24 16v12M24 32h.01" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h3 class="confirm-title">Save Template?</h3>
+    <p class="confirm-message">Are you sure you want to save this template?</p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" (click)="cancelSave()">Cancel</button>
+      <button class="btn-confirm" (click)="confirmSave()">Save</button>
+    </div>
+  </div>
+</div>
