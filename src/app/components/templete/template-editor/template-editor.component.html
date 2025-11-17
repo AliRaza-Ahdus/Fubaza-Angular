@@ -31,11 +31,6 @@
           <span class="btn-icon">←</span>
           <span class="btn-text">Back</span>
         </button>
-        <button class="upload-button" (click)="fileInput.click()">
-          <span class="btn-icon">↑</span>
-          <span class="btn-text">Upload</span>
-        </button>
-        <input #fileInput type="file" accept=".txt" (change)="onLoad($event)" style="display: none;" />
         <button class="save-button" (click)="onSave()">
           <span class="btn-icon">✓</span>
           <span class="btn-text">Save</span>
