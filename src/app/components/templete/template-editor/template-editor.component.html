@@ -1,21 +1,28 @@
 
 
-<div class="controls" *ngIf="editorLoaded">
-  <input [(ngModel)]="templateTitle" placeholder="Template Title" class="title-input" />
-  <select [(ngModel)]="selectedSport" class="dropdown">
-    <option *ngFor="let sport of sportTypes" [value]="sport.id">{{ sport.name }}</option>
-  </select>
-  <select [(ngModel)]="selectedTemplate" class="dropdown">
-    <option *ngFor="let type of templateTypes" [value]="type.id">{{ type.name }}</option>
-  </select>
-  <button class="back-button" (click)="onBack()">Back</button>
-  <button class="upload-button" (click)="fileInput.click()">Upload</button>
-  <input #fileInput type="file" accept=".txt" (change)="onLoad($event)" style="display: none;" />
-  <button class="save-button" (click)="onSave()">Save Template</button>
-</div>
+<div class="editor-wrapper">
+  <div class="controls-header" *ngIf="editorLoaded">
+    <div class="controls-wrapper">
+      <div class="controls-group">
+        <input [(ngModel)]="templateTitle" placeholder="Template Title" class="title-input" />
+        <select [(ngModel)]="selectedSport" class="dropdown">
+          <option *ngFor="let sport of sportTypes" [value]="sport.id">{{ sport.name }}</option>
+        </select>
+        <select [(ngModel)]="selectedTemplate" class="dropdown">
+          <option *ngFor="let type of templateTypes" [value]="type.id">{{ type.name }}</option>
+        </select>
+      </div>
+      <div class="controls-actions">
+        <button class="back-button" (click)="onBack()">Back</button>
+        <button class="upload-button" (click)="fileInput.click()">Upload</button>
+        <input #fileInput type="file" accept=".txt" (change)="onLoad($event)" style="display: none;" />
+        <button class="save-button" (click)="onSave()">Save Template</button>
+      </div>
+    </div>
+  </div>
 
-<div
-  #cesdk_container
-  [style.height.vh]="'100'"
-  [style.width.vw]="'95'"
-></div>
+  <div
+    #cesdk_container
+    class="editor-container"
+  ></div>
+</div>

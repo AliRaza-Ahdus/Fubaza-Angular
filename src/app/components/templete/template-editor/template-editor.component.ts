@@ -98,7 +98,7 @@ export class TemplateEditorComponent implements OnInit {
     try {
       // Get the scene as JSON string
       const sceneString = await this.editorInstance.engine.scene.saveToString();
-      
+      debugger;
       // Encode to base64
       const uint8 = new TextEncoder().encode(sceneString);
       const base64String = this.uint8ToBase64(uint8);
@@ -189,5 +189,17 @@ export class TemplateEditorComponent implements OnInit {
     link.download = filename;
     link.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  private uint8ToBase64(uint8: Uint8Array): string {
+    let binary = '';
+    const chunkSize = 0x8000; // 32KB chunks
+
+    for (let i = 0; i < uint8.length; i += chunkSize) {
+      const chunk = uint8.subarray(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, chunk as unknown as number[]);
+    }
+
+    return btoa(binary);
   }
 }
