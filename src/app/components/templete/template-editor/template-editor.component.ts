@@ -100,10 +100,11 @@ export class TemplateEditorComponent implements OnInit {
       const sceneString = await this.editorInstance.engine.scene.saveToString();
       debugger;
       // Encode to base64
-      const uint8 = new TextEncoder().encode(sceneString);
-      const base64String = this.uint8ToBase64(uint8);
-      
-      console.log('Template Base64:', base64String);
+      const base64 = btoa(sceneString);
+
+      console.log('Template Base64:', base64);
+
+      this.downloadBase64(base64, 'template.txt');
       
       // Export the current page as PNG
       const engine = this.editorInstance.engine;
@@ -117,25 +118,13 @@ export class TemplateEditorComponent implements OnInit {
       const pageId = pages[0];
       const imageBlob = await engine.block.export(pageId, 'image/png');
       
-      // Also convert to base64 for imageBase64 field
-      const reader = new FileReader();
-      const imageBase64 = await new Promise<string>((resolve) => {
-        reader.onloadend = () => {
-          const dataUrl = reader.result as string;
-          const base64 = dataUrl.split(',')[1];
-          resolve(base64);
-        };
-        reader.readAsDataURL(imageBlob);
-      });
-      
       // Prepare FormData for API
       const formData = new FormData();
       formData.append('title', this.templateTitle);
       formData.append('sportId', this.selectedSport);
       formData.append('templeteType', this.selectedTemplate);
-      formData.append('jsonTemeplete', base64String);
+      formData.append('jsonTemeplete', base64);
       formData.append('file', imageBlob, 'template.png');
-      formData.append('imageBase64', imageBase64);
 
       debugger; 
       // Save to backend
@@ -191,15 +180,4 @@ export class TemplateEditorComponent implements OnInit {
     window.URL.revokeObjectURL(url);
   }
 
-  private uint8ToBase64(uint8: Uint8Array): string {
-    let binary = '';
-    const chunkSize = 0x8000; // 32KB chunks
-
-    for (let i = 0; i < uint8.length; i += chunkSize) {
-      const chunk = uint8.subarray(i, i + chunkSize);
-      binary += String.fromCharCode.apply(null, chunk as unknown as number[]);
-    }
-
-    return btoa(binary);
-  }
 }
