@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import CreativeEditorSDK, { Configuration } from '@cesdk/cesdk-js';
@@ -10,21 +10,25 @@ import CreativeEditorSDK, { Configuration } from '@cesdk/cesdk-js';
   templateUrl: './template-editor.component.html',
   styleUrls: ['./template-editor.component.scss'],
 })
-export class TemplateEditorComponent implements AfterViewInit {
-  @ViewChild('cesdk_container') containerRef!: ElementRef;
+export class TemplateEditorComponent implements OnInit {
+  @ViewChild('cesdk_container', { static: true }) containerRef!: ElementRef;
 
   title = 'Integrate CreativeEditor SDK with Angular';
   private editorInstance: any;
+  private isInitialized = false;
 
   sportTypes = ['Football', 'Basketball', 'Cricket', 'Tennis'];
   templateTypes = ['Poster', 'Banner', 'Card', 'Flyer'];
   selectedSport = 'Football';
   selectedTemplate = 'Poster';
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    if (this.isInitialized) return;
+    this.isInitialized = true;
+
     const config: Configuration = {
       license: 'Uf5RWKa8_LjfNhwAVmmye9jjTRvd20YOTs8Sbn4VsDO0RoyqHDuAL2YmaDOdCv5h', // Replace with your actual CE.SDK license key
-      theme: 'dark',
+      theme: 'light',
       //userId: 'guides-user'
        // baseURL: 'https://cdn.img.ly/packages/imgly/cesdk-js/1.63.0/assets'
     };
@@ -40,6 +44,10 @@ export class TemplateEditorComponent implements AfterViewInit {
         await instance.createDesignScene();
       }
     );
+  }
+
+  onBack(): void {
+    window.history.back();
   }
 
   async onSave(): Promise<void> {

@@ -1,5 +1,17 @@
 
 
+<div class="controls">
+  <select [(ngModel)]="selectedSport" class="dropdown">
+    <option *ngFor="let sport of sportTypes" [value]="sport">{{ sport }}</option>
+  </select>
+  <select [(ngModel)]="selectedTemplate" class="dropdown">
+    <option *ngFor="let type of templateTypes" [value]="type">{{ type }}</option>
+  </select>
+  <button class="back-button" (click)="onBack()">Back</button>
+  <button class="upload-button" (click)="fileInput.click()">Upload</button>
+  <input #fileInput type="file" accept=".txt" (change)="onLoad($event)" style="display: none;" />
+  <button class="save-button" (click)="onSave()">Save Template</button>
+</div>
 
 <div
   #cesdk_container
