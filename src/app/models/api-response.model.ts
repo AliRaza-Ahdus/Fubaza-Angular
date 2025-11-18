@@ -3,6 +3,7 @@ export interface Templete {
   id: string;
   title: string;
   templeteUrl: string | null;
+  fileUrl: string | null;
   sportName: string;
   sportId: string;
 }

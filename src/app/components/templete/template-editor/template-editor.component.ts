@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import CreativeEditorSDK, { Configuration } from '@cesdk/cesdk-js';
 import { TempleteService } from '../../../services/templete.service';
 import { Sport, TempleteType } from '../../../models/api-response.model';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-template-editor',
   standalone: true,
@@ -65,37 +65,202 @@ export class TemplateEditorComponent implements OnInit {
       // Now initialize the editor
       this.initializeEditor();
     }).catch((error) => {
-      console.error('Error fetching data:', error);
       this.loading = false;
       // Still initialize editor even if data fetch fails
       this.initializeEditor();
     });
   }
 
-  private initializeEditor(): void {
-    if (this.isInitialized) return;
-    this.isInitialized = true;
+  private async initializeEditor(): Promise<void> {
+  if (this.isInitialized) return;
+  this.isInitialized = true;
 
-    const config: Configuration = {
-      license: 'Uf5RWKa8_LjfNhwAVmmye9jjTRvd20YOTs8Sbn4VsDO0RoyqHDuAL2YmaDOdCv5h', // Replace with your actual CE.SDK license key
-      theme: 'light',
-      //userId: 'guides-user'
-       // baseURL: 'https://cdn.img.ly/packages/imgly/cesdk-js/1.63.0/assets'
-    };
+  const config: Configuration = {
+    license: 'Uf5RWKa8_LjfNhwAVmmye9jjTRvd20YOTs8Sbn4VsDO0RoyqHDuAL2YmaDOdCv5h',
+    theme: 'light',
+    //baseURL: 'https://cdn.img.ly/packages/imgly/cesdk-js/1.63.0/assets'
+  };
 
-    CreativeEditorSDK.create(this.containerRef.nativeElement, config).then(
-      async (instance: any) => {
-        this.editorInstance = instance;
-        instance.addDefaultAssetSources();
-        instance.addDemoAssetSources({
-          sceneMode: 'Design',
-          withUploadAssetSources: true
-        });
-        await instance.createDesignScene();
-        this.editorLoaded = true;
+  const instance = await CreativeEditorSDK.create(this.containerRef.nativeElement, config);
+  this.editorInstance = instance;
+
+  instance.addDefaultAssetSources();
+  instance.addDemoAssetSources({
+    sceneMode: 'Design',
+    withUploadAssetSources: true
+  });
+
+  const engine = instance.engine;
+
+  // --------------------------------------------------------------------
+  // 🔥 1. FETCHING TEMPLATES FROM API
+  // --------------------------------------------------------------------
+  const requestBody = {
+    sportId: "b1a1cfd3-48b9-43e5-a00b-ff248a623f7a",
+    templeteType: 1,
+    pageNumber: 1,
+    pageSize: 10,
+    searchTerm: ""
+  };
+
+  debugger;
+  const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
+  const items = response?.data?.items ?? [];
+
+  // --------------------------------------------------------------------
+  // 🔥 2. CREATE CUSTOM TEMPLATE SOURCE
+  // --------------------------------------------------------------------
+  await engine.asset.addLocalSource(
+    'my-templates',
+    undefined,
+    async (asset: any): Promise<number | undefined> => {
+      try {
+        console.log('🔵 Template clicked:', asset);
+        console.log('🔵 Template ID:', asset.id);
+
+        if (!asset.id) {
+          throw new Error("Template ID is missing");
+        }
+
+        // Fetch template details from API
+        console.log('🔵 Fetching template from API...');
+       
+        const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
+        console.log('🔵 Template data received:', templateData);
+        debugger;
+        if (!templateData?.data?.fileUrl) {
+          throw new Error("Template file URL not found in API response");
+        }
+
+        // Fetch the scene file using Angular HttpClient (avoids CORS issues)
+        console.log('🔵 Fetching scene file from:', templateData.data.fileUrl);
+        
+        const sceneString = await this.templeteService.getTemplateFileContent(templateData.data.fileUrl).toPromise();
+        debugger;
+        if (!sceneString || sceneString.trim() === '') {
+          throw new Error("Scene file content is empty");
+        }
+        
+        console.log('🔵 Scene file loaded successfully');
+        console.log('🔵 Scene string length:', sceneString.length);
+        console.log('🔵 Scene string preview:', sceneString.substring(0, 100));
+        
+        // Clear existing scene first
+        const pages = engine.block.findByType('page');
+        console.log('🔵 Clearing pages:', pages.length);
+        for (const pageId of pages) {
+          engine.block.destroy(pageId);
+        }
+
+        // Load template using sceneString
+        console.log('🔵 Loading scene...');
+        await engine.scene.loadFromString(sceneString);
+        console.log('✅ Template loaded successfully!');
+
+        return undefined;
+      } catch (error) {
+        console.error('❌ Error loading template:', error);
+        throw error; // Re-throw to let CESDK show the error dialog
       }
-    );
+    }
+  );
+
+  // --------------------------------------------------------------------
+  // 🔥 3. ADD API TEMPLATES TO SOURCE
+  // --------------------------------------------------------------------
+  console.log('📦 Templates from API:', items.length, 'items');
+  
+  for (const t of items) {
+    // Clean up URLs - remove any double slashes
+    const thumbUrl = `${environment.apiUrl}/${t.templeteUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    const sceneUrl = `${environment.apiUrl}/${t.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
+
+    console.log('📌 Registering template:', {
+      id: t.id,
+      title: t.title,
+      sceneUrl: sceneUrl,
+      thumbUrl: thumbUrl
+    });
+
+    engine.asset.addAssetToSource('my-templates', {
+      id: t.id,
+      label: { en: t.title },
+      meta: {
+        uri: sceneUrl,           // .txt file with scene data
+        thumbUri: thumbUrl       // .png preview image
+      }
+    });
   }
+  
+  console.log('✅ All templates registered');
+
+  // --------------------------------------------------------------------
+  // 🔥 4. REGISTER UI ENTRY
+  // --------------------------------------------------------------------
+  instance.ui.addAssetLibraryEntry({
+    id: 'my-templates-entry',
+    sourceIds: ['my-templates'],
+    sceneMode: 'Design',
+    previewLength: 10,
+    gridColumns: 2
+  });
+
+  // --------------------------------------------------------------------
+  // 🔥 5. ADD TAB IN LEFT DOCK (Keep all default tabs + add custom)
+  // --------------------------------------------------------------------
+  instance.ui.setDockOrder([
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'my-templates-dock',
+      label: 'Templates',
+      icon: '@imgly/Template',
+      entries: ['my-templates-entry']
+    },
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'ly.img.assetLibrary.images',
+      label: 'Images',
+      icon: '@imgly/Image',
+      entries: ['ly.img.image']
+    },
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'ly.img.assetLibrary.uploads',
+      label: 'Uploads',
+      icon: '@imgly/Upload',
+      entries: ['ly.img.upload']
+    },
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'ly.img.assetLibrary.text',
+      label: 'Text',
+      icon: '@imgly/Text',
+      entries: ['ly.img.text']
+    },
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'ly.img.assetLibrary.shapes',
+      label: 'Shapes',
+      icon: '@imgly/Shapes',
+      entries: ['ly.img.shape', 'ly.img.vectorpath']
+    },
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'ly.img.assetLibrary.stickers',
+      label: 'Stickers',
+      icon: '@imgly/Sticker',
+      entries: ['ly.img.sticker']
+    },
+    
+  ]);
+
+  // --------------------------------------------------------------------
+  // Load blank scene
+  // --------------------------------------------------------------------
+  await instance.createDesignScene();
+  this.editorLoaded = true;
+}
+
 
   onBack(): void {
     window.history.back();
@@ -129,7 +294,6 @@ export class TemplateEditorComponent implements OnInit {
     this.showConfirmDialog = false;
     
     if (!this.editorInstance) {
-      console.error('Editor instance not initialized');
       return;
     }
 
@@ -137,9 +301,6 @@ export class TemplateEditorComponent implements OnInit {
       // Get the scene as JSON string
       const sceneString = await this.editorInstance.engine.scene.saveToString();
       debugger;
-      // Encode to base64
-      
-      console.log('Template Base64:', sceneString);
       
       // Export the current page as PNG
       const engine = this.editorInstance.engine;
@@ -184,13 +345,11 @@ export class TemplateEditorComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Error saving template:', error);
-          alert('Error saving template. Check console for details.');
+          alert('Error saving template. Please try again.');
         }
       });
     } catch (error) {
-      console.error('Error saving template:', error);
-      alert('Error saving template. Check console for details.');
+      alert('Error saving template. Please try again.');
     }
   }
 
@@ -210,8 +369,7 @@ export class TemplateEditorComponent implements OnInit {
           alert('Template loaded successfully!');
         }
       } catch (error) {
-        console.error('Error loading template:', error);
-        alert('Error loading template. Check console for details.');
+        alert('Error loading template. Please try again.');
       }
     };
     reader.readAsText(file);
