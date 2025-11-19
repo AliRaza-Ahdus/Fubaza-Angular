@@ -12,13 +12,13 @@
         
         <div class="input-wrapper">
           <label class="input-label">Sport Type</label>
-          <select [(ngModel)]="selectedSport" class="dropdown">
+          <select [(ngModel)]="selectedSport" (change)="onSportChange()" class="dropdown">
             <option *ngFor="let sport of sportTypes" [value]="sport.id">{{ sport.name }}</option>
           </select>
         </div>
         <div class="input-wrapper">
           <label class="input-label">Template Type</label>
-          <select [(ngModel)]="selectedTemplate" class="dropdown">
+          <select [(ngModel)]="selectedTemplate" (change)="onTemplateTypeChange()" class="dropdown">
             <option *ngFor="let type of templateTypes" [value]="type.id">{{ type.name }}</option>
           </select>
         </div>

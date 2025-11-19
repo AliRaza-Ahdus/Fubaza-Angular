@@ -126,16 +126,27 @@ export class TemplateEditorComponent implements OnInit {
   // --------------------------------------------------------------------
   // 🔥 1. FETCHING TEMPLATES FROM API
   // --------------------------------------------------------------------
-  const requestBody = {
-    sportId: "b1a1cfd3-48b9-43e5-a00b-ff248a623f7a",
-    templeteType: 1,
-    pageNumber: 1,
-    pageSize: 10,
-    searchTerm: ""
-  };
+  let items: any[] = [];
+  
+  if (this.selectedSport) {
+    const requestBody = {
+      sportId: this.selectedSport,
+      templeteType: this.selectedTemplate ? parseInt(this.selectedTemplate) : undefined,
+      pageNumber: 1,
+      pageSize: 10,
+      searchTerm: ""
+    };
 
-  const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
-  const items = response?.data?.items ?? [];
+    try {
+      const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
+      items = response?.data?.items ?? [];
+    } catch (error) {
+      console.error('Error loading templates:', error);
+      // Continue with empty items array
+    }
+  } else {
+    console.warn('No sport selected, loading templates without filter');
+  }
 
   // --------------------------------------------------------------------
   // 🔥 2. CREATE CUSTOM TEMPLATE SOURCE
@@ -277,6 +288,14 @@ export class TemplateEditorComponent implements OnInit {
     window.history.back();
   }
 
+  onSportChange(): void {
+    this.refreshTemplateList();
+  }
+
+  onTemplateTypeChange(): void {
+    this.refreshTemplateList();
+  }
+
   onSave(): void {
     // Validate required fields
     if (!this.templateTitle || this.templateTitle.trim() === '') {
@@ -355,6 +374,17 @@ export class TemplateEditorComponent implements OnInit {
               await this.editorInstance.createDesignScene();
             }
             
+            // Refresh the template list to show the newly saved template
+            console.log('💾 Template saved successfully, now refreshing template list...');
+            console.log('📊 Current selections - Sport:', this.selectedSport, 'Template Type:', this.selectedTemplate);
+            
+            // Wait for backend to process the saved template
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            console.log('🔄 About to call refreshTemplateList()');
+            await this.refreshTemplateList();
+            console.log('✨ Template list refresh completed after save!');
+            
             // Reset template title
             this.templateTitle = 'New Template';
           } else {
@@ -370,17 +400,187 @@ export class TemplateEditorComponent implements OnInit {
     }
   }
 
-  private readBlobAsText(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve(reader.result as string);
+  private async refreshTemplateList(): Promise<void> {
+    if (!this.editorInstance) return;
+
+    const engine = this.editorInstance.engine;
+    const instance = this.editorInstance;
+
+    if (!this.selectedSport) {
+      console.warn('⚠️ No sport selected, skipping refresh');
+      return;
+    }
+
+    try {
+      console.log('🔄 STARTING COMPLETE TEMPLATE REFRESH...');
+      
+      // STEP 1: FETCH FRESH TEMPLATES FIRST
+      console.log('🌐 Fetching fresh templates from API...');
+      const requestBody = {
+        sportId: this.selectedSport,
+        templeteType: this.selectedTemplate ? parseInt(this.selectedTemplate) : undefined,
+        pageNumber: 1,
+        pageSize: 100,
+        searchTerm: "",
+        _t: Date.now()
       };
-      reader.onerror = () => {
-        reject(reader.error);
-      };
-      reader.readAsText(blob);
-    });
+
+      const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
+      const freshItems = response?.data?.items ?? [];
+      console.log('✅ API returned', freshItems.length, 'fresh templates');
+
+      // STEP 2: COMPLETELY REMOVE OLD SOURCE AND ALL REFERENCES
+      console.log('🗑️ CLEARING ALL OLD TEMPLATES AND REFERENCES...');
+      
+      // Remove UI entry first
+      try {
+        instance.ui.unstable_removeAssetLibraryEntry('my-templates-entry');
+        console.log('  ✓ Removed UI entry');
+      } catch (e) {
+        console.warn('  ⚠️ Could not remove entry (may not exist)', e);
+      }
+
+      // Remove the asset source completely
+      try {
+        engine.asset.removeAssetSource('my-templates');
+        console.log('  ✓ Removed asset source');
+      } catch (e) {
+        console.warn('  ⚠️ Could not remove source (may not exist)', e);
+      }
+
+      // Wait for cleanup to complete
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // STEP 3: CREATE COMPLETELY NEW SOURCE FROM SCRATCH
+      console.log('🔨 CREATING NEW FRESH SOURCE...');
+      await engine.asset.addLocalSource(
+        'my-templates',
+        undefined,
+        async (asset: any): Promise<number | undefined> => {
+          try {
+            if (!asset.id) throw new Error("Template ID is missing");
+
+            const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
+            if (!templateData?.data?.fileUrl) {
+              throw new Error("Template file URL not found");
+            }
+
+            const fileUrl = `${environment.apiUrl}/${templateData.data.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
+            const response = await fetch(fileUrl + '?_t=' + Date.now(), {
+              cache: 'no-cache',
+              headers: { 'Cache-Control': 'no-cache' }
+            });
+
+            if (!response.ok) {
+              throw new Error(`Failed to fetch: ${response.status}`);
+            }
+
+            const processedScene = await response.text();
+            if (!processedScene?.trim()) {
+              throw new Error("Scene content is empty");
+            }
+
+            const pages = engine.block.findByType('page');
+            for (const pageId of pages) {
+              engine.block.destroy(pageId);
+            }
+
+            await engine.scene.loadFromString(processedScene);
+            return undefined;
+          } catch (error) {
+            console.error('❌ Error loading template:', error);
+            throw error;
+          }
+        }
+      );
+      console.log('  ✓ New source created');
+
+      // STEP 4: POPULATE NEW SOURCE WITH ONLY FRESH TEMPLATES
+      console.log('📝 POPULATING NEW SOURCE WITH', freshItems.length, 'FRESH TEMPLATES...');
+      const timestamp = Date.now();
+      
+      for (const t of freshItems) {
+        try {
+          const thumbUrl = `${environment.apiUrl}/${t.templeteUrl}`.replace(/([^:]\/)\/+/g, "$1") + '?v=' + timestamp;
+          const sceneUrl = `${environment.apiUrl}/${t.fileUrl}`.replace(/([^:]\/)\/+/g, "$1") + '?v=' + timestamp;
+
+          engine.asset.addAssetToSource('my-templates', {
+            id: t.id,
+            label: { en: t.title },
+            meta: {
+              uri: sceneUrl,
+              thumbUri: thumbUrl
+            }
+          });
+          console.log('    ✓', t.title);
+        } catch (err) {
+          console.error('    ✗ Failed to add:', t.title, err);
+        }
+      }
+      console.log('  ✓ All fresh templates added');
+
+      // STEP 5: ADD NEW UI ENTRY
+      console.log('🎨 ADDING NEW UI ENTRY...');
+      instance.ui.addAssetLibraryEntry({
+        id: 'my-templates-entry',
+        sourceIds: ['my-templates'],
+        sceneMode: 'Design',
+        previewLength: 10,
+        gridColumns: 2
+      });
+      console.log('  ✓ UI entry added');
+
+      // STEP 6: FORCE UI REFRESH WITH NEW DOCK ORDER
+      console.log('🔄 FORCING UI REFRESH WITH NEW DOCK ORDER...');
+      instance.ui.setDockOrder([
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'my-templates-dock',
+          label: 'Templates',
+          icon: '@imgly/Template',
+          entries: ['my-templates-entry']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'ly.img.assetLibrary.images',
+          label: 'Images',
+          icon: '@imgly/Image',
+          entries: ['ly.img.image']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'ly.img.assetLibrary.uploads',
+          label: 'Uploads',
+          icon: '@imgly/Upload',
+          entries: ['ly.img.upload']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'ly.img.assetLibrary.text',
+          label: 'Text',
+          icon: '@imgly/Text',
+          entries: ['ly.img.text']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'ly.img.assetLibrary.shapes',
+          label: 'Shapes',
+          icon: '@imgly/Shapes',
+          entries: ['ly.img.shape', 'ly.img.vectorpath']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'ly.img.assetLibrary.stickers',
+          label: 'Stickers',
+          icon: '@imgly/Sticker',
+          entries: ['ly.img.sticker']
+        }
+      ]);
+
+      console.log('🎉 ✨ TEMPLATE REFRESH COMPLETE! Showing', freshItems.length, 'FRESH TEMPLATES! ✨ 🎉');
+    } catch (error) {
+      console.error('❌ ERROR during template refresh:', error);
+    }
   }
 
 }
