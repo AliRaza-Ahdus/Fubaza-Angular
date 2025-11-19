@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import CreativeEditorSDK, { Configuration } from '@cesdk/cesdk-js';
 import { TempleteService } from '../../../services/templete.service';
 import { Sport, TempleteType } from '../../../models/api-response.model';
@@ -30,7 +31,7 @@ export class TemplateEditorComponent implements OnInit {
   showToast = false;
   toastMessage = '';
 
-  constructor(private templeteService: TempleteService) {}
+  constructor(private templeteService: TempleteService, private http: HttpClient) {}
 
   private showToastMessage(message: string): void {
     this.toastMessage = message;
@@ -103,7 +104,6 @@ export class TemplateEditorComponent implements OnInit {
     searchTerm: ""
   };
 
-  debugger;
   const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
   const items = response?.data?.items ?? [];
 
@@ -124,26 +124,36 @@ export class TemplateEditorComponent implements OnInit {
 
         // Fetch template details from API
         console.log('🔵 Fetching template from API...');
-       
+        console.log('🔵 Template Id:', asset.id);
         const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
         console.log('🔵 Template data received:', templateData);
-        debugger;
         if (!templateData?.data?.fileUrl) {
           throw new Error("Template file URL not found in API response");
         }
 
         // Fetch the scene file using Angular HttpClient (avoids CORS issues)
         console.log('🔵 Fetching scene file from:', templateData.data.fileUrl);
-        
-        const sceneString = await this.templeteService.getTemplateFileContent(templateData.data.fileUrl).toPromise();
+       
+        // Build the full URL with environment.apiUrl
+        const fileUrl = `${environment.apiUrl}/${templateData.data.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
+        console.log('🔵 Full file URL:', fileUrl);
         debugger;
-        if (!sceneString || sceneString.trim() === '') {
+        // Fetch the txt file directly as text using fetch API
+        const response = await fetch(fileUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
+        }
+        
+        const processedScene = await response.text();
+        console.log('🔵 File content received:', processedScene?.substring(0, 100));
+        
+        if (!processedScene || processedScene.trim() === '') {
           throw new Error("Scene file content is empty");
         }
         
         console.log('🔵 Scene file loaded successfully');
-        console.log('🔵 Scene string length:', sceneString.length);
-        console.log('🔵 Scene string preview:', sceneString.substring(0, 100));
+        console.log('🔵 Scene string length:', processedScene.length);
+        console.log('🔵 Scene string preview:', processedScene.substring(0, 100));
         
         // Clear existing scene first
         const pages = engine.block.findByType('page');
@@ -152,9 +162,9 @@ export class TemplateEditorComponent implements OnInit {
           engine.block.destroy(pageId);
         }
 
-        // Load template using sceneString
+        // Load template using processedScene
         console.log('🔵 Loading scene...');
-        await engine.scene.loadFromString(sceneString);
+        await engine.scene.loadFromString(processedScene);
         console.log('✅ Template loaded successfully!');
 
         return undefined;
@@ -300,7 +310,6 @@ export class TemplateEditorComponent implements OnInit {
     try {
       // Get the scene as JSON string
       const sceneString = await this.editorInstance.engine.scene.saveToString();
-      debugger;
       
       // Export the current page as PNG
       const engine = this.editorInstance.engine;
@@ -334,7 +343,6 @@ export class TemplateEditorComponent implements OnInit {
       formData.append('documentTypes', '1');
       formData.append('documentTypes', '2');
 
-      debugger; 
       // Save to backend
       this.templeteService.addOrUpdateTemplete(formData).subscribe({
         next: (response) => {
@@ -363,7 +371,6 @@ export class TemplateEditorComponent implements OnInit {
         const base64 = e.target?.result as string;
         // Decode from base64
         const sceneString = atob(base64);
-        debugger;
         if (this.editorInstance) {
           await this.editorInstance.engine.scene.loadFromString(sceneString);
           alert('Template loaded successfully!');
@@ -383,6 +390,19 @@ export class TemplateEditorComponent implements OnInit {
     link.download = filename;
     link.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  private readBlobAsText(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve(reader.result as string);
+      };
+      reader.onerror = () => {
+        reject(reader.error);
+      };
+      reader.readAsText(blob);
+    });
   }
 
 }

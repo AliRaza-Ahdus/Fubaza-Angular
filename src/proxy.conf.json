@@ -1,14 +1,14 @@
 {
   "/api": {
-    "target": "http://35.225.113.177:5000",
-    "secure": false,
+    "target": "https://fubuza-api.ahdus.de",
+    "secure": true,
     "changeOrigin": true,
-    "logLevel": "debug",
-    "pathRewrite": {
-      "^/api": ""
-    },
-    "headers": {
-      "Connection": "keep-alive"
-    }
+    "logLevel": "debug"
+  },
+  "/Attachments": {
+    "target": "https://fubuza-api.ahdus.de",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
 } 

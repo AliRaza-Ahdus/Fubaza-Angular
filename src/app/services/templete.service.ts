@@ -41,12 +41,6 @@ export class TempleteService {
   addOrUpdateTemplete(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/Templete/AddOrUpdatedTemplete`, formData);
   }
-  
-  // Fetch template file content (scene data) from URL
-  getTemplateFileContent(fileUrl: string): Observable<string> {
-    const fullUrl = `${this.baseUrl}/${fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
-    return this.http.get(fullUrl, { responseType: 'text' });
-  }
 
   saveTemplate(payload: any): Observable<any> {
     return this.http.post(this.baseUrl, payload);
