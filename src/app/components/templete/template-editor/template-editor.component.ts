@@ -310,6 +310,8 @@ export class TemplateEditorComponent implements OnInit {
     try {
       // Get the scene as JSON string
       const sceneString = await this.editorInstance.engine.scene.saveToString();
+
+      debugger;
       
       // Export the current page as PNG
       const engine = this.editorInstance.engine;
@@ -359,37 +361,6 @@ export class TemplateEditorComponent implements OnInit {
     } catch (error) {
       alert('Error saving template. Please try again.');
     }
-  }
-
-  onLoad(event: any): void {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const base64 = e.target?.result as string;
-        // Decode from base64
-        const sceneString = atob(base64);
-        if (this.editorInstance) {
-          await this.editorInstance.engine.scene.loadFromString(sceneString);
-          alert('Template loaded successfully!');
-        }
-      } catch (error) {
-        alert('Error loading template. Please try again.');
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  private downloadBase64(data: string, filename: string): void {
-    const blob = new Blob([data], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    window.URL.revokeObjectURL(url);
   }
 
   private readBlobAsText(blob: Blob): Promise<string> {
