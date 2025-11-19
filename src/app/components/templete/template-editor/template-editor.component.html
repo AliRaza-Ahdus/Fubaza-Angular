@@ -72,3 +72,20 @@
     <span class="toast-text">{{ toastMessage }}</span>
   </div>
 </div>
+
+<!-- Custom Popup Toast -->
+<div class="popup-toast" *ngIf="popupVisible" [ngClass]="[popupType, popupFadeOut ? 'fade-out' : '']">
+  <div class="popup-toast-content">
+    <div class="popup-toast-icon">
+      <span *ngIf="popupType === 'success'">✓</span>
+      <span *ngIf="popupType === 'error'">✕</span>
+    </div>
+    <div class="popup-toast-body">
+      <div class="popup-toast-title">{{ popupTitle }}</div>
+      <div class="popup-toast-message">{{ popupMessage }}</div>
+    </div>
+    <button class="popup-toast-close" (click)="closePopup()" aria-label="Close">
+      ×
+    </button>
+  </div>
+</div>

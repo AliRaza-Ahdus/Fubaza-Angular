@@ -30,6 +30,11 @@ export class TemplateEditorComponent implements OnInit {
   showConfirmDialog = false;
   showToast = false;
   toastMessage = '';
+  popupVisible = false;
+  popupType: 'success' | 'error' = 'success';
+  popupMessage = '';
+  popupTitle = '';
+  popupFadeOut = false;
 
   constructor(private templeteService: TempleteService, private http: HttpClient) {}
 
@@ -40,6 +45,31 @@ export class TemplateEditorComponent implements OnInit {
       this.showToast = false;
       this.toastMessage = '';
     }, 3000);
+  }
+
+  private showPopup(type: 'success' | 'error', title: string, message: string): void {
+    this.popupType = type;
+    this.popupTitle = title;
+    this.popupMessage = message;
+    this.popupVisible = true;
+    this.popupFadeOut = false;
+    
+    // Auto-dismiss after 4 seconds
+    setTimeout(() => {
+      this.closePopup();
+    }, 4000);
+  }
+
+  closePopup(): void {
+    this.popupFadeOut = true;
+    // Wait for animation to complete before hiding
+    setTimeout(() => {
+      this.popupVisible = false;
+      this.popupType = 'success';
+      this.popupTitle = '';
+      this.popupMessage = '';
+      this.popupFadeOut = false;
+    }, 300);
   }
 
   ngOnInit(): void {
@@ -135,18 +165,7 @@ export class TemplateEditorComponent implements OnInit {
           throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
         }
         
-        const sceneText = await response.text();
-        
-        // Handle base64 encoded scene data
-        let processedScene = sceneText;
-        if (sceneText && sceneText.trim().match(/^[A-Za-z0-9+/=]+$/)) {
-          try {
-            processedScene = atob(sceneText);
-          } catch (e) {
-            // If base64 decoding fails, use as plain text
-            processedScene = sceneText;
-          }
-        }
+        const processedScene = await response.text();
         
         if (!processedScene || processedScene.trim() === '') {
           throw new Error("Scene file content is empty");
@@ -163,13 +182,6 @@ export class TemplateEditorComponent implements OnInit {
 
         return undefined;
       } catch (error) {
-        console.error('Template loading error:', error);
-        // Create a new blank scene if loading fails
-        try {
-          await engine.scene.loadFromString('{"version":"1.0","blocks":[]}');
-        } catch (fallbackError) {
-          console.error('Fallback scene creation failed:', fallbackError);
-        }
         throw error; // Re-throw to let CESDK show the error dialog
       }
     }
@@ -312,8 +324,8 @@ export class TemplateEditorComponent implements OnInit {
       const pageId = pages[0];
       const imageBlob = await engine.block.export(pageId, 'image/png');
       
-      // Create JSON file from base64 encoded scene
-      const jsonBlob = new Blob([btoa(sceneString)], { type: 'text/plain' });
+      // Create JSON file from base64
+      const jsonBlob = new Blob([sceneString], { type: 'text/plain' });
       
       // Prepare FormData for API with files array
       const formData = new FormData();
@@ -334,15 +346,23 @@ export class TemplateEditorComponent implements OnInit {
 
       // Save to backend
       this.templeteService.addOrUpdateTemplete(formData).subscribe({
-        next: (response) => {
+        next: async (response) => {
           if (response.success) {
-            alert('Template saved successfully!');
+            this.showPopup('success', 'Template Saved', 'Template saved successfully!');
+            
+            // Clear the canvas after successful save
+            if (this.editorInstance) {
+              await this.editorInstance.createDesignScene();
+            }
+            
+            // Reset template title
+            this.templateTitle = 'New Template';
           } else {
-            alert('Error saving template: ' + response.message);
+            this.showPopup('error', 'Save Failed', 'Error saving template: ' + response.message);
           }
         },
         error: (error) => {
-          alert('Error saving template. Please try again.');
+          this.showPopup('error', 'Save Failed', 'Error saving template. Please try again.');
         }
       });
     } catch (error) {
