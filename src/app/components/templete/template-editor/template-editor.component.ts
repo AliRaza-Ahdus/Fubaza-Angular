@@ -115,61 +115,61 @@ export class TemplateEditorComponent implements OnInit {
     undefined,
     async (asset: any): Promise<number | undefined> => {
       try {
-        console.log('🔵 Template clicked:', asset);
-        console.log('🔵 Template ID:', asset.id);
-
         if (!asset.id) {
           throw new Error("Template ID is missing");
         }
 
         // Fetch template details from API
-        console.log('🔵 Fetching template from API...');
-        console.log('🔵 Template Id:', asset.id);
         const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
-        console.log('🔵 Template data received:', templateData);
         if (!templateData?.data?.fileUrl) {
           throw new Error("Template file URL not found in API response");
         }
 
         // Fetch the scene file using Angular HttpClient (avoids CORS issues)
-        console.log('🔵 Fetching scene file from:', templateData.data.fileUrl);
-       
         // Build the full URL with environment.apiUrl
         const fileUrl = `${environment.apiUrl}/${templateData.data.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
-        console.log('🔵 Full file URL:', fileUrl);
-        debugger;
+        
         // Fetch the txt file directly as text using fetch API
         const response = await fetch(fileUrl);
         if (!response.ok) {
           throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
         }
         
-        const processedScene = await response.text();
-        console.log('🔵 File content received:', processedScene?.substring(0, 100));
+        const sceneText = await response.text();
+        
+        // Handle base64 encoded scene data
+        let processedScene = sceneText;
+        if (sceneText && sceneText.trim().match(/^[A-Za-z0-9+/=]+$/)) {
+          try {
+            processedScene = atob(sceneText);
+          } catch (e) {
+            // If base64 decoding fails, use as plain text
+            processedScene = sceneText;
+          }
+        }
         
         if (!processedScene || processedScene.trim() === '') {
           throw new Error("Scene file content is empty");
         }
         
-        console.log('🔵 Scene file loaded successfully');
-        console.log('🔵 Scene string length:', processedScene.length);
-        console.log('🔵 Scene string preview:', processedScene.substring(0, 100));
-        
         // Clear existing scene first
         const pages = engine.block.findByType('page');
-        console.log('🔵 Clearing pages:', pages.length);
         for (const pageId of pages) {
           engine.block.destroy(pageId);
         }
 
         // Load template using processedScene
-        console.log('🔵 Loading scene...');
         await engine.scene.loadFromString(processedScene);
-        console.log('✅ Template loaded successfully!');
 
         return undefined;
       } catch (error) {
-        console.error('❌ Error loading template:', error);
+        console.error('Template loading error:', error);
+        // Create a new blank scene if loading fails
+        try {
+          await engine.scene.loadFromString('{"version":"1.0","blocks":[]}');
+        } catch (fallbackError) {
+          console.error('Fallback scene creation failed:', fallbackError);
+        }
         throw error; // Re-throw to let CESDK show the error dialog
       }
     }
@@ -178,19 +178,10 @@ export class TemplateEditorComponent implements OnInit {
   // --------------------------------------------------------------------
   // 🔥 3. ADD API TEMPLATES TO SOURCE
   // --------------------------------------------------------------------
-  console.log('📦 Templates from API:', items.length, 'items');
-  
   for (const t of items) {
     // Clean up URLs - remove any double slashes
     const thumbUrl = `${environment.apiUrl}/${t.templeteUrl}`.replace(/([^:]\/)\/+/g, "$1");
     const sceneUrl = `${environment.apiUrl}/${t.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
-
-    console.log('📌 Registering template:', {
-      id: t.id,
-      title: t.title,
-      sceneUrl: sceneUrl,
-      thumbUrl: thumbUrl
-    });
 
     engine.asset.addAssetToSource('my-templates', {
       id: t.id,
@@ -201,8 +192,6 @@ export class TemplateEditorComponent implements OnInit {
       }
     });
   }
-  
-  console.log('✅ All templates registered');
 
   // --------------------------------------------------------------------
   // 🔥 4. REGISTER UI ENTRY
@@ -310,8 +299,6 @@ export class TemplateEditorComponent implements OnInit {
     try {
       // Get the scene as JSON string
       const sceneString = await this.editorInstance.engine.scene.saveToString();
-
-      debugger;
       
       // Export the current page as PNG
       const engine = this.editorInstance.engine;
@@ -325,8 +312,8 @@ export class TemplateEditorComponent implements OnInit {
       const pageId = pages[0];
       const imageBlob = await engine.block.export(pageId, 'image/png');
       
-      // Create JSON file from base64
-      const jsonBlob = new Blob([sceneString], { type: 'text/plain' });
+      // Create JSON file from base64 encoded scene
+      const jsonBlob = new Blob([btoa(sceneString)], { type: 'text/plain' });
       
       // Prepare FormData for API with files array
       const formData = new FormData();

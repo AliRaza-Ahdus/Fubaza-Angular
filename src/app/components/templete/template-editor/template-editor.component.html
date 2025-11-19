@@ -9,10 +9,7 @@
   <div class="controls-header" [class.hidden]="!editorLoaded">
     <div class="controls-wrapper">
       <div class="controls-group">
-        <div class="input-wrapper">
-          <label class="input-label">Template Title</label>
-          <input [(ngModel)]="templateTitle" placeholder="Enter template name" class="title-input" />
-        </div>
+        
         <div class="input-wrapper">
           <label class="input-label">Sport Type</label>
           <select [(ngModel)]="selectedSport" class="dropdown">
@@ -24,6 +21,10 @@
           <select [(ngModel)]="selectedTemplate" class="dropdown">
             <option *ngFor="let type of templateTypes" [value]="type.id">{{ type.name }}</option>
           </select>
+        </div>
+        <div class="input-wrapper">
+          <label class="input-label">Template Title</label>
+          <input [(ngModel)]="templateTitle" placeholder="Enter template name" class="title-input" />
         </div>
       </div>
       <div class="controls-actions">
