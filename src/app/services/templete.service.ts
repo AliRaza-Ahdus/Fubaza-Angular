@@ -53,4 +53,16 @@ export class TempleteService {
   getTemplatesBySport(sport: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}?sport=${sport}`);
   }
+
+  // Upload template image
+  uploadTemplateImage(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.baseUrl}/api/Templete/UplaodTempleteImage`, formData);
+  }
+
+  // Get list of uploaded template images
+  getTemplateImages(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/Templete/GetTempleteImage`);
+  }
 }

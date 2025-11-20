@@ -19,6 +19,8 @@ export class TemplateEditorComponent implements OnInit {
   title = 'Integrate CreativeEditor SDK with Angular';
   private editorInstance: any;
   private isInitialized = false;
+  private uploadInProgress = new Set<string>(); // Track uploads to prevent duplicates
+  private uploadedAssets = new Set<string>(); // Track successfully uploaded assets
 
   sportTypes: Sport[] = [];
   templateTypes: TempleteType[] = [];
@@ -228,6 +230,137 @@ export class TemplateEditorComponent implements OnInit {
   });
 
   // --------------------------------------------------------------------
+  // 🔥 CUSTOM IMAGE UPLOADS SOURCE
+  // --------------------------------------------------------------------
+await engine.asset.addSource({
+  id: 'userUploads',
+
+  // Allow only images
+  getSupportedMimeTypes: () => [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'image/gif',
+    'image/webp'
+  ],
+
+  // Fetch previously uploaded images
+  findAssets: async () => {
+    try {
+      const response = await this.templeteService.getTemplateImages().toPromise();
+      const files = response?.data || [];
+
+      const assets = files.map((file: any) => ({
+        id: file.id.toString(),
+        label: file.fileName,
+        meta: {
+          uri: `${environment.apiUrl}/${file.fileUrl}`,
+          thumbUri: `${environment.apiUrl}/${file.fileUrl}`,
+          mimeType: this.getMimeTypeFromFileName(file.fileName),
+          blockType: '//ly.img.ubq/graphic',
+          fillType: '//ly.img.ubq/fill/image',
+          shapeType: '//ly.img.ubq/shape/rect',
+          kind: 'image'
+        }
+      }));
+
+      return {
+        assets,
+        total: assets.length,
+        currentPage: 1,
+        totalPages: 1,
+      };
+
+    } catch (error) {
+      console.error("Error loading user images:", error);
+      return { assets: [], total: 0, currentPage: 1, totalPages: 1 };
+    }
+  },
+
+  // Handle Upload inside CE.SDK
+  addAsset: async (asset: any) => {
+    let uniqueId: string | undefined;
+
+    try {
+      // Step 1: Get Blob from local temp URL
+      const blobUrl = asset.meta?.uri;
+      if (!blobUrl) {
+        throw new Error('No asset URI to upload');
+      }
+
+      const blob = await fetch(blobUrl).then(res => res.blob());
+
+      // Create a unique identifier based on blob size and type
+      uniqueId = `${blob.size}-${blob.type}`;
+
+      // Check if this upload is already in progress or completed
+      if (this.uploadInProgress.has(uniqueId) || this.uploadedAssets.has(uniqueId)) {
+        console.log('Upload already in progress or completed for:', uniqueId);
+        return; // Skip duplicate upload
+      }
+
+      // Mark upload as in progress
+      this.uploadInProgress.add(uniqueId);
+
+      console.log('🚀 Starting upload for:', uniqueId);
+
+      // Step 2: Convert to File
+      const extension = blob.type.split("/")[1];
+      const fileName = `upload_${Date.now()}.${extension}`;
+      const file = new File([blob], fileName, { type: blob.type });
+
+      // Step 3: Upload File to Backend
+      console.log('📤 Uploading to backend...');
+      const uploadRes = await this.templeteService.uploadTemplateImage(file).toPromise();
+
+      if (!uploadRes?.success) throw new Error("Upload failed");
+
+      const result = uploadRes.data;
+      const serverUrl = `${environment.apiUrl}/${result.fileUrl}`;
+
+      console.log('✅ Upload successful, server URL:', serverUrl);
+
+      // Step 4: Replace CE.SDK asset URL with server URL
+      asset.meta.uri = serverUrl;
+      asset.meta.thumbUri = serverUrl;
+      asset.label = result.fileName;
+      asset.id = result.id;
+
+      // Step 5: Immediately add to CE browser (only if not already added)
+      if (!this.uploadedAssets.has(uniqueId)) {
+        engine.asset.addAssetToSource('userUploads', {
+          id: asset.id,
+          label: asset.label,
+          meta: asset.meta
+        });
+        this.uploadedAssets.add(uniqueId);
+        console.log('📝 Added asset to source:', asset.id);
+      }
+
+      this.showPopup('success', 'Upload Successful', 'Image uploaded successfully!');
+
+    } catch (error) {
+      console.error("❌ Upload Error:", error);
+      this.showPopup('error', 'Upload Failed', 'Failed to upload image.');
+      throw error;
+    } finally {
+      // Always remove from in-progress set
+      if (uniqueId) {
+        this.uploadInProgress.delete(uniqueId);
+        console.log('🧹 Cleaned up upload tracking for:', uniqueId);
+      }
+    }
+  }
+  });
+
+  // Add custom uploads library entry
+  instance.ui.addAssetLibraryEntry({
+  id: 'myUploadsLibrary',
+  sourceIds: ['userUploads'],
+  previewLength: 12,
+  gridColumns: 3,
+  canAdd: true
+  });
   // 🔥 5. ADD TAB IN LEFT DOCK (Keep all default tabs + add custom)
   // --------------------------------------------------------------------
   instance.ui.setDockOrder([
@@ -240,17 +373,17 @@ export class TemplateEditorComponent implements OnInit {
     },
     {
       id: 'ly.img.assetLibrary.dock',
+      key: 'myUploadsLibrary',
+      label: 'Uploads',
+      icon: '@imgly/Upload',
+      entries: ['myUploadsLibrary']
+    },
+    {
+      id: 'ly.img.assetLibrary.dock',
       key: 'ly.img.assetLibrary.images',
       label: 'Images',
       icon: '@imgly/Image',
       entries: ['ly.img.image']
-    },
-    {
-      id: 'ly.img.assetLibrary.dock',
-      key: 'ly.img.assetLibrary.uploads',
-      label: 'Uploads',
-      icon: '@imgly/Upload',
-      entries: ['ly.img.upload']
     },
     {
       id: 'ly.img.assetLibrary.dock',
@@ -273,7 +406,7 @@ export class TemplateEditorComponent implements OnInit {
       icon: '@imgly/Sticker',
       entries: ['ly.img.sticker']
     },
-    
+
   ]);
 
   // --------------------------------------------------------------------
@@ -397,6 +530,17 @@ export class TemplateEditorComponent implements OnInit {
       });
     } catch (error) {
       alert('Error saving template. Please try again.');
+    }
+  }
+
+  private getMimeTypeFromFileName(fileName: string): string {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    switch (extension) {
+      case 'png': return 'image/png';
+      case 'jpg': case 'jpeg': return 'image/jpeg';
+      case 'gif': return 'image/gif';
+      case 'webp': return 'image/webp';
+      default: return 'image/jpeg';
     }
   }
 
@@ -542,17 +686,17 @@ export class TemplateEditorComponent implements OnInit {
         },
         {
           id: 'ly.img.assetLibrary.dock',
+          key: 'myUploadsLibrary',
+          label: 'Uploaded',
+          icon: '@imgly/Upload',
+          entries: ['myUploadsLibrary']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
           key: 'ly.img.assetLibrary.images',
           label: 'Images',
           icon: '@imgly/Image',
           entries: ['ly.img.image']
-        },
-        {
-          id: 'ly.img.assetLibrary.dock',
-          key: 'ly.img.assetLibrary.uploads',
-          label: 'Uploads',
-          icon: '@imgly/Upload',
-          entries: ['ly.img.upload']
         },
         {
           id: 'ly.img.assetLibrary.dock',
