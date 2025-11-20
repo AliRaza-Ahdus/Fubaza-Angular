@@ -65,4 +65,9 @@ export class TempleteService {
   getTemplateImages(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/api/Templete/GetTempleteImage`);
   }
+
+  // Delete template image
+  deleteTemplateImage(imageId: string): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/api/Templete/TempleteImage/${imageId}/delete`, null);
+  }
 }

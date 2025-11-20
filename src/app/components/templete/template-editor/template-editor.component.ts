@@ -21,6 +21,7 @@ export class TemplateEditorComponent implements OnInit {
   private isInitialized = false;
   private uploadInProgress = new Set<string>(); // Track uploads to prevent duplicates
   private uploadedAssets = new Set<string>(); // Track successfully uploaded assets
+  private deleteInProgress = new Set<string>(); // Track deletes to prevent duplicates
 
   sportTypes: Sport[] = [];
   templateTypes: TempleteType[] = [];
@@ -350,6 +351,49 @@ await engine.asset.addSource({
         console.log('🧹 Cleaned up upload tracking for:', uniqueId);
       }
     }
+  },
+
+  // Handle Delete inside CE.SDK
+  removeAsset: async (asset: any) => {
+    try {
+      console.log('🗑️ Deleting asset:', asset);
+
+      // Check if this delete is already in progress
+      if (this.deleteInProgress.has(asset)) {
+        console.log('Delete already in progress for:', asset);
+        return; // Skip duplicate delete
+      }
+
+      // Mark delete as in progress
+      this.deleteInProgress.add(asset);
+
+      // Call the delete API
+      const deleteRes = await this.templeteService.deleteTemplateImage(asset).toPromise();
+
+      if (!deleteRes?.success) {
+        throw new Error("Delete failed");
+      }
+
+      // Remove from CE.SDK source
+      engine.asset.removeAssetFromSource('userUploads', asset);
+
+      // Remove from local tracking if needed
+      // Note: We don't have a reverse mapping from asset.id to uniqueId, but that's okay
+      // since the asset is removed from the UI and backend
+
+      this.showPopup('success', 'Delete Successful', 'Image deleted successfully!');
+
+      console.log('✅ Asset deleted successfully:', asset);
+
+    } catch (error) {
+      console.error("❌ Delete Error:", error);
+      this.showPopup('error', 'Delete Failed', 'Failed to delete image.');
+      throw error;
+    } finally {
+      // Always remove from in-progress set
+      this.deleteInProgress.delete(asset.id);
+      console.log('🧹 Cleaned up delete tracking for:', asset);
+    }
   }
   });
 
@@ -359,7 +403,8 @@ await engine.asset.addSource({
   sourceIds: ['userUploads'],
   previewLength: 12,
   gridColumns: 3,
-  canAdd: true
+  canAdd: true,
+  canRemove: true
   });
   // 🔥 5. ADD TAB IN LEFT DOCK (Keep all default tabs + add custom)
   // --------------------------------------------------------------------
