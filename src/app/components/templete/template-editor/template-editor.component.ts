@@ -454,7 +454,7 @@ await engine.asset.addSource({
     {
       id: 'ly.img.assetLibrary.dock',
       key: 'myUploadsLibrary',
-      label: 'My Images',
+      label: 'My Uploads',
       icon: '@imgly/Upload',
       entries: ['myUploadsLibrary']
     },
@@ -468,7 +468,7 @@ await engine.asset.addSource({
     {
       id: 'ly.img.assetLibrary.dock',
       key: 'images-dock',
-      label: 'Stock Images',
+      label: 'Images',
       icon: '@imgly/Image',
       entries: ['ly.img.image'] // Images tab with user uploads first, then stock images
     },
@@ -820,7 +820,7 @@ await engine.asset.addSource({
         {
           id: 'ly.img.assetLibrary.dock',
           key: 'myUploadsLibrary',
-          label: 'My Images',
+          label: 'My Uploads',
           icon: '@imgly/Upload',
           entries: ['myUploadsLibrary']
         },
