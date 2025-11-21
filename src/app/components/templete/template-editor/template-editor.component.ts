@@ -144,11 +144,10 @@ export class TemplateEditorComponent implements OnInit {
       const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
       items = response?.data?.items ?? [];
     } catch (error) {
-      console.error('Error loading templates:', error);
       // Continue with empty items array
     }
   } else {
-    console.warn('No sport selected, loading templates without filter');
+    // No sport selected, loading templates without filter
   }
 
   // --------------------------------------------------------------------
@@ -279,7 +278,6 @@ await engine.asset.addSource({
       };
 
     } catch (error) {
-      console.error("Error loading user images:", error);
       return { assets: [], total: 0, currentPage: 1, totalPages: 1 };
     }
   },
@@ -353,7 +351,6 @@ await engine.asset.addSource({
       this.showPopup('success', 'Upload Successful', 'Image uploaded successfully!');
 
     } catch (error) {
-      console.error("❌ Upload Error:", error);
       this.showPopup('error', 'Upload Failed', 'Failed to upload image.');
       throw error;
     } finally {
@@ -392,7 +389,6 @@ await engine.asset.addSource({
       this.showPopup('success', 'Delete Successful', 'Image deleted successfully!');
 
     } catch (error) {
-      console.error("❌ Delete Error:", error);
       this.showPopup('error', 'Delete Failed', 'Failed to delete image.');
       throw error;
     } finally {
@@ -411,9 +407,57 @@ await engine.asset.addSource({
   canAdd: true,
   canRemove: true,
   });
-  // 🔥 5. ADD TAB IN LEFT DOCK (Keep all default tabs + add custom)
+
+  // Add dedicated image replacement entry that prioritizes user uploads
+  instance.ui.addAssetLibraryEntry({
+  id: 'imageReplacementLibrary',
+  sourceIds: ['userUploads', 'ly.img.image'], // User uploads first, then stock images
+  previewLength: 5,
+  gridColumns: 4,
+  canAdd: true, // No upload button in replacement dialog
+  canRemove: true, // No delete in replacement dialog
+  });
+
+  // Create an alias source with custom display name "MY Images"
+  await engine.asset.addSource({
+    id: 'MY Images',
+    findAssets: async (queryData: any) => {
+      // Delegate to userUploads source
+      return await engine.asset.findAssets('userUploads', queryData);
+    },
+    getSupportedMimeTypes: () => [
+      'image/png',
+      'image/jpeg',
+      'image/jpg',
+      'image/gif',
+      'image/webp',
+      'image/svg+xml'
+    ]
+  });
+
+  // Modify the default image library entry to include user uploads with sections
+  try {
+    instance.ui.removeAssetLibraryEntry('ly.img.image');
+  } catch (e) {
+    // Entry might not exist, that's okay
+  }
+  
+  instance.ui.addAssetLibraryEntry({
+    id: 'ly.img.image',
+    sourceIds: ['MY Images', 'ly.img.image'], // User uploads appear first with "MY Images" label
+    previewLength: 5,
+    gridColumns: 4,
+  });
+  // 🔥 5. ADD TAB IN LEFT DOCK (Clean and organized for users)
   // --------------------------------------------------------------------
   instance.ui.setDockOrder([
+    {
+      id: 'ly.img.assetLibrary.dock',
+      key: 'myUploadsLibrary',
+      label: 'My Images',
+      icon: '@imgly/Upload',
+      entries: ['myUploadsLibrary']
+    },
     {
       id: 'ly.img.assetLibrary.dock',
       key: 'my-templates-dock',
@@ -423,10 +467,10 @@ await engine.asset.addSource({
     },
     {
       id: 'ly.img.assetLibrary.dock',
-      key: 'myUploadsLibrary',
-      label: 'Uploads',
-      icon: '@imgly/Upload',
-      entries: ['myUploadsLibrary']
+      key: 'images-dock',
+      label: 'Stock Images',
+      icon: '@imgly/Image',
+      entries: ['ly.img.image'] // Images tab with user uploads first, then stock images
     },
     {
       id: 'ly.img.assetLibrary.dock',
@@ -448,8 +492,7 @@ await engine.asset.addSource({
       label: 'Stickers',
       icon: '@imgly/Sticker',
       entries: ['ly.img.sticker']
-    },
-
+    }
   ]);
 
   // --------------------------------------------------------------------
@@ -574,21 +617,17 @@ await engine.asset.addSource({
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(`🔄 Refresh attempt ${attempt}/${maxRetries} after template save`);
 
         await this.refreshTemplateList();
 
         // Check if the template list was successfully refreshed
         // We can add additional validation here if needed
 
-        console.log(`✅ Template list refreshed successfully on attempt ${attempt}`);
         return; // Success, exit the retry loop
 
       } catch (error) {
-        console.warn(`⚠️ Template refresh attempt ${attempt} failed:`, error);
 
         if (attempt === maxRetries) {
-          console.error('❌ All template refresh attempts failed');
           this.showPopup('error', 'Refresh Warning', 'Template saved but list may not update immediately. Please refresh manually if needed.');
           return;
         }
@@ -618,7 +657,6 @@ await engine.asset.addSource({
     const instance = this.editorInstance;
 
     if (!this.selectedSport) {
-      console.warn('⚠️ No sport selected, skipping refresh');
       return;
     }
 
@@ -643,14 +681,14 @@ await engine.asset.addSource({
       try {
         instance.ui.unstable_removeAssetLibraryEntry('my-templates-entry');
       } catch (e) {
-        console.warn('  ⚠️ Could not remove entry (may not exist)', e);
+        // Entry might not exist, that's okay
       }
 
       // Remove the asset source completely
       try {
         await engine.asset.removeSource('my-templates');
       } catch (e) {
-        console.warn('  ⚠️ Could not remove source (may not exist or method not available)', e);
+        // Source might not exist, that's okay
         // Try alternative approach - clear all assets from the source
         try {
           const existingAssets = await engine.asset.findAssets('my-templates', {});
@@ -658,11 +696,11 @@ await engine.asset.addSource({
             try {
               await engine.asset.removeAssetFromSource('my-templates', asset.id);
             } catch (removeError) {
-              console.warn('    Could not remove asset:', asset.id, removeError);
+              // Could not remove asset
             }
           }
         } catch (clearError) {
-          console.warn('    Could not clear existing assets:', clearError);
+          // Could not clear existing assets
         }
       }
 
@@ -707,15 +745,13 @@ await engine.asset.addSource({
               await engine.scene.loadFromString(processedScene);
               return undefined;
             } catch (error) {
-              console.error('❌ Error loading template:', error);
               throw error;
             }
           }
         );
       } catch (sourceError: any) {
         if (sourceError?.message?.includes('already exists')) {
-          console.log('  ℹ️ Source already exists, will update assets instead');
-          // Source already exists, we'll just update the assets
+          // Source already exists, will update assets instead
         } else {
           throw sourceError; // Re-throw if it's a different error
         }
@@ -738,7 +774,7 @@ await engine.asset.addSource({
             }
           });
         } catch (err) {
-          console.error('    ✗ Failed to add:', t.title, err);
+          // Failed to add asset
         }
       }
 
@@ -753,28 +789,34 @@ await engine.asset.addSource({
 
       // Ensure professional images library entry exists
       try {
-        instance.ui.unstable_removeAssetLibraryEntry('professionalImagesLibrary');
+        instance.ui.removeAssetLibraryEntry('professionalImagesLibrary');
       } catch (e) {
         // Entry might not exist, that's okay
       }
       instance.ui.addAssetLibraryEntry({
         id: 'professionalImagesLibrary',
-        sourceIds: ['ly.img.image', 'userUploads'],
+        sourceIds: ['userUploads', 'ly.img.image'], // User uploads first
         previewLength: 24,
         gridColumns: 4,
         canAdd: false,
         canRemove: false,
       });
 
-      // STEP 6: FORCE UI REFRESH WITH NEW DOCK ORDER
+      // Update the default image library to prioritize user uploads
+      try {
+        instance.ui.removeAssetLibraryEntry('ly.img.image');
+      } catch (e) {
+        // Entry might not exist, that's okay
+      }
+      instance.ui.addAssetLibraryEntry({
+        id: 'ly.img.image',
+        sourceIds: ['userUploads', 'ly.img.image'], // User uploads appear first
+        previewLength: 24,
+        gridColumns: 4,
+      });
+
+      // STEP 6: FORCE UI REFRESH WITH CLEAN DOCK ORDER
       instance.ui.setDockOrder([
-        {
-          id: 'ly.img.assetLibrary.dock',
-          key: 'my-templates-dock',
-          label: 'Templates',
-          icon: '@imgly/Template',
-          entries: ['my-templates-entry']
-        },
         {
           id: 'ly.img.assetLibrary.dock',
           key: 'myUploadsLibrary',
@@ -784,10 +826,17 @@ await engine.asset.addSource({
         },
         {
           id: 'ly.img.assetLibrary.dock',
-          key: 'professionalImagesLibrary',
-          label: 'Image Library',
+          key: 'my-templates-dock',
+          label: 'Templates',
+          icon: '@imgly/Template',
+          entries: ['my-templates-entry']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'images-dock',
+          label: 'Images',
           icon: '@imgly/Image',
-          entries: ['professionalImagesLibrary']
+          entries: ['ly.img.image'] // Images tab with user uploads first, then stock images
         },
         {
           id: 'ly.img.assetLibrary.dock',
@@ -812,7 +861,7 @@ await engine.asset.addSource({
         }
       ]);
     } catch (error) {
-      console.error('❌ ERROR during template refresh:', error);
+      // Error during template refresh
     }
   }
 
