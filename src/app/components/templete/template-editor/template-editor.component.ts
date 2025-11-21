@@ -296,14 +296,11 @@ await engine.asset.addSource({
 
       // Check if this upload is already in progress or completed
       if (this.uploadInProgress.has(uniqueId) || this.uploadedAssets.has(uniqueId)) {
-        console.log('Upload already in progress or completed for:', uniqueId);
         return; // Skip duplicate upload
       }
 
       // Mark upload as in progress
       this.uploadInProgress.add(uniqueId);
-
-      console.log('🚀 Starting upload for:', uniqueId);
 
       // Step 2: Convert to File
       const extension = blob.type.split("/")[1];
@@ -311,15 +308,12 @@ await engine.asset.addSource({
       const file = new File([blob], fileName, { type: blob.type });
 
       // Step 3: Upload File to Backend
-      console.log('📤 Uploading to backend...');
       const uploadRes = await this.templeteService.uploadTemplateImage(file).toPromise();
 
       if (!uploadRes?.success) throw new Error("Upload failed");
 
       const result = uploadRes.data;
       const serverUrl = `${environment.apiUrl}/${result.fileUrl}`;
-
-      console.log('✅ Upload successful, server URL:', serverUrl);
 
       // Step 4: Replace CE.SDK asset URL with server URL
       asset.meta.uri = serverUrl;
@@ -335,7 +329,6 @@ await engine.asset.addSource({
           meta: asset.meta
         });
         this.uploadedAssets.add(uniqueId);
-        console.log('📝 Added asset to source:', asset.id);
       }
 
       this.showPopup('success', 'Upload Successful', 'Image uploaded successfully!');
@@ -348,7 +341,6 @@ await engine.asset.addSource({
       // Always remove from in-progress set
       if (uniqueId) {
         this.uploadInProgress.delete(uniqueId);
-        console.log('🧹 Cleaned up upload tracking for:', uniqueId);
       }
     }
   },
@@ -356,11 +348,8 @@ await engine.asset.addSource({
   // Handle Delete inside CE.SDK
   removeAsset: async (asset: any) => {
     try {
-      console.log('🗑️ Deleting asset:', asset);
-
       // Check if this delete is already in progress
       if (this.deleteInProgress.has(asset)) {
-        console.log('Delete already in progress for:', asset);
         return; // Skip duplicate delete
       }
 
@@ -383,8 +372,6 @@ await engine.asset.addSource({
 
       this.showPopup('success', 'Delete Successful', 'Image deleted successfully!');
 
-      console.log('✅ Asset deleted successfully:', asset);
-
     } catch (error) {
       console.error("❌ Delete Error:", error);
       this.showPopup('error', 'Delete Failed', 'Failed to delete image.');
@@ -392,7 +379,6 @@ await engine.asset.addSource({
     } finally {
       // Always remove from in-progress set
       this.deleteInProgress.delete(asset.id);
-      console.log('🧹 Cleaned up delete tracking for:', asset);
     }
   }
   });
@@ -401,10 +387,10 @@ await engine.asset.addSource({
   instance.ui.addAssetLibraryEntry({
   id: 'myUploadsLibrary',
   sourceIds: ['userUploads'],
-  previewLength: 12,
-  gridColumns: 3,
+  previewLength: 16,
+  gridColumns: 4,
   canAdd: true,
-  canRemove: true
+  canRemove: true,
   });
   // 🔥 5. ADD TAB IN LEFT DOCK (Keep all default tabs + add custom)
   // --------------------------------------------------------------------
@@ -553,15 +539,11 @@ await engine.asset.addSource({
             }
             
             // Refresh the template list to show the newly saved template
-            console.log('💾 Template saved successfully, now refreshing template list...');
-            console.log('📊 Current selections - Sport:', this.selectedSport, 'Template Type:', this.selectedTemplate);
             
             // Wait for backend to process the saved template
             await new Promise(resolve => setTimeout(resolve, 2000));
             
-            console.log('🔄 About to call refreshTemplateList()');
             await this.refreshTemplateList();
-            console.log('✨ Template list refresh completed after save!');
             
             // Reset template title
             this.templateTitle = 'New Template';
@@ -601,10 +583,8 @@ await engine.asset.addSource({
     }
 
     try {
-      console.log('🔄 STARTING COMPLETE TEMPLATE REFRESH...');
       
       // STEP 1: FETCH FRESH TEMPLATES FIRST
-      console.log('🌐 Fetching fresh templates from API...');
       const requestBody = {
         sportId: this.selectedSport,
         templeteType: this.selectedTemplate ? parseInt(this.selectedTemplate) : undefined,
@@ -616,15 +596,12 @@ await engine.asset.addSource({
 
       const response = await this.templeteService.getTempletesBySport(requestBody).toPromise();
       const freshItems = response?.data?.items ?? [];
-      console.log('✅ API returned', freshItems.length, 'fresh templates');
 
       // STEP 2: COMPLETELY REMOVE OLD SOURCE AND ALL REFERENCES
-      console.log('🗑️ CLEARING ALL OLD TEMPLATES AND REFERENCES...');
       
       // Remove UI entry first
       try {
         instance.ui.unstable_removeAssetLibraryEntry('my-templates-entry');
-        console.log('  ✓ Removed UI entry');
       } catch (e) {
         console.warn('  ⚠️ Could not remove entry (may not exist)', e);
       }
@@ -632,7 +609,6 @@ await engine.asset.addSource({
       // Remove the asset source completely
       try {
         engine.asset.removeAssetSource('my-templates');
-        console.log('  ✓ Removed asset source');
       } catch (e) {
         console.warn('  ⚠️ Could not remove source (may not exist)', e);
       }
@@ -641,7 +617,6 @@ await engine.asset.addSource({
       await new Promise(resolve => setTimeout(resolve, 200));
 
       // STEP 3: CREATE COMPLETELY NEW SOURCE FROM SCRATCH
-      console.log('🔨 CREATING NEW FRESH SOURCE...');
       await engine.asset.addLocalSource(
         'my-templates',
         undefined,
@@ -682,10 +657,8 @@ await engine.asset.addSource({
           }
         }
       );
-      console.log('  ✓ New source created');
 
       // STEP 4: POPULATE NEW SOURCE WITH ONLY FRESH TEMPLATES
-      console.log('📝 POPULATING NEW SOURCE WITH', freshItems.length, 'FRESH TEMPLATES...');
       const timestamp = Date.now();
       
       for (const t of freshItems) {
@@ -701,15 +674,12 @@ await engine.asset.addSource({
               thumbUri: thumbUrl
             }
           });
-          console.log('    ✓', t.title);
         } catch (err) {
           console.error('    ✗ Failed to add:', t.title, err);
         }
       }
-      console.log('  ✓ All fresh templates added');
 
       // STEP 5: ADD NEW UI ENTRY
-      console.log('🎨 ADDING NEW UI ENTRY...');
       instance.ui.addAssetLibraryEntry({
         id: 'my-templates-entry',
         sourceIds: ['my-templates'],
@@ -717,10 +687,8 @@ await engine.asset.addSource({
         previewLength: 10,
         gridColumns: 2
       });
-      console.log('  ✓ UI entry added');
 
       // STEP 6: FORCE UI REFRESH WITH NEW DOCK ORDER
-      console.log('🔄 FORCING UI REFRESH WITH NEW DOCK ORDER...');
       instance.ui.setDockOrder([
         {
           id: 'ly.img.assetLibrary.dock',
@@ -765,8 +733,6 @@ await engine.asset.addSource({
           entries: ['ly.img.sticker']
         }
       ]);
-
-      console.log('🎉 ✨ TEMPLATE REFRESH COMPLETE! Showing', freshItems.length, 'FRESH TEMPLATES! ✨ 🎉');
     } catch (error) {
       console.error('❌ ERROR during template refresh:', error);
     }
