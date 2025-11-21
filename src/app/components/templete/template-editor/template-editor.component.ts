@@ -236,13 +236,14 @@ export class TemplateEditorComponent implements OnInit {
 await engine.asset.addSource({
   id: 'userUploads',
 
-  // Allow only images
+  // Allow only images including SVG
   getSupportedMimeTypes: () => [
     'image/png',
     'image/jpeg',
     'image/jpg',
     'image/gif',
-    'image/webp'
+    'image/webp',
+    'image/svg+xml'
   ],
 
   // Fetch previously uploaded images
@@ -251,19 +252,24 @@ await engine.asset.addSource({
       const response = await this.templeteService.getTemplateImages().toPromise();
       const files = response?.data || [];
 
-      const assets = files.map((file: any) => ({
-        id: file.id.toString(),
-        label: file.fileName,
-        meta: {
-          uri: `${environment.apiUrl}/${file.fileUrl}`,
-          thumbUri: `${environment.apiUrl}/${file.fileUrl}`,
-          mimeType: this.getMimeTypeFromFileName(file.fileName),
-          blockType: '//ly.img.ubq/graphic',
-          fillType: '//ly.img.ubq/fill/image',
-          shapeType: '//ly.img.ubq/shape/rect',
-          kind: 'image'
-        }
-      }));
+      const assets = files.map((file: any) => {
+        const mimeType = this.getMimeTypeFromFileName(file.fileName);
+        const isSvg = mimeType === 'image/svg+xml';
+
+        return {
+          id: file.id.toString(),
+          label: file.fileName,
+          meta: {
+            uri: `${environment.apiUrl}/${file.fileUrl}`,
+            thumbUri: `${environment.apiUrl}/${file.fileUrl}`,
+            mimeType: mimeType,
+            blockType: '//ly.img.ubq/graphic',
+            fillType: '//ly.img.ubq/fill/image',
+            shapeType: '//ly.img.ubq/shape/rect',
+            kind: 'image'
+          }
+        };
+      });
 
       return {
         assets,
@@ -303,7 +309,11 @@ await engine.asset.addSource({
       this.uploadInProgress.add(uniqueId);
 
       // Step 2: Convert to File
-      const extension = blob.type.split("/")[1];
+      let extension = blob.type.split("/")[1];
+      // Handle SVG specially - API expects .svg not .svg+xml
+      if (extension === 'svg+xml') {
+        extension = 'svg';
+      }
       const fileName = `upload_${Date.now()}.${extension}`;
       const file = new File([blob], fileName, { type: blob.type });
 
@@ -315,11 +325,20 @@ await engine.asset.addSource({
       const result = uploadRes.data;
       const serverUrl = `${environment.apiUrl}/${result.fileUrl}`;
 
-      // Step 4: Replace CE.SDK asset URL with server URL
+      // Step 4: Replace CE.SDK asset URL with server URL and set proper meta properties
       asset.meta.uri = serverUrl;
       asset.meta.thumbUri = serverUrl;
       asset.label = result.fileName;
       asset.id = result.id;
+
+      // Set proper meta properties based on file type
+      const mimeType = blob.type;
+      const isSvg = mimeType === 'image/svg+xml';
+      asset.meta.mimeType = mimeType;
+      asset.meta.blockType = '//ly.img.ubq/graphic';
+      asset.meta.fillType = '//ly.img.ubq/fill/image';
+      asset.meta.shapeType = '//ly.img.ubq/shape/rect';
+      asset.meta.kind = 'image';
 
       // Step 5: Immediately add to CE browser (only if not already added)
       if (!this.uploadedAssets.has(uniqueId)) {
@@ -408,13 +427,6 @@ await engine.asset.addSource({
       label: 'Uploads',
       icon: '@imgly/Upload',
       entries: ['myUploadsLibrary']
-    },
-    {
-      id: 'ly.img.assetLibrary.dock',
-      key: 'ly.img.assetLibrary.images',
-      label: 'Images',
-      icon: '@imgly/Image',
-      entries: ['ly.img.image']
     },
     {
       id: 'ly.img.assetLibrary.dock',
@@ -567,6 +579,7 @@ await engine.asset.addSource({
       case 'jpg': case 'jpeg': return 'image/jpeg';
       case 'gif': return 'image/gif';
       case 'webp': return 'image/webp';
+      case 'svg': return 'image/svg+xml';
       default: return 'image/jpeg';
     }
   }
@@ -703,13 +716,6 @@ await engine.asset.addSource({
           label: 'Uploaded',
           icon: '@imgly/Upload',
           entries: ['myUploadsLibrary']
-        },
-        {
-          id: 'ly.img.assetLibrary.dock',
-          key: 'ly.img.assetLibrary.images',
-          label: 'Images',
-          icon: '@imgly/Image',
-          entries: ['ly.img.image']
         },
         {
           id: 'ly.img.assetLibrary.dock',
