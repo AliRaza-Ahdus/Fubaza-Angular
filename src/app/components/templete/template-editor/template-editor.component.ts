@@ -550,12 +550,8 @@ await engine.asset.addSource({
               await this.editorInstance.createDesignScene();
             }
             
-            // Refresh the template list to show the newly saved template
-            
-            // Wait for backend to process the saved template
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            await this.refreshTemplateList();
+            // Refresh the template list with retry logic to ensure newly saved template appears
+            await this.refreshTemplatesAfterSave();
             
             // Reset template title
             this.templateTitle = 'New Template';
@@ -569,6 +565,37 @@ await engine.asset.addSource({
       });
     } catch (error) {
       alert('Error saving template. Please try again.');
+    }
+  }
+
+  private async refreshTemplatesAfterSave(): Promise<void> {
+    const maxRetries = 5;
+    const retryDelay = 1000; // 1 second
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`🔄 Refresh attempt ${attempt}/${maxRetries} after template save`);
+
+        await this.refreshTemplateList();
+
+        // Check if the template list was successfully refreshed
+        // We can add additional validation here if needed
+
+        console.log(`✅ Template list refreshed successfully on attempt ${attempt}`);
+        return; // Success, exit the retry loop
+
+      } catch (error) {
+        console.warn(`⚠️ Template refresh attempt ${attempt} failed:`, error);
+
+        if (attempt === maxRetries) {
+          console.error('❌ All template refresh attempts failed');
+          this.showPopup('error', 'Refresh Warning', 'Template saved but list may not update immediately. Please refresh manually if needed.');
+          return;
+        }
+
+        // Wait before retrying
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      }
     }
   }
 
@@ -621,55 +648,78 @@ await engine.asset.addSource({
 
       // Remove the asset source completely
       try {
-        engine.asset.removeAssetSource('my-templates');
+        await engine.asset.removeSource('my-templates');
       } catch (e) {
-        console.warn('  ⚠️ Could not remove source (may not exist)', e);
+        console.warn('  ⚠️ Could not remove source (may not exist or method not available)', e);
+        // Try alternative approach - clear all assets from the source
+        try {
+          const existingAssets = await engine.asset.findAssets('my-templates', {});
+          for (const asset of existingAssets.assets || []) {
+            try {
+              await engine.asset.removeAssetFromSource('my-templates', asset.id);
+            } catch (removeError) {
+              console.warn('    Could not remove asset:', asset.id, removeError);
+            }
+          }
+        } catch (clearError) {
+          console.warn('    Could not clear existing assets:', clearError);
+        }
       }
 
       // Wait for cleanup to complete
       await new Promise(resolve => setTimeout(resolve, 200));
 
-      // STEP 3: CREATE COMPLETELY NEW SOURCE FROM SCRATCH
-      await engine.asset.addLocalSource(
-        'my-templates',
-        undefined,
-        async (asset: any): Promise<number | undefined> => {
-          try {
-            if (!asset.id) throw new Error("Template ID is missing");
+      // STEP 3: CREATE OR UPDATE SOURCE
+      try {
+        // Try to create the source (it might already exist)
+        await engine.asset.addLocalSource(
+          'my-templates',
+          undefined,
+          async (asset: any): Promise<number | undefined> => {
+            try {
+              if (!asset.id) throw new Error("Template ID is missing");
 
-            const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
-            if (!templateData?.data?.fileUrl) {
-              throw new Error("Template file URL not found");
+              const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
+              if (!templateData?.data?.fileUrl) {
+                throw new Error("Template file URL not found");
+              }
+
+              const fileUrl = `${environment.apiUrl}/${templateData.data.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
+              const response = await fetch(fileUrl + '?_t=' + Date.now(), {
+                cache: 'no-cache',
+                headers: { 'Cache-Control': 'no-cache' }
+              });
+
+              if (!response.ok) {
+                throw new Error(`Failed to fetch: ${response.status}`);
+              }
+
+              const processedScene = await response.text();
+              if (!processedScene?.trim()) {
+                throw new Error("Scene content is empty");
+              }
+
+              const pages = engine.block.findByType('page');
+              for (const pageId of pages) {
+                engine.block.destroy(pageId);
+              }
+
+              await engine.scene.loadFromString(processedScene);
+              return undefined;
+            } catch (error) {
+              console.error('❌ Error loading template:', error);
+              throw error;
             }
-
-            const fileUrl = `${environment.apiUrl}/${templateData.data.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
-            const response = await fetch(fileUrl + '?_t=' + Date.now(), {
-              cache: 'no-cache',
-              headers: { 'Cache-Control': 'no-cache' }
-            });
-
-            if (!response.ok) {
-              throw new Error(`Failed to fetch: ${response.status}`);
-            }
-
-            const processedScene = await response.text();
-            if (!processedScene?.trim()) {
-              throw new Error("Scene content is empty");
-            }
-
-            const pages = engine.block.findByType('page');
-            for (const pageId of pages) {
-              engine.block.destroy(pageId);
-            }
-
-            await engine.scene.loadFromString(processedScene);
-            return undefined;
-          } catch (error) {
-            console.error('❌ Error loading template:', error);
-            throw error;
           }
+        );
+      } catch (sourceError: any) {
+        if (sourceError?.message?.includes('already exists')) {
+          console.log('  ℹ️ Source already exists, will update assets instead');
+          // Source already exists, we'll just update the assets
+        } else {
+          throw sourceError; // Re-throw if it's a different error
         }
-      );
+      }
 
       // STEP 4: POPULATE NEW SOURCE WITH ONLY FRESH TEMPLATES
       const timestamp = Date.now();
@@ -701,6 +751,21 @@ await engine.asset.addSource({
         gridColumns: 2
       });
 
+      // Ensure professional images library entry exists
+      try {
+        instance.ui.unstable_removeAssetLibraryEntry('professionalImagesLibrary');
+      } catch (e) {
+        // Entry might not exist, that's okay
+      }
+      instance.ui.addAssetLibraryEntry({
+        id: 'professionalImagesLibrary',
+        sourceIds: ['ly.img.image', 'userUploads'],
+        previewLength: 24,
+        gridColumns: 4,
+        canAdd: false,
+        canRemove: false,
+      });
+
       // STEP 6: FORCE UI REFRESH WITH NEW DOCK ORDER
       instance.ui.setDockOrder([
         {
@@ -713,9 +778,16 @@ await engine.asset.addSource({
         {
           id: 'ly.img.assetLibrary.dock',
           key: 'myUploadsLibrary',
-          label: 'Uploaded',
+          label: 'My Images',
           icon: '@imgly/Upload',
           entries: ['myUploadsLibrary']
+        },
+        {
+          id: 'ly.img.assetLibrary.dock',
+          key: 'professionalImagesLibrary',
+          label: 'Image Library',
+          icon: '@imgly/Image',
+          entries: ['professionalImagesLibrary']
         },
         {
           id: 'ly.img.assetLibrary.dock',
