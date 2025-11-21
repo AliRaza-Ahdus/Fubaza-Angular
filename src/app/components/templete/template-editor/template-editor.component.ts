@@ -162,6 +162,18 @@ export class TemplateEditorComponent implements OnInit {
           throw new Error("Template ID is missing");
         }
 
+        // Handle blank templates specially
+        if (asset.id.startsWith('blank-template-')) {
+          // Clear existing scene first
+          const pages = engine.block.findByType('page');
+          for (const pageId of pages) {
+            engine.block.destroy(pageId);
+          }
+          // Create a new blank design scene
+          await instance.createDesignScene();
+          return undefined;
+        }
+
         // Fetch template details from API
         const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
         if (!templateData?.data?.fileUrl) {
@@ -171,19 +183,19 @@ export class TemplateEditorComponent implements OnInit {
         // Fetch the scene file using Angular HttpClient (avoids CORS issues)
         // Build the full URL with environment.apiUrl
         const fileUrl = `${environment.apiUrl}/${templateData.data.fileUrl}`.replace(/([^:]\/)\/+/g, "$1");
-        
+
         // Fetch the txt file directly as text using fetch API
         const response = await fetch(fileUrl);
         if (!response.ok) {
           throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
         }
-        
+
         const processedScene = await response.text();
-        
+
         if (!processedScene || processedScene.trim() === '') {
           throw new Error("Scene file content is empty");
         }
-        
+
         // Clear existing scene first
         const pages = engine.block.findByType('page');
         for (const pageId of pages) {
@@ -198,11 +210,30 @@ export class TemplateEditorComponent implements OnInit {
         throw error; // Re-throw to let CESDK show the error dialog
       }
     }
-  );
-
-  // --------------------------------------------------------------------
+  );  // --------------------------------------------------------------------
   // 🔥 3. ADD API TEMPLATES TO SOURCE
   // --------------------------------------------------------------------
+
+  // Add multiple blank templates first
+  const blankTemplates = [
+    { id: 'blank-template-1', name: 'Blank Template', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg4MFY4MEgyMFYyMFoiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTMwIDMwSDcwVjcwSDMweiIgc3Ryb2tlPSIjOTlBM0FGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+    { id: 'blank-template-2', name: 'Empty Canvas', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjMwIiBzdHJva2U9IiM5OUEzQUYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJNNDAgNDBINjBWNjBIAjQwVjQwWiIgc3Ryb2tlPSIjOTlBM0FGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+    { id: 'blank-template-3', name: 'Fresh Start', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yNSAyNUg3NVY3NUgyNVYyNVoiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz4KPHN5bWJvbCBpZD0icGx1cyIgdmlld0JveD0iMCAwIDI0IDI0Ij4KPHBhdGggZD0iTTEyIDV2MTRNNyAxMmgxNG0xMiAwaC0xNFYxMmgyNFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHVzZSBocmVmPSIjZGF0YS1wbHVzIiB4PSI0NCIgeT0iNDQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIvPgo8L3N2Zz4K' },
+    { id: 'blank-template-4', name: 'Clean Slate', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5QTNBRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QXJ0PC90ZXh0Pgo8L3N2Zz4K' },
+    { id: 'blank-template-5', name: 'New Design', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zMCAzMEg3MFY3MEgzMFYzMFoiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTQwIDQwSDYwVjYwSDQwVjQwWiIgc3Ryb2tlPSIjOTlBM0FGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' }
+  ];
+
+  for (const blankTemplate of blankTemplates) {
+    engine.asset.addAssetToSource('my-templates', {
+      id: blankTemplate.id,
+      label: { en: blankTemplate.name },
+      meta: {
+        uri: blankTemplate.id, // Special identifier for blank template
+        thumbUri: `data:image/svg+xml;base64,${blankTemplate.icon}` // Custom icon for each blank template
+      }
+    });
+  }
+
   for (const t of items) {
     // Clean up URLs - remove any double slashes
     const thumbUrl = `${environment.apiUrl}/${t.templeteUrl}`.replace(/([^:]\/)\/+/g, "$1");
@@ -717,6 +748,18 @@ await engine.asset.addSource({
             try {
               if (!asset.id) throw new Error("Template ID is missing");
 
+              // Handle blank templates specially
+              if (asset.id.startsWith('blank-template-')) {
+                // Clear existing scene first
+                const pages = engine.block.findByType('page');
+                for (const pageId of pages) {
+                  engine.block.destroy(pageId);
+                }
+                // Create a new blank design scene
+                await instance.createDesignScene();
+                return undefined;
+              }
+
               const templateData = await this.templeteService.getTempleteById(asset.id).toPromise();
               if (!templateData?.data?.fileUrl) {
                 throw new Error("Template file URL not found");
@@ -759,7 +802,27 @@ await engine.asset.addSource({
 
       // STEP 4: POPULATE NEW SOURCE WITH ONLY FRESH TEMPLATES
       const timestamp = Date.now();
-      
+
+      // Add multiple blank templates first
+      const blankTemplates = [
+        { id: 'blank-template-1', name: 'Blank Template', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAyMEg4MFY4MEgyMFYyMFoiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTMwIDMwSDcwVjcwSDMweiIgc3Ryb2tlPSIjOTlBM0FGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+        { id: 'blank-template-2', name: 'Empty Canvas', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjMwIiBzdHJva2U9IiM5OUEzQUYiIHN0cm9rZS13aWR0aD0iMiIgZmlsbD0ibm9uZSIvPgo8cGF0aCBkPSJNNDAgNDBINjBWNjBIAjQwVjQwWiIgc3Ryb2tlPSIjOTlBM0FGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' },
+        { id: 'blank-template-3', name: 'Fresh Start', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yNSAyNUg3NVY3NUgyNVYyNVoiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz4KPHN5bWJvbCBpZD0icGx1cyIgdmlld0JveD0iMCAwIDI0IDI0Ij4KPHBhdGggZD0iTTEyIDV2MTRNNyAxMmgxNG0xMiAwaC0xNFYxMmgyNFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHVzZSBocmVmPSIjZGF0YS1wbHVzIiB4PSI0NCIgeT0iNDQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIvPgo8L3N2Zz4K' },
+        { id: 'blank-template-4', name: 'Clean Slate', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5QTNBRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QXJ0PC90ZXh0Pgo8L3N2Zz4K' },
+        { id: 'blank-template-5', name: 'New Design', icon: 'PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zMCAzMEg3MFY3MEgzMFYzMFoiIHN0cm9rZT0iIzk5QTNBRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtcGluZWpvaW49InJvdW5kIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTQwIDQwSDYwVjYwSDQwVjQwWiIgc3Ryb2tlPSIjOTlBM0FGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4K' }
+      ];
+
+      for (const blankTemplate of blankTemplates) {
+        engine.asset.addAssetToSource('my-templates', {
+          id: blankTemplate.id,
+          label: { en: blankTemplate.name },
+          meta: {
+            uri: blankTemplate.id, // Special identifier for blank template
+            thumbUri: `data:image/svg+xml;base64,${blankTemplate.icon}` // Custom icon for each blank template
+          }
+        });
+      }
+
       for (const t of freshItems) {
         try {
           const thumbUrl = `${environment.apiUrl}/${t.templeteUrl}`.replace(/([^:]\/)\/+/g, "$1") + '?v=' + timestamp;
